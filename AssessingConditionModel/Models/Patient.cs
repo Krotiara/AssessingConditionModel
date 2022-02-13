@@ -9,27 +9,15 @@ namespace AssessingConditionModel.Models
     {
         public string Name { get; set; }
 
-        public Dictionary<ParamsNames, string> Parameters { get; private set; }
+        public Parameters<ClinicalParams> ClinicalParams { get; private set; }
 
-        public Dictionary<ParamsNames, string> ParametersNorms { get; private set; }
+        public Parameters<NormParams> ParamsNorms { get; private set; }
 
         public Patient(string name)
         {
             Name = name;
-            Parameters = new Dictionary<ParamsNames, string>();
-            ParametersNorms = new Dictionary<ParamsNames, string>();
+            ClinicalParams = new Parameters<ClinicalParams>();
+            ParamsNorms = new Parameters<NormParams>();
         }
-
-
-        public T GetParamValue<T>(ParamsNames parameterName)
-        {
-            return  Parameters[parameterName].ParseTo<T>();
-        }
-
-
-        public T GetParamNormValue<T>(ParamsNames parameterName)
-        {
-            return ParametersNorms[parameterName].ParseTo<T>();
-        } 
     }
 }

@@ -7,7 +7,7 @@ namespace AssessingConditionModel.Models.Agents
 {
     public class AgentPatient : Agent
     {
-        private Patient patient;
+        private readonly Patient patient;
 
         public AgentPatient(Patient patient)
         {
@@ -27,24 +27,24 @@ namespace AssessingConditionModel.Models.Agents
 
         private State DetermineState()
         {
-            double temp = patient.GetParamValue<double>(ParamsNames.Temperature);
-            double critLowTemp = patient.GetParamNormValue<double>(ParamsNames.LowCriticalTemperature);
-            double critUpTemp = patient.GetParamNormValue<double>(ParamsNames.UpCriticalTemperature);
-            double normLowTemp = patient.GetParamNormValue<double>(ParamsNames.LowNormalTemperature);
-            double normUpTemp = patient.GetParamNormValue<double>(ParamsNames.UpNormalTemperature);
+            double temp = patient.ClinicalParams.GetParam<double>(ClinicalParams.Temperature);
+            double critLowTemp = patient.ParamsNorms.GetParam<double>(NormParams.LowCriticalTemperature);  
+            double critUpTemp = patient.ParamsNorms.GetParam<double>(NormParams.UpCriticalTemperature);
+            double normLowTemp = patient.ParamsNorms.GetParam<double>(NormParams.LowNormalTemperature);
+            double normUpTemp = patient.ParamsNorms.GetParam<double>(NormParams.UpNormalTemperature);
 
-            double saturation = patient.GetParamValue<double>(ParamsNames.Saturation);
-            double normLowSaturation = patient.GetParamNormValue<double>(ParamsNames.LowNormalSaturation);
-            double critLowSaturation = patient.GetParamNormValue<double>(ParamsNames.LowCriticalSaturation);
+            double saturation = patient.ClinicalParams.GetParam<double>(ClinicalParams.Saturation);
+            double normLowSaturation = patient.ParamsNorms.GetParam<double>(NormParams.LowNormalSaturation);
+            double critLowSaturation = patient.ParamsNorms.GetParam<double>(NormParams.LowCriticalSaturation);
 
-            bool isCough = patient.GetParamValue<bool>(ParamsNames.Cough);
+            bool isCough = patient.ClinicalParams.GetParam<bool>(ClinicalParams.Cough);
 
-            double lungDamage = patient.GetParamValue<double>(ParamsNames.LungTissueDamage);
-            double critLungDamage = patient.GetParamNormValue<double>(ParamsNames.UpCriticalLungTissueDamage);
+            double lungDamage = patient.ClinicalParams.GetParam<double>(ClinicalParams.LungTissueDamage);
+            double critLungDamage = patient.ParamsNorms.GetParam<double>(NormParams.UpCriticalLungTissueDamage);
 
-            double cProtein = patient.GetParamValue<double>(ParamsNames.CReactiveProtein);
-            double critCProtein = patient.GetParamNormValue<double>(ParamsNames.UpCriticalCReactiveProtein);
-            double normCProtein = patient.GetParamNormValue<double>(ParamsNames.UpNormCReactiveProtein);
+            double cProtein = patient.ClinicalParams.GetParam<double>(ClinicalParams.CReactiveProtein);
+            double critCProtein = patient.ParamsNorms.GetParam<double>(NormParams.UpCriticalCReactiveProtein);
+            double normCProtein = patient.ParamsNorms.GetParam<double>(NormParams.UpNormCReactiveProtein);
 
             if (normLowTemp <= temp && temp <= normUpTemp &&
             normLowSaturation <= saturation && !isCough &&
