@@ -27,43 +27,33 @@ namespace AssessingConditionModel.Models.Agents
 
         private State DetermineState()
         {
-            double temp = patient.ClinicalParams.GetParam<double>(ClinicalParams.Temperature);
-            double critLowTemp = patient.ParamsNorms.GetParam<double>(NormParams.LowCriticalTemperature);  
-            double critUpTemp = patient.ParamsNorms.GetParam<double>(NormParams.UpCriticalTemperature);
-            double normLowTemp = patient.ParamsNorms.GetParam<double>(NormParams.LowNormalTemperature);
-            double normUpTemp = patient.ParamsNorms.GetParam<double>(NormParams.UpNormalTemperature);
 
-            double saturation = patient.ClinicalParams.GetParam<double>(ClinicalParams.Saturation);
-            double normLowSaturation = patient.ParamsNorms.GetParam<double>(NormParams.LowNormalSaturation);
-            double critLowSaturation = patient.ParamsNorms.GetParam<double>(NormParams.LowCriticalSaturation);
-
-            bool isCough = patient.ClinicalParams.GetParam<bool>(ClinicalParams.Cough);
-
-            double lungDamage = patient.ClinicalParams.GetParam<double>(ClinicalParams.LungTissueDamage);
-            double critLungDamage = patient.ParamsNorms.GetParam<double>(NormParams.UpCriticalLungTissueDamage);
-
-            double cProtein = patient.ClinicalParams.GetParam<double>(ClinicalParams.CReactiveProtein);
-            double critCProtein = patient.ParamsNorms.GetParam<double>(NormParams.UpCriticalCReactiveProtein);
-            double normCProtein = patient.ParamsNorms.GetParam<double>(NormParams.UpNormCReactiveProtein);
-
-            if (normLowTemp <= temp && temp <= normUpTemp &&
-            normLowSaturation <= saturation && !isCough &&
-            lungDamage == 0 && cProtein <= normCProtein)
+            if (patient.ParametersNorms.LowNormalTemperature <= patient.ClinicalParameters.Temperature
+                && patient.ClinicalParameters.Temperature <= patient.ParametersNorms.UpNormalTemperature 
+                && patient.ParametersNorms.LowNormalSaturation <= patient.ClinicalParameters.Saturation 
+                && !patient.ClinicalParameters.IsCough 
+                && patient.ClinicalParameters.LungTissueDamage == 0 
+                && patient.ClinicalParameters.CReactiveProtein <= patient.ParametersNorms.UpNormCReactiveProtein)
                 return StateDiagram.GetState("Healthy");
 
-            if ((critLowTemp < temp && temp < normLowTemp) ||
-            (normUpTemp < temp && temp < critUpTemp) ||
-            (critLowSaturation < saturation && saturation < normLowSaturation) ||
-            isCough ||
-            (lungDamage > 0 && lungDamage < critLungDamage) ||
-            (normCProtein < cProtein && cProtein < critCProtein))
+            if ((patient.ParametersNorms.LowCriticalTemperature < patient.ClinicalParameters.Temperature 
+                && patient.ClinicalParameters.Temperature < patient.ParametersNorms.LowNormalTemperature) ||
+                (patient.ParametersNorms.UpNormalTemperature < patient.ClinicalParameters.Temperature 
+                && patient.ClinicalParameters.Temperature < patient.ParametersNorms.UpCriticalTemperature) ||
+                (patient.ParametersNorms.LowCriticalSaturation < patient.ClinicalParameters.Saturation 
+                && patient.ClinicalParameters.Saturation < patient.ParametersNorms.LowNormalSaturation) ||
+                patient.ClinicalParameters.IsCough ||
+                (patient.ClinicalParameters.LungTissueDamage > 0 
+                && patient.ClinicalParameters.LungTissueDamage < patient.ParametersNorms.UpCriticalLungTissueDamage) ||
+                (patient.ParametersNorms.UpNormCReactiveProtein < patient.ClinicalParameters.CReactiveProtein 
+                && patient.ClinicalParameters.CReactiveProtein < patient.ParametersNorms.UpCriticalCReactiveProtein))
                 return StateDiagram.GetState("Sick");
 
-            if (temp <= critLowTemp ||
-            temp >= critUpTemp ||
-            saturation <= critLowSaturation ||
-            lungDamage >= critLungDamage ||
-            cProtein >= critCProtein)
+            if (patient.ClinicalParameters.Temperature <= patient.ParametersNorms.LowCriticalTemperature ||
+                patient.ClinicalParameters.Temperature >= patient.ParametersNorms.UpCriticalTemperature ||
+                patient.ClinicalParameters.Saturation <= patient.ParametersNorms.LowCriticalSaturation ||
+                patient.ClinicalParameters.LungTissueDamage >= patient.ParametersNorms.UpCriticalLungTissueDamage ||
+                patient.ClinicalParameters.CReactiveProtein >= patient.ParametersNorms.UpCriticalCReactiveProtein)
                 return StateDiagram.GetState("Critical");
 
             throw new StateDetermineException($"Cant determine state for Patient with name {patient.Name}");
