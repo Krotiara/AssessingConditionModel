@@ -6,38 +6,6 @@ using System.Threading.Tasks;
 
 namespace AssessingConditionModel.Models
 {
- 
-    //public enum ClinicalParams
-    //{
-    //    [Display(Name = "Температура")]
-    //    Temperature,
-    //    [Display(Name = "Сатурация")]
-    //    Saturation,
-    //    [Display(Name = "Кашель")]
-    //    Cough,
-    //    [Display(Name = "Объем поражения легочной ткани")]
-    //    LungTissueDamage,
-    //    [Display(Name = "Частота дыхательных движений")]
-    //    FRM,
-    //    [Display(Name = "Частота сердечных сокращений")]
-    //    HeartRate,
-    //    [Display(Name = "С-реактивный белок")]
-    //    CReactiveProtein
-    //}
-
-
-    //public enum FunctionalParams
-    //{
-
-    //}
-
-
-    //public enum InstrumentalParams
-    //{
-
-    //}
-
-
     //public enum NormParams
     //{
     //    [Display(Name = "Нижнее значение нормы температуры")]

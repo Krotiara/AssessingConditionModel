@@ -28,14 +28,17 @@ namespace AssessingConditionModel.Models
         public ParametersNorms ParametersNorms { get; set; }
 
        
-        public Patient(string name)
+        public Patient(string name): this()
         {
             Name = name;
-            
         }
 
         public Patient()
         {
+            ClinicalParameters = new ClinicalParameters();
+            FunctionalParameters = new FunctionalParameters();
+            InstrumentalParameters = new InstrumentalParameters();
+            ParametersNorms = new ParametersNorms();
             //suitable constructor for entity type for awoid EF error No suitable constructor found for entity type
         }
     }
