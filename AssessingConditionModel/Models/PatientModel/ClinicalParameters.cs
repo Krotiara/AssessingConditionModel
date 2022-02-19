@@ -10,6 +10,10 @@ namespace AssessingConditionModel.Models
     {
         public int PatientId { get; set; }
 
+
+        [Display(Name = "Дата снятия показателей")]
+        public DateTime Date { get; set; }
+
         [Display(Name = "Температура")]
         public double Temperature { get; set; }
 

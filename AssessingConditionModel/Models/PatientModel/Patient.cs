@@ -21,7 +21,6 @@ namespace AssessingConditionModel.Models
         public ParametersNorms ParametersNorms { get; set; }
 
        
-
         public Patient(string name)
         {
             Name = name;
