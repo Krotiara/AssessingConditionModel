@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace AssessingConditionModel.Models.DataHandler
@@ -25,9 +26,10 @@ namespace AssessingConditionModel.Models.DataHandler
 
         private void AdjustRowDelimeters(ref List<string> rawRow)
         {
+            Regex dateRegex = new Regex(@"\d{1,2}.\d{1,2}.\d{4}"); 
             for(int i=0; i < rawRow.Count; i++)
             {
-                if (rawRow[i].Any(c => char.IsDigit(c)))
+                if (rawRow[i].Any(c => char.IsDigit(c)) && !dateRegex.IsMatch(rawRow[i]))
                     rawRow[i] = rawRow[i].Replace('.', ','); //Для преобразования в double
             }
         }
