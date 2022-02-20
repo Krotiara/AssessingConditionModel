@@ -58,5 +58,8 @@ namespace AssessingConditionModel.Models.PatientModel
 
         public GeneralBloodTest GeneralBloodTest { get; set; }
 
+
+        public GeneralUrineAnalysis GeneralUrineAnalysis { get; set; }
+
     }
 }

@@ -21,6 +21,8 @@ namespace AssessingConditionModel.Models
 
         public DbSet<GeneralBloodTest> GeneralBloodTests { get; set; }
 
+        public DbSet<GeneralUrineAnalysis> GeneralUrineAnalysises { get; set; }
+
 
         public PatientsContext(DbContextOptions<PatientsContext> options) : base(options)
         {
@@ -64,6 +66,13 @@ namespace AssessingConditionModel.Models
                 .HasPrincipalKey<ClinicalParameters>(x => x.PatientId)
                 .HasForeignKey<GeneralBloodTest>(x => x.Id)
                 .IsRequired();
+
+            modelBuilder.Entity<ClinicalParameters>()
+               .HasOne<GeneralUrineAnalysis>(x => x.GeneralUrineAnalysis)
+               .WithOne()
+               .HasPrincipalKey<ClinicalParameters>(x => x.PatientId)
+               .HasForeignKey<GeneralUrineAnalysis>(x => x.Id)
+               .IsRequired();
         }
     }
 }
