@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace AssessingConditionModel.Models
+namespace AssessingConditionModel.Models.PatientModel
 {
     [Table("ClinicalParameters")]
     public class ClinicalParameters
@@ -13,6 +13,7 @@ namespace AssessingConditionModel.Models
 
         public ClinicalParameters()
         {
+            LungTissueDamage = new LungTissueDamage();
             //suitable constructor for entity type for awoid EF error No suitable constructor found for entity type
         }
 
@@ -36,9 +37,9 @@ namespace AssessingConditionModel.Models
         [Display(Name = "Кашель")]
         public bool IsCough { get; set; }
 
-        [Column("LungTissueDamage")]
-        [Display(Name = "Объем поражения легочной ткани")]
-        public double LungTissueDamage { get; set; }
+        //[Column("LungTissueDamage")]
+        //[Display(Name = "Объем поражения легочной ткани")]
+        //public double LungTissueDamage { get; set; }
 
         [Column("FRM")]
         [Display(Name = "Частота дыхательных движений")]
@@ -51,5 +52,8 @@ namespace AssessingConditionModel.Models
         [Column("CReactiveProtein")]
         [Display(Name = "С-реактивный белок")]
         public double CReactiveProtein { get; set; }
+
+
+        public LungTissueDamage LungTissueDamage { get; set; }
     }
 }

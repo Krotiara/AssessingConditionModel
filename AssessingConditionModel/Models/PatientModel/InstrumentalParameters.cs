@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace AssessingConditionModel.Models
+namespace AssessingConditionModel.Models.PatientModel
 {
     [Table("InstrumentalParameters")]
     public class InstrumentalParameters

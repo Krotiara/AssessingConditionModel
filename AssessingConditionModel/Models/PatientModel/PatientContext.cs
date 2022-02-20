@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AssessingConditionModel.Models.PatientModel;
 using Microsoft.EntityFrameworkCore;
 
 namespace AssessingConditionModel.Models
@@ -15,6 +16,8 @@ namespace AssessingConditionModel.Models
         public DbSet<FunctionalParameters> FunctionalParameters { get; set; }
 
         public DbSet<InstrumentalParameters> InstrumentalParameters { get; set; }
+
+        public DbSet<LungTissueDamage> LungTissueDamages { get; set; }
 
 
         public PatientsContext(DbContextOptions<PatientsContext> options) : base(options)
@@ -46,7 +49,12 @@ namespace AssessingConditionModel.Models
                 .HasForeignKey<InstrumentalParameters>(p => p.PatientId)
                 .IsRequired();
 
-            modelBuilder.Entity<Patient>().Ignore(b => b.ParametersNorms);
+            modelBuilder.Entity<ClinicalParameters>()
+                .HasOne<LungTissueDamage>(x => x.LungTissueDamage)
+                .WithOne()
+                .HasPrincipalKey<ClinicalParameters>(x => x.PatientId)
+                .HasForeignKey<LungTissueDamage>(x => x.Id)
+                .IsRequired();
         }
     }
 }

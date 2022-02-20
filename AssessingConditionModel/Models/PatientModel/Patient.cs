@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace AssessingConditionModel.Models
+namespace AssessingConditionModel.Models.PatientModel
 {
     [Table("Patients")]
     public class Patient
@@ -25,6 +25,7 @@ namespace AssessingConditionModel.Models
 
         public InstrumentalParameters InstrumentalParameters { get; set; }
 
+        [NotMapped]
         public ParametersNorms ParametersNorms { get; set; }
 
        
