@@ -26,4 +26,10 @@
     <ProjectReference Include="..\..\AssessingConditionModel\AssessingConditionModel.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="TestData\multiLineTestFile.xlsx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

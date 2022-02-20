@@ -12,4 +12,13 @@ namespace AssessingConditionModel.Models
 
         }
     }
+
+
+    public class SetPropertyValueException: Exception
+    {
+        public SetPropertyValueException(string message): base(message)
+        {
+
+        }
+    }
 }

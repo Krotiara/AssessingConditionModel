@@ -19,59 +19,82 @@ namespace AssessingConditionModel.Models.DataHandler
         private readonly Dictionary<string, string> matchingPropertiesNames = new Dictionary<string, string>()
         {
             {"номер истории болезни", "MedicalHistoryNumber" },
-            {"Кашель","ClinicalParameters.IsCough" },
-            {"Температура максимально", "ClinicalParameters.Temperature" },
-            {"Сатурация", "ClinicalParameters.Saturation" },
-            {"ЧДД", "ClinicalParameters.FRM" },
-            {"ЧСС", "ClinicalParameters.HeartRate" },
+            {"кашель","ClinicalParameters.IsCough" },
+            {"температура максимально", "ClinicalParameters.Temperature" },
+            {"сатурация", "ClinicalParameters.Saturation" },
+            {"чдд", "ClinicalParameters.FRM" },
+            {"чсс", "ClinicalParameters.HeartRate" },
             //{"", "ClinicalParameters.CReactiveProtein" },
             {"пол", "FunctionalParameters.Gender" },
             {"возраст", "FunctionalParameters.Age" },
             {"возраст ребенка", "FunctionalParameters.Age" },
             {"дата поступления", "ClinicalParameters.Date"},
-            {"Правостороннее","ClinicalParameters.LungTissueDamage.IsRightHandDamage" },
-            {"Левостороннее","ClinicalParameters.LungTissueDamage.IsLeftHandDamage" },
-            {"Двухстороннее","ClinicalParameters.LungTissueDamage.IsTwoWayDamage" },
-            {"Правое легкое","ClinicalParameters.LungTissueDamage.RightLungDamageDescription" },
-            {"Левое легкое","ClinicalParameters.LungTissueDamage.LeftLungDamageDescription" },
-            {"Объем поражения","ClinicalParameters.LungTissueDamage.DamageVolumeDescription" },
+            {"правостороннее","ClinicalParameters.LungTissueDamage.IsRightHandDamage" },
+            {"левостороннее","ClinicalParameters.LungTissueDamage.IsLeftHandDamage" },
+            {"двухстороннее","ClinicalParameters.LungTissueDamage.IsTwoWayDamage" },
+            {"правое легкое","ClinicalParameters.LungTissueDamage.RightLungDamageDescription" },
+            {"левое легкое","ClinicalParameters.LungTissueDamage.LeftLungDamageDescription" },
+            {"объем поражения","ClinicalParameters.LungTissueDamage.DamageVolumeDescription" },
             // TODO соответствия и затем дебаг.
         };
 
 
-        public void TODO()
+        public (List<List<string>>, Dictionary<string, int>) GetExcelData(string path, List<int> headersColumnsIndexes)
         {
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
-            using (ExcelPackage xlPackage = new ExcelPackage(new FileInfo(@"C:\Users\Krotiara\Desktop\Аспирантура\статкарта.xlsx")))
-{
+            using (ExcelPackage xlPackage = new ExcelPackage(new FileInfo(path)))
+            {
                 //Get a WorkSheet by index. Note that EPPlus indexes are base 1, not base 0!
-                ExcelWorksheet myWorksheet = xlPackage.Workbook.Worksheets[1]; //Если брать по индексу 0, то он пропускает некоторые пустые столбцы, из-за чего слетают индексы.
+                ExcelWorksheet myWorksheet = xlPackage.Workbook.Worksheets.First(); //Если брать по индексу 0, то он пропускает некоторые пустые столбцы, из-за чего слетают индексы.
                 int totalRows = myWorksheet.Dimension.End.Row;
                 int totalColumns = myWorksheet.Dimension.End.Column;
 
-                Dictionary<string, int> headersColumnIndexes = ExcelParsePatientsHeaders(myWorksheet, new List<int>() { 1, 2 }, totalColumns);
-                List<Patient> patients = new List<Patient>();
-                for (int rowNum = 3; rowNum <= totalRows; rowNum++) //select starting row here
+                Dictionary<string, int> headersColumnIndexes = ExcelParsePatientsHeaders(myWorksheet, headersColumnsIndexes, totalColumns);
+
+                List<List<string>> data = new List<List<string>>();
+                int startDataIndex = headersColumnsIndexes.Max() + 1;
+                for (int rowNum = startDataIndex; rowNum <= totalRows; rowNum++) //select starting row here
                 {
                     List<string> row = myWorksheet
                         .Cells[rowNum, 1, rowNum, totalColumns]
                         .Select(c => c.Value == null ? string.Empty : c.Value.ToString().Trim())
                         .ToList();
-
-                    try
-                    {
-                        Patient p = ProcessPatientRow(row, headersColumnIndexes);
-                        patients.Add(p);
-                    }
-                    catch(Exception e)
-                    {
-                        if (e is FormatException || e is ArgumentOutOfRangeException)
-                            continue;//Выбрасывается при некорректной строке данных пациента. (или при строке, не относящихся к данным пациента).
-                        else throw;
-                    }
+                    data.Add(row);
                 }
+                return (data, headersColumnIndexes);
+            }
+
+
+        }
+
+
+        public void TODO()
+        {
+            (List<List<string>>, Dictionary<string, int>) datas = GetExcelData(@"C:\Users\Krotiara\Desktop\Аспирантура\статкартаЛист2.xlsx", new List<int>() { 1, 2 });
+            List<List<string>> data = datas.Item1;
+            Dictionary<string, int> headersColumnIndexes = datas.Item2;
+
+            List<Patient> patients = new List<Patient>();
+
+            DataPreprocessor dataPreprocessor = new DataPreprocessor();
+            dataPreprocessor.PreProcessData(ref data, ref headersColumnIndexes);
+
+            foreach (List<string> row in data) //select starting row here
+            {
+                //try
+                //{
+                    Patient p = ProcessPatientRow(row, headersColumnIndexes);
+                    patients.Add(p);
+                //}
+                //catch (Exception e)
+                //{
+                //    if (e is FormatException || e is ArgumentOutOfRangeException)
+                //        continue;//Выбрасывается при некорректной строке данных пациента. (или при строке, не относящихся к данным пациента).
+                //    else throw;
+                //}
             }
         }
+    
 
         
 
@@ -93,10 +116,22 @@ namespace AssessingConditionModel.Models.DataHandler
             {
                 int columnIndex = headersColumnIndexes[header];
                 string propertyName = matchingPropertiesNames[header];
-                string value = row[columnIndex];     
+                string value = row[columnIndex];
                 (PropertyInfo, object) propertyInfoData = GetPropertyInfo(patient, propertyName);
-                object convertedValue = ConvertValue(value, propertyInfoData.Item1.PropertyType);
-                propertyInfoData.Item1.SetValue(propertyInfoData.Item2, convertedValue);
+                try
+                {         
+                    object convertedValue = ConvertValue(value, propertyInfoData.Item1.PropertyType);
+                    propertyInfoData.Item1.SetValue(propertyInfoData.Item2, convertedValue);
+                }
+                catch(System.FormatException e)
+                {
+                    throw new SetPropertyValueException(
+                        $"Cant set property {propertyName} with type {propertyInfoData.Item1.PropertyType.Name}." +
+                        $"Value to set = {value}\n" +
+                        $"Header = {header}\n" +
+                        $"ColumnIndex={columnIndex}");
+                }
+               
             }
             return patient;
         }
@@ -152,7 +187,7 @@ namespace AssessingConditionModel.Models.DataHandler
             {
                 List<string> row = myWorksheet
                     .Cells[headerRowIndex, 1, headerRowIndex, totalColumnsNumber]
-                    .Select(c => c.Value == null ? string.Empty : c.Value.ToString().Trim())
+                    .Select(c => c.Value == null ? string.Empty : c.Value.ToString().Trim().ToLower())
                     .ToList();
                 for (int i = 0; i < row.Count; i++)
                 {

@@ -30,7 +30,7 @@ namespace AssessingConditionModel.Models.PatientModel
 
         [Column("Age")]
         [Display(Name = "Возраст")]
-        public string Age { get; set; }
+        public double Age { get; set; }
 
         [Column("BioAge")]
         [Display(Name = "Биовозраст")]
