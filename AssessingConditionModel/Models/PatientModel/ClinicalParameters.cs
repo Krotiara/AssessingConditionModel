@@ -14,6 +14,8 @@ namespace AssessingConditionModel.Models.PatientModel
         public ClinicalParameters()
         {
             LungTissueDamage = new LungTissueDamage();
+            GeneralBloodTest = new GeneralBloodTest();
+            GeneralUrineAnalysis = new GeneralUrineAnalysis();
             //suitable constructor for entity type for awoid EF error No suitable constructor found for entity type
         }
 

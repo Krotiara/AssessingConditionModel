@@ -32,6 +32,10 @@ namespace AssessingConditionModel.Models.PatientModel
         [Column("LymPercent")]
         public double LymPercent { get; set; }
 
+        [Column("Lym")]
+        public double Lym { get; set; }
+
+
         [Column("MonoPercent")]
         public double MonoPercent { get; set; }
 

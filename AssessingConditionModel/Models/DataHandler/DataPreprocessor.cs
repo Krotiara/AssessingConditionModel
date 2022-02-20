@@ -22,6 +22,7 @@ namespace AssessingConditionModel.Models.DataHandler
             for (int i = 0; i < data.Count; i++)
             {
                 List<string> row = data[i].Select(x=>x.Trim().ToLower()).ToList();
+                FillEmptyCells(ref row);
                 AdjustRowDelimeters(ref row);
                 AdjustGender(ref row, headersColumnIndexes);
                 AdjustAge(ref row, headersColumnIndexes);
@@ -41,6 +42,15 @@ namespace AssessingConditionModel.Models.DataHandler
             catch(IndexOutOfRangeException)
             {
                 return false;
+            }
+        }
+
+        private void FillEmptyCells(ref List<string> rawRow)
+        {
+            for(int i=0; i < rawRow.Count; i++)
+            {
+                if (rawRow[i].Equals(""))
+                    rawRow[i] = "0";
             }
         }
 

@@ -13,31 +13,13 @@ namespace AssessingConditionModel.Models.DataHandler
 {
     public class DataParser
     {
-        /// <summary>
-        /// Словарь соответствий колонок входных данных и относительных путей до соответсвующих свойств объекта Patient. 
-        /// </summary>
-        private readonly Dictionary<string, string> matchingPropertiesNames = new Dictionary<string, string>()
-        {
-            {"номер истории болезни", "MedicalHistoryNumber" },
-            {"кашель","ClinicalParameters.IsCough" },
-            {"температура максимально", "ClinicalParameters.Temperature" },
-            {"сатурация", "ClinicalParameters.Saturation" },
-            {"чдд", "ClinicalParameters.FRM" },
-            {"чсс", "ClinicalParameters.HeartRate" },
-            //{"", "ClinicalParameters.CReactiveProtein" },
-            {"пол", "FunctionalParameters.Gender" },
-            {"возраст", "FunctionalParameters.Age" },
-            {"возраст ребенка", "FunctionalParameters.Age" },
-            {"дата поступления", "ClinicalParameters.Date"},
-            {"правостороннее","ClinicalParameters.LungTissueDamage.IsRightHandDamage" },
-            {"левостороннее","ClinicalParameters.LungTissueDamage.IsLeftHandDamage" },
-            {"двухстороннее","ClinicalParameters.LungTissueDamage.IsTwoWayDamage" },
-            {"правое легкое","ClinicalParameters.LungTissueDamage.RightLungDamageDescription" },
-            {"левое легкое","ClinicalParameters.LungTissueDamage.LeftLungDamageDescription" },
-            {"объем поражения","ClinicalParameters.LungTissueDamage.DamageVolumeDescription" },
-            // TODO соответствия и затем дебаг.
-        };
 
+        private MatchingProperties mp;
+
+        public DataParser()
+        {
+            mp = new MatchingProperties();
+        }
 
         public (List<List<string>>, Dictionary<string, int>) GetExcelData(string path, List<int> headersColumnsIndexes)
         {
@@ -108,14 +90,14 @@ namespace AssessingConditionModel.Models.DataHandler
         {
             Patient patient = new Patient();
 
-            Dictionary<string, string> matchingProperties = matchingPropertiesNames
+            Dictionary<string, string> matchingProperties = mp.MatchingPropertiesNames
                 .Where(x => headersColumnIndexes.Keys.Contains(x.Key))
                 .ToDictionary(x => x.Key, x => x.Value);
 
             foreach (string header in matchingProperties.Keys)
             {
                 int columnIndex = headersColumnIndexes[header];
-                string propertyName = matchingPropertiesNames[header];
+                string propertyName = mp.MatchingPropertiesNames[header];
                 string value = row[columnIndex];
                 (PropertyInfo, object) propertyInfoData = GetPropertyInfo(patient, propertyName);
                 try
