@@ -19,7 +19,7 @@ namespace AssessingConditionModel.Models.DataHandler
         private readonly Dictionary<string, string> matchingPropertiesNames = new Dictionary<string, string>()
         {
             {"номер истории болезни", "MedicalHistoryNumber" },
-            {"Кашель","ClinicalParameters.IsCough" },   
+            {"Кашель","ClinicalParameters.IsCough" },
             {"Температура максимально", "ClinicalParameters.Temperature" },
             {"Сатурация", "ClinicalParameters.Saturation" },
             {"ЧДД", "ClinicalParameters.FRM" },
@@ -28,7 +28,13 @@ namespace AssessingConditionModel.Models.DataHandler
             {"пол", "FunctionalParameters.Gender" },
             {"возраст", "FunctionalParameters.Age" },
             {"возраст ребенка", "FunctionalParameters.Age" },
-            {"дата поступления", "ClinicalParameters.Date"}
+            {"дата поступления", "ClinicalParameters.Date"},
+            {"Правостороннее","ClinicalParameters.LungTissueDamage.IsRightHandDamage" },
+            {"Левостороннее","ClinicalParameters.LungTissueDamage.IsLeftHandDamage" },
+            {"Двухстороннее","ClinicalParameters.LungTissueDamage.IsTwoWayDamage" },
+            {"Правое легкое","ClinicalParameters.LungTissueDamage.RightLungDamageDescription" },
+            {"Левое легкое","ClinicalParameters.LungTissueDamage.LeftLungDamageDescription" },
+            {"Объем поражения","ClinicalParameters.LungTissueDamage.DamageVolumeDescription" },
             // TODO соответствия и затем дебаг.
         };
 
@@ -49,7 +55,7 @@ namespace AssessingConditionModel.Models.DataHandler
                 {
                     List<string> row = myWorksheet
                         .Cells[rowNum, 1, rowNum, totalColumns]
-                        .Select(c => c.Value == null ? string.Empty : c.Value.ToString())
+                        .Select(c => c.Value == null ? string.Empty : c.Value.ToString().Trim())
                         .ToList();
 
                     try
@@ -124,7 +130,7 @@ namespace AssessingConditionModel.Models.DataHandler
                 List<string> pathPropertiesNames = propertyPath.Split('.').ToList();
                 PropertyInfo currentPInfo = obj.GetType().GetProperty(pathPropertiesNames[0]);
                 object nestedPropertyValue = currentPInfo.GetValue(obj, null);
-                return GetPropertyInfo(nestedPropertyValue, pathPropertiesNames[1]);
+                return GetPropertyInfo(nestedPropertyValue, propertyPath.Replace($"{pathPropertiesNames[0]}.",""));
             }
             else
             {
@@ -146,7 +152,7 @@ namespace AssessingConditionModel.Models.DataHandler
             {
                 List<string> row = myWorksheet
                     .Cells[headerRowIndex, 1, headerRowIndex, totalColumnsNumber]
-                    .Select(c => c.Value == null ? string.Empty : c.Value.ToString()/*.ToLower()*/)
+                    .Select(c => c.Value == null ? string.Empty : c.Value.ToString().Trim())
                     .ToList();
                 for (int i = 0; i < row.Count; i++)
                 {
