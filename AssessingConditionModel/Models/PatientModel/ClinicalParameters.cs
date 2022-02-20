@@ -55,5 +55,8 @@ namespace AssessingConditionModel.Models.PatientModel
 
 
         public LungTissueDamage LungTissueDamage { get; set; }
+
+        public GeneralBloodTest GeneralBloodTest { get; set; }
+
     }
 }

@@ -19,6 +19,8 @@ namespace AssessingConditionModel.Models
 
         public DbSet<LungTissueDamage> LungTissueDamages { get; set; }
 
+        public DbSet<GeneralBloodTest> GeneralBloodTests { get; set; }
+
 
         public PatientsContext(DbContextOptions<PatientsContext> options) : base(options)
         {
@@ -54,6 +56,13 @@ namespace AssessingConditionModel.Models
                 .WithOne()
                 .HasPrincipalKey<ClinicalParameters>(x => x.PatientId)
                 .HasForeignKey<LungTissueDamage>(x => x.Id)
+                .IsRequired();
+
+            modelBuilder.Entity<ClinicalParameters>()
+                .HasOne<GeneralBloodTest>(x => x.GeneralBloodTest)
+                .WithOne()
+                .HasPrincipalKey<ClinicalParameters>(x => x.PatientId)
+                .HasForeignKey<GeneralBloodTest>(x => x.Id)
                 .IsRequired();
         }
     }
