@@ -19,9 +19,21 @@ namespace AssessingConditionModel.Models.PatientModel
             //suitable constructor for entity type for awoid EF error No suitable constructor found for entity type
         }
 
+
+        private int patientId;
         [Key]
         [Required]
-        public int PatientId { get; set; }
+        public int PatientId
+        {
+            get => patientId;
+            set
+            {
+                patientId = value;
+                LungTissueDamage.Id = value;
+                GeneralBloodTest.Id = value;
+                GeneralUrineAnalysis.Id = value;
+            }
+        }
 
         [Column("Date")]
         [Display(Name = "Дата снятия показателей")]

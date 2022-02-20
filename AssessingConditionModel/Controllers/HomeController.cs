@@ -1,5 +1,6 @@
 ﻿using AssessingConditionModel.Models;
 using AssessingConditionModel.Models.DataHandler;
+using AssessingConditionModel.Models.PatientModel;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
@@ -12,11 +13,11 @@ namespace AssessingConditionModel.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        private readonly PatientsContext patientsDb;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(PatientsContext context)
         {
-            _logger = logger;
+            patientsDb = context;
         }
 
         public IActionResult Index()
@@ -36,10 +37,22 @@ namespace AssessingConditionModel.Controllers
         }
 
 
+       
         public IActionResult LoadData()
         {
             DataParser dataParser = new DataParser();
-            dataParser.TODO();
+            List<Patient> patients = dataParser.LoadData();
+            //using(var transaction = patientsDb.Database.BeginTransaction())
+            //{
+            //    try
+            //    {
+            //        //TODO
+            //    }
+            //    catch(Exception)
+            //    {
+            //        transaction.Rollback();
+            //    }
+            //}
             return RedirectToAction("Index");
         }
     }

@@ -50,7 +50,7 @@ namespace AssessingConditionModel.Models.DataHandler
         }
 
 
-        public void TODO()
+        public List<Patient> LoadData()
         {
             (List<List<string>>, Dictionary<string, int>) datas = GetExcelData(@"C:\Users\Krotiara\Desktop\Аспирантура\статкартаЛист2.xlsx", new List<int>() { 1, 2 });
             List<List<string>> data = datas.Item1;
@@ -75,6 +75,7 @@ namespace AssessingConditionModel.Models.DataHandler
                 //    else throw;
                 //}
             }
+            return patients;
         }
     
 

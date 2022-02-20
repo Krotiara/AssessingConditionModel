@@ -10,13 +10,28 @@ namespace AssessingConditionModel.Models.PatientModel
     [Table("Patients")]
     public class Patient
     {
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
        
         public string Name { get; set; }
+
+
+        private int medicalHistoryNumber;
 
         [Key]
         [Column("MedicalHistoryNumber")]
         [Required]
-        public int MedicalHistoryNumber { get; set; }
+        public int MedicalHistoryNumber
+        {
+            get => medicalHistoryNumber;
+            set
+            {
+                medicalHistoryNumber = value;
+                ClinicalParameters.PatientId = value;
+                FunctionalParameters.PatientId = value;
+                InstrumentalParameters.PatientId = value;
+            }
+        }
 
 
         public ClinicalParameters ClinicalParameters { get; set; }
