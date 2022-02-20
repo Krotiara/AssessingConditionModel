@@ -18,7 +18,16 @@ namespace AssessingConditionModel.Models.DataHandler
         private readonly Dictionary<string, string> matchingPropertiesNames = new Dictionary<string, string>()
         {
             {"номер истории болезни", "MedicalHistoryNumber" },
-            {"Кашель","ClinicalParameters.IsCough" },
+            {"Кашель","ClinicalParameters.IsCough" },   
+            {"Температура максимально", "ClinicalParameters.Temperature" },
+            {"Сатурация", "ClinicalParameters.Saturation" },
+            {"ЧДД", "ClinicalParameters.FRM" },
+            {"ЧСС", "ClinicalParameters.HeartRate" },
+            //{"", "ClinicalParameters.CReactiveProtein" },
+            {"пол", "FunctionalParameters.Gender" },
+            {"возраст", "FunctionalParameters.Age" },
+            {"возраст ребенка", "FunctionalParameters.Age" },
+            {"дата поступления", "ClinicalParameters.Date"}
             // TODO соответствия и затем дебаг.
         };
 
@@ -26,7 +35,7 @@ namespace AssessingConditionModel.Models.DataHandler
         public void TODO()
         {
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
-            using (ExcelPackage xlPackage = new ExcelPackage(new FileInfo(@"C:\Users\Krotiara\Downloads\Telegram Desktop\статкарта.xlsx")))
+            using (ExcelPackage xlPackage = new ExcelPackage(new FileInfo(@"C:\Users\Krotiara\Desktop\Аспирантура\статкарта.xlsx")))
 {
                 //Get a WorkSheet by index. Note that EPPlus indexes are base 1, not base 0!
                 ExcelWorksheet myWorksheet = xlPackage.Workbook.Worksheets[1]; //Если брать по индексу 0, то он пропускает некоторые пустые столбцы, из-за чего слетают индексы.
@@ -47,13 +56,17 @@ namespace AssessingConditionModel.Models.DataHandler
                         Patient p = ProcessPatientRow(row, headersColumnIndexes);
                         patients.Add(p);
                     }
-                    catch(System.FormatException e)
+                    catch(Exception e)
                     {
-                        continue; //TODO - Разобраться, почему возникла на какой-то строке длиной 16. с ЦРБ, который не находится в документе.
+                        if (e is FormatException || e is ArgumentOutOfRangeException)
+                            continue;//Выбрасывается при некорректной строке данных пациента. (или при строке, не относящихся к данным пациента).
+                        else throw;
                     }
                 }
             }
         }
+
+        
 
         /// <summary>
         /// Метод обрабатывает отслеживаемые параметры и присваивает им значения на основе переданной строки данных.
@@ -64,7 +77,12 @@ namespace AssessingConditionModel.Models.DataHandler
         private Patient ProcessPatientRow(List<string> row, Dictionary<string, int> headersColumnIndexes)
         {
             Patient patient = new Patient();
-            foreach(string header in matchingPropertiesNames.Keys)
+
+            Dictionary<string, string> matchingProperties = matchingPropertiesNames
+                .Where(x => headersColumnIndexes.Keys.Contains(x.Key))
+                .ToDictionary(x => x.Key, x => x.Value);
+
+            foreach (string header in matchingProperties.Keys)
             {
                 int columnIndex = headersColumnIndexes[header];
                 string propertyName = matchingPropertiesNames[header];
