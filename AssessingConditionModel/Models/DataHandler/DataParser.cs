@@ -77,9 +77,9 @@ namespace AssessingConditionModel.Models.DataHandler
             List<Patient> patients = new List<Patient>();
 
             DataPreprocessor dataPreprocessor = new DataPreprocessor();
-            dataPreprocessor.PreProcessData(ref data, ref headersColumnIndexes);
+            List<List<string>> processedData = dataPreprocessor.PreProcessData(data, ref headersColumnIndexes);
 
-            foreach (List<string> row in data) //select starting row here
+            foreach (List<string> row in processedData) //select starting row here
             {
                 //try
                 //{
