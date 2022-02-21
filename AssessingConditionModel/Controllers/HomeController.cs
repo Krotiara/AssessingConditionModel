@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace AssessingConditionModel.Controllers
 {
@@ -34,6 +35,24 @@ namespace AssessingConditionModel.Controllers
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+
+
+        [HttpGet, Route("patients")]
+        public async Task<List<Patient>> GetPatients()
+        {
+            List<Patient> patients = await patientsDb.Patients
+                .Include(p => p.ClinicalParameters)
+                    .ThenInclude(с => с.GeneralUrineAnalysis)
+                .Include(p => p.ClinicalParameters)
+                    .ThenInclude(c => c.GeneralBloodTest)
+                .Include(p => p.ClinicalParameters)
+                    .ThenInclude(c => c.LungTissueDamage)
+                .Include(p => p.FunctionalParameters)
+                .Include(p => p.InstrumentalParameters)
+                //.AsNoTracking() // https://metanit.com/sharp/entityframework/4.8.php
+                .ToListAsync();
+            return patients;       
         }
 
 
