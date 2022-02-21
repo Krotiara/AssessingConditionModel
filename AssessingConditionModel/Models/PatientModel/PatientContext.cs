@@ -73,6 +73,10 @@ namespace AssessingConditionModel.Models
                .HasPrincipalKey<ClinicalParameters>(x => x.PatientId)
                .HasForeignKey<GeneralUrineAnalysis>(x => x.Id)
                .IsRequired();
+
+            modelBuilder.Entity<Patient>()
+            .Property(f => f.Id)
+            .ValueGeneratedOnAdd();
         }
     }
 }

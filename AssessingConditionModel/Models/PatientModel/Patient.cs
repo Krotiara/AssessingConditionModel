@@ -10,10 +10,11 @@ namespace AssessingConditionModel.Models.PatientModel
     [Table("Patients")]
     public class Patient
     {
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; }
-       
-        public string Name { get; set; }
+        
+        [Column("Id")]
+        public long Id { get; set; }
+
+        public string Name { get; set; } = "";
 
 
         private int medicalHistoryNumber;

@@ -38,22 +38,35 @@ namespace AssessingConditionModel.Controllers
 
 
        
-        public IActionResult LoadData()
+        public async Task<IActionResult> LoadData()
         {
             DataParser dataParser = new DataParser();
             List<Patient> patients = dataParser.LoadData();
-            //using(var transaction = patientsDb.Database.BeginTransaction())
-            //{
-            //    try
-            //    {
-            //        //TODO
-            //    }
-            //    catch(Exception)
-            //    {
-            //        transaction.Rollback();
-            //    }
-            //}
+            using (var transaction = patientsDb.Database.BeginTransaction())
+            {
+                try
+                {
+                    foreach (Patient patient in patients)
+                    {
+                        if (patientsDb.Patients.Contains(patient))
+                        {
+                            patientsDb.Update<Patient>(patient);
+
+                        }
+                        else
+                            patientsDb.Add<Patient>(patient);
+                    }
+                    await patientsDb.SaveChangesAsync();   
+                    transaction.Commit();
+                }
+                catch (Exception e)
+                {
+                    transaction.Rollback();
+                }
+            }
             return RedirectToAction("Index");
-        }
+        } 
+
+
     }
 }
