@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -36,35 +37,35 @@ namespace AssessingConditionModel.Models.PatientModel
         }
 
         [Column("Date")]
-        [Display(Name = "Дата снятия показателей")]
+        [DisplayName("Дата снятия показателей")]
         public DateTime Date { get; set; }
 
         [Column("Temperature")]
-        [Display(Name = "Температура")]
+        [DisplayName("Температура")]
         public double Temperature { get; set; }
 
         [Column("Saturation")]
-        [Display(Name = "Сатурация")]
+        [DisplayName("Сатурация")]
         public double Saturation { get; set; }
 
         [Column("IsCough")]
-        [Display(Name = "Кашель")]
+        [DisplayName("Кашель")]
         public bool IsCough { get; set; }
 
         //[Column("LungTissueDamage")]
-        //[Display(Name = "Объем поражения легочной ткани")]
+        //[DisplayName("Объем поражения легочной ткани")]
         //public double LungTissueDamage { get; set; }
 
         [Column("FRM")]
-        [Display(Name = "Частота дыхательных движений")]
+        [DisplayName("Частота дыхательных движений")]
         public double FRM { get; set; }
 
         [Column("HeartRate")]
-        [Display(Name = "Частота сердечных сокращений")]
+        [DisplayName("Частота сердечных сокращений")]
         public double HeartRate { get; set; }
 
         [Column("CReactiveProtein")]
-        [Display(Name = "С-реактивный белок")]
+        [DisplayName("С-реактивный белок")]
         public double CReactiveProtein { get; set; }
 
 

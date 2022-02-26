@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -14,7 +15,7 @@ namespace AssessingConditionModel.Models.PatientModel
         [Column("Id")]
         public long Id { get; set; }
 
-        [Display(Name = "ФИО")]
+        [DisplayName("ФИО")]
         public string Name { get; set; } = "";
 
 
@@ -22,7 +23,7 @@ namespace AssessingConditionModel.Models.PatientModel
 
         [Key]
         [Column("MedicalHistoryNumber")]
-        [Display(Name="Номер медицинской карты")]
+        [DisplayName("Номер медицинской карты")]
         [Required]
         public int MedicalHistoryNumber
         {

@@ -56,6 +56,28 @@ namespace AssessingConditionModel.Controllers
         }
 
 
+        [HttpGet, Route("patients/{id}")]
+        public IActionResult GetPatient(int id)
+        {
+            Patient p = GetPatientById(id);
+            if (p == null)
+                RedirectToAction("Index");
+            return View("PatientView", p);
+        }
+
+
+        private Patient GetPatientById(int id)
+        {
+            return patientsDb.Patients
+                .Include(p => p.ClinicalParameters)
+                    .ThenInclude(с => с.GeneralUrineAnalysis)
+                .Include(p => p.ClinicalParameters)
+                    .ThenInclude(c => c.GeneralBloodTest)
+                .Include(p => p.ClinicalParameters)
+                    .ThenInclude(c => c.LungTissueDamage)
+                .Include(p => p.FunctionalParameters)
+                .Include(p => p.InstrumentalParameters).SingleOrDefault(s => s.MedicalHistoryNumber.Equals(id));
+        }
        
         public async Task<IActionResult> LoadData()
         {

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -15,27 +16,27 @@ namespace AssessingConditionModel.Models.PatientModel
         public int Id { get; set; }
 
         [Column("IsRightHandDamage")]
-        [Display(Name = "Правостороннее")]
+        [DisplayName("Правостороннее")]
         public bool IsRightHandDamage { get; set; }
 
         [Column("IsLeftHandDamage")]
-        [Display(Name = "Левостороннее")]
+        [DisplayName("Левостороннее")]
         public bool IsLeftHandDamage { get; set; }
 
         [Column("IsTwoWayDamage")]
-        [Display(Name = "Двустороннее")]
+        [DisplayName("Двустороннее")]
         public bool IsTwoWayDamage { get; set; }
 
         [Column("RightLungDamageDescription")]
-        [Display(Name = "Правое легкое")]
+        [DisplayName("Правое легкое")]
         public string RightLungDamageDescription { get; set; }
 
         [Column("LeftLungDamageDescription")]
-        [Display(Name = "Левое легкое")]
+        [DisplayName("Левое легкое")]
         public string LeftLungDamageDescription { get; set; }
 
         [Column("DamageVolumeDescription")]
-        [Display(Name = "Объем поражения")]
+        [DisplayName("Объем поражения")]
         public string DamageVolumeDescription { get; set; }
     }
 }

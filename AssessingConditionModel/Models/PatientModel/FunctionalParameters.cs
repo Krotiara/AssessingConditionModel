@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -21,47 +22,47 @@ namespace AssessingConditionModel.Models.PatientModel
         public int PatientId { get; set; }
 
         [Column("Date")]
-        [Display(Name = "Дата снятия показателей")]
+        [DisplayName("Дата снятия показателей")]
         public DateTime Date { get; set; }
 
         [Column("Gender")]
-        [Display(Name = "Пол")]
+        [DisplayName("Пол")]
         public string Gender { get; set; }
 
         [Column("Age")]
-        [Display(Name = "Возраст")]
+        [DisplayName("Возраст")]
         public double Age { get; set; }
 
         [Column("BioAge")]
-        [Display(Name = "Биовозраст")]
+        [DisplayName("Биовозраст")]
         public double BioAge { get; set; }
 
         [Column("Weight")]
-        [Display(Name = "Масса тела")]
+        [DisplayName("Масса тела")]
         public double Weight { get; set; }
 
         [Column("SystolicBloodPressure")]
-        [Display(Name = "Артериальное давление (систолическое)")]
+        [DisplayName("Артериальное давление (систолическое)")]
         public double SystolicBloodPressure { get; set; }
 
         [Column("DiastolicBloodPressure")]
-        [Display(Name = "Артериальное давление (диастолическое)")]
+        [DisplayName("Артериальное давление (диастолическое)")]
         public double DiastolicBloodPressure { get; set; }
 
         [Column("PulseBloodPressure")]
-        [Display(Name = "Артериальное давление (пульсовое)")]
+        [DisplayName("Артериальное давление (пульсовое)")]
         public double PulseBloodPressure { get; set; }
 
         [Column("LungCapacity")]
-        [Display(Name = "Жизненная емкость легких")]
+        [DisplayName("Жизненная емкость легких")]
         public double LungCapacity { get; set; }
 
         [Column("InhaleBreathHolding")]
-        [Display(Name = "Задержка дыхания (на вдохе)")]
+        [DisplayName("Задержка дыхания (на вдохе)")]
         public double InhaleBreathHolding { get; set; }
 
         [Column("OuthaleBreathHolding")]
-        [Display(Name = "Задержка дыхания (на выдохе)")]
+        [DisplayName("Задержка дыхания (на выдохе)")]
         public double OuthaleBreathHolding { get; set; }
 
     }
