@@ -2,7 +2,32 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<html>
+<head>
+    <title>Главная страница</title>
+</head>
+<body>
+    <div>
+        <p style="font-size:18px">Поиск пациента:</p>
+        <input type="text" id="patientId" placeholder="Номер медицинской карты" style = "width:300px"/>
+        <button onclick="SearchPatient()">Поиск</button>
+    </div>
+    <div id="PatientInfo"></div>
+</body>
+</html>
+
+<script>
+    function SearchPatient(patientId) {
+        var patientId = $('#patientId').val();
+         $.ajax({
+            url: '@Url.Action("GetPatient", "Home")',
+            data: {id: patientId},
+            type: 'get',
+            cache: false,
+            async: true,
+            success: function (result) {
+                $('#PatientInfo').html(result);
+            }
+        });
+    }
+</script>

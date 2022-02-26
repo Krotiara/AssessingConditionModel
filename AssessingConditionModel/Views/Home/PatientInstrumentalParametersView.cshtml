@@ -1,0 +1,16 @@
+﻿@using AssessingConditionModel.Models.PatientModel
+@model Patient
+
+
+<html>
+<head>
+    <title>Инструментальные параметры</title>
+</head>
+<body>
+     <div id=instrumentalParameters>
+        <p style="font-size:20px">Инструментальные параметры:</p>
+         @await Html.PartialAsync("PartialParametersView", Model.InstrumentalParameters)
+    </div>  
+</body>
+</html>
+

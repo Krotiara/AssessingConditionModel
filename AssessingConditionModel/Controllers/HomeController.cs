@@ -56,16 +56,19 @@ namespace AssessingConditionModel.Controllers
         }
 
 
-        [HttpGet, Route("patients/{id}")]
-        public IActionResult GetPatient(int id)
+        [HttpGet]
+        public IActionResult GetPatient(string id)
         {
-            Patient p = GetPatientById(id);
+            int patientId = int.Parse(id); //TODO check valid in view
+            Patient p = GetPatientById(patientId);
             if (p == null)
                 RedirectToAction("Index");
-            return View("PatientView", p);
+            
+            return PartialView("PatientView", p);
         }
 
 
+        [HttpGet]
         public IActionResult SetParametersTable(int patientId, string parametersIdTable)
         {
             Patient p = GetPatientById(patientId);
@@ -74,11 +77,11 @@ namespace AssessingConditionModel.Controllers
             switch (parametersIdTable)
             {
                 case "clinicalParameters":
-                    return PartialView("PartialParametersView", p.ClinicalParameters);
+                    return PartialView("PatientClinicalParametersView", p);
                 case "functionalParameters":
-                    return PartialView("PartialParametersView", p.FunctionalParameters);
+                    return PartialView("PatientFunctionalParametersView", p);
                 case "instrumentalParameters":
-                    return PartialView("PartialParametersView", p.InstrumentalParameters);
+                    return PartialView("PatientInstrumentalParametersView", p);
                 default:
                     throw new KeyNotFoundException();
             }

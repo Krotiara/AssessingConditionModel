@@ -1,0 +1,22 @@
+﻿@using AssessingConditionModel.Models.PatientModel
+@model Patient
+
+
+<html>
+<head>
+    <title>Клинические параметры</title>
+</head>
+<body>
+    <div>
+        <p style="font-size:20px">Клинические параметры:</p>
+         @await Html.PartialAsync("PartialParametersView", Model.ClinicalParameters)
+        <p style="font-size:20px">Общий анализ крови:</p>
+         @await Html.PartialAsync("PartialParametersView", Model.ClinicalParameters.GeneralBloodTest)
+         <p style="font-size:20px">Общий анализ мочи:</p>
+         @await Html.PartialAsync("PartialParametersView", Model.ClinicalParameters.GeneralUrineAnalysis)
+         <p style="font-size:20px">Объем поражения легочной ткани по данным РГОК:</p>
+         @await Html.PartialAsync("PartialParametersView", Model.ClinicalParameters.LungTissueDamage)
+    </div>
+</body>
+</html>
+
