@@ -1,6 +1,7 @@
 ﻿@using AssessingConditionModel.Models.PatientModel
 @model Patient
 @*
+
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
 @{
@@ -12,17 +13,25 @@
     <title>Информация о пациенте</title>
 </head>
 <body>
-    <table class="table table-bordered table-hover">
-        @foreach(KeyValuePair<string, string> pair in Model.GetDisplayAttributes<Patient>())
-            {
-             <tr>
-                 <th>
-                     <p>@pair.Key</p>
-                 </th>
-                 <th>
-                      <p>@pair.Value</p>
-                 </th>
-             </tr>
-        }
-    </table>
+    <div>
+        <p style="font-size:20px"><b>Информация о пациенте</b></p><br />
+         @await Html.PartialAsync("PartialParametersView", Model)
+    </div>
+   
+   
+    <div id=ClinicalParameters>
+        <div><p style="font-size:20px"><b>Клинические параметры</b></p><br /></div>
+         @await Html.PartialAsync("PartialParametersView", Model.ClinicalParameters)
+         @await Html.PartialAsync("PartialParametersView", Model.ClinicalParameters.GeneralBloodTest)
+         @await Html.PartialAsync("PartialParametersView", Model.ClinicalParameters.GeneralUrineAnalysis)
+         @await Html.PartialAsync("PartialParametersView", Model.ClinicalParameters.LungTissueDamage)
+    </div>
+    <div id=FunctionalParameters>
+         <div><p style="font-size:20px"><b>Функциональные параметры</b></p><br /></div>
+         @await Html.PartialAsync("PartialParametersView", Model.FunctionalParameters)
+    </div>
+    <div id=InstrumentalParameters>
+         <div><p style="font-size:20px"><b>Инструментальные параметры параметры</b></p><br /></div>
+         @await Html.PartialAsync("PartialParametersView", Model.InstrumentalParameters)
+    </div>  
 </body>
