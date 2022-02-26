@@ -66,6 +66,25 @@ namespace AssessingConditionModel.Controllers
         }
 
 
+        public IActionResult SetParametersTable(int patientId, string parametersIdTable)
+        {
+            Patient p = GetPatientById(patientId);
+            if (p == null)
+                RedirectToAction("Index");
+            switch (parametersIdTable)
+            {
+                case "clinicalParameters":
+                    return PartialView("PartialParametersView", p.ClinicalParameters);
+                case "functionalParameters":
+                    return PartialView("PartialParametersView", p.FunctionalParameters);
+                case "instrumentalParameters":
+                    return PartialView("PartialParametersView", p.InstrumentalParameters);
+                default:
+                    throw new KeyNotFoundException();
+            }
+        }
+
+
         private Patient GetPatientById(int id)
         {
             return patientsDb.Patients
