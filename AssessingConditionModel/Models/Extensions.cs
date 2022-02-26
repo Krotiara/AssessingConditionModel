@@ -32,5 +32,30 @@ namespace AssessingConditionModel.Models
             return (T)converter.ConvertFromString(null,
                 CultureInfo.InvariantCulture, inValue);
         }
+
+
+        public static Dictionary<string, string> GetDisplayAttributes<T>(this T obj)
+        {
+            Dictionary<string, string> attributes = new Dictionary<string, string>();
+            PropertyInfo[] properties = obj.GetType().GetProperties();
+            foreach (PropertyInfo property in properties)
+            {
+                try
+                {
+                    DisplayNameAttribute attribute = property
+                        .GetCustomAttributes(typeof(DisplayNameAttribute), true)
+                        .Cast<DisplayNameAttribute>()
+                        .Single();
+                    attributes[attribute.DisplayName] = property.GetValue(obj).ToString();
+                    
+                }
+                catch (Exception ex)
+                {
+                    continue;
+                }
+
+            }
+            return attributes;
+        }
     }
 }

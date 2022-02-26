@@ -14,6 +14,7 @@ namespace AssessingConditionModel.Models.PatientModel
         [Column("Id")]
         public long Id { get; set; }
 
+        [Display(Name = "ФИО")]
         public string Name { get; set; } = "";
 
 
@@ -21,6 +22,7 @@ namespace AssessingConditionModel.Models.PatientModel
 
         [Key]
         [Column("MedicalHistoryNumber")]
+        [Display(Name="Номер медицинской карты")]
         [Required]
         public int MedicalHistoryNumber
         {

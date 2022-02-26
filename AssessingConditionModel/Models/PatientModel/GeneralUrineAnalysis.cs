@@ -15,15 +15,19 @@ namespace AssessingConditionModel.Models.PatientModel
         public int Id { get; set; }
 
         [Column("WhiteBloodCells")]
+        [Display(Name = "Лейкоциты")]
         public double WhiteBloodCells { get; set; }
 
         [Column("FreshRedBloodCells")]
+        [Display(Name = "Эритроциты свежие")]
         public double FreshRedBloodCells { get; set; }
 
         [Column("AlteredRedBloodCells")]
+        [Display(Name = "Эритроциты измененные")]
         public double AlteredRedBloodCells { get; set; }
 
         [Column("Protein")]
+        [Display(Name = "Белок")]
         public double Protein { get; set; }
     }
 }
