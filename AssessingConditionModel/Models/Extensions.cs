@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
@@ -56,6 +57,35 @@ namespace AssessingConditionModel.Models
 
             }
             return attributes;
+        }
+
+
+        public static T GetValueFromName<T>(this string name) where T : Enum
+        {
+
+            name = name.Trim().ToLower();
+
+            var type = typeof(T);
+
+            foreach (var field in type.GetFields())
+            {
+                if (Attribute.GetCustomAttribute(field, typeof(DisplayAttribute)) is DisplayAttribute attribute)
+                {
+                    string attributeName = attribute.Name.Trim().ToLower();
+                    
+                    if (attributeName == name || attributeName.Contains(name))
+                    {
+                        return (T)field.GetValue(null);
+                    }
+                }
+
+                if (field.Name == name || field.Name.ToLower() == name)
+                {
+                    return (T)field.GetValue(null);
+                }
+            }
+
+            throw new ArgumentOutOfRangeException(nameof(name));
         }
     }
 }
