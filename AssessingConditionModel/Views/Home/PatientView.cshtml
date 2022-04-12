@@ -23,6 +23,7 @@
                 <th><button onclick="LoadParameters('clinicalParameters')">Клинические параметры</button></th>
                 <th><button onclick="LoadParameters('functionalParameters')">Функциональные параметры</button></th>
                 <th><button onclick="LoadParameters('instrumentalParameters')">Инструментальные параметры</button></th>
+                <th><button onclick="LoadState()">Состояние пациента</button></th>
             </tr>
         </table>
     </div>
@@ -39,6 +40,20 @@
         $.ajax({
             url: '@Url.Action("SetParametersTable", "Home")',
             data: {patientId: patientId, parametersIdTable:parametersIdTable},
+            type: 'get',
+            cache: false,
+            async: true,
+            success: function (result) {
+                $('#ParamsContent').html(result);
+            }
+        });
+    }
+
+    function LoadState() {
+        var patientId = @Model.MedicalHistoryNumber;
+        $.ajax({
+            url: '@Url.Action("GetPatientState", "Home")',
+            data: {patientId: patientId},
             type: 'get',
             cache: false,
             async: true,

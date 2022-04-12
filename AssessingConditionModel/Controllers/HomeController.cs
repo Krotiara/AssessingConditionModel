@@ -9,6 +9,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using AssessingConditionModel.Models.Agents;
 
 namespace AssessingConditionModel.Controllers
 {
@@ -68,6 +69,20 @@ namespace AssessingConditionModel.Controllers
                 RedirectToAction("Index");
             
             return PartialView("PatientView", p);
+        }
+
+
+        [HttpGet]
+        public IActionResult GetPatientState(int patientId)
+        {
+            Patient p = GetPatientById(patientId);
+            if (p == null)
+                RedirectToAction("Index");
+
+            Agent agent = new AgentPatient(p);
+            agent.StateDiagram.UpdateState();
+
+            return PartialView("PatientStateView", agent);
         }
 
 

@@ -13,6 +13,8 @@ namespace AssessingConditionModel.Models.Agents
         public AgentPatient(Patient patient)
         {
             this.patient = patient;
+            Name = patient.MedicalHistoryNumber.ToString();
+            InitStateDiagram();
         }
 
 
