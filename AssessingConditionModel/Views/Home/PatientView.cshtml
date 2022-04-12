@@ -17,13 +17,15 @@
         <p style="font-size:20px">Информация о пациенте:</p>
          @await Html.PartialAsync("PartialParametersView", Model)
     </div>
+    <div id="State">
+
+    </div>
     <div>
         <table>
             <tr>
                 <th><button onclick="LoadParameters('clinicalParameters')">Клинические параметры</button></th>
                 <th><button onclick="LoadParameters('functionalParameters')">Функциональные параметры</button></th>
-                <th><button onclick="LoadParameters('instrumentalParameters')">Инструментальные параметры</button></th>
-                <th><button onclick="LoadState()">Состояние пациента</button></th>
+                <th><button onclick="LoadParameters('instrumentalParameters')">Инструментальные параметры</button></th> 
             </tr>
         </table>
     </div>
@@ -49,7 +51,7 @@
         });
     }
 
-    function LoadState() {
+    $(document).ready(function LoadState() {
         var patientId = @Model.MedicalHistoryNumber;
         $.ajax({
             url: '@Url.Action("GetPatientState", "Home")',
@@ -58,10 +60,10 @@
             cache: false,
             async: true,
             success: function (result) {
-                $('#ParamsContent').html(result);
+                $('#State').html(result);
             }
         });
-    }
+    });
 </script>
 
 
