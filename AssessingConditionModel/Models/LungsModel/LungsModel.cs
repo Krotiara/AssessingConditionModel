@@ -19,6 +19,31 @@ namespace AssessingConditionModel.Models.LungsModel
         public LeftLung LeftLung { get; set; }
 
         public RightLung RightLung { get; set; }
+
+
+        public void SetData(bool isRightHandDamage, bool isLeftHandDamage,
+            string rightLungDamageDescription, string leftLungDamageDescription, string damageVolumeDescription)
+        {
+            if (isRightHandDamage)
+            {
+                List<int> damageIndexes = RightLung.GetDamagedSegmentsIndexesBy(rightLungDamageDescription);
+                foreach (int index in damageIndexes)
+                    RightLung.SegmentsIsDamage[index] = true;
+
+                LungDamages lungDamage = RightLung.GetLungDamageBy(damageVolumeDescription);
+                RightLung.LungDamage = lungDamage;
+            }
+
+            if(isLeftHandDamage)
+            {
+                List<int> damageIndexes = LeftLung.GetDamagedSegmentsIndexesBy(rightLungDamageDescription);
+                foreach (int index in damageIndexes)
+                    LeftLung.SegmentsIsDamage[index] = true;
+
+                LungDamages lungDamage = LeftLung.GetLungDamageBy(damageVolumeDescription);
+                LeftLung.LungDamage = lungDamage;
+            }
+        }
     }
 
 

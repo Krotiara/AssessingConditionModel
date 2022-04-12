@@ -76,5 +76,33 @@ namespace AssessingConditionModel.Models.PatientModel
 
         public GeneralUrineAnalysis GeneralUrineAnalysis { get; set; }
 
+
+        public LungsModel.LungsModel LungsModel { get; set; }
+
+
+        public void InitLungsModel()
+        {
+            try
+            {
+                if (LungTissueDamage != null)
+                {
+                    LungsModel = new LungsModel.LungsModel();
+                    LungsModel.SetData(LungTissueDamage.IsRightHandDamage,
+                        LungTissueDamage.IsLeftHandDamage,
+                        LungTissueDamage.RightLungDamageDescription,
+                        LungTissueDamage.LeftLungDamageDescription,
+                        LungTissueDamage.DamageVolumeDescription);
+                }
+                else
+                {
+                    //TODO log
+                }
+            }
+            catch(Exception ex)
+            {
+                //TODO log
+            }
+        }
+
     }
 }

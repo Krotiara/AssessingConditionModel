@@ -52,6 +52,9 @@ namespace AssessingConditionModel.Controllers
                 .Include(p => p.InstrumentalParameters)
                 //.AsNoTracking() // https://metanit.com/sharp/entityframework/4.8.php
                 .ToListAsync();
+
+            patients.ForEach(x => x.InitParameters());
+
             return patients;       
         }
 
@@ -90,7 +93,8 @@ namespace AssessingConditionModel.Controllers
 
         private Patient GetPatientById(int id)
         {
-            return patientsDb.Patients
+
+            Patient patient = patientsDb.Patients
                 .Include(p => p.ClinicalParameters)
                     .ThenInclude(с => с.GeneralUrineAnalysis)
                 .Include(p => p.ClinicalParameters)
@@ -99,6 +103,10 @@ namespace AssessingConditionModel.Controllers
                     .ThenInclude(c => c.LungTissueDamage)
                 .Include(p => p.FunctionalParameters)
                 .Include(p => p.InstrumentalParameters).SingleOrDefault(s => s.MedicalHistoryNumber.Equals(id));
+
+            patient.InitParameters();
+
+            return patient;
         }
        
         public async Task<IActionResult> LoadData()

@@ -47,6 +47,12 @@ namespace AssessingConditionModel.Models.PatientModel
         [NotMapped]
         public ParametersNorms ParametersNorms { get; set; }
 
+
+        public void InitParameters()
+        {
+            if (ClinicalParameters != null)
+                ClinicalParameters.InitLungsModel();
+        }
        
         public Patient(string name): this()
         {
@@ -61,5 +67,9 @@ namespace AssessingConditionModel.Models.PatientModel
             ParametersNorms = new ParametersNorms();
             //suitable constructor for entity type for awoid EF error No suitable constructor found for entity type
         }
+
+
+        
+
     }
 }
