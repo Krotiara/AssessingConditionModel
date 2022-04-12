@@ -149,5 +149,42 @@ namespace AssessingConditionModelTests
 
             Assert.Equal(assertIndexes, indexes);
         }
+
+        [Fact]
+        public void GetLungDamageByCorrectInputWithSpaceTest()
+        {
+            string input = "КТ 1, матовое стекло";
+
+            LungDamages assertLungDamage = LungDamages.CT1;
+
+            LungDamages lungDamage = lungModel.LeftLung.GetLungDamageBy(input);
+
+            Assert.Equal(assertLungDamage, lungDamage);
+        }
+
+        [Fact]
+        public void GetLungDamageByCorrectInputWithoutSpaceTest()
+        {
+            string input = "КТ4, матовое стекло";
+
+            LungDamages assertLungDamage = LungDamages.CT4;
+
+            LungDamages lungDamage = lungModel.LeftLung.GetLungDamageBy(input);
+
+            Assert.Equal(assertLungDamage, lungDamage);
+        }
+
+
+        [Fact]
+        public void GetLungDamageByInCorrectInputMustreturnNoTest()
+        {
+            string input = "матовое стекло";
+
+            LungDamages assertLungDamage = LungDamages.No;
+
+            LungDamages lungDamage = lungModel.LeftLung.GetLungDamageBy(input);
+
+            Assert.Equal(assertLungDamage, lungDamage);
+        }
     }
 }

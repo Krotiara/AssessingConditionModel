@@ -61,9 +61,33 @@ namespace AssessingConditionModel.Models.LungsModel
                 .ToList();
         }
 
-        public void SetSegmentDamage(int segmentNumberFromOne)
+
+        public LungDamages GetLungDamageBy(string lungDamageDescription)
         {
-            //TODO
+            try
+            {
+                lungDamageDescription = lungDamageDescription.Trim().ToLower();
+                Regex lungDamageRegex = new Regex(@"кт\d|кт \d");
+                Match lungDamageMatch = lungDamageRegex.Match(lungDamageDescription);
+                if (lungDamageMatch.Success)
+                    return lungDamageMatch.Value.Replace(" ","").GetValueFromName<LungDamages>();
+                else
+                {
+                    // TODO log
+                    return LungDamages.No;
+                }
+            }
+            catch(Exception ex)
+            {
+                //TODO log
+                return LungDamages.No;
+            }
         }
+
+
+        //public void SetSegmentDamage(int segmentNumberFromOne)
+        //{
+        //    //TODO
+        //}
     }
 }

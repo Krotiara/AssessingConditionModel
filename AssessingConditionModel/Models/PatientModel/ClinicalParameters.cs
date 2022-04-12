@@ -69,7 +69,7 @@ namespace AssessingConditionModel.Models.PatientModel
         public double CReactiveProtein { get; set; }
 
 
-        public LungTissueDamage LungTissueDamage { get; set; }
+        public LungTissueDamage LungTissueDamage { get; set; } //TODO add and init LungDamageModel
 
         public GeneralBloodTest GeneralBloodTest { get; set; }
 
