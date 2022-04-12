@@ -21,6 +21,12 @@ namespace AssessingConditionModel.Models.LungsModel
         public RightLung RightLung { get; set; }
 
 
+        public double DamagePercent =>
+            100 * (LeftLung.SegmentsIsDamage.Where(x => x == true).Count()
+            + RightLung.SegmentsIsDamage.Where(x => x == true).Count()) /
+            (LeftLung.SegmentsIsDamage.Count() + RightLung.SegmentsIsDamage.Count());
+
+
         public void SetData(bool isRightHandDamage, bool isLeftHandDamage,
             string rightLungDamageDescription, string leftLungDamageDescription, string damageVolumeDescription)
         {

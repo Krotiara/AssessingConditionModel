@@ -67,10 +67,13 @@ namespace AssessingConditionModel.Models.LungsModel
             try
             {
                 lungDamageDescription = lungDamageDescription.Trim().ToLower();
-                Regex lungDamageRegex = new Regex(@"кт\d|кт \d");
+                Regex lungDamageRegex = new Regex(@"кт\d|кт \d|кт-\d"); //TODO тест на кт-\d
                 Match lungDamageMatch = lungDamageRegex.Match(lungDamageDescription);
                 if (lungDamageMatch.Success)
-                    return lungDamageMatch.Value.Replace(" ","").GetValueFromName<LungDamages>();
+                    return lungDamageMatch.Value
+                        .Replace(" ","")
+                        .Replace("-","")
+                        .GetValueFromName<LungDamages>();
                 else
                 {
                     // TODO log

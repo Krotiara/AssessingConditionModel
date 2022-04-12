@@ -25,9 +25,9 @@ namespace AssessingConditionModel.Models
         
         [Display(Name = "Нижний предел нормы сатурации")]
         public double LowCriticalSaturation { get; set; }
-        
-        [Display(Name = "Критический объем поражения легочной ткани")]
-        public double UpCriticalLungTissueDamage { get; set; }
+      
+        [Display(Name = "Критический объем поражения легочной ткани в процентах")]
+        public double UpCriticalLungDamage { get; set; }
         
         [Display(Name = "Верхний предел нормы С-реактивного белка")]
         public double UpCriticalCReactiveProtein { get; set; }

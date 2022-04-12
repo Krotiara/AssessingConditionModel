@@ -52,6 +52,34 @@ namespace AssessingConditionModel.Models.PatientModel
         {
             if (ClinicalParameters != null)
                 ClinicalParameters.InitLungsModel();
+            InitParametersNorms();
+        }
+
+
+        private void InitParametersNorms()
+        {
+            if (ParametersNorms == null)
+                ParametersNorms = new ParametersNorms();
+
+            //TODO продумать зависимости норма относительно параметров пациентов
+            //TODO надежные источники и значения
+
+            //https://ikb1.ru/about/news/1443/
+            ParametersNorms.LowNormalSaturation = 95.0;
+            ParametersNorms.LowCriticalSaturation = 93.0;
+
+            //https://ru.wikipedia.org/wiki/%D0%A2%D0%B5%D0%BC%D0%BF%D0%B5%D1%80%D0%B0%D1%82%D1%83%D1%80%D0%B0_%D1%82%D0%B5%D0%BB%D0%B0
+            ParametersNorms.LowNormalTemperature = 35.0;
+            ParametersNorms.LowCriticalTemperature = 32.0;
+            ParametersNorms.UpNormalTemperature = 37.0;
+            ParametersNorms.UpCriticalTemperature = 39.0;
+
+            // > 75 % соответсвует КТ4 
+            ParametersNorms.UpCriticalLungDamage = 75.0;
+
+            //https://helix.ru/kb/item/06-050
+            ParametersNorms.UpNormCReactiveProtein = 1.0;
+            ParametersNorms.UpCriticalCReactiveProtein = 10.0;
         }
        
         public Patient(string name): this()

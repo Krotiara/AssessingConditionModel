@@ -77,6 +77,7 @@ namespace AssessingConditionModel.Models.PatientModel
         public GeneralUrineAnalysis GeneralUrineAnalysis { get; set; }
 
 
+        [NotMapped]
         public LungsModel.LungsModel LungsModel { get; set; }
 
 
