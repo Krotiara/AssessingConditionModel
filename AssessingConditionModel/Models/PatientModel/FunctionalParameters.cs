@@ -39,15 +39,15 @@ namespace AssessingConditionModel.Models.PatientModel
 
         [Column("Weight")]
         [DisplayName("Масса тела")]
-        public double Weight { get; set; }
+        public double Weight { get; set; } // масса 
 
         [Column("SystolicBloodPressure")]
         [DisplayName("Артериальное давление (систолическое)")]
-        public double SystolicBloodPressure { get; set; }
+        public double SystolicBloodPressure { get; set; } //АДС
 
         [Column("DiastolicBloodPressure")]
         [DisplayName("Артериальное давление (диастолическое)")]
-        public double DiastolicBloodPressure { get; set; }
+        public double DiastolicBloodPressure { get; set; } //АДД
 
         [Column("PulseBloodPressure")]
         [DisplayName("Артериальное давление (пульсовое)")]
@@ -55,15 +55,33 @@ namespace AssessingConditionModel.Models.PatientModel
 
         [Column("LungCapacity")]
         [DisplayName("Жизненная емкость легких")]
-        public double LungCapacity { get; set; }
+        public double LungCapacity { get; set; } // ЖЕЛ
 
         [Column("InhaleBreathHolding")]
         [DisplayName("Задержка дыхания (на вдохе)")]
-        public double InhaleBreathHolding { get; set; }
+        public double InhaleBreathHolding { get; set; } // ЗДВдох
 
         [Column("OuthaleBreathHolding")]
         [DisplayName("Задержка дыхания (на выдохе)")]
-        public double OuthaleBreathHolding { get; set; }
+        public double OuthaleBreathHolding { get; set; } //ЗДВыдох
 
+
+        [NotMapped]
+        public double Accommodation { get; set; } // в диоптриях
+
+
+        [NotMapped]
+        public double HearingAcuity { get; set; } //в бел
+
+
+        [NotMapped]
+        public double StaticBalancing { get; set; } //в сек
+
+
+        /// <summary>
+        /// Разность между систолическим и диастолическим давлением в мм.рт.ст
+        /// </summary>
+        [NotMapped]
+        public double DeltaBloodPressure => SystolicBloodPressure - DiastolicBloodPressure;
     }
 }
