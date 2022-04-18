@@ -79,7 +79,7 @@ namespace AssessingConditionModel.Models.PatientModel
 
 
         /// <summary>
-        /// Разность между систолическим и диастолическим давлением в мм.рт.ст
+        /// Разность между систолическим и диастолическим давлением в мм.рт.ст.
         /// </summary>
         [NotMapped]
         public double DeltaBloodPressure => SystolicBloodPressure - DiastolicBloodPressure;
