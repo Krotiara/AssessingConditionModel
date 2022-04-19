@@ -25,6 +25,12 @@ namespace AssessingConditionModel.Models
         }
 
 
+        public static string GetDisplayAttributeValue(this Enum enumValue)
+        {
+            return enumValue.GetAttribute<DisplayAttribute>().Name;
+        }
+
+
         public static T ParseTo<T>(this string inValue)
         {
             TypeConverter converter =

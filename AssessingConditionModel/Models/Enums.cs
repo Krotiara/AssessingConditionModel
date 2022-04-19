@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace AssessingConditionModel.Models
 {
+
     //public enum NormParams
     //{
     //    [Display(Name = "Нижнее значение нормы температуры")]

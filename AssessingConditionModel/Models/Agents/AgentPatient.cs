@@ -27,7 +27,17 @@ namespace AssessingConditionModel.Models.Agents
             StateDiagram.DetermineState = DetermineState;
         }
 
+        public override void ProcessMessage(Message message, Agent messenger)
+        {
+            throw new NotImplementedException();
+        }
 
+        public override void ProcessPrivateTransitions()
+        {
+            throw new NotImplementedException();
+        }
+
+        
         private State DetermineState()
         {
 

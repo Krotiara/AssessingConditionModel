@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace AssessingConditionModel.Models
+namespace AssessingConditionModel.Models.Agents
 {
     public class State
     {
