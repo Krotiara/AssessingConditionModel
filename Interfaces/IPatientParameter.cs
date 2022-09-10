@@ -14,5 +14,12 @@ namespace Interfaces
 
         public object DynamicValue { get; set; }
 
+        /// <summary>
+        /// Коэффициент направления улучшения показателя. 
+        /// Если улучшение показателя характеризуется его повышением, то значение должно быть = 1; 
+        /// Если в меньшую сторону, то значение должно быть = -1.
+        /// </summary>
+        public int PositiveDynamicCoef { get; set; }
+
     }
 }
