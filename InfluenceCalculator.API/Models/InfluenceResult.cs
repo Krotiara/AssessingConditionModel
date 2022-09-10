@@ -1,7 +1,7 @@
 ﻿using Interfaces;
 using System.Collections.Generic;
 
-namespace AssessingConditionModel.Models.InfluenceModel
+namespace InfluenceCalculator.API.Models
 {
     public class InfluenceResult : IInfluenceResult
     {

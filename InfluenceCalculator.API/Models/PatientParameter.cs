@@ -1,6 +1,6 @@
 ﻿using Interfaces;
 
-namespace AssessingConditionModel.Models.InfluenceModel
+namespace InfluenceCalculator.API.Models
 {
     public class PatientParameter : IPatientParameter
     {

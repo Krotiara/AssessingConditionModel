@@ -3,7 +3,7 @@ using System.Collections;
 using System;
 using System.Collections.Generic;
 
-namespace AssessingConditionModel.Models.InfluenceModel
+namespace InfluenceCalculator.API.Models
 {
     public class InfluenceModel
     {
@@ -15,6 +15,12 @@ namespace AssessingConditionModel.Models.InfluenceModel
 
 
         public IEnumerable<IInfluenceResult> GetInfluenceHistory(int patientId)
+        {
+            throw new NotImplementedException();
+        }
+
+
+        private void SaveInfluenceResult(IInfluenceResult influenceResult)
         {
             throw new NotImplementedException();
         }
