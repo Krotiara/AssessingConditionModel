@@ -6,5 +6,6 @@ namespace AssessingConditionModel.Models.InfluenceModel
     {
         public string Name { get; set; }
         public object Value { get; set; }
+        public object DynamicValue { get; set; }
     }
 }
