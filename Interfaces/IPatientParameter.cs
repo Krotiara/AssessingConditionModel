@@ -10,8 +10,9 @@ namespace Interfaces
     {
         public string Name { get; set; }
 
-        public object Value { set; }
+        public object Value { get;  set; }
 
-        public T GetValueByParse<T>();
+        public object DynamicValue { get; set; }
+
     }
 }

@@ -1,11 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.31729.503
+# Visual Studio Version 17
+VisualStudioVersion = 17.2.32519.379
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AssessingConditionModel", "AssessingConditionModel\AssessingConditionModel.csproj", "{BC426460-D811-4773-AB86-868F1F0E2B98}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AssessingConditionModelTests", "AssessingConditionModelTests\AssessingConditionModelTests\AssessingConditionModelTests.csproj", "{047E624B-6A5D-4A99-AFDE-91A0F44E6D21}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AssessingConditionModelTests", "AssessingConditionModelTests\AssessingConditionModelTests\AssessingConditionModelTests.csproj", "{047E624B-6A5D-4A99-AFDE-91A0F44E6D21}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Interfaces", "Interfaces\Interfaces.csproj", "{725D1E79-0947-4475-B8D3-E0B382994711}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{047E624B-6A5D-4A99-AFDE-91A0F44E6D21}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{047E624B-6A5D-4A99-AFDE-91A0F44E6D21}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{047E624B-6A5D-4A99-AFDE-91A0F44E6D21}.Release|Any CPU.Build.0 = Release|Any CPU
+		{725D1E79-0947-4475-B8D3-E0B382994711}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{725D1E79-0947-4475-B8D3-E0B382994711}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{725D1E79-0947-4475-B8D3-E0B382994711}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{725D1E79-0947-4475-B8D3-E0B382994711}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

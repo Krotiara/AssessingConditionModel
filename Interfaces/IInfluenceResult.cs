@@ -10,6 +10,8 @@ namespace Interfaces
     {
         public string InfluenceName { get; set; }
 
-        public IEnumerable<IPatientParameter> ParametersDynamic { get; set; }
+        public IEnumerable<IPatientParameter> TrackedParameters { get; set; }
+
+        public double GetInfluenceEffectiveness();
     }
 }
