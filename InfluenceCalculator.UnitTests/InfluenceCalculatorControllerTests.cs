@@ -48,7 +48,7 @@ namespace InfluenceCalculator.UnitTests
 
             InfluenceCalculatorController c = new InfluenceCalculatorController(mockContext.Object);
 
-            InfluenceResult testResult = new InfluenceResult() { InfluenceId = 1, InfluenceEffectiveness = 1 };
+            InfluenceResult testResult = new InfluenceResult() { InfluenceId = 1, InfluenceEffectiveness = 1};
 
             IActionResult res = await c.SaveInfluenceResultAsync(testResult);
 

@@ -14,6 +14,7 @@ namespace InfluenceCalculator.API.Models
         public int Id { get; set; }
 
         [Column("Influence id")]
+        [Required]
         public int InfluenceId { get; set; }
 
         public IInfluence Influence { get; set; }
@@ -22,9 +23,11 @@ namespace InfluenceCalculator.API.Models
         public IEnumerable<IPatientParameter> TrackedParameters { get; set; }
 
         [Column("Influence effectiveness")]
+        [Required]
         public double InfluenceEffectiveness { get; set; }
 
         [Column("Patient id")]
+        [Required]
         public int PatientId { get; set; }
     }
 }
