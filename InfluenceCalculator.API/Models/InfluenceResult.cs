@@ -16,10 +16,15 @@ namespace InfluenceCalculator.API.Models
         [Column("Influence id")]
         public int InfluenceId { get; set; }
 
+        public IInfluence Influence { get; set; }
+
         [NotMapped]
         public IEnumerable<IPatientParameter> TrackedParameters { get; set; }
 
         [Column("Influence effectiveness")]
         public double InfluenceEffectiveness { get; set; }
+
+        [Column("Patient id")]
+        public int PatientId { get; set; }
     }
 }
