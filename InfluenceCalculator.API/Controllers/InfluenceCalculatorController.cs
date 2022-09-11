@@ -8,19 +8,21 @@ namespace InfluenceCalculator.API.Controllers
     public class InfluenceCalculatorController: Controller
     {
         InfluenceModel influenceModel;
+        InfluenceContext dbContext;
 
-        public InfluenceCalculatorController()
+        public InfluenceCalculatorController(InfluenceContext dbContext)
         {
+            this.dbContext = dbContext;
             influenceModel = new InfluenceModel();
         }
 
 
         [HttpGet("calculate/{influenceName}")]
-        public ActionResult<IInfluenceResult> CalculateInfluence(string influenceName, [FromBody] IPatientData patientData)
+        public ActionResult<IInfluenceResult> CalculateInfluence(int influenceId, [FromBody] IPatientData patientData)
         {
             try
             {
-                IInfluenceResult influenceResult = influenceModel.CalculateInfluence(influenceName, patientData);
+                IInfluenceResult influenceResult = influenceModel.CalculateInfluence(influenceId, patientData);
                 return Ok(influenceResult);
             }
             catch(InfluenceCalculationException ex)
@@ -42,9 +44,21 @@ namespace InfluenceCalculator.API.Controllers
 
 
         [HttpPost("save")]
-        public IActionResult SaveInfluenceResult([FromBody] IInfluenceResult influenceResult)
+        public async Task<IActionResult> SaveInfluenceResultAsync([FromBody] IInfluenceResult influenceResult)
         {
-            throw new NotImplementedException();
+            try
+            {
+                //TODo разобраться, как быть в таких ситуациях, когда нужно сохранить экземпляр, а передается не экземпляр
+                //if (influenceResult as InfluenceResult == null)
+                //    return BadRequest();
+                await dbContext.InfluenceResults.AddAsync(influenceResult);
+                await dbContext.SaveChangesAsync();
+                return Ok();
+            }
+            catch(Exception ex)
+            {
+                return BadRequest(ex); //TODo более осмысленных catch
+            }
         }
     }
 }

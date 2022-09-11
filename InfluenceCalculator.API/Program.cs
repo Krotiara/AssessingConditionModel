@@ -1,5 +1,6 @@
 using InfluenceCalculator.API.Models;
 using Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -34,6 +35,9 @@ if (!app.Environment.IsDevelopment())
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
+
+string connectionString = builder.Configuration.GetConnectionString("PostgresConnection");
+builder.Services.AddDbContext<InfluenceContext>(options => options.UseNpgsql(connectionString)); // Registration dbContext as service.
 
 // Enable middleware to serve generated Swagger as a JSON endpoint.
 app.UseSwagger();

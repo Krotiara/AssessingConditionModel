@@ -8,7 +8,7 @@ namespace Interfaces
 {
     public interface IInfluenceResult
     {
-        public string InfluenceName { get; set; }
+        public int InfluenceId { get; set; }
 
         public IEnumerable<IPatientParameter> TrackedParameters { get; set; }
 
