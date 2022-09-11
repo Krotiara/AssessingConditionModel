@@ -42,7 +42,7 @@ namespace InfluenceCalculator.UnitTests
 
             InfluenceResult testResult = new InfluenceResult() { InfluenceId = 1, InfluenceEffectiveness = 1};
 
-            IActionResult res = await c.SaveInfluenceResultAsync(testResult);
+            IActionResult res = await c.SaveInfluenceResult(testResult);
 
             mockSet.Verify(x=>x.Add(It.IsAny<IInfluenceResult>()), Times.Once());
             mockContext.Verify(x=>x.SaveChanges(), Times.Once());

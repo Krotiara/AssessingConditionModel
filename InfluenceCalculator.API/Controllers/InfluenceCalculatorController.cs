@@ -44,7 +44,7 @@ namespace InfluenceCalculator.API.Controllers
 
 
         [HttpPost("save")]
-        public async Task<IActionResult> SaveInfluenceResultAsync([FromBody] IInfluenceResult influenceResult)
+        public async Task<IActionResult> SaveInfluenceResult([FromBody] IInfluenceResult influenceResult)
         {
             try
             {
