@@ -4,6 +4,11 @@ namespace InfluenceCalculator.API.Models
 {
     public class PatientParameter : IPatientParameter
     {
+        public PatientParameter()
+        {
+
+        }
+
         public PatientParameter(string name, object value,
             int positiveDynamicCoef = 1, object? dynamicValue = null)
         {
