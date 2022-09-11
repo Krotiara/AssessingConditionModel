@@ -24,7 +24,8 @@ namespace InfluenceCalculator.API.Models
                     effectiveness += (newValue - oldValue) * patientParameter.PositiveDynamicCoef;
                 }
                 else
-                    effectiveness += ((double)patientParameter.DynamicValue - (double)patientParameter.Value) 
+                    effectiveness += 
+                        (Convert.ToDouble(patientParameter.DynamicValue) - Convert.ToDouble(patientParameter.Value)) 
                         * patientParameter.PositiveDynamicCoef;
             }
             return new InfluenceResult()

@@ -9,7 +9,7 @@ namespace InfluenceCalculator.API.Models
 
         }
 
-        public PatientParameter(string name, object value,
+        public PatientParameter(int patientId, DateTime timestamp, string name, object value,
             int positiveDynamicCoef = 1, object? dynamicValue = null)
         {
             Name = name;
