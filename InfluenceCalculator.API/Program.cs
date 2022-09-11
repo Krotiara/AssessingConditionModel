@@ -23,6 +23,7 @@ builder.Services.AddSwaggerGen(c =>
 
 builder.Services.AddScoped<IPatientParameter, PatientParameter>();
 builder.Services.AddScoped<IInfluenceResult, InfluenceResult>();
+builder.Services.AddScoped<IInfluenceEffectivenessCalculator, InfluenceModel>();
 
 var app = builder.Build();
 

@@ -12,9 +12,6 @@ namespace InfluenceCalculator.API.Models
         
         public IEnumerable<IPatientParameter> TrackedParameters { get; set; }
 
-        public double GetInfluenceEffectiveness()
-        {
-            throw new System.NotImplementedException();
-        }
+        public double InfluenceEffectiveness { get; set; }
     }
 }

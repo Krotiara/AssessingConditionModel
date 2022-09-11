@@ -12,6 +12,6 @@ namespace Interfaces
 
         public IEnumerable<IPatientParameter> TrackedParameters { get; set; }
 
-        public double GetInfluenceEffectiveness();
+        public double InfluenceEffectiveness { get; set; }
     }
 }
