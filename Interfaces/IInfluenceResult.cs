@@ -8,7 +8,6 @@ namespace Interfaces
 {
     public interface IInfluenceResult
     {
-
         public int Id { get; set; }
 
         public int PatientId { get; set; }
