@@ -48,11 +48,12 @@ namespace InfluenceCalculator.API.Controllers
         {
             try
             {
+#warning TODO Убран AddAsync пока что.
                 //TODo разобраться, как быть в таких ситуациях, когда нужно сохранить экземпляр, а передается не экземпляр
                 //if (influenceResult as InfluenceResult == null)
                 //    return BadRequest();
-                await dbContext.InfluenceResults.AddAsync(influenceResult);
-                await dbContext.SaveChangesAsync();
+                dbContext.InfluenceResults.Add(influenceResult);
+                dbContext.SaveChanges();
                 return Ok();
             }
             catch(Exception ex)

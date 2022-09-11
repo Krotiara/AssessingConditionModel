@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace InfluenceCalculator.API.Models
 {
+    [Table("InfluenceResults")]
     public class InfluenceResult : IInfluenceResult
     {
         public InfluenceResult() { }

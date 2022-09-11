@@ -3,6 +3,7 @@ using InfluenceCalculator.API.Models;
 using Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Moq;
 
 namespace InfluenceCalculator.UnitTests
@@ -33,16 +34,15 @@ namespace InfluenceCalculator.UnitTests
         [Fact]
         public async Task SaveInfluenceTestAsync()
         {
-            List<IInfluenceResult> data = new List<IInfluenceResult>();
-            IQueryable<IInfluenceResult> queryable = data.AsQueryable();
+            //List<IInfluenceResult> data = new List<IInfluenceResult>();
+            //IQueryable<IInfluenceResult> queryable = data.AsQueryable();
+            //mockSet.As<IQueryable<IInfluenceResult>>().Setup(m => m.Provider).Returns(queryable.Provider);
+            //mockSet.As<IQueryable<IInfluenceResult>>().Setup(m => m.Expression).Returns(queryable.Expression);
+            //mockSet.As<IQueryable<IInfluenceResult>>().Setup(m => m.ElementType).Returns(queryable.ElementType);
+            //mockSet.As<IQueryable<IInfluenceResult>>().Setup(m => m.GetEnumerator()).Returns(() => data.GetEnumerator());
+            //mockSet.Setup(d => d.Add(It.IsAny<IInfluenceResult>())).Callback<IInfluenceResult>((s) => data.Add(s));
 
             var mockSet = new Mock<DbSet<IInfluenceResult>>();
-            mockSet.As<IQueryable<IInfluenceResult>>().Setup(m => m.Provider).Returns(queryable.Provider);
-            mockSet.As<IQueryable<IInfluenceResult>>().Setup(m => m.Expression).Returns(queryable.Expression);
-            mockSet.As<IQueryable<IInfluenceResult>>().Setup(m => m.ElementType).Returns(queryable.ElementType);
-            mockSet.As<IQueryable<IInfluenceResult>>().Setup(m => m.GetEnumerator()).Returns(() => data.GetEnumerator());
-            mockSet.Setup(d => d.Add(It.IsAny<IInfluenceResult>())).Callback<IInfluenceResult>((s) => data.Add(s));
-
             var mockContext = new Mock<InfluenceContext>();
             mockContext.Setup(m => m.InfluenceResults).Returns(mockSet.Object);
 
@@ -52,9 +52,8 @@ namespace InfluenceCalculator.UnitTests
 
             IActionResult res = await c.SaveInfluenceResultAsync(testResult);
 
-            Assert.True(res is OkResult);
-            Assert.True(data.Count() == 1);
-
+            mockSet.Verify(x=>x.Add(It.IsAny<IInfluenceResult>()), Times.Once());
+            mockContext.Verify(x=>x.SaveChanges(), Times.Once());
         }
 
 
