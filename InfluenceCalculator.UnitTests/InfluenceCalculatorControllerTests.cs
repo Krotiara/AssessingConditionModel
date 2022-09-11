@@ -32,16 +32,8 @@ namespace InfluenceCalculator.UnitTests
 
 
         [Fact]
-        public async Task SaveInfluenceTestAsync()
+        public async Task SaveInfluenceTest()
         {
-            //List<IInfluenceResult> data = new List<IInfluenceResult>();
-            //IQueryable<IInfluenceResult> queryable = data.AsQueryable();
-            //mockSet.As<IQueryable<IInfluenceResult>>().Setup(m => m.Provider).Returns(queryable.Provider);
-            //mockSet.As<IQueryable<IInfluenceResult>>().Setup(m => m.Expression).Returns(queryable.Expression);
-            //mockSet.As<IQueryable<IInfluenceResult>>().Setup(m => m.ElementType).Returns(queryable.ElementType);
-            //mockSet.As<IQueryable<IInfluenceResult>>().Setup(m => m.GetEnumerator()).Returns(() => data.GetEnumerator());
-            //mockSet.Setup(d => d.Add(It.IsAny<IInfluenceResult>())).Callback<IInfluenceResult>((s) => data.Add(s));
-
             var mockSet = new Mock<DbSet<IInfluenceResult>>();
             var mockContext = new Mock<InfluenceContext>();
             mockContext.Setup(m => m.InfluenceResults).Returns(mockSet.Object);
