@@ -15,12 +15,12 @@ namespace InfluenceCalculator.API.Controllers
         }
 
 
-        [HttpGet("calculate")]
-        public ActionResult<IInfluenceResult> CalculateInfluence([FromBody] IPatientData patientData)
+        [HttpGet("calculate/{influenceName}")]
+        public ActionResult<IInfluenceResult> CalculateInfluence(string influenceName, [FromBody] IPatientData patientData)
         {
             try
             {
-                IInfluenceResult influenceResult = influenceModel.CalculateInfluence(patientData);
+                IInfluenceResult influenceResult = influenceModel.CalculateInfluence(influenceName, patientData);
                 return Ok(influenceResult);
             }
             catch(InfluenceCalculationException ex)

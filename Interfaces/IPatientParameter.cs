@@ -8,6 +8,10 @@ namespace Interfaces
 {
     public interface IPatientParameter
     {
+        public int PatientId { get; set; }
+
+        public DateTime Timestamp { get; set; }
+
         public string Name { get; set; }
 
         public object Value { get;  set; }

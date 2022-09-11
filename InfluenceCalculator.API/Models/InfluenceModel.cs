@@ -8,7 +8,7 @@ namespace InfluenceCalculator.API.Models
     public class InfluenceModel
     {
 
-        public IInfluenceResult CalculateInfluence(IPatientData inluenceDynamicData)
+        public IInfluenceResult CalculateInfluence(string influenceName, IPatientData inluenceDynamicData)
         {
             throw new NotImplementedException();
         }

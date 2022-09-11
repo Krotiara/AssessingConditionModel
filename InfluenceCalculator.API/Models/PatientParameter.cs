@@ -23,5 +23,7 @@ namespace InfluenceCalculator.API.Models
         public object? DynamicValue { get; set; }
 
         public int PositiveDynamicCoef { get; set; } = 1;
+        public int PatientId { get; set; }
+        public DateTime Timestamp { get; set; }
     }
 }
