@@ -1,3 +1,7 @@
+using Interfaces;
+using Microsoft.EntityFrameworkCore;
+using PatientDataHandler.API.Models;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -17,6 +21,26 @@ builder.Services.AddSwaggerGen(c =>
         }
     });
 });
+
+builder.Services.AddScoped<IPatientData, PatientData>();
+builder.Services.AddScoped<IPatientParameter, PatientParameter>();
+builder.Services.AddScoped<IInfluence, Influence>();
+
+builder.Services.AddScoped<ExcelDataProvider>();
+
+builder.Services.AddTransient<Func<DataParserTypes, IDataProvider>>(serviceProvider => serviceTypeName =>
+{
+    switch (serviceTypeName)
+    {
+        case DataParserTypes.TestVahitova:
+            return serviceProvider.GetService<ExcelDataProvider>();
+        default:
+            return null;
+    }
+});
+
+string connectionString = builder.Configuration.GetConnectionString("PostgresConnection");
+builder.Services.AddDbContext<PatientsDataDbContext>(options => options.UseNpgsql(connectionString)); // Registration dbContext as service.
 
 var app = builder.Build();
 
