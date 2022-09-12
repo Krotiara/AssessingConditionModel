@@ -1,11 +1,25 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.31729.503
+# Visual Studio Version 17
+VisualStudioVersion = 17.2.32519.379
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AssessingConditionModel", "AssessingConditionModel\AssessingConditionModel.csproj", "{BC426460-D811-4773-AB86-868F1F0E2B98}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AssessingConditionModelTests", "AssessingConditionModelTests\AssessingConditionModelTests\AssessingConditionModelTests.csproj", "{047E624B-6A5D-4A99-AFDE-91A0F44E6D21}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AssessingConditionModelTests", "AssessingConditionModelTests\AssessingConditionModelTests\AssessingConditionModelTests.csproj", "{047E624B-6A5D-4A99-AFDE-91A0F44E6D21}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Interfaces", "Interfaces\Interfaces.csproj", "{725D1E79-0947-4475-B8D3-E0B382994711}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{2EEAF549-0BE6-4B9A-B2A2-9C9D405E9F48}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{5926CB45-6876-4826-BAC9-5159CFE72BD6}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InfluenceCalculator.API", "InfluenceCalculator.API\InfluenceCalculator.API.csproj", "{6C1484B1-997F-46FB-A4D7-80914FE6418E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "InfluenceCalculator.API", "InfluenceCalculator.API", "{BFF72520-48AB-4FBD-9086-7AEFC8743B38}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{D7AE7453-DF8D-4AEA-ABDA-002891F6C780}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InfluenceCalculator.UnitTests", "InfluenceCalculator.UnitTests\InfluenceCalculator.UnitTests.csproj", "{94D28F52-D105-4F53-9167-4A968C7FA428}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,9 +35,28 @@ Global
 		{047E624B-6A5D-4A99-AFDE-91A0F44E6D21}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{047E624B-6A5D-4A99-AFDE-91A0F44E6D21}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{047E624B-6A5D-4A99-AFDE-91A0F44E6D21}.Release|Any CPU.Build.0 = Release|Any CPU
+		{725D1E79-0947-4475-B8D3-E0B382994711}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{725D1E79-0947-4475-B8D3-E0B382994711}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{725D1E79-0947-4475-B8D3-E0B382994711}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{725D1E79-0947-4475-B8D3-E0B382994711}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6C1484B1-997F-46FB-A4D7-80914FE6418E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6C1484B1-997F-46FB-A4D7-80914FE6418E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6C1484B1-997F-46FB-A4D7-80914FE6418E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6C1484B1-997F-46FB-A4D7-80914FE6418E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{94D28F52-D105-4F53-9167-4A968C7FA428}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{94D28F52-D105-4F53-9167-4A968C7FA428}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{94D28F52-D105-4F53-9167-4A968C7FA428}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{94D28F52-D105-4F53-9167-4A968C7FA428}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{5926CB45-6876-4826-BAC9-5159CFE72BD6} = {2EEAF549-0BE6-4B9A-B2A2-9C9D405E9F48}
+		{6C1484B1-997F-46FB-A4D7-80914FE6418E} = {BFF72520-48AB-4FBD-9086-7AEFC8743B38}
+		{BFF72520-48AB-4FBD-9086-7AEFC8743B38} = {5926CB45-6876-4826-BAC9-5159CFE72BD6}
+		{D7AE7453-DF8D-4AEA-ABDA-002891F6C780} = {BFF72520-48AB-4FBD-9086-7AEFC8743B38}
+		{94D28F52-D105-4F53-9167-4A968C7FA428} = {D7AE7453-DF8D-4AEA-ABDA-002891F6C780}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {6FA4C998-2594-48A2-A283-C474A19E73B5}

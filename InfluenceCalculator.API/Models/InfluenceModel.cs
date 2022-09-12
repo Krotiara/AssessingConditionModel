@@ -1,0 +1,40 @@
+﻿using Interfaces;
+using System.Collections;
+using System;
+using System.Collections.Generic;
+
+namespace InfluenceCalculator.API.Models
+{
+    public class InfluenceModel: IInfluenceEffectivenessCalculator
+    {
+
+        public IInfluenceResult CalculateInfluence(IPatientData patientData)
+        {
+            double effectiveness = 0;
+            foreach(IPatientParameter patientParameter in patientData.Parameters)
+            {
+                if (patientParameter.Value.GetType() == typeof(string) 
+                    || patientParameter.DynamicValue.GetType() == typeof(string))
+                    continue;
+                if(patientParameter.Value.GetType() == typeof(bool) 
+                    && patientParameter.DynamicValue.GetType() == typeof(bool))
+                {
+                    double newValue = (bool)patientParameter.DynamicValue ? 1 : 0;
+                    double oldValue = (bool)patientParameter.Value? 1 : 0;
+                    effectiveness += (newValue - oldValue) * patientParameter.PositiveDynamicCoef;
+                }
+                else
+                    effectiveness += 
+                        (Convert.ToDouble(patientParameter.DynamicValue) - Convert.ToDouble(patientParameter.Value)) 
+                        * patientParameter.PositiveDynamicCoef;
+            }
+            return new InfluenceResult()
+            {
+                Influence = patientData.Influence,
+                InfluenceEffectiveness = effectiveness,
+                PatientId = patientData.PatientId
+            };
+        }
+
+    }
+}
