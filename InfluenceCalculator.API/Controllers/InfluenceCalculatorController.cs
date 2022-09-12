@@ -34,12 +34,5 @@ namespace InfluenceCalculator.API.Controllers
                 return BadRequest($"Unexpected error: {ex.Message}.");
             }
         }
-
-
-        [HttpGet("history/{patientId}")]
-        public ActionResult<IEnumerable<IInfluenceResult>> GetInfluenceHistory(int patientId)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

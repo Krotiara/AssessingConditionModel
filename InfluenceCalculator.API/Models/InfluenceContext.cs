@@ -6,6 +6,10 @@ namespace InfluenceCalculator.API.Models
     public class InfluenceContext: DbContext
     {
 
+        public InfluenceContext(): base()
+        { 
+        }
+
         public InfluenceContext(DbContextOptions<InfluenceContext> options): base(options)
         {
 
