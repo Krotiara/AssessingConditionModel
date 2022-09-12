@@ -8,10 +8,10 @@ namespace InfluenceCalculator.API.Models
     public class InfluenceModel: IInfluenceEffectivenessCalculator
     {
 
-        public IInfluenceResult CalculateInfluence(int influenceId, IPatientData influenceDynamicData)
+        public IInfluenceResult CalculateInfluence(IPatientData patientData)
         {
             double effectiveness = 0;
-            foreach(IPatientParameter patientParameter in influenceDynamicData.Parameters)
+            foreach(IPatientParameter patientParameter in patientData.Parameters)
             {
                 if (patientParameter.Value.GetType() == typeof(string) 
                     || patientParameter.DynamicValue.GetType() == typeof(string))
@@ -30,11 +30,9 @@ namespace InfluenceCalculator.API.Models
             }
             return new InfluenceResult()
             {
-                InfluenceId = influenceId,
+                Influence = patientData.Influence,
                 InfluenceEffectiveness = effectiveness,
-                TrackedParameters = influenceDynamicData.Parameters.Where(x => 
-                x.Value.GetType() != typeof(string) && 
-                x.DynamicValue.GetType() != typeof(string))
+                PatientId = patientData.PatientId
             };
         }
 

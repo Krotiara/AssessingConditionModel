@@ -12,11 +12,7 @@ namespace Interfaces
 
         public int PatientId { get; set; }
 
-        public int InfluenceId { get; set; }
-
         public IInfluence Influence { get; set; }
-
-        public IEnumerable<IPatientParameter> TrackedParameters { get; set; }
 
         public double InfluenceEffectiveness { get; set; }
     }

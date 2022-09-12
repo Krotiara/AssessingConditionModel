@@ -8,7 +8,11 @@ namespace Interfaces
 {
     public interface IPatientData
     {
-        public int PatientId { get; }
+        public int PatientId { get; set; }
+
+        public int InfluenceId { get; set; }
+
+        public IInfluence Influence { get; set; }
 
         public IEnumerable<IPatientParameter> Parameters { get; set; }
 

@@ -18,11 +18,11 @@ namespace InfluenceCalculator.API.Controllers
 
 
         [HttpGet("calculate/{influenceName}")]
-        public ActionResult<IInfluenceResult> CalculateInfluence(int influenceId, [FromBody] IPatientData patientData)
+        public ActionResult<IInfluenceResult> CalculateInfluence([FromBody] IPatientData patientData)
         {
             try
             {
-                IInfluenceResult influenceResult = influenceModel.CalculateInfluence(influenceId, patientData);
+                IInfluenceResult influenceResult = influenceModel.CalculateInfluence(patientData);
                 return Ok(influenceResult);
             }
             catch(InfluenceCalculationException ex)
@@ -40,26 +40,6 @@ namespace InfluenceCalculator.API.Controllers
         public ActionResult<IEnumerable<IInfluenceResult>> GetInfluenceHistory(int patientId)
         {
             throw new NotImplementedException();
-        }
-
-
-        [HttpPost("save")]
-        public async Task<IActionResult> SaveInfluenceResult([FromBody] IInfluenceResult influenceResult)
-        {
-            try
-            {
-#warning TODO Убран AddAsync пока что.
-                //TODo разобраться, как быть в таких ситуациях, когда нужно сохранить экземпляр, а передается не экземпляр
-                //if (influenceResult as InfluenceResult == null)
-                //    return BadRequest();
-                dbContext.InfluenceResults.Add(influenceResult);
-                dbContext.SaveChanges();
-                return Ok();
-            }
-            catch(Exception ex)
-            {
-                return BadRequest(ex); //TODo более осмысленных catch
-            }
         }
     }
 }
