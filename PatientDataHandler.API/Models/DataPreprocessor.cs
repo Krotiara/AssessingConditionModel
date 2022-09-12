@@ -14,37 +14,35 @@ namespace PatientDataHandler.API.Models
         private readonly Regex idRegex = new Regex(@"\d+");
 
 
-        public List<List<string>> PreProcessData(List<List<string>> data, ref Dictionary<string, int> headersColumnIndexes)
+        /// <summary>
+        /// Нулевая строка - заголовки
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        public IList<IList<string>> PreProcessData(IList<IList<string>> data)
         {
-            headersColumnIndexes = headersColumnIndexes.ToDictionary(p => p.Key.Trim().ToLower(), p => p.Value);
-            var copyHeaders = headersColumnIndexes;
-            data = data.Where(row => IsCorrectDataString(row, copyHeaders)).ToList();
+            int genderIndex = data[0]
+                .Select((Value, Index) => new { Value, Index })
+                .Single(p => p.Value == "пол" || p.Value == "gender").Index;
+
+            int ageIndex = data[0]
+                .Select((Value, Index) => new { Value, Index })
+                .Single(p => p.Value == "возраст" || p.Value == "age").Index;
+
             for (int i = 0; i < data.Count; i++)
             {
                 List<string> row = data[i].Select(x=>x.Trim().ToLower()).ToList();
                 FillEmptyCells(ref row);
                 AdjustRowDelimeters(ref row);
-                AdjustGender(ref row, headersColumnIndexes);
-                AdjustAge(ref row, headersColumnIndexes);
+                AdjustGender(ref row, genderIndex);
+                AdjustAge(ref row, ageIndex);
                 data[i] = row;
             }
             return data;
         }
 
 
-        private bool IsCorrectDataString(List<string> rawRow, Dictionary<string, int> headersColumnIndexes)
-        {
-            try
-            {
-                int idIndex = headersColumnIndexes.Where(pair => pair.Key.Equals("номер истории болезни")).First().Value;
-                return idRegex.IsMatch(rawRow[idIndex]);
-            }
-            catch(IndexOutOfRangeException)
-            {
-                return false;
-            }
-        }
-
+      
 
         private void FillEmptyCells(ref List<string> rawRow)
         {
@@ -67,13 +65,8 @@ namespace PatientDataHandler.API.Models
         }
 
 
-        private void AdjustAge(ref List<string> rawRow, Dictionary<string, int> headersColumnIndexes)
-        {
-            int ageIndex = headersColumnIndexes
-                .Where(pair => pair.Key.Equals("возраст") || pair.Key.Equals("возраст ребенка")) //Лучше еще заменить возраст ребенка на возраст в начале
-                .First()
-                .Value;
-            
+        private void AdjustAge(ref List<string> rawRow, int ageIndex)
+        {    
             string rawAge = rawRow[ageIndex].Replace(" ", ""); //Во входных данных могут встретиться пробелы, поэтому убираем их.
             if (rawAge.Equals("")) return; //TODO понадежнее обработку
            
@@ -92,15 +85,15 @@ namespace PatientDataHandler.API.Models
         }
 
 
-        private void AdjustGender(ref List<string> rawRow, Dictionary<string, int> headersColumnIndexes)
+        private void AdjustGender(ref List<string> rawRow, int genderColumnIndex)
         {
             try
             {
-                int genderIndex = headersColumnIndexes.Where(pair => pair.Key.Equals("пол")).First().Value;
-                if (rawRow[genderIndex].Equals("мужск"))
-                    rawRow[genderIndex] = "м";
-                if (rawRow[genderIndex].Equals("женск"))
-                    rawRow[genderIndex] = "ж";
+                
+                if (rawRow[genderColumnIndex].Equals("мужск"))
+                    rawRow[genderColumnIndex] = "м";
+                if (rawRow[genderColumnIndex].Equals("женск"))
+                    rawRow[genderColumnIndex] = "ж";
             }
             catch(System.ArgumentOutOfRangeException)
             {

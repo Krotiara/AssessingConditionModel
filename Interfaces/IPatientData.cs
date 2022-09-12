@@ -14,7 +14,7 @@ namespace Interfaces
 
         public IInfluence Influence { get; set; }
 
-        public IEnumerable<IPatientParameter> Parameters { get; set; }
+        public IList<IPatientParameter> Parameters { get; set; }
 
     }
 }

@@ -12,6 +12,6 @@ namespace PatientDataHandler.API.Models
         public int PatientId { get ; set ; }
         public int InfluenceId { get ; set ; }
         public IInfluence Influence { get ; set ; }
-        public IEnumerable<IPatientParameter> Parameters { get ; set ; }
+        public IList<IPatientParameter> Parameters { get ; set ; }
     }
 }

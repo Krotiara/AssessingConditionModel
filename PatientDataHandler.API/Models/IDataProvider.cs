@@ -4,6 +4,6 @@ namespace PatientDataHandler.API.Models
 {
     public interface IDataProvider
     {
-        public IPatientData ParseData(string filePath);
+        public IList<IPatientData> ParseData(string filePath);
     }
 }

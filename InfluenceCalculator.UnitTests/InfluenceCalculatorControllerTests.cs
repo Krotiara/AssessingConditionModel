@@ -36,11 +36,11 @@ namespace InfluenceCalculator.UnitTests
             var model = Assert.IsAssignableFrom<IInfluenceResult>((actionResult.Result as ObjectResult).Value);
         }
 
-        private IEnumerable<PatientParameter> GetTestParameters(int userId)
+        private IList<IPatientParameter> GetTestParameters(int userId)
         {
             
             DateTime dateTime = DateTime.Now;
-            return new List<PatientParameter>()
+            return new List<IPatientParameter>()
             {
                 new PatientParameter(userId, dateTime, "param1", true, 1, false),
                 new PatientParameter(userId, dateTime, "param2", 40, -1, 20)
