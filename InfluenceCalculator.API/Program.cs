@@ -26,6 +26,9 @@ builder.Services.AddScoped<IPatientParameter, PatientParameter>();
 builder.Services.AddScoped<IInfluenceResult, InfluenceResult>();
 builder.Services.AddScoped<IInfluenceEffectivenessCalculator, InfluenceModel>();
 
+string connectionString = builder.Configuration.GetConnectionString("PostgresConnection");
+builder.Services.AddDbContext<InfluenceContext>(options => options.UseNpgsql(connectionString)); // Registration dbContext as service.
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -35,9 +38,6 @@ if (!app.Environment.IsDevelopment())
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
-
-string connectionString = builder.Configuration.GetConnectionString("PostgresConnection");
-builder.Services.AddDbContext<InfluenceContext>(options => options.UseNpgsql(connectionString)); // Registration dbContext as service.
 
 // Enable middleware to serve generated Swagger as a JSON endpoint.
 app.UseSwagger();

@@ -5,6 +5,12 @@ namespace InfluenceCalculator.API.Models
 {
     public class InfluenceContext: DbContext
     {
+
+        public InfluenceContext(DbContextOptions<InfluenceContext> options): base(options)
+        {
+
+        }
+
         public virtual DbSet<IInfluenceResult> InfluenceResults { get; set; }
 
 

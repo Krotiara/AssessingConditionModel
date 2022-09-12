@@ -17,7 +17,7 @@ namespace InfluenceCalculator.API.Controllers
         }
 
 
-        [HttpGet("calculate/{influenceName}")]
+        [HttpGet("calculateInfluence")]
         public ActionResult<IInfluenceResult> CalculateInfluence([FromBody] IPatientData patientData)
         {
             try
