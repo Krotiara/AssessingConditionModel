@@ -22,17 +22,19 @@ namespace PatientDataHandler.API.Models
         public IList<IList<string>> PreProcessData(IList<IList<string>> data)
         {
             int genderIndex = data[0]
+                .Select(x=> x.Trim().ToLower())
                 .Select((Value, Index) => new { Value, Index })
                 .Single(p => p.Value == "пол" || p.Value == "gender").Index;
 
             int ageIndex = data[0]
+                .Select(x => x.Trim().ToLower())
                 .Select((Value, Index) => new { Value, Index })
                 .Single(p => p.Value == "возраст" || p.Value == "age").Index;
 
-            for (int i = 0; i < data.Count; i++)
+            for (int i = 1; i < data.Count; i++)
             {
                 List<string> row = data[i].Select(x=>x.Trim().ToLower()).ToList();
-                FillEmptyCells(ref row);
+                //FillEmptyCells(ref row);
                 AdjustRowDelimeters(ref row);
                 AdjustGender(ref row, genderIndex);
                 AdjustAge(ref row, ageIndex);

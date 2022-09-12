@@ -1,5 +1,5 @@
-﻿using Interfaces;
-using OfficeOpenXml;
+﻿using ExcelDataReader;
+using Interfaces;
 
 namespace PatientDataHandler.API.Models
 {
@@ -12,12 +12,14 @@ namespace PatientDataHandler.API.Models
  
         public IList<IPatientData> ParseData(string filePath)
         {
+            //TODO add try catch
             IList<IList<string>> rawData = LoadData(filePath);
             DataPreprocessor dataPreprocessor = new DataPreprocessor();
             rawData = dataPreprocessor.PreProcessData(rawData);
             IList<IPatientData> data = ParseExcelData(rawData[0], rawData.Skip(1).ToList());
             return data;
         }
+
 
         private IList<IPatientData> ParseExcelData(IList<string> headers, IList<IList<string>> data)
         {
@@ -91,74 +93,26 @@ namespace PatientDataHandler.API.Models
 
         private IList<IList<string>> LoadData(string filePath)
         {
+            //TODO try catch
             IList<IList<string>> data = new List<IList<string>>();
-            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
-            using (ExcelPackage xlPackage = new ExcelPackage(new FileInfo(filePath)))
+            System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
+            using (var stream = File.Open(filePath, FileMode.Open, FileAccess.Read))
             {
-                //Get a WorkSheet by index. Note that EPPlus indexes are base 1, not base 0!
-                ExcelWorksheet myWorksheet = xlPackage.Workbook.Worksheets.First(); //Если брать по индексу 0, то он пропускает некоторые пустые столбцы, из-за чего слетают индексы.
-                int totalRows = myWorksheet.Dimension.End.Row;
-                int totalColumns = myWorksheet.Dimension.End.Column;
-                for (int rowNum = 0; rowNum <= totalRows; rowNum++) //select starting row here
-                    data.Add(myWorksheet
-                        .Cells[rowNum, 1, rowNum, totalColumns]
-                        .Select(c => c.Value == null ? string.Empty : c.Value.ToString().Trim())
-                        .ToList());
+                using (var reader = ExcelReaderFactory.CreateReader(stream))
+                {
+                    while (reader.Read()) //Each ROW
+                    {
+                        IList<string> row = new List<string>();
+                        for (int column = 0; column < reader.FieldCount; column++)
+                        {
+                            object value = reader.GetValue(column);
+                            row.Add(value == null ? "" : value.ToString());
+                        }
+                        data.Add(row);
+                    }
+                }
             }
             return data;
         }
-
-      
-
-        ////Пока что версия из монолита.
-        //private (List<List<string>>, Dictionary<string, int>) GetExcelData(string path, List<int> headersColumnsIndexes)
-        //{
-        //    ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
-        //    using (ExcelPackage xlPackage = new ExcelPackage(new FileInfo(path)))
-        //    {
-        //        //Get a WorkSheet by index. Note that EPPlus indexes are base 1, not base 0!
-        //        ExcelWorksheet myWorksheet = xlPackage.Workbook.Worksheets.First(); //Если брать по индексу 0, то он пропускает некоторые пустые столбцы, из-за чего слетают индексы.
-        //        int totalRows = myWorksheet.Dimension.End.Row;
-        //        int totalColumns = myWorksheet.Dimension.End.Column;
-
-        //        Dictionary<string, int> headersColumnIndexes = ExcelParsePatientsHeaders(myWorksheet, headersColumnsIndexes, totalColumns);
-
-        //        List<List<string>> data = new List<List<string>>();
-        //        int startDataIndex = headersColumnsIndexes.Max() + 1;
-        //        for (int rowNum = startDataIndex; rowNum <= totalRows; rowNum++) //select starting row here
-        //        {
-        //            List<string> row = myWorksheet
-        //                .Cells[rowNum, 1, rowNum, totalColumns]
-        //                .Select(c => c.Value == null ? string.Empty : c.Value.ToString().Trim())
-        //                .ToList();
-        //            data.Add(row);
-        //        }
-        //        return (data, headersColumnIndexes);
-        //    }
-        //}
-
-
-        ////Пока что версия из монолита.
-        ///// <summary>
-        /////
-        ///// </summary>
-        ///// <returns>Словарь, ключ - имя столбца, значение - индекс столбца</returns>
-        //private Dictionary<string, int> ExcelParsePatientsHeaders(ExcelWorksheet myWorksheet, int totalColumnsNumber)
-        //{
-        //    Dictionary<string, int> res = new Dictionary<string, int>();
-
-        //        List<string> row = myWorksheet
-        //            .Cells[headerRowIndex, 1, headerRowIndex, totalColumnsNumber]
-        //            .Select(c => c.Value == null ? string.Empty : c.Value.ToString().Trim().ToLower())
-        //            .ToList();
-        //        for (int i = 0; i < row.Count; i++)
-        //        {
-        //            if (row[i].Equals(""))
-        //                continue;
-        //            else res[row[i]] = i;
-        //        }
-
-        //    return res;
-        //}
     }
 }

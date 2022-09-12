@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Interfaces;
+using Microsoft.AspNetCore.Mvc;
 using PatientDataHandler.API.Models;
 
 namespace PatientDataHandler.API.Controllers
@@ -13,6 +14,15 @@ namespace PatientDataHandler.API.Controllers
         {
             this.dataParserResolver = dataParserResolver;
             this.patientsDataDbContext = patientsDataDbContext;
+        }
+
+
+        [HttpGet("parseData/{pathToFile}")]
+        public ActionResult<IList<IPatientData>> ParsePatientData(string pathToFile)
+        {
+            IDataProvider dataProvider = dataParserResolver.Invoke(DataParserTypes.TestVahitova);
+            IList<IPatientData> patientDatas = dataProvider.ParseData(pathToFile);
+            return Ok(patientDatas);
         }
     }
 }
