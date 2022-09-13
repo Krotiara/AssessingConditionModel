@@ -34,6 +34,8 @@ namespace InfluenceCalculator.UnitTests
 
             var actionResult = Assert.IsAssignableFrom<ActionResult<IInfluenceResult>>(result);
             var model = Assert.IsAssignableFrom<IInfluenceResult>((actionResult.Result as ObjectResult).Value);
+
+
         }
 
         private IList<IPatientParameter> GetTestParameters(int userId)

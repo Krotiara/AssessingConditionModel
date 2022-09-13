@@ -25,7 +25,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PatientDataHandler.API", "P
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{C8280AA6-5D64-427A-9D6C-9036E45B3ECA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PatientDataHandler.API", "PatientDataHandler.API\PatientDataHandler.API.csproj", "{FB257204-DCBE-4243-B1CD-AD6E936B0710}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PatientDataHandler.API", "PatientDataHandler.API\PatientDataHandler.API.csproj", "{FB257204-DCBE-4243-B1CD-AD6E936B0710}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PatientDataHandler.UnitTests", "PatientDataHandler.UnitTests\PatientDataHandler.UnitTests.csproj", "{A8A546CA-6A0E-46F5-B401-62B9664FC560}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -57,6 +59,10 @@ Global
 		{FB257204-DCBE-4243-B1CD-AD6E936B0710}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FB257204-DCBE-4243-B1CD-AD6E936B0710}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FB257204-DCBE-4243-B1CD-AD6E936B0710}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A8A546CA-6A0E-46F5-B401-62B9664FC560}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A8A546CA-6A0E-46F5-B401-62B9664FC560}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A8A546CA-6A0E-46F5-B401-62B9664FC560}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A8A546CA-6A0E-46F5-B401-62B9664FC560}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -70,6 +76,7 @@ Global
 		{8935F66D-F1E7-4C5F-9C0E-F251E5E2192A} = {5926CB45-6876-4826-BAC9-5159CFE72BD6}
 		{C8280AA6-5D64-427A-9D6C-9036E45B3ECA} = {8935F66D-F1E7-4C5F-9C0E-F251E5E2192A}
 		{FB257204-DCBE-4243-B1CD-AD6E936B0710} = {8935F66D-F1E7-4C5F-9C0E-F251E5E2192A}
+		{A8A546CA-6A0E-46F5-B401-62B9664FC560} = {C8280AA6-5D64-427A-9D6C-9036E45B3ECA}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {6FA4C998-2594-48A2-A283-C474A19E73B5}
