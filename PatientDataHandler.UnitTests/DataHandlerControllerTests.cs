@@ -49,9 +49,9 @@ namespace PatientDataHandler.UnitTests
                     Parameters = new List<IPatientParameter>()
                     {
                         new PatientParameter()
-                        {Name = "testP1",PatientId = 1, Timestamp = DateTime.Now, Value = 15, DynamicValue = 10, PositiveDynamicCoef = 1 },
+                        {Name = "testP1",PatientId = 1, Timestamp = DateTime.Now, Value = "15", DynamicValue = "10", PositiveDynamicCoef = 1 },
                         new PatientParameter()
-                        {Name = "testP2",PatientId = 1, Timestamp = DateTime.Now, Value = true, DynamicValue = false, PositiveDynamicCoef = 1 }
+                        {Name = "testP2",PatientId = 1, Timestamp = DateTime.Now, Value = "true", DynamicValue = "false", PositiveDynamicCoef = 1 }
                     }
                 },
                 new PatientData()
@@ -63,9 +63,9 @@ namespace PatientDataHandler.UnitTests
                     Parameters = new List<IPatientParameter>()
                     {
                         new PatientParameter()
-                        {Name = "testP1",PatientId = 2, Timestamp = DateTime.Now, Value = 40, DynamicValue = 20, PositiveDynamicCoef = 1 },
+                        {Name = "testP1",PatientId = 2, Timestamp = DateTime.Now, Value = "40", DynamicValue = "20", PositiveDynamicCoef = 1 },
                         new PatientParameter()
-                        {Name = "testP2",PatientId = 2, Timestamp = DateTime.Now, Value = 30, DynamicValue = 50, PositiveDynamicCoef = -1 }
+                        {Name = "testP2",PatientId = 2, Timestamp = DateTime.Now, Value = "30", DynamicValue = "50", PositiveDynamicCoef = -1 }
                     }
                 }
             };

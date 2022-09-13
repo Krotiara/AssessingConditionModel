@@ -17,9 +17,9 @@ namespace Interfaces
 
         public string Name { get; set; }
 
-        public object Value { get;  set; }
+        public string Value { get;  set; }
 
-        public object DynamicValue { get; set; }
+        public string DynamicValue { get; set; }
 
         /// <summary>
         /// Коэффициент направления улучшения показателя. 

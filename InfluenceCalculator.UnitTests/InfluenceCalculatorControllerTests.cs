@@ -44,8 +44,8 @@ namespace InfluenceCalculator.UnitTests
             DateTime dateTime = DateTime.Now;
             return new List<IPatientParameter>()
             {
-                new PatientParameter(userId, dateTime, "param1", true, 1, false),
-                new PatientParameter(userId, dateTime, "param2", 40, -1, 20)
+                new PatientParameter(userId, dateTime, "param1", "true", 1, "false"),
+                new PatientParameter(userId, dateTime, "param2", "40", -1, "20")
             };
         }
 

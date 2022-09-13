@@ -14,8 +14,8 @@ namespace PatientDataHandler.API.Models
         public int PatientId { get ; set ; }
         public DateTime Timestamp { get ; set ; }
         public string Name { get ; set ; }
-        public object Value { get ; set ; }
-        public object DynamicValue { get ; set ; }
+        public string Value { get ; set ; }
+        public string DynamicValue { get ; set ; }
         public int PositiveDynamicCoef { get ; set ; }
     }
 }
