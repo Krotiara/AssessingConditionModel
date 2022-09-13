@@ -20,6 +20,8 @@ namespace InfluenceCalculator.API.Models
 
         public int Id { get; set; }
 
+        public int PatientDataId { get; set; }
+
         public string Name { get; set; }
         public string Value { get; set; }
         public string? DynamicValue { get; set; }
