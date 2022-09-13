@@ -33,7 +33,7 @@ namespace InfluenceCalculator.API.Models
             {
                 InfluenceId = patientData.InfluenceId,
                 InfluenceEffectiveness = effectiveness,
-                PatientId = patientData.PatientId
+                PatientDataId = patientData.Id
             };
         }
 
