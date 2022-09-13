@@ -17,14 +17,9 @@ namespace InfluenceCalculator.UnitTests
             Mock<IPatientData> mock = new Mock<IPatientData>();
             mock.Setup(r => r.Parameters).Returns(GetTestParameters(userId));
             mock.Setup(r => r.PatientId).Returns(userId);
-            mock.Setup(r=>r.Influence).Returns(new Influence()
-            {
-                InfluenceType = InfluenceTypes.BiologicallyActiveAdditive,
-                MedicineName = "medicine",
-                StartTimestamp = DateTime.Now
-            });
+            mock.Setup(r=>r.InfluenceId).Returns(1);
 
-            var mockSet = new Mock<DbSet<IInfluenceResult>>();
+            var mockSet = new Mock<DbSet<InfluenceResult>>();
             var mockContext = new Mock<InfluenceContext>();
             mockContext.Setup(m => m.InfluenceResults).Returns(mockSet.Object);
 

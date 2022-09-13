@@ -42,9 +42,7 @@ namespace PatientDataHandler.UnitTests
             {
                 new PatientData()
                 {
-                    InfluenceId = 1,
-                    Influence = new Influence()
-                    {Id = 1, InfluenceType = InfluenceTypes.AntiInflammatory, MedicineName = "test1", StartTimestamp = DateTime.Now },
+                    InfluenceId = 1,   
                     PatientId = 1,
                     Parameters = new List<IPatientParameter>()
                     {
@@ -56,9 +54,7 @@ namespace PatientDataHandler.UnitTests
                 },
                 new PatientData()
                 {
-                    InfluenceId = 2,
-                    Influence = new Influence()
-                    {Id = 2, InfluenceType = InfluenceTypes.Antihypoxic, MedicineName = "test2", StartTimestamp = DateTime.Now },
+                    InfluenceId = 2,    
                     PatientId = 2,
                     Parameters = new List<IPatientParameter>()
                     {

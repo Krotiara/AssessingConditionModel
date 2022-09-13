@@ -31,7 +31,7 @@ namespace InfluenceCalculator.API.Models
             }
             return new InfluenceResult()
             {
-                Influence = patientData.Influence,
+                InfluenceId = patientData.InfluenceId,
                 InfluenceEffectiveness = effectiveness,
                 PatientId = patientData.PatientId
             };

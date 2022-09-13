@@ -28,8 +28,6 @@ namespace PatientDataHandler.API.Models
         [NotNull]
         [Column("InfluenceId")]
         public int InfluenceId { get ; set ; }
-
-        public IInfluence Influence { get ; set ; }
         
         public IList<IPatientParameter> Parameters { get ; set ; }
     }
