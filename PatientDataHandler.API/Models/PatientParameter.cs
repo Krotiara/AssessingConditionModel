@@ -17,7 +17,13 @@ namespace PatientDataHandler.API.Models
         [Column("Id")]
         [Key]
         public int Id { get; set; }
-        
+
+
+        [NotNull]
+        [Column("PatientDataId")]
+        public int PatientDataId { get; set; } //TODO укать как ключ в связи таблиц
+
+
         [NotNull]
         [Required]
         public int PatientId { get ; set ; }

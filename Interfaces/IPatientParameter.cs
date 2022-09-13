@@ -11,6 +11,8 @@ namespace Interfaces
 
         public int Id { get; set; }
 
+        public int PatientDataId { get; set; } //TODO укать как ключ в связи таблиц
+
         public int PatientId { get; set; }
 
         public DateTime Timestamp { get; set; }
