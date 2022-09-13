@@ -9,6 +9,8 @@ namespace PatientDataHandler.API.Models
 
         }
 
+        public int Id { get; set; }
+
         public int PatientId { get ; set ; }
         public DateTime Timestamp { get ; set ; }
         public string Name { get ; set ; }
