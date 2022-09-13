@@ -8,6 +8,10 @@ namespace Interfaces
 {
     public interface IPatientData
     {
+        public int Id { get; set; }
+
+        public DateTime Timestamp { get; set; }
+
         public int PatientId { get; set; }
 
         public int InfluenceId { get; set; }
