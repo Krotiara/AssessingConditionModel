@@ -11,25 +11,26 @@ namespace InfluenceCalculator.API.Models
     {
         public InfluenceResult() { }
 
-        [Key]
-        [NotNull]
-        [Column("Id")]
-        [Required]
+#warning Пока убрано хранение в бд в силу принятого решения не хранить результаты вычислений, так как метод вычисления может меняться.
+        //[Key]
+        //[NotNull]
+        //[Column("Id")]
+        //[Required]
         public int Id { get; set; }
 
-        [NotNull]
-        [Column("Influence id")]
-        [Required]
+        //[NotNull]
+        //[Column("Influence id")]
+        //[Required]
         public int InfluenceId { get; set; }
 
-        [NotNull]
-        [Column("Influence effectiveness")]
-        [Required]
+        //[NotNull]
+        //[Column("Influence effectiveness")]
+        //[Required]
         public double InfluenceEffectiveness { get; set; }
 
-        [NotNull]
-        [Column("PatientDataId")]
-        [Required]
+        //[NotNull]
+        //[Column("PatientDataId")]
+        //[Required]
         public int PatientDataId { get; set; }
     }
 }

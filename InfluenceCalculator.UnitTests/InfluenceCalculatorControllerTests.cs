@@ -20,11 +20,7 @@ namespace InfluenceCalculator.UnitTests
             mock.Setup(r=>r.InfluenceId).Returns(1);
 
             var mockSet = new Mock<DbSet<InfluenceResult>>();
-            var mockContext = new Mock<InfluenceContext>();
-            mockContext.Setup(m => m.InfluenceResults).Returns(mockSet.Object);
-
-
-            InfluenceCalculatorController c = new InfluenceCalculatorController(mockContext.Object);
+            InfluenceCalculatorController c = new InfluenceCalculatorController();
             var result = c.CalculateInfluence(mock.Object);
 
             var actionResult = Assert.IsAssignableFrom<ActionResult<IInfluenceResult>>(result);
