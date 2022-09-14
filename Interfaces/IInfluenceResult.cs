@@ -10,9 +10,9 @@ namespace Interfaces
     {
         public int Id { get; set; }
 
-        public int PatientId { get; set; }
+        public int PatientDataId { get; set; }
 
-        public IInfluence Influence { get; set; }
+        public int InfluenceId { get; set; }
 
         public double InfluenceEffectiveness { get; set; }
     }

@@ -8,11 +8,9 @@ namespace InfluenceCalculator.API.Controllers
     public class InfluenceCalculatorController: Controller
     {
         InfluenceModel influenceModel;
-        InfluenceContext dbContext;
 
-        public InfluenceCalculatorController(InfluenceContext dbContext)
+        public InfluenceCalculatorController()
         {
-            this.dbContext = dbContext;
             influenceModel = new InfluenceModel();
         }
 

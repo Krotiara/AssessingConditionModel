@@ -17,33 +17,24 @@ namespace InfluenceCalculator.UnitTests
             Mock<IPatientData> mock = new Mock<IPatientData>();
             mock.Setup(r => r.Parameters).Returns(GetTestParameters(userId));
             mock.Setup(r => r.PatientId).Returns(userId);
-            mock.Setup(r=>r.Influence).Returns(new Influence()
-            {
-                InfluenceType = InfluenceTypes.BiologicallyActiveAdditive,
-                MedicineName = "medicine",
-                StartTimestamp = DateTime.Now
-            });
+            mock.Setup(r=>r.InfluenceId).Returns(1);
 
-            var mockSet = new Mock<DbSet<IInfluenceResult>>();
-            var mockContext = new Mock<InfluenceContext>();
-            mockContext.Setup(m => m.InfluenceResults).Returns(mockSet.Object);
-
-
-            InfluenceCalculatorController c = new InfluenceCalculatorController(mockContext.Object);
+            var mockSet = new Mock<DbSet<InfluenceResult>>();
+            InfluenceCalculatorController c = new InfluenceCalculatorController();
             var result = c.CalculateInfluence(mock.Object);
 
             var actionResult = Assert.IsAssignableFrom<ActionResult<IInfluenceResult>>(result);
             var model = Assert.IsAssignableFrom<IInfluenceResult>((actionResult.Result as ObjectResult).Value);
         }
 
-        private IEnumerable<PatientParameter> GetTestParameters(int userId)
+        private IList<IPatientParameter> GetTestParameters(int userId)
         {
             
             DateTime dateTime = DateTime.Now;
-            return new List<PatientParameter>()
+            return new List<IPatientParameter>()
             {
-                new PatientParameter(userId, dateTime, "param1", true, 1, false),
-                new PatientParameter(userId, dateTime, "param2", 40, -1, 20)
+                new PatientParameter(userId, dateTime, "param1", "true", 1, "false"),
+                new PatientParameter(userId, dateTime, "param2", "40", -1, "20")
             };
         }
 

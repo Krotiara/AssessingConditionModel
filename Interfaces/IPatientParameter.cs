@@ -8,15 +8,20 @@ namespace Interfaces
 {
     public interface IPatientParameter
     {
+
+        public int Id { get; set; }
+
+        public int PatientDataId { get; set; }
+
         public int PatientId { get; set; }
 
         public DateTime Timestamp { get; set; }
 
         public string Name { get; set; }
 
-        public object Value { get;  set; }
+        public string Value { get;  set; }
 
-        public object DynamicValue { get; set; }
+        public string DynamicValue { get; set; }
 
         /// <summary>
         /// Коэффициент направления улучшения показателя. 

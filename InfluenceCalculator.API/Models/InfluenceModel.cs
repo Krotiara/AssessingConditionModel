@@ -13,26 +13,27 @@ namespace InfluenceCalculator.API.Models
             double effectiveness = 0;
             foreach(IPatientParameter patientParameter in patientData.Parameters)
             {
-                if (patientParameter.Value.GetType() == typeof(string) 
-                    || patientParameter.DynamicValue.GetType() == typeof(string))
-                    continue;
-                if(patientParameter.Value.GetType() == typeof(bool) 
-                    && patientParameter.DynamicValue.GetType() == typeof(bool))
+
+                if (double.TryParse(patientParameter.Value, out _) && double.TryParse(patientParameter.DynamicValue, out _))
                 {
-                    double newValue = (bool)patientParameter.DynamicValue ? 1 : 0;
-                    double oldValue = (bool)patientParameter.Value? 1 : 0;
+                    effectiveness +=
+                        (double.Parse(patientParameter.DynamicValue) - double.Parse(patientParameter.Value))
+                        * patientParameter.PositiveDynamicCoef;
+                }
+                else if (bool.TryParse(patientParameter.Value, out _) && bool.TryParse(patientParameter.DynamicValue, out _))
+                {
+                    double newValue = bool.Parse(patientParameter.DynamicValue) ? 1 : 0;
+                    double oldValue = bool.Parse(patientParameter.Value) ? 1 : 0;
                     effectiveness += (newValue - oldValue) * patientParameter.PositiveDynamicCoef;
                 }
                 else
-                    effectiveness += 
-                        (Convert.ToDouble(patientParameter.DynamicValue) - Convert.ToDouble(patientParameter.Value)) 
-                        * patientParameter.PositiveDynamicCoef;
+                    continue;
             }
             return new InfluenceResult()
             {
-                Influence = patientData.Influence,
+                InfluenceId = patientData.InfluenceId,
                 InfluenceEffectiveness = effectiveness,
-                PatientId = patientData.PatientId
+                PatientDataId = patientData.Id
             };
         }
 

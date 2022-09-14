@@ -26,8 +26,8 @@ builder.Services.AddScoped<IPatientParameter, PatientParameter>();
 builder.Services.AddScoped<IInfluenceResult, InfluenceResult>();
 builder.Services.AddScoped<IInfluenceEffectivenessCalculator, InfluenceModel>();
 
-string connectionString = builder.Configuration.GetConnectionString("PostgresConnection");
-builder.Services.AddDbContext<InfluenceContext>(options => options.UseNpgsql(connectionString)); // Registration dbContext as service.
+//string connectionString = builder.Configuration.GetConnectionString("PostgresConnection");
+//builder.Services.AddDbContext<InfluenceContext>(options => options.UseNpgsql(connectionString)); // Registration dbContext as service.
 
 var app = builder.Build();
 
