@@ -1,5 +1,6 @@
 ﻿using Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using PatientDataHandler.API.Models;
 
 namespace PatientDataHandler.API.Controllers
@@ -20,9 +21,23 @@ namespace PatientDataHandler.API.Controllers
         [HttpGet("parseData/{pathToFile}")]
         public ActionResult<IList<IPatientData>> ParsePatientData(string pathToFile)
         {
+            // TODO try catch
             //TODO определение типа данных
             IDataProvider dataProvider = dataParserResolver.Invoke(DataParserTypes.TestVahitova);
             IList<IPatientData> patientDatas = dataProvider.ParseData(pathToFile);
+            return Ok(patientDatas);
+        }
+
+
+        [HttpGet("getData/{patientId}")]
+        public async Task<ActionResult<IList<IPatientData>>> GetPatientData(int patientId)
+        {
+            IList<PatientData> patientDatas = await patientsDataDbContext
+                .PatientDatas
+                .Include(x => x.Parameters)
+                .Where(x => x.PatientId == patientId)
+                .ToListAsync();
+
             return Ok(patientDatas);
         }
 
