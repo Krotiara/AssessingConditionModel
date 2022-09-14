@@ -29,6 +29,14 @@ namespace PatientDataHandler.API.Models
         [Column("InfluenceId")]
         public int InfluenceId { get ; set ; }
         
-        public IList<IPatientParameter> Parameters { get ; set ; }
+        public IList<PatientParameter> Parameters { get ; set ; }
+
+        [NotMapped]
+        IList<IPatientParameter> IPatientData.Parameters
+        {
+            get { return (IList<IPatientParameter>)Parameters; }
+            set { Parameters = value as IList<PatientParameter>; }
+        }
+
     }
 }

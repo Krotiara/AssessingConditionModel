@@ -32,11 +32,15 @@ namespace PatientDataHandler.API.Controllers
         [HttpGet("getData/{patientId}")]
         public async Task<ActionResult<IList<IPatientData>>> GetPatientData(int patientId)
         {
-            IList<PatientData> patientDatas = await patientsDataDbContext
+            IQueryable<PatientData> patientDatas = patientsDataDbContext
                 .PatientDatas
-                .Include(x => x.Parameters)
-                .Where(x => x.PatientId == patientId)
-                .ToListAsync();
+                .Where(x => x.PatientId == patientId);
+
+            if (patientDatas.Count() == 0)
+                return BadRequest("No patient data is found");
+
+#warning Выскакивала ошибка The expression 'x.Parameters' is invalid inside an 'Include' operation
+            patientDatas = patientDatas.Include(x => x.Parameters);
 
             return Ok(patientDatas);
         }

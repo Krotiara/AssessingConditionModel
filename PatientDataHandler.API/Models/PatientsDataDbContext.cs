@@ -22,13 +22,13 @@ namespace PatientDataHandler.API.Models
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            base.OnModelCreating(modelBuilder);
+        {      
             modelBuilder.Entity<PatientData>()
                 .HasMany<PatientParameter>()
                 .WithOne()
                 .HasForeignKey(x => x.PatientDataId)
                 .IsRequired();
+            base.OnModelCreating(modelBuilder);
         }
     }
 }
