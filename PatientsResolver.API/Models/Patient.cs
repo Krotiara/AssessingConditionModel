@@ -5,6 +5,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace PatientsResolver.API.Models
 {
+    [Table("Patients")]
     public class Patient : IPatient
     {
 
