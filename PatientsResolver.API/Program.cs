@@ -1,3 +1,4 @@
+using Interfaces;
 using Microsoft.EntityFrameworkCore;
 using PatientsResolver.API.Models;
 
@@ -23,6 +24,10 @@ builder.Services.AddSwaggerGen(c =>
 
 string connectionString = builder.Configuration.GetConnectionString("PostgresConnection");
 builder.Services.AddDbContext<PatientsDataDbContext>(options => options.UseNpgsql(connectionString)); // Registration dbContext as service.
+
+builder.Services.AddScoped<IPatientData, PatientData>();
+builder.Services.AddScoped<IPatientParameter, PatientParameter>();
+builder.Services.AddScoped<IPatient, Patient>();
 
 var app = builder.Build();
 

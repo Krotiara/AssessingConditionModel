@@ -26,6 +26,6 @@ namespace PatientDataHandler.API.Models
         
         public IList<IPatientParameter> Parameters { get ; set ; }
 
-        
+        public IPatient Patient { get; set; }
     }
 }

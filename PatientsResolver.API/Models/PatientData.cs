@@ -24,7 +24,9 @@ namespace PatientsResolver.API.Models
         [NotNull]
         [Column("PatientId")]
         public int PatientId { get ; set ; }
-        
+
+        public IPatient Patient { get; set; }
+
         [NotNull]
         [Column("InfluenceId")]
         public int InfluenceId { get ; set ; }
