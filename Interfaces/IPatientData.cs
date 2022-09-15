@@ -12,6 +12,9 @@ namespace Interfaces
 
         public DateTime Timestamp { get; set; }
 
+
+        public IPatient Patient { get; set; }
+
         public int PatientId { get; set; }
 
         public int InfluenceId { get; set; }

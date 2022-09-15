@@ -46,7 +46,7 @@ namespace PatientDataHandler.API.Models
                         patientData = new PatientData()
                         {
                             PatientId = id,
-                            Parameters = new List<PatientParameter>()
+                            Parameters = new List<IPatientParameter>()
                         };
                         patientParameters[id] = patientData;
                     }

@@ -1,7 +1,7 @@
 ﻿using Interfaces;
 using Microsoft.EntityFrameworkCore;
 
-namespace PatientDataHandler.API.Models
+namespace PatientsResolver.API.Models
 {
     public class PatientsDataDbContext: DbContext
     {
@@ -9,6 +9,8 @@ namespace PatientDataHandler.API.Models
         public virtual DbSet<PatientParameter> PatientsParameters { get; set; }
 
         public virtual DbSet<PatientData> PatientDatas { get; set; }
+
+        public virtual DbSet<Patient> Patients { get; set; }
 
 
         public PatientsDataDbContext():base()
@@ -28,6 +30,10 @@ namespace PatientDataHandler.API.Models
                 .WithOne()
                 .HasForeignKey(x => x.PatientDataId)
                 .IsRequired();
+            modelBuilder.Entity<PatientData>()
+                .HasOne<Patient>()
+                .WithMany()
+                .HasForeignKey(x => x.PatientId);
             base.OnModelCreating(modelBuilder);
         }
     }

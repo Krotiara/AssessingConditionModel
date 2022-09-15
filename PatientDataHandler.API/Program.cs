@@ -39,9 +39,6 @@ builder.Services.AddTransient<Func<DataParserTypes, IDataProvider>>(serviceProvi
     }
 });
 
-string connectionString = builder.Configuration.GetConnectionString("PostgresConnection");
-builder.Services.AddDbContext<PatientsDataDbContext>(options => options.UseNpgsql(connectionString)); // Registration dbContext as service.
-
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

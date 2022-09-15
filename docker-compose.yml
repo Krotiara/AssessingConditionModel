@@ -1,0 +1,22 @@
+version: '3.4'
+
+services:
+  patientsresolver.api:
+    image: ${DOCKER_REGISTRY-}patientsresolverapi
+    build:
+      context: .
+      dockerfile: PatientsResolver.API/Dockerfile
+
+  influencecalculator.api:
+    image: ${DOCKER_REGISTRY-}influencecalculatorapi
+    build:
+      context: .
+      dockerfile: InfluenceCalculator.API/Dockerfile
+
+
+  patientdatahandler.api:
+    image: ${DOCKER_REGISTRY-}patientdatahandlerapi
+    build:
+      context: .
+      dockerfile: PatientDataHandler.API/Dockerfile
+
