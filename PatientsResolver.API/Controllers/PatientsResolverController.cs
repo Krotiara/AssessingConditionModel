@@ -26,7 +26,7 @@ namespace PatientsResolver.API.Controllers
                 return BadRequest("No patient data is found");
 
 #warning Выскакивала ошибка The expression 'x.Parameters' is invalid inside an 'Include' operation
-            patientDatas = patientDatas.Include(x => x.Parameters);
+            patientDatas = patientDatas.Include(x=>x.Patient).Include(x => x.Parameters);
 
             return Ok(patientDatas);
         }
