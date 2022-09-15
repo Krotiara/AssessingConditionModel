@@ -28,6 +28,10 @@ namespace PatientsResolver.API.Models
                 .WithOne()
                 .HasForeignKey(x => x.PatientDataId)
                 .IsRequired();
+            modelBuilder.Entity<PatientData>()
+                .HasOne<Patient>()
+                .WithMany()
+                .HasForeignKey(x => x.PatientId);
             base.OnModelCreating(modelBuilder);
         }
     }

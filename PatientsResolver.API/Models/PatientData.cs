@@ -25,7 +25,6 @@ namespace PatientsResolver.API.Models
         [Column("PatientId")]
         public int PatientId { get ; set ; }
 
-        public IPatient Patient { get; set; }
 
         [NotNull]
         [Column("InfluenceId")]
@@ -38,6 +37,15 @@ namespace PatientsResolver.API.Models
         {
             get { return (IList<IPatientParameter>)Parameters; }
             set { Parameters = value as IList<PatientParameter>; }
+        }
+
+        public Patient Patient { get; set; }
+
+        [NotMapped]
+        IPatient IPatientData.Patient
+        {
+            get { return Patient; }
+            set { Patient = (Patient)value; }
         }
 
     }
