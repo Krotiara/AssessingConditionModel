@@ -10,6 +10,8 @@ namespace PatientsResolver.API.Models
 
         public virtual DbSet<PatientData> PatientDatas { get; set; }
 
+        public virtual DbSet<Patient> Patients { get; set; }
+
 
         public PatientsDataDbContext():base()
         {
