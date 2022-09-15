@@ -1,6 +1,5 @@
-using Interfaces;
 using Microsoft.EntityFrameworkCore;
-using PatientDataHandler.API.Models;
+using PatientsResolver.API.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,8 +11,8 @@ builder.Services.AddSwaggerGen(c =>
     c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo()
     {
         Version = "v1",
-        Title = "Микросервис обработки данных пациентов",
-        Description = "Микросервис отвечает за обработку сырых данных пациента.",
+        Title = "Управляющий данными пациентов",
+        Description = "Микросервис отвечает за хранение и предоставление данных о пациентах и воздействиях на них",
         Contact = new Microsoft.OpenApi.Models.OpenApiContact()
         {
             Name = "Lisovenko Anton",
@@ -22,22 +21,8 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
-builder.Services.AddScoped<IPatientData, PatientData>();
-builder.Services.AddScoped<IPatientParameter, PatientParameter>();
-builder.Services.AddScoped<IInfluence, Influence>();
-
-builder.Services.AddScoped<ExcelDataProvider>();
-
-builder.Services.AddTransient<Func<DataParserTypes, IDataProvider>>(serviceProvider => serviceTypeName =>
-{
-    switch (serviceTypeName)
-    {
-        case DataParserTypes.TestVahitova:
-            return serviceProvider.GetService<ExcelDataProvider>();
-        default:
-            return null;
-    }
-});
+string connectionString = builder.Configuration.GetConnectionString("PostgresConnection");
+builder.Services.AddDbContext<PatientsDataDbContext>(options => options.UseNpgsql(connectionString)); // Registration dbContext as service.
 
 var app = builder.Build();
 
@@ -58,7 +43,7 @@ app.UseSwagger();
 
 app.UseSwaggerUI(c =>
 {
-    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Patient Data Handler API");
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Patients Resolver API");
     c.RoutePrefix = string.Empty;
 });
 

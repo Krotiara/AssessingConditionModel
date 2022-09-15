@@ -1,7 +1,7 @@
 ﻿using Interfaces;
 using Microsoft.EntityFrameworkCore;
 
-namespace PatientDataHandler.API.Models
+namespace PatientsResolver.API.Models
 {
     public class PatientsDataDbContext: DbContext
     {

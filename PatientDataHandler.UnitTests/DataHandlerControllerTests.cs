@@ -19,10 +19,10 @@ namespace PatientDataHandler.UnitTests
             dataProviderResolverMock.Setup(x => x.Invoke(It.IsAny<DataParserTypes>())).Returns(dataProviderMock.Object);
 
             var mockSet = new Mock<DbSet<PatientParameter>>();
-            var mockContext = new Mock<PatientsDataDbContext>();
-            mockContext.Setup(m => m.PatientsParameters).Returns(mockSet.Object);
+            //var mockContext = new Mock<PatientsDataDbContext>();
+            //mockContext.Setup(m => m.PatientsParameters).Returns(mockSet.Object);
 
-            DataHandlerController controller = new DataHandlerController(dataProviderResolverMock.Object, mockContext.Object);
+            DataHandlerController controller = new DataHandlerController(dataProviderResolverMock.Object/*, mockContext.Object*/);
 
             string projectDirectory = Directory
                 .GetParent(Environment.CurrentDirectory).Parent.Parent.FullName;
