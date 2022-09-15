@@ -18,7 +18,7 @@ namespace PatientDataHandler.UnitTests
                = new Mock<Func<DataParserTypes, IDataProvider>>();
             dataProviderResolverMock.Setup(x => x.Invoke(It.IsAny<DataParserTypes>())).Returns(dataProviderMock.Object);
 
-            var mockSet = new Mock<DbSet<PatientParameter>>();
+            //var mockSet = new Mock<DbSet<PatientParameter>>();
             //var mockContext = new Mock<PatientsDataDbContext>();
             //mockContext.Setup(m => m.PatientsParameters).Returns(mockSet.Object);
 
