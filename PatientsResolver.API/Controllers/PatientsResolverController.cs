@@ -15,7 +15,7 @@ namespace PatientsResolver.API.Controllers
         }
 
 
-        [HttpGet("getData/{patientId}")]
+        [HttpGet("getPatientData/{patientId}")]
         public async Task<ActionResult<IList<IPatientData>>> GetPatientData(int patientId)
         {
             IQueryable<PatientData> patientDatas = patientsDataDbContext
@@ -26,10 +26,27 @@ namespace PatientsResolver.API.Controllers
                 return BadRequest("No patient data is found");
 
 #warning Выскакивала ошибка The expression 'x.Parameters' is invalid inside an 'Include' operation
-            patientDatas = patientDatas.Include(x=>x.Patient).Include(x => x.Parameters);
-
-            return Ok(patientDatas);
+            List<PatientData> datas = await patientDatas
+                .Include(x=>x.Patient)
+                .Include(x => x.Parameters)
+                .ToListAsync();
+            return Ok(datas);
         }
+
+
+        [HttpGet("getPatient/{patientId}")]
+        public async Task<ActionResult<IPatient>> GetPatient(long patientMedicalHistoryNumber)
+        {
+            Patient? patient = await patientsDataDbContext
+                .Patients
+                .FirstOrDefaultAsync(x => x.MedicalHistoryNumber == patientMedicalHistoryNumber);
+
+            if (patient == null)
+                return BadRequest($"Patient with medical history number = {patientMedicalHistoryNumber} was not found.");
+
+            return Ok(patient);
+        }
+
 
 
         [HttpPost("saveData")]
