@@ -1,17 +1,21 @@
 ﻿using Interfaces;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PatientsResolver.API.Models;
+using PatientsResolver.API.Service.Command;
 
 namespace PatientsResolver.API.Controllers
 {
     public class PatientsResolverController: Controller
     {
-        private PatientsDataDbContext patientsDataDbContext;
+        private readonly PatientsDataDbContext patientsDataDbContext;
+        private readonly IMediator mediator;
 
-        public PatientsResolverController(PatientsDataDbContext patientsDataDbContext)
+        public PatientsResolverController(PatientsDataDbContext patientsDataDbContext, IMediator mediator)
         {
             this.patientsDataDbContext = patientsDataDbContext;
+            this.mediator = mediator;
         }
 
 
@@ -52,29 +56,40 @@ namespace PatientsResolver.API.Controllers
         [HttpPost("saveData")]
         public async Task<ActionResult> SavePatientDataAsync([FromBody] IList<IPatientData> patientDatas)
         {
-            using (var transaction = patientsDataDbContext.Database.BeginTransaction())
+            try
             {
-                //Рассмотреть необходимость сужения try catch до поэлементного отлова.
-                try
+                using (var transaction = patientsDataDbContext.Database.BeginTransaction())
                 {
-                    foreach (PatientData data in patientDatas)
+                    //Рассмотреть необходимость сужения try catch до поэлементного отлова.
+                    try
                     {
-                        //Не уверен, что upcast хороший выбор.
-                        await patientsDataDbContext.PatientsParameters.AddRangeAsync(data.Parameters.Cast<PatientParameter>());
-                        await patientsDataDbContext.PatientDatas.AddAsync(data);
-                        await patientsDataDbContext.SaveChangesAsync();
-                    }
+                        foreach (PatientData data in patientDatas)
+                        {
+                            //Не уверен, что upcast хороший выбор.
+                            await patientsDataDbContext.PatientsParameters.AddRangeAsync(data.Parameters.Cast<PatientParameter>());
+                            await patientsDataDbContext.PatientDatas.AddAsync(data);
+                            await patientsDataDbContext.SaveChangesAsync();
+                        }
 
-                    await patientsDataDbContext.SaveChangesAsync();
-                    transaction.Commit();
-                    return Ok();
+                        await patientsDataDbContext.SaveChangesAsync();
+                        transaction.Commit();
+                    }
+                    catch (Exception ex) //TODO осмысленный try catch
+                    {
+                        //TODO add log
+                        transaction.Rollback();
+                        return BadRequest(ex.Message);
+                    }
                 }
-                catch (Exception ex) //TODO осмысленный try catch
-                {
-                    //TODO add log
-                    transaction.Rollback();
-                    return BadRequest(ex.Message);
-                }
+
+                foreach (IPatientData patientData in patientDatas)
+                    await mediator.Send(new UpdatePatientDataCommand() { PatientData = patientData });
+
+                return Ok();
+            }
+            catch(Exception ex)
+            {
+                return BadRequest(ex.Message);
             }
         }
     }
