@@ -1,6 +1,8 @@
 using Interfaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using PatientsResolver.API.Data;
+using PatientsResolver.API.Entities;
 using PatientsResolver.API.Messaging.Send;
 using PatientsResolver.API.Messaging.Send.Sender;
 using PatientsResolver.API.Models;

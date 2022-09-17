@@ -2,7 +2,8 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using PatientsResolver.API.Models;
+using PatientsResolver.API.Data;
+using PatientsResolver.API.Entities;
 using PatientsResolver.API.Service.Command;
 
 namespace PatientsResolver.API.Controllers
