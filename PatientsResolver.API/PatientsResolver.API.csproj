@@ -18,8 +18,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\PatientsResolver.API.Data\PatientsResolver.API.Data.csproj" />
     <ProjectReference Include="..\Interfaces\Interfaces.csproj" />
+    <ProjectReference Include="..\PatientsResolver.API.Data\PatientsResolver.API.Data.csproj" />
+    <ProjectReference Include="..\PatientsResolver.API.Entities\PatientsResolver.API.Entities.csproj" />
     <ProjectReference Include="..\PatientsResolver.API.Messaging.Send\PatientsResolver.API.Messaging.Send.csproj" />
     <ProjectReference Include="..\PatientsResolver.API.Service\PatientsResolver.API.Service.csproj" />
   </ItemGroup>
