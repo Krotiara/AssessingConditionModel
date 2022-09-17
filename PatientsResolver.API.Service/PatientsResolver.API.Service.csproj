@@ -13,6 +13,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Interfaces\Interfaces.csproj" />
+    <ProjectReference Include="..\PatientsResolver.API.Data\PatientsResolver.API.Data.csproj" />
     <ProjectReference Include="..\PatientsResolver.API.Messaging.Send\PatientsResolver.API.Messaging.Send.csproj" />
   </ItemGroup>
 

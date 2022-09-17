@@ -23,5 +23,6 @@ namespace PatientsResolver.API.Data.Repository
                 .Patients
                 .FirstOrDefaultAsync(x => x.MedicalHistoryNumber == patientMedHistoryNumber);
         }
+
     }
 }

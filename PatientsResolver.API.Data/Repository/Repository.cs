@@ -36,6 +36,23 @@ namespace PatientsResolver.API.Data.Repository
             }
         }
 
+        public async Task<List<TEntity>> AddRangeAsync(List<TEntity> entities)
+        {
+            foreach (TEntity entity in entities)
+            {
+                try
+                {
+                    await AddAsync(entity);
+                }
+                catch(Exception ex)
+                {
+                    //TODO log
+                    continue;
+                }
+            }
+            return entities;
+        }
+
         public IEnumerable<TEntity> GetAll()
         {
             try

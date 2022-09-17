@@ -54,6 +54,8 @@ if(useRabbitMq)
 
 builder.Services.AddTransient<IRequestHandler<UpdatePatientDataCommand, IPatientData>,
     UpdatePatientDataCommandHandler>();
+builder.Services.AddTransient<IRequestHandler<CreatePatientDatasCommand, List<PatientData>>,
+    CreatePatientDatasCommandHandler>();
 #endregion
 
 var app = builder.Build();

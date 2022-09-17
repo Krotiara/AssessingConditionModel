@@ -12,6 +12,8 @@ namespace PatientsResolver.API.Data.Repository
 
         Task<TEntity> AddAsync(TEntity entity);
 
+        Task<List<TEntity>> AddRangeAsync(List<TEntity> entities);
+
         Task<TEntity> UpdateAsync(TEntity entity);
 
         Task UpdateRangeAsync(List<TEntity> entities);

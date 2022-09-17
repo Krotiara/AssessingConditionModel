@@ -1,4 +1,5 @@
-﻿using Interfaces;
+﻿using AutoMapper;
+using Interfaces;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -10,12 +11,12 @@ namespace PatientsResolver.API.Controllers
 {
     public class PatientsResolverController: Controller
     {
-        private readonly PatientsDataDbContext patientsDataDbContext;
         private readonly IMediator mediator;
+        private readonly IMapper mapper;
 
-        public PatientsResolverController(PatientsDataDbContext patientsDataDbContext, IMediator mediator)
+        public PatientsResolverController(IMapper mapper, IMediator mediator)
         {
-            this.patientsDataDbContext = patientsDataDbContext;
+            this.mapper = mapper;
             this.mediator = mediator;
         }
 
@@ -55,43 +56,56 @@ namespace PatientsResolver.API.Controllers
 
 
         [HttpPost("saveData")]
-        public async Task<ActionResult> SavePatientDataAsync([FromBody] IList<IPatientData> patientDatas)
+        public async Task<ActionResult<List<IPatientData>>> SavePatientDataAsync(List<IPatientData> patientDatas)
         {
             try
             {
-                using (var transaction = patientsDataDbContext.Database.BeginTransaction())
+#warning могут быть проблемы с кастами.
+                List<PatientData> datas = await mediator.Send(new CreatePatientDatasCommand()
                 {
-                    //Рассмотреть необходимость сужения try catch до поэлементного отлова.
-                    try
-                    {
-                        foreach (PatientData data in patientDatas)
-                        {
-                            //Не уверен, что upcast хороший выбор.
-                            await patientsDataDbContext.PatientsParameters.AddRangeAsync(data.Parameters.Cast<PatientParameter>());
-                            await patientsDataDbContext.PatientDatas.AddAsync(data);
-                            await patientsDataDbContext.SaveChangesAsync();
-                        }
-
-                        await patientsDataDbContext.SaveChangesAsync();
-                        transaction.Commit();
-                    }
-                    catch (Exception ex) //TODO осмысленный try catch
-                    {
-                        //TODO add log
-                        transaction.Rollback();
-                        return BadRequest(ex.Message);
-                    }
-                }
-
-                foreach (IPatientData patientData in patientDatas)
-                    await mediator.Send(new UpdatePatientDataCommand() { PatientData = patientData });
-
-                return Ok();
+                    PatientDatas = patientDatas.Cast<PatientData>().ToList()
+                });
+                return datas.Cast<IPatientData>().ToList();
             }
             catch(Exception ex)
             {
                 return BadRequest(ex.Message);
             }
+            //try
+            //{
+            //    using (var transaction = patientsDataDbContext.Database.BeginTransaction())
+            //    {
+            //        //Рассмотреть необходимость сужения try catch до поэлементного отлова.
+            //        try
+            //        {
+            //            foreach (PatientData data in patientDatas)
+            //            {
+            //                //Не уверен, что upcast хороший выбор.
+            //                await patientsDataDbContext.PatientsParameters.AddRangeAsync(data.Parameters.Cast<PatientParameter>());
+            //                await patientsDataDbContext.PatientDatas.AddAsync(data);
+            //                await patientsDataDbContext.SaveChangesAsync();
+            //            }
+
+            //            await patientsDataDbContext.SaveChangesAsync();
+            //            transaction.Commit();
+            //        }
+            //        catch (Exception ex) //TODO осмысленный try catch
+            //        {
+            //            //TODO add log
+            //            transaction.Rollback();
+            //            return BadRequest(ex.Message);
+            //        }
+            //    }
+
+            //    foreach (IPatientData patientData in patientDatas)
+            //        await mediator.Send(new UpdatePatientDataCommand() { PatientData = patientData });
+
+            //    return Ok();
+            //}
+            //catch(Exception ex)
+            //{
+            //    return BadRequest(ex.Message);
+            //}
         }
     }
 }
