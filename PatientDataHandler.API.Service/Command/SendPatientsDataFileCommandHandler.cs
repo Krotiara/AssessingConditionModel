@@ -26,7 +26,7 @@ namespace PatientDataHandler.API.Service.Command
         public Task<Unit> Handle(SendPatientsDataFileCommand request, CancellationToken cancellationToken)
         {
             IDataProvider dataProvider = dataParserResolver.Invoke(DataParserTypes.TestVahitova);
-            IList<IPatientData> patientDatas = dataProvider.ParseData(request.PathToFile);
+            IList<IPatientData> patientDatas = dataProvider.ParseData(request.FileStream);
             patientsDataSender.SendPatientsData(patientDatas);
             return Unit.Task;
         }

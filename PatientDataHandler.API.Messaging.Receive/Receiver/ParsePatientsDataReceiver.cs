@@ -67,16 +67,28 @@ namespace PatientDataHandler.API.Messaging.Receive.Receiver
             consumer.Received += (ch, ea) =>
             {
                 string content = Encoding.UTF8.GetString(ea.Body.ToArray());
-#warning надо ли вообще отjson-вать string?
-                var dataFileName = JsonConvert.DeserializeObject<string>(content); 
-
-                parsePatientsDataService.ParsePatients(dataFileName);
+#warning Гарантируется ли, что здесь всегда приходит только дата пациентов, а не все сообщения?
+                Stream s = GenerateStreamFromString(content);
+//#warning надо ли вообще отjson-вать string?
+//                var dataFileName = JsonConvert.DeserializeObject<string>(content); 
+                parsePatientsDataService.ParsePatients(s);
                 channel.BasicAck(ea.DeliveryTag, false);
             };
 
             channel.BasicConsume(queueName, false, consumer);
 
             return Task.CompletedTask;
+        }
+
+
+        private Stream GenerateStreamFromString(string s)
+        {
+            var stream = new MemoryStream();
+            var writer = new StreamWriter(stream);
+            writer.Write(s);
+            writer.Flush();
+            stream.Position = 0;
+            return stream;
         }
     }
 }

@@ -8,6 +8,6 @@ namespace PatientDataHandler.API.Service.Services
 {
     public interface IParsePatientsDataService
     {
-        void ParsePatients(string pathToFile);
+        void ParsePatients(Stream fileStream);
     }
 }

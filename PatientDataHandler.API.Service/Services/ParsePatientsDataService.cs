@@ -19,11 +19,11 @@ namespace PatientDataHandler.API.Service.Services
             this.mediator = mediator;
         }
 
-        public async void ParsePatients(string pathToFile)
+        public async void ParsePatients(Stream fileStream)
         {
             try
             {
-                await mediator.Send(new SendPatientsDataFileCommand() { PathToFile = pathToFile });
+                await mediator.Send(new SendPatientsDataFileCommand() { FileStream = fileStream });
             }
             catch (Exception ex)
             {

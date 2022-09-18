@@ -13,7 +13,13 @@ namespace PatientDataHandler.API.Entities
         public IList<IPatientData> ParseData(string filePath)
         {
             //TODO add try catch
-            IList<IList<string>> rawData = LoadData(filePath);
+            Stream stream = File.Open(filePath, FileMode.Open, FileAccess.Read);
+            return ParseData(stream);
+        }
+
+        public IList<IPatientData> ParseData(Stream stream)
+        {
+            IList<IList<string>> rawData = LoadData(stream);
             DataPreprocessor dataPreprocessor = new DataPreprocessor();
             rawData = dataPreprocessor.PreProcessData(rawData);
             IList<IPatientData> data = ParseExcelData(rawData[0], rawData.Skip(1).ToList());
@@ -91,12 +97,13 @@ namespace PatientDataHandler.API.Entities
         }
 
 
-        private IList<IList<string>> LoadData(string filePath)
+        private IList<IList<string>> LoadData(Stream stream)
         {
             //TODO try catch
             IList<IList<string>> data = new List<IList<string>>();
             System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
-            using (var stream = File.Open(filePath, FileMode.Open, FileAccess.Read))
+            using(stream)
+            //using (var stream = File.Open(filePath, FileMode.Open, FileAccess.Read))
             {
                 using (var reader = ExcelReaderFactory.CreateReader(stream))
                 {
@@ -114,5 +121,7 @@ namespace PatientDataHandler.API.Entities
             }
             return data;
         }
+
+       
     }
 }

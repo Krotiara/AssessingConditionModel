@@ -10,6 +10,6 @@ namespace PatientDataHandler.API.Service.Command
 {
     public class SendPatientsDataFileCommand: IRequest
     {
-        public string PathToFile { get; set; }
+        public Stream FileStream { get; set; }
     }
 }
