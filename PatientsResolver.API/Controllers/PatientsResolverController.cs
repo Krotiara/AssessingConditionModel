@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PatientsResolver.API.Data;
 using PatientsResolver.API.Entities;
-using PatientsResolver.API.Service.Command;
 
 namespace PatientsResolver.API.Controllers
 {
@@ -21,56 +20,65 @@ namespace PatientsResolver.API.Controllers
         }
 
 
-        [HttpGet("getPatientData/{patientId}")]
-        public async Task<ActionResult<IList<IPatientData>>> GetPatientData(int patientId)
-        {
-            IQueryable<PatientData> patientDatas = patientsDataDbContext
-                .PatientDatas
-                .Where(x => x.PatientId == patientId);
+        //        [HttpGet("getPatientData/{patientId}")]
+        //        public async Task<ActionResult<IList<IPatientData>>> GetPatientData(int patientId)
+        //        {
+        //            IQueryable<PatientData> patientDatas = patientsDataDbContext
+        //                .PatientDatas
+        //                .Where(x => x.PatientId == patientId);
 
-            if (patientDatas.Count() == 0)
-                return BadRequest("No patient data is found");
+        //            if (patientDatas.Count() == 0)
+        //                return BadRequest("No patient data is found");
 
-#warning Выскакивала ошибка The expression 'x.Parameters' is invalid inside an 'Include' operation
-            List<PatientData> datas = await patientDatas
-                .Include(x=>x.Patient)
-                .Include(x => x.Parameters)
-                .ToListAsync();
-            return Ok(datas);
-        }
+        //#warning Выскакивала ошибка The expression 'x.Parameters' is invalid inside an 'Include' operation
+        //            List<PatientData> datas = await patientDatas
+        //                .Include(x=>x.Patient)
+        //                .Include(x => x.Parameters)
+        //                .ToListAsync();
+        //            return Ok(datas);
+        //        }
 
 
-        [HttpGet("getPatient/{patientId}")]
-        public async Task<ActionResult<IPatient>> GetPatient(long patientMedicalHistoryNumber)
-        {
-            Patient? patient = await patientsDataDbContext
-                .Patients
-                .FirstOrDefaultAsync(x => x.MedicalHistoryNumber == patientMedicalHistoryNumber);
+        //        [HttpGet("getPatient/{patientId}")]
+        //        public async Task<ActionResult<IPatient>> GetPatient(long patientMedicalHistoryNumber)
+        //        {
+        //            Patient? patient = await patientsDataDbContext
+        //                .Patients
+        //                .FirstOrDefaultAsync(x => x.MedicalHistoryNumber == patientMedicalHistoryNumber);
 
-            if (patient == null)
-                return BadRequest($"Patient with medical history number = {patientMedicalHistoryNumber} was not found.");
+        //            if (patient == null)
+        //                return BadRequest($"Patient with medical history number = {patientMedicalHistoryNumber} was not found.");
 
-            return Ok(patient);
-        }
+        //            return Ok(patient);
+        //        }
 
+
+        //[HttpPost("addData/{pathToPatientsDataFile}")]
+        //public async ActionResult<List<IPatientData>> AddPatientsData(string pathToPatientsDataFile)
+        //{
+        //    //Отправить запрос на парсинг данных.
+        //    IList<IPatientData> patientDatas = await mediator.Send()
+        //    //Отправить команду на добавление данных
+        //}
 
 
         [HttpPost("saveData")]
         public async Task<ActionResult<List<IPatientData>>> SavePatientDataAsync(List<IPatientData> patientDatas)
         {
-            try
-            {
-#warning могут быть проблемы с кастами.
-                List<PatientData> datas = await mediator.Send(new CreatePatientDatasCommand()
-                {
-                    PatientDatas = patientDatas.Cast<PatientData>().ToList()
-                });
-                return datas.Cast<IPatientData>().ToList();
-            }
-            catch(Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            throw new NotImplementedException();
+//            try
+//            {
+//#warning могут быть проблемы с кастами.
+//                List<PatientData> datas = await mediator.Send(new CreatePatientDatasCommand()
+//                {
+//                    PatientDatas = patientDatas.Cast<PatientData>().ToList()
+//                });
+//                return datas.Cast<IPatientData>().ToList();
+//            }
+//            catch(Exception ex)
+//            {
+//                return BadRequest(ex.Message);
+//            }
             //try
             //{
             //    using (var transaction = patientsDataDbContext.Database.BeginTransaction())

@@ -1,6 +1,14 @@
 using Interfaces;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
+using PatientDataHandler.API.Entities;
+using PatientDataHandler.API.Messaging.Receive;
+using PatientDataHandler.API.Messaging.Receive.Receiver;
 using PatientDataHandler.API.Models;
+using PatientDataHandler.API.Service.Command;
+using PatientDataHandler.API.Service.Services;
+using PatientDataHandler.API_Messaging.Send.Sender;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -38,6 +46,19 @@ builder.Services.AddTransient<Func<DataParserTypes, IDataProvider>>(serviceProvi
             return null;
     }
 });
+
+#region RabbitMQ
+var serviceClientSettingsConfig = builder.Configuration.GetSection("RabbitMq");
+var serviceClientSettings = serviceClientSettingsConfig.Get<RabbitMqConfiguration>();
+builder.Services.Configure<RabbitMqConfiguration>(serviceClientSettingsConfig);
+builder.Services.AddMediatR(Assembly.GetExecutingAssembly(), typeof(IParsePatientsDataService).Assembly);
+builder.Services.AddTransient<IRequestHandler<SendPatientsDataFileCommand>, SendPatientsDataFileCommandHandler>();
+builder.Services.AddTransient<IPatientsDataSender, PatientsDataSender>();
+if (serviceClientSettings.Enabled)
+{
+    builder.Services.AddHostedService<ParsePatientsDataReceiver>();
+}
+#endregion
 
 var app = builder.Build();
 

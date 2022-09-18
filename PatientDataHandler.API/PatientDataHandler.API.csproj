@@ -11,6 +11,8 @@
 
   <ItemGroup>
     <PackageReference Include="ExcelDataReader" Version="3.6.0" />
+    <PackageReference Include="MediatR" Version="10.0.1" />
+    <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="10.0.1" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.14.0" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="6.0.6" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
@@ -18,6 +20,10 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Interfaces\Interfaces.csproj" />
+    <ProjectReference Include="..\PatientDataHandler.API.Entities\PatientDataHandler.API.Entities.csproj" />
+    <ProjectReference Include="..\PatientDataHandler.API.Messaging.Receive\PatientDataHandler.API.Messaging.Receive.csproj" />
+    <ProjectReference Include="..\PatientDataHandler.API.Service\PatientDataHandler.API.Service.csproj" />
+    <ProjectReference Include="..\PatientsResolver.API.Entities\PatientsResolver.API.Entities.csproj" />
   </ItemGroup>
 
 </Project>

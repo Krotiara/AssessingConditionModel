@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Diagnostics.CodeAnalysis;
 
-namespace PatientDataHandler.API.Models
+namespace PatientDataHandler.API.Entities
 {
     public class PatientData : IPatientData
     {

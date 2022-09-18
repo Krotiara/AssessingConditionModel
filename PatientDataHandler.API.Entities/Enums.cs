@@ -1,4 +1,4 @@
-﻿namespace PatientDataHandler.API.Models
+﻿namespace PatientDataHandler.API.Entities
 {
    public enum DataParserTypes
     {

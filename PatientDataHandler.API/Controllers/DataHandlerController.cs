@@ -1,6 +1,7 @@
 ﻿using Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using PatientDataHandler.API.Entities;
 using PatientDataHandler.API.Models;
 
 namespace PatientDataHandler.API.Controllers

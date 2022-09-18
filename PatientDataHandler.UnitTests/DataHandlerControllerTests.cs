@@ -2,6 +2,7 @@ using Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Moq;
 using PatientDataHandler.API.Controllers;
+using PatientDataHandler.API.Entities;
 using PatientDataHandler.API.Models;
 
 namespace PatientDataHandler.UnitTests

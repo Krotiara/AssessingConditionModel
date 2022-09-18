@@ -17,4 +17,10 @@
     <ProjectReference Include="..\PatientsResolver.API.Messaging.Send\PatientsResolver.API.Messaging.Send.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Command\" />
+    <Folder Include="Query\" />
+    <Folder Include="Services\" />
+  </ItemGroup>
+
 </Project>

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace PatientDataHandler.API.Models
+namespace PatientDataHandler.API.Entities
 {
     public class DataPreprocessor
     {

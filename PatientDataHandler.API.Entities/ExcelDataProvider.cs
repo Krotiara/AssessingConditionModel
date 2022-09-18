@@ -1,7 +1,7 @@
 ﻿using ExcelDataReader;
 using Interfaces;
 
-namespace PatientDataHandler.API.Models
+namespace PatientDataHandler.API.Entities
 {
     public class ExcelDataProvider : IDataProvider
     {

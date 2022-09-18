@@ -5,10 +5,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PatientsResolver.API.Messaging.Send.Sender
+namespace PatientDataHandler.API_Messaging.Send.Sender
 {
-    public interface IPatientDataUpdateSender
+    public interface IPatientsDataSender
     {
-        void SendPatientData(IPatientData data);
+        void SendPatientsData(IList<IPatientData> data);
     }
 }

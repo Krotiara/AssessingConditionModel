@@ -47,6 +47,14 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PatientsResolver.API.Entiti
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PatientsResolver.API.Data", "PatientsResolver.API.Data\PatientsResolver.API.Data.csproj", "{1D192C04-3C7D-4EB8-A046-2619D35771A0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PatientDataHandler.API.Entities", "PatientDataHandler.API.Entities\PatientDataHandler.API.Entities.csproj", "{ABBA57B9-2DB9-43A8-856F-1ABAF1B838B5}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PatientDataHandler.API.Service", "PatientDataHandler.API.Service\PatientDataHandler.API.Service.csproj", "{EDAC359C-B587-41E6-9883-622E957C2DA6}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PatientDataHandler.API.Messaging.Receive", "PatientDataHandler.API.Messaging.Receive\PatientDataHandler.API.Messaging.Receive.csproj", "{99E5FD86-94CB-4DE0-AF42-385D6DB02733}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PatientDataHandler.API,Messaging.Send", "PatientDataHandler.API,Messaging.Send\PatientDataHandler.API,Messaging.Send.csproj", "{8AD76212-54C0-41FA-9A9A-E0508932AFB5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -109,6 +117,22 @@ Global
 		{1D192C04-3C7D-4EB8-A046-2619D35771A0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1D192C04-3C7D-4EB8-A046-2619D35771A0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1D192C04-3C7D-4EB8-A046-2619D35771A0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ABBA57B9-2DB9-43A8-856F-1ABAF1B838B5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ABBA57B9-2DB9-43A8-856F-1ABAF1B838B5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ABBA57B9-2DB9-43A8-856F-1ABAF1B838B5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ABBA57B9-2DB9-43A8-856F-1ABAF1B838B5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EDAC359C-B587-41E6-9883-622E957C2DA6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EDAC359C-B587-41E6-9883-622E957C2DA6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EDAC359C-B587-41E6-9883-622E957C2DA6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EDAC359C-B587-41E6-9883-622E957C2DA6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{99E5FD86-94CB-4DE0-AF42-385D6DB02733}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{99E5FD86-94CB-4DE0-AF42-385D6DB02733}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{99E5FD86-94CB-4DE0-AF42-385D6DB02733}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{99E5FD86-94CB-4DE0-AF42-385D6DB02733}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8AD76212-54C0-41FA-9A9A-E0508932AFB5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8AD76212-54C0-41FA-9A9A-E0508932AFB5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8AD76212-54C0-41FA-9A9A-E0508932AFB5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8AD76212-54C0-41FA-9A9A-E0508932AFB5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -131,6 +155,10 @@ Global
 		{11B6D910-BE8F-4927-A9AF-0188BC91264B} = {098F5959-B072-4E7F-ADAB-081A7EF0EF69}
 		{ED9AA8C4-E041-40BA-B568-98E3F5361DDA} = {098F5959-B072-4E7F-ADAB-081A7EF0EF69}
 		{1D192C04-3C7D-4EB8-A046-2619D35771A0} = {098F5959-B072-4E7F-ADAB-081A7EF0EF69}
+		{ABBA57B9-2DB9-43A8-856F-1ABAF1B838B5} = {8935F66D-F1E7-4C5F-9C0E-F251E5E2192A}
+		{EDAC359C-B587-41E6-9883-622E957C2DA6} = {8935F66D-F1E7-4C5F-9C0E-F251E5E2192A}
+		{99E5FD86-94CB-4DE0-AF42-385D6DB02733} = {8935F66D-F1E7-4C5F-9C0E-F251E5E2192A}
+		{8AD76212-54C0-41FA-9A9A-E0508932AFB5} = {8935F66D-F1E7-4C5F-9C0E-F251E5E2192A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {6FA4C998-2594-48A2-A283-C474A19E73B5}
