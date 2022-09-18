@@ -50,11 +50,12 @@ namespace PatientsResolver.API.Controllers
         }
 
 
-        [HttpPost]
+        [HttpPost("addData/{pathToDataFile}")]
         public async Task<ActionResult> AddData(string pathToDataFile)
         {
             try
             {
+                //D:/Downloads/ExcelDataTestFormat (1).xlsx
                 Stream stream = System.IO.File.Open(pathToDataFile, FileMode.Open, FileAccess.Read);
                 return Ok(await mediator.Send(new SendPatientDataFileSourceCommand() { Stream = stream }));
             }
