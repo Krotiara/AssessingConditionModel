@@ -17,7 +17,7 @@ namespace PatientsResolver.API.Entities
         [NotNull]
         [Key]
         [Column("Id")]
-        public long Id { get; set; }
+        public int Id { get; set; }
 
         [NotNull]
         [Column("Name")]
@@ -29,6 +29,6 @@ namespace PatientsResolver.API.Entities
 
         [NotNull]
         [Column("MedicalHistoryNumber")]
-        public long MedicalHistoryNumber { get; set; }
+        public int MedicalHistoryNumber { get; set; }
     }
 }

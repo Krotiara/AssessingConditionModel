@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PatientsResolver.API.Data;
 using PatientsResolver.API.Entities;
+using PatientsResolver.API.Service.Query;
 
 namespace PatientsResolver.API.Controllers
 {
@@ -19,6 +20,33 @@ namespace PatientsResolver.API.Controllers
             this.mediator = mediator;
         }
 
+
+        [HttpGet("patientsData/{patientId}")]
+        public async Task<ActionResult<List<PatientData>>> GetPatientsDataAsync(int patientId)
+        {
+            try
+            {
+                return Ok(await mediator.Send(new GetPatientQuery() { PatientId = patientId}));
+            }
+            catch(Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+
+        [HttpGet("patients/{patientId}")]
+        public async Task<ActionResult<Patient>> GetPatient(int patientId)
+        {
+            try
+            {
+                return Ok(await mediator.Send(new GetPatientQuery() { PatientId = patientId }));
+            }
+            catch(Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
 
         //        [HttpGet("getPatientData/{patientId}")]
         //        public async Task<ActionResult<IList<IPatientData>>> GetPatientData(int patientId)

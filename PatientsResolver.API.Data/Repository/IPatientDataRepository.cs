@@ -7,8 +7,11 @@ using System.Threading.Tasks;
 
 namespace PatientsResolver.API.Data.Repository
 {
-    public interface IPatientDatarepository: IRepository<PatientData>
+    public interface IPatientDataRepository: IRepository<PatientData>
     {
-        Task<Patient> GetPatientDataByIdAsync(long patientMedHistoryNumber, CancellationToken cancellationToken);
+        Task<Patient> GetPatientDataByIdAsync(int patientMedHistoryNumber, CancellationToken cancellationToken);
+
+        Task<List<PatientData>> GetPatientData(int patientId);
+
     }
 }
