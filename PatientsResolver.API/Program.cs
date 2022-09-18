@@ -2,9 +2,13 @@ using Interfaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using PatientsResolver.API.Data;
+using PatientsResolver.API.Data.Repository;
 using PatientsResolver.API.Entities;
 using PatientsResolver.API.Messaging.Send;
 using PatientsResolver.API.Models;
+using PatientsResolver.API.Service.Command;
+using PatientsResolver.API.Service.Query;
+using PatientsResolver.API.Service.Services;
 using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -34,30 +38,33 @@ builder.Services.AddScoped<IPatientData, PatientData>();
 builder.Services.AddScoped<IPatientParameter, PatientParameter>();
 builder.Services.AddScoped<IPatient, Patient>();
 
+builder.Services.AddTransient<IPatientDataRepository, PatientDataRepository>();
+builder.Services.AddTransient<IAddPatientsDataFromSourceService, AddPatientsDataFromSourceService>();
+
 builder.Services.AddOptions();
 
-//#region rabbitMQ
-///*Теперь вы можете выполнять ваши запросы. Для этого вам потребуется получить экземпляр интерфейса IMediator. Он регистрируется в вашем контейнере зависимостей той же командой AddMediatR.*/
-//builder.Services.AddMediatR(Assembly.GetExecutingAssembly());
+#region rabbitMQ
+/*Теперь вы можете выполнять ваши запросы. Для этого вам потребуется получить экземпляр интерфейса IMediator. Он регистрируется в вашем контейнере зависимостей той же командой AddMediatR.*/
+builder.Services.AddMediatR(Assembly.GetExecutingAssembly());
 
-//var serviceClientSettingsConfig = builder.Configuration.GetSection("RabbitMq");
-//builder.Services.Configure<RabbitMqConfiguration>(serviceClientSettingsConfig);
+var serviceClientSettingsConfig = builder.Configuration.GetSection("RabbitMq");
+builder.Services.Configure<RabbitMqConfiguration>(serviceClientSettingsConfig);
 
-//bool.TryParse(builder.Configuration["BaseServiceSettings:UserabbitMq"], out var useRabbitMq);
+bool.TryParse(builder.Configuration["BaseServiceSettings:UserabbitMq"], out var useRabbitMq);
 
-//if(useRabbitMq)
-//{
-//    builder.Services.AddSingleton<IPatientDataUpdateSender, PatientDatasUpdateSender>();
-//    builder.Services.AddSingleton<IPatientsDataFilePathSender, PatientsDataFilePathSender>();
-//}
+if (useRabbitMq)
+{
+    //builder.Services.AddSingleton<IPatientDataUpdateSender, PatientDatasUpdateSender>();
+    //builder.Services.AddSingleton<IPatientsDataFilePathSender, PatientsDataFilePathSender>();
+}
 
-//builder.Services.AddTransient<IRequestHandler<UpdatePatientDataCommand, IPatientData>,
-//    UpdatePatientDataCommandHandler>();
-//builder.Services.AddTransient<IRequestHandler<CreatePatientDatasCommand, List<PatientData>>,
-//    CreatePatientDatasCommandHandler>();
-//builder.Services.AddTransient<IRequestHandler<ParsePatientsDataCommand, IList<IPatientData>>,
-//    ParsePatientsDataCommandHandler>();
-//#endregion
+builder.Services.AddTransient<IRequestHandler<GetPatientDataQuery, List<PatientData>>,
+    GetPatientDataQueryHandler>();
+builder.Services.AddTransient<IRequestHandler<GetPatientQuery, Patient>,
+    GetPatientQueryHandler>();
+builder.Services.AddTransient<IRequestHandler<AddPatientDataCommand, List<PatientData>>,
+    AddPatientDataCommandHandler>();
+#endregion
 
 var app = builder.Build();
 

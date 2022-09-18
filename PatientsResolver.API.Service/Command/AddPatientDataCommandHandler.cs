@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace PatientsResolver.API.Service.Command
 {
-    internal class AddPatientDataCommandHandler : IRequestHandler<AddPatientDataCommand, List<PatientData>>
+    public class AddPatientDataCommandHandler : IRequestHandler<AddPatientDataCommand, List<PatientData>>
     {
 
         private readonly IPatientDataRepository patientDatarepository;
