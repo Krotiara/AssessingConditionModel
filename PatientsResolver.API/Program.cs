@@ -5,6 +5,7 @@ using PatientsResolver.API.Data;
 using PatientsResolver.API.Data.Repository;
 using PatientsResolver.API.Entities;
 using PatientsResolver.API.Messaging.Send;
+using PatientsResolver.API.Messaging.Send.Sender;
 using PatientsResolver.API.Models;
 using PatientsResolver.API.Service.Command;
 using PatientsResolver.API.Service.Query;
@@ -52,11 +53,9 @@ builder.Services.Configure<RabbitMqConfiguration>(serviceClientSettingsConfig);
 
 bool.TryParse(builder.Configuration["BaseServiceSettings:UserabbitMq"], out var useRabbitMq);
 
-if (useRabbitMq)
-{
-    //builder.Services.AddSingleton<IPatientDataUpdateSender, PatientDatasUpdateSender>();
-    //builder.Services.AddSingleton<IPatientsDataFilePathSender, PatientsDataFilePathSender>();
-}
+
+
+builder.Services.AddSingleton<IPatientFileDataSender, PatientFileDataSender>();
 
 builder.Services.AddTransient<IRequestHandler<GetPatientDataQuery, List<PatientData>>,
     GetPatientDataQueryHandler>();
@@ -64,6 +63,8 @@ builder.Services.AddTransient<IRequestHandler<GetPatientQuery, Patient>,
     GetPatientQueryHandler>();
 builder.Services.AddTransient<IRequestHandler<AddPatientDataCommand, List<PatientData>>,
     AddPatientDataCommandHandler>();
+builder.Services.AddTransient<IRequestHandler<SendPatientDataFileSourceCommand>,
+    SendPatientDataFileSourceCommandHandler>();
 #endregion
 
 var app = builder.Build();

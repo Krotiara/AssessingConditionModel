@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PatientsResolver.API.Data;
 using PatientsResolver.API.Entities;
+using PatientsResolver.API.Service.Command;
 using PatientsResolver.API.Service.Query;
 
 namespace PatientsResolver.API.Controllers
@@ -41,6 +42,21 @@ namespace PatientsResolver.API.Controllers
             try
             {
                 return Ok(await mediator.Send(new GetPatientQuery() { PatientId = patientId }));
+            }
+            catch(Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+
+        [HttpPost]
+        public async Task<ActionResult> AddData(string pathToDataFile)
+        {
+            try
+            {
+                Stream stream = System.IO.File.Open(pathToDataFile, FileMode.Open, FileAccess.Read);
+                return Ok(await mediator.Send(new SendPatientDataFileSourceCommand() { Stream = stream }));
             }
             catch(Exception ex)
             {
