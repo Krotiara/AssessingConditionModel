@@ -6,6 +6,8 @@ services:
     build:
       context: .
       dockerfile: PatientsResolver.API/Dockerfile
+    volumes:
+      - "C:/Users/Lisovenko/Desktop/asp:/data"
 
   influencecalculator.api:
     image: ${DOCKER_REGISTRY-}influencecalculatorapi
@@ -14,9 +16,11 @@ services:
       dockerfile: InfluenceCalculator.API/Dockerfile
 
 
+
   patientdatahandler.api:
     image: ${DOCKER_REGISTRY-}patientdatahandlerapi
     build:
       context: .
       dockerfile: PatientDataHandler.API/Dockerfile
+    
 

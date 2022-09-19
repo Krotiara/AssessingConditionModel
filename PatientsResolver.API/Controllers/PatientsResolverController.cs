@@ -55,7 +55,7 @@ namespace PatientsResolver.API.Controllers
         {
             try
             {
-                //D:/Downloads/ExcelDataTestFormat (1).xlsx
+                pathToDataFile = pathToDataFile.Replace("%2F", "/"); //TODO вынести в отдельный метод
                 Stream stream = System.IO.File.Open(pathToDataFile, FileMode.Open, FileAccess.Read);
                 return Ok(await mediator.Send(new SendPatientDataFileSourceCommand() { Stream = stream }));
             }
