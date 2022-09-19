@@ -15,12 +15,22 @@ services:
       context: .
       dockerfile: InfluenceCalculator.API/Dockerfile
 
-
-
   patientdatahandler.api:
     image: ${DOCKER_REGISTRY-}patientdatahandlerapi
     build:
       context: .
       dockerfile: PatientDataHandler.API/Dockerfile
+
+  rabbitmq:
+    container_name: rabbitmq
+    tty: true
+    hostname: rabbitmq
+    ports:
+        - "15672:15672"
+        - "5672:5672"
+    image: rabbitmq:3-management
+    environment:
+        - RABBITMQ_DEFAULT_USER=user
+        - RABBITMQ_DEFAULT_PASS=password
     
 

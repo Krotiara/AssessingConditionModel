@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using PatientsResolver.API.Data;
 using PatientsResolver.API.Data.Repository;
 using PatientsResolver.API.Entities;
+using PatientsResolver.API.Messaging.Receive.Receiver;
 using PatientsResolver.API.Messaging.Send;
 using PatientsResolver.API.Messaging.Send.Sender;
 using PatientsResolver.API.Models;
@@ -38,6 +39,7 @@ builder.Services.AddDbContext<PatientsDataDbContext>(options => options.UseNpgsq
 builder.Services.AddScoped<IPatientData, PatientData>();
 builder.Services.AddScoped<IPatientParameter, PatientParameter>();
 builder.Services.AddScoped<IPatient, Patient>();
+builder.Services.AddScoped<IFileData, FileData>();
 
 builder.Services.AddTransient<IPatientDataRepository, PatientDataRepository>();
 builder.Services.AddTransient<IAddPatientsDataFromSourceService, AddPatientsDataFromSourceService>();
@@ -45,18 +47,17 @@ builder.Services.AddTransient<IAddPatientsDataFromSourceService, AddPatientsData
 builder.Services.AddOptions();
 
 #region rabbitMQ
-/*Теперь вы можете выполнять ваши запросы. Для этого вам потребуется получить экземпляр интерфейса IMediator. Он регистрируется в вашем контейнере зависимостей той же командой AddMediatR.*/
-builder.Services.AddMediatR(Assembly.GetExecutingAssembly());
+
 
 var serviceClientSettingsConfig = builder.Configuration.GetSection("RabbitMq");
+var serviceClientSettings = serviceClientSettingsConfig.Get<RabbitMqConfiguration>();
 builder.Services.Configure<RabbitMqConfiguration>(serviceClientSettingsConfig);
-
-bool.TryParse(builder.Configuration["BaseServiceSettings:UserabbitMq"], out var useRabbitMq);
+/*Теперь вы можете выполнять ваши запросы. Для этого вам потребуется получить экземпляр интерфейса IMediator. Он регистрируется в вашем контейнере зависимостей той же командой AddMediatR.*/
+builder.Services.AddMediatR(Assembly.GetExecutingAssembly());
 
 
 
 builder.Services.AddSingleton<IPatientFileDataSender, PatientFileDataSender>();
-builder.Services.AddSingleton<IAddPatientsDataFromSourceService, AddPatientsDataFromSourceService>();
 
 builder.Services.AddTransient<IRequestHandler<GetPatientDataQuery, List<PatientData>>,
     GetPatientDataQueryHandler>();
@@ -66,6 +67,11 @@ builder.Services.AddTransient<IRequestHandler<AddPatientDataCommand, List<Patien
     AddPatientDataCommandHandler>();
 builder.Services.AddTransient<IRequestHandler<SendPatientDataFileSourceCommand, Unit>,
     SendPatientDataFileSourceCommandHandler>();
+
+if (serviceClientSettings.Enabled)
+{
+    builder.Services.AddHostedService<AddPatientsDataFromSourceReceiver>();
+}
 
 #endregion
 

@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
+using PatientDataHandler.API.Entities;
 using PatientDataHandler.API.Service.Services;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
@@ -67,11 +68,12 @@ namespace PatientDataHandler.API.Messaging.Receive.Receiver
             consumer.Received += (ch, ea) =>
             {
                 string content = Encoding.UTF8.GetString(ea.Body.ToArray());
+                FileData fileData = JsonConvert.DeserializeObject<FileData>(content);
 #warning Гарантируется ли, что здесь всегда приходит только дата пациентов, а не все сообщения?
-                Stream s = GenerateStreamFromString(content);
+                //Stream s = GenerateStreamFromString(content);
 //#warning надо ли вообще отjson-вать string?
 //                var dataFileName = JsonConvert.DeserializeObject<string>(content); 
-                parsePatientsDataService.ParsePatients(s);
+                parsePatientsDataService.ParsePatients(fileData);
                 channel.BasicAck(ea.DeliveryTag, false);
             };
 
@@ -81,14 +83,6 @@ namespace PatientDataHandler.API.Messaging.Receive.Receiver
         }
 
 
-        private Stream GenerateStreamFromString(string s)
-        {
-            var stream = new MemoryStream();
-            var writer = new StreamWriter(stream);
-            writer.Write(s);
-            writer.Flush();
-            stream.Position = 0;
-            return stream;
-        }
+       
     }
 }

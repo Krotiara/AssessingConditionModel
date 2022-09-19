@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
+using PatientsResolver.API.Entities;
 using RabbitMQ.Client;
 using System;
 using System.Collections.Generic;
@@ -27,24 +28,15 @@ namespace PatientsResolver.API.Messaging.Send.Sender
             CreateConnection();
         }
 
-        public void SendPatientsFileData(Stream stream)
+        public void SendPatientsFileData(FileData data)
         {
             if (connection == null)
                 CreateConnection();
             using (IModel channel = connection.CreateModel())
             {
                 channel.QueueDeclare(queue: queueName);
-
-                Func<Stream, string> getStreamData = (stream) =>
-                {
-                    stream.Position = 0;
-                    StreamReader streamReader = new StreamReader(stream);
-                    return streamReader.ReadToEnd();
-                };
-
-                string data = getStreamData.Invoke(stream);   
-                byte[] body = Encoding.UTF8.GetBytes(data);
-
+                string jsonString = JsonConvert.SerializeObject(data);
+                byte[] body = Encoding.UTF8.GetBytes(jsonString);
                 channel.BasicPublish(exchange: "", routingKey: queueName, body: body);
             }
         }
@@ -64,6 +56,7 @@ namespace PatientsResolver.API.Messaging.Send.Sender
             }
             catch (Exception ex)
             {
+                //LOG
                 Console.WriteLine($"Could not create connection: {ex.Message}");
             }
         }

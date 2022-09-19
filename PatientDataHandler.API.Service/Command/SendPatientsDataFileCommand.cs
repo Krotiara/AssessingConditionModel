@@ -1,5 +1,6 @@
 ﻿using Interfaces;
 using MediatR;
+using PatientDataHandler.API.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +11,6 @@ namespace PatientDataHandler.API.Service.Command
 {
     public class SendPatientsDataFileCommand: IRequest
     {
-        public Stream FileStream { get; set; }
+        public FileData Data { get; set; }
     }
 }

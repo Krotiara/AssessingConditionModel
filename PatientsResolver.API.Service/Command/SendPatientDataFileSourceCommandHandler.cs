@@ -19,7 +19,7 @@ namespace PatientsResolver.API.Service.Command
 
         public async Task<Unit> Handle(SendPatientDataFileSourceCommand request, CancellationToken cancellationToken)
         {
-            patientFileDataSender.SendPatientsFileData(request.Stream);
+            patientFileDataSender.SendPatientsFileData(request.Data);
             return await Unit.Task;
         }
     }
