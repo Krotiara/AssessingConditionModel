@@ -51,13 +51,11 @@ builder.Services.AddOptions();
 
 var serviceClientSettingsConfig = builder.Configuration.GetSection("RabbitMq");
 var serviceClientSettings = serviceClientSettingsConfig.Get<RabbitMqConfiguration>();
-builder.Services.Configure<RabbitMqConfiguration>(serviceClientSettingsConfig);
+#warning Криво, нужно вынести RabbitMqConfiguration отдельно.
+builder.Services.Configure<PatientsResolver.API.Messaging.Send.RabbitMqConfiguration>(serviceClientSettingsConfig);
+builder.Services.Configure<PatientsResolver.API.Messaging.Receive.RabbitMqConfiguration>(serviceClientSettingsConfig);
 /*Теперь вы можете выполнять ваши запросы. Для этого вам потребуется получить экземпляр интерфейса IMediator. Он регистрируется в вашем контейнере зависимостей той же командой AddMediatR.*/
 builder.Services.AddMediatR(Assembly.GetExecutingAssembly());
-
-
-
-builder.Services.AddSingleton<IPatientFileDataSender, PatientFileDataSender>();
 
 builder.Services.AddTransient<IRequestHandler<GetPatientDataQuery, List<PatientData>>,
     GetPatientDataQueryHandler>();
@@ -72,6 +70,9 @@ if (serviceClientSettings.Enabled)
 {
     builder.Services.AddHostedService<AddPatientsDataFromSourceReceiver>();
 }
+
+
+builder.Services.AddSingleton<IPatientFileDataSender, PatientFileDataSender>();
 
 #endregion
 

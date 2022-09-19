@@ -68,13 +68,21 @@ namespace PatientsResolver.API.Messaging.Receive.Receiver
             EventingBasicConsumer consumer = new EventingBasicConsumer(channel);
             consumer.Received += (ch, ea) =>
             {
-                string content = Encoding.UTF8.GetString(ea.Body.ToArray());
-                List<PatientData> data = 
-                (List<PatientData>)JsonConvert.DeserializeObject<List<IPatientData>>(content)
-                .Cast<PatientData>();
+                try
+                {
+                    string content = Encoding.UTF8.GetString(ea.Body.ToArray());
+                    List<PatientData> data =
+                    (List<PatientData>)JsonConvert.DeserializeObject<List<IPatientData>>(content)
+                    .Cast<PatientData>();
 
-                addPatientsDataFromSourceService.AddPatientsData(data);
-                channel.BasicAck(ea.DeliveryTag, false);
+                    addPatientsDataFromSourceService.AddPatientsData(data);
+                    channel.BasicAck(ea.DeliveryTag, false);
+                }
+                catch (Newtonsoft.Json.JsonSerializationException ex)
+                {
+                    //TODO add log
+                    channel.BasicReject(ea.DeliveryTag, false);
+                }
             };
 
             channel.BasicConsume(queueName, false, consumer);

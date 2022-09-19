@@ -7,6 +7,7 @@ using PatientsResolver.API.Data;
 using PatientsResolver.API.Entities;
 using PatientsResolver.API.Service.Command;
 using PatientsResolver.API.Service.Query;
+using System.Text;
 
 namespace PatientsResolver.API.Controllers
 {
@@ -61,7 +62,7 @@ namespace PatientsResolver.API.Controllers
                     Func<Stream, string> getStreamData = (stream) =>
                     {
                         stream.Position = 0;
-                        StreamReader streamReader = new StreamReader(stream);
+                        StreamReader streamReader = new StreamReader(stream, encoding: Encoding.UTF8);
                         return streamReader.ReadToEnd();
                     };
                     string data = getStreamData(stream);

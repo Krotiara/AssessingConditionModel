@@ -34,7 +34,7 @@ builder.Services.AddScoped<IPatientData, PatientData>();
 builder.Services.AddScoped<IPatientParameter, PatientParameter>();
 builder.Services.AddScoped<IInfluence, Influence>();
 
-builder.Services.AddScoped<ExcelDataProvider>();
+builder.Services.AddSingleton<ExcelDataProvider>();
 
 builder.Services.AddTransient<Func<DataParserTypes, IDataProvider>>(serviceProvider => serviceTypeName =>
 {

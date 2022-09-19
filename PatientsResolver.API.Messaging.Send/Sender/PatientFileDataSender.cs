@@ -34,7 +34,7 @@ namespace PatientsResolver.API.Messaging.Send.Sender
                 CreateConnection();
             using (IModel channel = connection.CreateModel())
             {
-                channel.QueueDeclare(queue: queueName);
+                channel.QueueDeclare(queue: queueName, durable: false, exclusive: false, autoDelete: false, arguments: null);
                 string jsonString = JsonConvert.SerializeObject(data);
                 byte[] body = Encoding.UTF8.GetBytes(jsonString);
                 channel.BasicPublish(exchange: "", routingKey: queueName, body: body);
