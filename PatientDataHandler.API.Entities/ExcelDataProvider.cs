@@ -104,7 +104,8 @@ namespace PatientDataHandler.API.Entities
             System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
             using(stream)
             {
-                using (var reader = ExcelReaderFactory.CreateReader(stream))
+#warning Здесь ошибка с MemoryStream System.IO.InvalidDataException: Offset to Central Directory cannot be held in an Int64.
+                using (var reader = ExcelReaderFactory.CreateReader(stream)) 
                 {
                     while (reader.Read()) //Each ROW
                     {

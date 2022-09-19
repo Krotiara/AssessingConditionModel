@@ -67,14 +67,20 @@ namespace PatientDataHandler.API.Messaging.Receive.Receiver
             EventingBasicConsumer consumer = new EventingBasicConsumer(channel);
             consumer.Received += (ch, ea) =>
             {
-                string content = Encoding.UTF8.GetString(ea.Body.ToArray());
-                FileData fileData = JsonConvert.DeserializeObject<FileData>(content);
+                try
+                {
+                    string content = Encoding.UTF8.GetString(ea.Body.ToArray());
+                    FileData fileData = JsonConvert.DeserializeObject<FileData>(content);
 #warning Гарантируется ли, что здесь всегда приходит только дата пациентов, а не все сообщения?
-                //Stream s = GenerateStreamFromString(content);
-//#warning надо ли вообще отjson-вать string?
-//                var dataFileName = JsonConvert.DeserializeObject<string>(content); 
-                parsePatientsDataService.ParsePatients(fileData);
-                channel.BasicAck(ea.DeliveryTag, false);
+                    //Stream s = GenerateStreamFromString(content);
+                    parsePatientsDataService.ParsePatients(fileData);
+                    channel.BasicAck(ea.DeliveryTag, false);
+                }
+                catch(JsonSerializationException ex)
+                {
+                    //TODO log
+                    channel.BasicReject(ea.DeliveryTag, false);
+                }
             };
 
             channel.BasicConsume(queueName, false, consumer);
