@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 namespace PatientDataHandler.API.Service.Command
 {
     public class SendPatientsDataFileCommandHandler :
-        IRequestHandler<SendPatientsDataFileCommand>
+        IRequestHandler<SendPatientsDataFileCommand, Unit>
     {
         Func<DataParserTypes, IDataProvider> dataParserResolver;
         IPatientsDataSender patientsDataSender;

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace PatientsResolver.API.Service.Command
 {
-    public class SendPatientDataFileSourceCommandHandler : IRequestHandler<SendPatientDataFileSourceCommand>
+    public class SendPatientDataFileSourceCommandHandler : IRequestHandler<SendPatientDataFileSourceCommand, Unit>
     {
         private readonly IPatientFileDataSender patientFileDataSender;
 

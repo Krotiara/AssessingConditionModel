@@ -52,8 +52,10 @@ var serviceClientSettingsConfig = builder.Configuration.GetSection("RabbitMq");
 var serviceClientSettings = serviceClientSettingsConfig.Get<RabbitMqConfiguration>();
 builder.Services.Configure<RabbitMqConfiguration>(serviceClientSettingsConfig);
 builder.Services.AddMediatR(Assembly.GetExecutingAssembly(), typeof(IParsePatientsDataService).Assembly);
-builder.Services.AddTransient<IRequestHandler<SendPatientsDataFileCommand>, SendPatientsDataFileCommandHandler>();
+builder.Services.AddTransient<IRequestHandler<SendPatientsDataFileCommand, Unit>, SendPatientsDataFileCommandHandler>();
 builder.Services.AddTransient<IPatientsDataSender, PatientsDataSender>();
+builder.Services.AddTransient<IParsePatientsDataService, ParsePatientsDataService>();
+
 if (serviceClientSettings.Enabled)
 {
     builder.Services.AddHostedService<ParsePatientsDataReceiver>();

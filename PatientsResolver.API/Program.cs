@@ -56,6 +56,7 @@ bool.TryParse(builder.Configuration["BaseServiceSettings:UserabbitMq"], out var 
 
 
 builder.Services.AddSingleton<IPatientFileDataSender, PatientFileDataSender>();
+builder.Services.AddSingleton<IAddPatientsDataFromSourceService, AddPatientsDataFromSourceService>();
 
 builder.Services.AddTransient<IRequestHandler<GetPatientDataQuery, List<PatientData>>,
     GetPatientDataQueryHandler>();
@@ -63,8 +64,9 @@ builder.Services.AddTransient<IRequestHandler<GetPatientQuery, Patient>,
     GetPatientQueryHandler>();
 builder.Services.AddTransient<IRequestHandler<AddPatientDataCommand, List<PatientData>>,
     AddPatientDataCommandHandler>();
-builder.Services.AddTransient<IRequestHandler<SendPatientDataFileSourceCommand>,
+builder.Services.AddTransient<IRequestHandler<SendPatientDataFileSourceCommand, Unit>,
     SendPatientDataFileSourceCommandHandler>();
+
 #endregion
 
 var app = builder.Build();
