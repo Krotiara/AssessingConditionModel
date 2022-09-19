@@ -26,6 +26,7 @@ namespace PatientsResolver.API.Messaging.Receive.Receiver
 
         public AddPatientsDataFromSourceReceiver(IAddPatientsDataFromSourceService addPatientsDataFromSourceService, IOptions<RabbitMqConfiguration> rabbitMqOptions)
         {
+#warning передается пустой RabbitMqConfiguration и происходит краш
             hostname = rabbitMqOptions.Value.Hostname;
             queueName = rabbitMqOptions.Value.QueueName;
             username = rabbitMqOptions.Value.UserName;
