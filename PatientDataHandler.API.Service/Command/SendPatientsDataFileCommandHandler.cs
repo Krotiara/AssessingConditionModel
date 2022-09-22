@@ -23,28 +23,15 @@ namespace PatientDataHandler.API.Service.Command
             this.patientsDataSender = patientsDataSender;
         }
 
+
         public Task<Unit> Handle(SendPatientsDataFileCommand request, CancellationToken cancellationToken)
         {
             FileData fileData = request.Data; //TODO по FileData определение DataParserTypes
             IDataProvider dataProvider = dataParserResolver.Invoke(DataParserTypes.TestVahitova);
+            IList<IPatientData> patientDatas = dataProvider.ParseData(fileData.RawData);
+            patientsDataSender.SendPatientsData(patientDatas);
+            return Unit.Task;
 
-            using (Stream stream = GenerateStreamFromString(fileData.RawData))
-            {
-                IList<IPatientData> patientDatas = dataProvider.ParseData(stream);
-                patientsDataSender.SendPatientsData(patientDatas);
-                return Unit.Task;
-            }
-        }
-
-
-        private Stream GenerateStreamFromString(string s)
-        {
-            var stream = new MemoryStream();
-            var writer = new StreamWriter(stream);
-            writer.Write(s);
-            writer.Flush();
-            stream.Position = 0;
-            return stream;
         }
     }
 }

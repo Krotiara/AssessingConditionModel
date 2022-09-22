@@ -1,5 +1,6 @@
 ﻿using ExcelDataReader;
 using Interfaces;
+using OfficeOpenXml;
 
 namespace PatientDataHandler.API.Entities
 {
@@ -10,16 +11,22 @@ namespace PatientDataHandler.API.Entities
            
         }
  
+
         public IList<IPatientData> ParseData(string filePath)
         {
             //TODO add try catch
             Stream stream = File.Open(filePath, FileMode.Open, FileAccess.Read);
-            return ParseData(stream);
+            using (MemoryStream ms = new MemoryStream())
+            {
+                stream.CopyTo(ms);
+                return ParseData(ms.ToArray());
+            }
         }
 
-        public IList<IPatientData> ParseData(Stream stream)
+
+        public IList<IPatientData> ParseData(byte[] bytesData)
         {
-            IList<IList<string>> rawData = LoadData(stream);
+            IList<IList<string>> rawData = LoadData(bytesData);
             DataPreprocessor dataPreprocessor = new DataPreprocessor();
             rawData = dataPreprocessor.PreProcessData(rawData);
             IList<IPatientData> data = ParseExcelData(rawData[0], rawData.Skip(1).ToList());
@@ -97,15 +104,14 @@ namespace PatientDataHandler.API.Entities
         }
 
 
-        private IList<IList<string>> LoadData(Stream stream)
+        private IList<IList<string>> LoadData(byte[] bytesData)
         {
             //TODO try catch
             IList<IList<string>> data = new List<IList<string>>();
             System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
-            using(stream)
+            using (MemoryStream stream = new MemoryStream(bytesData))
             {
-#warning Здесь ошибка с MemoryStream System.IO.InvalidDataException: Offset to Central Directory cannot be held in an Int64.
-                using (var reader = ExcelReaderFactory.CreateReader(stream)) 
+                using (var reader = ExcelReaderFactory.CreateReader(stream))
                 {
                     while (reader.Read()) //Each ROW
                     {

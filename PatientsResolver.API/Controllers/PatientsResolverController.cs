@@ -59,13 +59,18 @@ namespace PatientsResolver.API.Controllers
                 pathToDataFile = pathToDataFile.Replace("%2F", "/"); //TODO вынести в отдельный метод
                 using (Stream stream = System.IO.File.Open(pathToDataFile, FileMode.Open, FileAccess.Read))
                 {
-                    Func<Stream, string> getStreamData = (stream) =>
+                    Func<Stream, byte[]> getStreamData = (stream) =>
                     {
                         stream.Position = 0;
-                        StreamReader streamReader = new StreamReader(stream, encoding: Encoding.UTF8);
-                        return streamReader.ReadToEnd();
+                        //StreamReader streamReader = new StreamReader(stream, encoding: Encoding.UTF8);
+                        //return streamReader.ReadToEnd();
+                        using(MemoryStream ms = new MemoryStream())
+                        {
+                            stream.CopyTo(ms);
+                            return ms.ToArray();
+                        }
                     };
-                    string data = getStreamData(stream);
+                    byte[] data = getStreamData(stream);
                     FileData fileData = new FileData() { RawData = data };
                     await mediator.Send(new SendPatientDataFileSourceCommand() { Data = fileData });
                 }

@@ -6,6 +6,6 @@ namespace PatientDataHandler.API.Entities
     {
         public IList<IPatientData> ParseData(string filePath);
 
-        public IList<IPatientData> ParseData(Stream stream);
+        public IList<IPatientData> ParseData(byte[] bytesData);
     }
 }

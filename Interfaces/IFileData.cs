@@ -8,6 +8,6 @@ namespace Interfaces
 {
     public interface IFileData
     {
-        public string RawData { get; set; }
+        public byte[] RawData { get; set; }
     }
 }

@@ -9,6 +9,6 @@ namespace PatientsResolver.API.Entities
 {
     public class FileData : IFileData
     {
-        public string RawData { get; set; }
+        public byte[] RawData { get; set; }
     }
 }
