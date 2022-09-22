@@ -22,6 +22,8 @@ namespace PatientDataHandler.API.Messaging.Receive.Receiver
         private readonly string queueName;
         private readonly string username;
         private readonly string password;
+        private readonly string exchange;
+        private readonly string routingKey;
 
         public ParsePatientsDataReceiver(IParsePatientsDataService parsePatientsDataService, IOptions<RabbitMqConfiguration> rabbitMqOptions)
         {
@@ -29,6 +31,8 @@ namespace PatientDataHandler.API.Messaging.Receive.Receiver
             queueName = rabbitMqOptions.Value.QueueName;
             username = rabbitMqOptions.Value.UserName;
             password = rabbitMqOptions.Value.Password;
+            exchange = rabbitMqOptions.Value.Exchange;
+            routingKey = rabbitMqOptions.Value.RoutingKey;
             this.parsePatientsDataService = parsePatientsDataService;
             InitializeRabbitMqListener();
         }
@@ -46,7 +50,16 @@ namespace PatientDataHandler.API.Messaging.Receive.Receiver
             connection = factory.CreateConnection();
             connection.ConnectionShutdown += RabbitMQ_ConnectionShutdown;
             channel = connection.CreateModel();
-            channel.QueueDeclare(queue: queueName, durable: false, exclusive: false, autoDelete: false, arguments: null);
+            try
+            {
+                channel.QueueBind(queueName, exchange, routingKey);
+            }
+            catch (RabbitMQ.Client.Exceptions.OperationInterruptedException ex)
+            {
+                QueueDeclareOk status = channel
+                    .QueueDeclare(queue: queueName, durable: false, exclusive: false, autoDelete: false, arguments: null);
+            }
+
         }
 
         private void RabbitMQ_ConnectionShutdown(object sender, ShutdownEventArgs e)

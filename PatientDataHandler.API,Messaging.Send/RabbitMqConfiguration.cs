@@ -1,6 +1,8 @@
-﻿namespace PatientDataHandler.API.Messaging.Send
+﻿using Interfaces;
+
+namespace PatientDataHandler.API.Messaging.Send
 {
-    public class RabbitMqConfiguration
+    public class RabbitMqConfiguration: IRabbitMqConfiguration
     {
         public string Hostname { get; set; }
 
@@ -11,5 +13,9 @@
         public string Password { get; set; }
 
         public bool Enabled { get; set; }
+
+        public string Exchange { get; set; }
+
+        public string RoutingKey { get; set; }
     }
 }

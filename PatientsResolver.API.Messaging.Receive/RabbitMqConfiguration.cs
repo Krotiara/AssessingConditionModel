@@ -1,6 +1,8 @@
-﻿namespace PatientsResolver.API.Messaging.Receive
+﻿using Interfaces;
+
+namespace PatientsResolver.API.Messaging.Receive
 {
-    public class RabbitMqConfiguration
+    public class RabbitMqConfiguration: IRabbitMqConfiguration
     {
         public string Hostname { get; set; }
 
@@ -11,5 +13,9 @@
         public string Password { get; set; }
 
         public bool Enabled { get; set; }
+
+        public string Exchange { get; set; }
+
+        public string RoutingKey { get; set; }
     }
 }

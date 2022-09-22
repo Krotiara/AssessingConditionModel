@@ -48,11 +48,12 @@ builder.Services.AddTransient<Func<DataParserTypes, IDataProvider>>(serviceProvi
 });
 
 #region RabbitMQ
-var serviceClientSettingsConfig = builder.Configuration.GetSection("RabbitMq");
-var serviceClientSettings = serviceClientSettingsConfig.Get<RabbitMqConfiguration>();
-#warning Криво, нужно вынести RabbitMqConfiguration отдельно.
-builder.Services.Configure<PatientDataHandler.API.Messaging.Receive.RabbitMqConfiguration>(serviceClientSettingsConfig);
-builder.Services.Configure<PatientDataHandler.API.Messaging.Send.RabbitMqConfiguration>(serviceClientSettingsConfig);
+var serviceClientSettingsConfigFile = builder.Configuration.GetSection("RabbitMq");
+var serviceClientSettingsConfigData = builder.Configuration.GetSection("RabbitMq1");
+var serviceClientSettings = serviceClientSettingsConfigFile.Get<RabbitMqConfiguration>();
+
+builder.Services.Configure<PatientDataHandler.API.Messaging.Receive.RabbitMqConfiguration>(serviceClientSettingsConfigFile);
+builder.Services.Configure<PatientDataHandler.API.Messaging.Send.RabbitMqConfiguration>(serviceClientSettingsConfigData);
 
 builder.Services.AddMediatR(Assembly.GetExecutingAssembly(), typeof(IParsePatientsDataService).Assembly);
 builder.Services.AddTransient<IRequestHandler<SendPatientsDataFileCommand, Unit>, SendPatientsDataFileCommandHandler>();
