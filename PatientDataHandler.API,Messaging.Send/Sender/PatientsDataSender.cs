@@ -38,15 +38,15 @@ namespace PatientDataHandler.API_Messaging.Send.Sender
                 CreateConnection();
             using (IModel channel = connection.CreateModel())
             {
-                try
-                {
-                    channel.QueueBind(queueName, exchange, routingKey);
-                }
-                catch (RabbitMQ.Client.Exceptions.OperationInterruptedException ex)
-                {
+                //try
+                //{
+                //    channel.QueueBind(queueName, exchange, routingKey);
+                //}
+                //catch (RabbitMQ.Client.Exceptions.OperationInterruptedException ex)
+                //{
                     QueueDeclareOk status = channel
                         .QueueDeclare(queue: queueName, durable: false, exclusive: false, autoDelete: false, arguments: null);
-                }
+                //}
 
 
                 string json = JsonConvert.SerializeObject(data);

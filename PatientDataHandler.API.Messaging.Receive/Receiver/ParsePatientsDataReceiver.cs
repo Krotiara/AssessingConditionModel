@@ -50,15 +50,15 @@ namespace PatientDataHandler.API.Messaging.Receive.Receiver
             connection = factory.CreateConnection();
             connection.ConnectionShutdown += RabbitMQ_ConnectionShutdown;
             channel = connection.CreateModel();
-            try
-            {
-                channel.QueueBind(queueName, exchange, routingKey);
-            }
-            catch (RabbitMQ.Client.Exceptions.OperationInterruptedException ex)
-            {
+            //try
+            //{
+            //    channel.QueueBind(queueName, exchange, routingKey);
+            //}
+            //catch (RabbitMQ.Client.Exceptions.OperationInterruptedException ex)
+            //{
                 QueueDeclareOk status = channel
                     .QueueDeclare(queue: queueName, durable: false, exclusive: false, autoDelete: false, arguments: null);
-            }
+            //}
 
         }
 
