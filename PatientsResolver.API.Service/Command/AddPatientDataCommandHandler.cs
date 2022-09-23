@@ -12,18 +12,18 @@ namespace PatientsResolver.API.Service.Command
     public class AddPatientDataCommandHandler : IRequestHandler<AddPatientDataCommand, List<PatientData>>
     {
 
-        private readonly IPatientDataRepository patientDatarepository;
+        private readonly IPatientDataRepository patientDataRepository;
 
 #warning Не прокинут IPatientDataRepository;
-        public AddPatientDataCommandHandler()
+        public AddPatientDataCommandHandler(IPatientDataRepository patientDataRepository)
         {
-            this.patientDatarepository = patientDatarepository;
+            this.patientDataRepository = patientDataRepository;
         }
 
 
         public async Task<List<PatientData>> Handle(AddPatientDataCommand request, CancellationToken cancellationToken)
         {
-            return await patientDatarepository.AddRangeAsync(request.Data);
+            return await patientDataRepository.AddRangeAsync(request.Data);
         }
     }
 }

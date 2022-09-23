@@ -34,16 +34,18 @@ builder.Services.AddSwaggerGen(c =>
 });
 
 string connectionString = builder.Configuration.GetConnectionString("PostgresConnection");
-builder.Services.AddDbContext<PatientsDataDbContext>(options => options.UseNpgsql(connectionString)); // Registration dbContext as service.
+builder.Services.AddDbContext<PatientsDataDbContext>(options => options.UseNpgsql(connectionString), ServiceLifetime.Singleton); // Registration dbContext as service.
 
 builder.Services.AddScoped<IPatientData, PatientData>();
 builder.Services.AddScoped<IPatientParameter, PatientParameter>();
 builder.Services.AddScoped<IPatient, Patient>();
 builder.Services.AddScoped<IFileData, FileData>();
 
-builder.Services.AddTransient<IPatientDataRepository, PatientDataRepository>();
-builder.Services.AddTransient<IAddPatientsDataFromSourceService, AddPatientsDataFromSourceService>();
 
+builder.Services.AddTransient<IAddPatientsDataFromSourceService, AddPatientsDataFromSourceService>();
+builder.Services.AddSingleton<IRepository<PatientData>, Repository<PatientData>>();
+builder.Services.AddSingleton<IPatientDataRepository, PatientDataRepository>();
+builder.Services.AddSingleton<IPatientFileDataSender, PatientFileDataSender>();
 builder.Services.AddOptions();
 
 #region rabbitMQ
@@ -73,8 +75,6 @@ if (serviceClientSettings.Enabled)
     builder.Services.AddHostedService<AddPatientsDataFromSourceReceiver>();
 }
 
-
-builder.Services.AddSingleton<IPatientFileDataSender, PatientFileDataSender>();
 
 #endregion
 
