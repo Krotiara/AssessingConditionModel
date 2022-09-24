@@ -55,11 +55,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PatientDataHandler.API.Mess
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PatientDataHandler.API.Messaging.Send", "PatientDataHandler.API,Messaging.Send\PatientDataHandler.API.Messaging.Send.csproj", "{8AD76212-54C0-41FA-9A9A-E0508932AFB5}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "dbscripts", "dbscripts", "{F08C59A9-F0C7-4584-9430-DCF8FB1DA9DE}"
-	ProjectSection(SolutionItems) = preProject
-		D:\Downloads\docker-aspnetcore-postgresql-master\docker-aspnetcore-postgresql-master\dbscripts\seed.sql = D:\Downloads\docker-aspnetcore-postgresql-master\docker-aspnetcore-postgresql-master\dbscripts\seed.sql
-	EndProjectSection
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

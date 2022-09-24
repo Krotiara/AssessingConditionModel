@@ -41,7 +41,8 @@ services:
     restart: always
     volumes:
       - db_volume:/var/lib/postgresql/data
-      #- ./dbscripts/seed.sql :/docker-entrypoint-initdb.d/seed.sql
+      # copy the sql script to create tables
+      - ./sql/create_tables.sql:/docker-entrypoint-initdb.d/create_tables.sql
     environment:
       POSTGRES_USER: "postgres"
       POSTGRES_PASSWORD: "lisa2021"
