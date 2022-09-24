@@ -40,9 +40,8 @@ services:
       - "5432"
     restart: always
     volumes:
-      - db_volume:/var/lib/postgresql/data
-      # copy the sql script to create tables
-      - ./sql/create_tables.sql:/docker-entrypoint-initdb.d/create_tables.sql
+      - ./postgresData:/var/lib/postgresql/data
+      - ./sql:/docker-entrypoint-initdb.d
     environment:
       POSTGRES_USER: "postgres"
       POSTGRES_PASSWORD: "lisa2021"
@@ -59,6 +58,7 @@ services:
          PGADMIN_CONFIG_SERVER_MODE: "False"
      volumes:
       - ./pgadmin:/var/lib/pgadmin
+      - ./sql:/tmp
      ports:
       - "5050:80"
      restart: unless-stopped
@@ -68,6 +68,7 @@ services:
 volumes:
    db_volume:
    pgadmin:
+   postgresData:
 
 networks:
   postgres:

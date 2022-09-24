@@ -21,3 +21,6 @@ FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "PatientDataHandler.API.dll"]
+#
+#FROM postgresql
+#ADD ./sql/create_tables.sql /docker-entrypoint-initdb.d/
