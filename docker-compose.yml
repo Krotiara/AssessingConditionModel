@@ -7,7 +7,7 @@ services:
       context: .
       dockerfile: PatientsResolver.API/Dockerfile
     volumes:
-      - "C:/Users/Lisovenko/Desktop/asp:/data"
+      - "C:/TestData:/data"
 
   influencecalculator.api:
     image: ${DOCKER_REGISTRY-}influencecalculatorapi
@@ -34,17 +34,43 @@ services:
         - RABBITMQ_DEFAULT_PASS=password
 
   postgres_image:
+    container_name: postgresql
     image: postgres:latest
-    restart: always
     ports:
-        - "5432:5432"
+      - "5432"
+    restart: always
     volumes:
-         - db_volume:/var/lib/postgresql/data
+      - db_volume:/var/lib/postgresql/data
+      #- ./dbscripts/seed.sql :/docker-entrypoint-initdb.d/seed.sql
     environment:
-         POSTGRES_USER: "postgres"
-         POSTGRES_PASSWORD: "lisa2021"
-         POSTGRES_DB: "PatientData_db"
-         PGDATA: "/var/lib/postgresql/data/pgdata"
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "lisa2021"
+      POSTGRES_DB: "PatientData_db"
+    networks:
+      - postgres
+
+  pgadmin:
+     container_name: pgadmin_container
+     image: dpage/pgadmin4:5.7
+     environment:
+         PGADMIN_DEFAULT_EMAIL: "70dog@mail.ru"
+         PGADMIN_DEFAULT_PASSWORD: "password"
+         PGADMIN_CONFIG_SERVER_MODE: "False"
+     volumes:
+      - ./pgadmin:/var/lib/pgadmin
+     ports:
+      - "5050:80"
+     restart: unless-stopped
+     networks:
+      - postgres
+
+volumes:
+   db_volume:
+   pgadmin:
+
+networks:
+  postgres:
+    driver: bridge
 
     
 
