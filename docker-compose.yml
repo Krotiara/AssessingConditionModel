@@ -46,8 +46,8 @@ services:
       POSTGRES_USER: "postgres"
       POSTGRES_PASSWORD: "lisa2021"
       POSTGRES_DB: "PatientData_db"
-    networks:
-      - postgres
+    #networks:
+    #  - postgres
 
   pgadmin:
      container_name: pgadmin_container
@@ -62,17 +62,17 @@ services:
      ports:
       - "5050:80"
      restart: unless-stopped
-     networks:
-      - postgres
+     #networks:
+     # - postgres
 
 volumes:
    db_volume:
    pgadmin:
    postgresData:
 
-networks:
-  postgres:
-    driver: bridge
+#networks:
+#  postgres:
+#    driver: bridge
 
     
 

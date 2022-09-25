@@ -28,7 +28,6 @@ namespace PatientsResolver.API.Messaging.Receive.Receiver
 
         public AddPatientsDataFromSourceReceiver(IAddPatientsDataFromSourceService addPatientsDataFromSourceService, IOptions<RabbitMqConfiguration> rabbitMqOptions)
         {
-#warning передается пустой RabbitMqConfiguration и происходит краш
             hostname = rabbitMqOptions.Value.Hostname;
             queueName = rabbitMqOptions.Value.QueueName;
             username = rabbitMqOptions.Value.UserName;
@@ -36,30 +35,33 @@ namespace PatientsResolver.API.Messaging.Receive.Receiver
             exchange = rabbitMqOptions.Value.Exchange;
             routingKey = rabbitMqOptions.Value.RoutingKey;
             this.addPatientsDataFromSourceService = addPatientsDataFromSourceService;
+            //TODO init listener if first init was wrong
             InitializeRabbitMqListener();
         }
 
         private void InitializeRabbitMqListener()
         {
-            var factory = new ConnectionFactory
+            try
             {
-                HostName = hostname,
-                UserName = username,
-                Password = password
-            };
+                var factory = new ConnectionFactory
+                {
+                    HostName = hostname,
+                    UserName = username,
+                    Password = password
+                };
 
-            connection = factory.CreateConnection();
-            connection.ConnectionShutdown += RabbitMQ_ConnectionShutdown;
-            channel = connection.CreateModel();
-            //try
-            //{
-            //    channel.QueueBind(queueName, exchange, routingKey);
-            //}
-            //catch (RabbitMQ.Client.Exceptions.OperationInterruptedException ex)
-            //{
+                connection = factory.CreateConnection();
+                connection.ConnectionShutdown += RabbitMQ_ConnectionShutdown;
+                channel = connection.CreateModel();
+
                 QueueDeclareOk status = channel
-                    .QueueDeclare(queue: queueName, durable: false, exclusive: false, autoDelete: false, arguments: null);
-            //}
+                        .QueueDeclare(queue: queueName, durable: false, exclusive: false, autoDelete: false, arguments: null);
+            }
+            catch(Exception ex)
+            {
+                //TODO try catch
+
+            }
 
 
         }
@@ -71,13 +73,16 @@ namespace PatientsResolver.API.Messaging.Receive.Receiver
 
         public override void Dispose()
         {
-            channel.Close();
-            connection.Close();
+            channel?.Close();
+            connection?.Close();
             base.Dispose();
         }
 
         protected override Task ExecuteAsync(CancellationToken stoppingToken)
         {
+            if (channel == null)
+                return Task.FromException(new Exception("PatientsResolver.API.Messaging.Receive.Receiver channel is null"));
+
             stoppingToken.ThrowIfCancellationRequested();
             EventingBasicConsumer consumer = new EventingBasicConsumer(channel);
             consumer.Received += (ch, ea) =>

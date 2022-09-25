@@ -40,26 +40,25 @@ namespace PatientDataHandler.API.Messaging.Receive.Receiver
 
         private void InitializeRabbitMqListener()
         {
-            var factory = new ConnectionFactory
+            try
             {
-                HostName = hostname,
-                UserName = username,
-                Password = password
-            };
+                var factory = new ConnectionFactory
+                {
+                    HostName = hostname,
+                    UserName = username,
+                    Password = password
+                };
 
-            connection = factory.CreateConnection();
-            connection.ConnectionShutdown += RabbitMQ_ConnectionShutdown;
-            channel = connection.CreateModel();
-            //try
-            //{
-            //    channel.QueueBind(queueName, exchange, routingKey);
-            //}
-            //catch (RabbitMQ.Client.Exceptions.OperationInterruptedException ex)
-            //{
+                connection = factory.CreateConnection();
+                connection.ConnectionShutdown += RabbitMQ_ConnectionShutdown;
+                channel = connection.CreateModel();
                 QueueDeclareOk status = channel
                     .QueueDeclare(queue: queueName, durable: false, exclusive: false, autoDelete: false, arguments: null);
-            //}
-
+            }
+            catch(Exception ex)
+            {
+                //TODO log
+            }
         }
 
         private void RabbitMQ_ConnectionShutdown(object sender, ShutdownEventArgs e)
@@ -69,13 +68,16 @@ namespace PatientDataHandler.API.Messaging.Receive.Receiver
 
         public override void Dispose()
         {
-            channel.Close();
-            connection.Close();
+            channel?.Close();
+            connection?.Close();
             base.Dispose();
         }
 
         protected override Task ExecuteAsync(CancellationToken stoppingToken)
         {
+            if (channel == null)
+                return Task.FromException(new Exception("PatientDataHandler.API.Messaging.Receive.Receiver channel is null"));
+
             stoppingToken.ThrowIfCancellationRequested();
             EventingBasicConsumer consumer = new EventingBasicConsumer(channel);
             consumer.Received += (ch, ea) =>
