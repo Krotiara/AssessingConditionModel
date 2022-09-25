@@ -58,7 +58,7 @@ services:
          PGADMIN_CONFIG_SERVER_MODE: "False"
      volumes:
       - ./pgadmin:/var/lib/pgadmin
-      - ./sql:/tmp
+      #- ./sql:/tmp
      ports:
       - "5050:80"
      restart: unless-stopped

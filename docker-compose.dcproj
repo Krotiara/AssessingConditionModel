@@ -14,6 +14,6 @@
     </None>
     <None Include="docker-compose.yml" />
     <None Include=".dockerignore" />
-    <None Include="sql\create_tables.sql" />
+    <None Include="sql\init.sql" />
   </ItemGroup>
 </Project>

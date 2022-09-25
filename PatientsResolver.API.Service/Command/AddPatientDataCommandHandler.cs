@@ -14,7 +14,6 @@ namespace PatientsResolver.API.Service.Command
 
         private readonly IPatientDataRepository patientDataRepository;
 
-#warning Не прокинут IPatientDataRepository;
         public AddPatientDataCommandHandler(IPatientDataRepository patientDataRepository)
         {
             this.patientDataRepository = patientDataRepository;
