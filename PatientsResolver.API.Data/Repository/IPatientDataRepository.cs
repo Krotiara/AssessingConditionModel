@@ -13,5 +13,7 @@ namespace PatientsResolver.API.Data.Repository
 
         Task<List<PatientData>> GetPatientData(int patientId);
 
+        Task AddPatientData(PatientData patientData, CancellationToken cancellationToken);
+
     }
 }

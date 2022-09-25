@@ -22,7 +22,17 @@ namespace PatientsResolver.API.Service.Command
 
         public async Task<List<PatientData>> Handle(AddPatientDataCommand request, CancellationToken cancellationToken)
         {
-            return await patientDataRepository.AddRangeAsync(request.Data);
+            foreach (PatientData p in request.Data)
+                try
+                {
+                    await patientDataRepository.AddPatientData(p, cancellationToken);
+                }
+                catch(Exception ex)
+                {
+                    //TODO log
+                    continue;
+                }
+            return request.Data;
         }
     }
 }
