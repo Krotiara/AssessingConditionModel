@@ -34,7 +34,10 @@ builder.Services.AddSwaggerGen(c =>
 });
 
 string connectionString = builder.Configuration.GetConnectionString("PostgresConnection");
-builder.Services.AddDbContext<PatientsDataDbContext>(options => options.UseNpgsql(connectionString), ServiceLifetime.Singleton); // Registration dbContext as service.
+builder.Services.AddDbContext<PatientsDataDbContext>(options => options.UseNpgsql(connectionString, builder =>
+{
+    builder.EnableRetryOnFailure(5, TimeSpan.FromSeconds(10), null);
+}), ServiceLifetime.Singleton); // Registration dbContext as service.
 
 builder.Services.AddScoped<IPatientData, PatientData>();
 builder.Services.AddScoped<IPatientParameter, PatientParameter>();
