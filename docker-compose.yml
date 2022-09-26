@@ -40,7 +40,7 @@ services:
       - "5432"
     restart: always
     volumes:
-      - ./postgresData:/var/lib/postgresql/data
+      - postgresData:/var/lib/postgresql/data
       - ./sql:/docker-entrypoint-initdb.d
     environment:
       POSTGRES_USER: "postgres"
@@ -69,6 +69,7 @@ volumes:
    db_volume:
    pgadmin:
    postgresData:
+       external: true
 
 #networks:
 #  postgres:
