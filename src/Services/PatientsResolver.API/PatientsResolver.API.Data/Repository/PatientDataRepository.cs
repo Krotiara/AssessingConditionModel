@@ -51,11 +51,14 @@ namespace PatientsResolver.API.Data.Repository
         {
             IExecutionStrategy strategy = PatientsDataDbContext.Database.CreateExecutionStrategy();
             await strategy.ExecuteAsync(async () =>
-            {
+            {               
                 using (var t = await PatientsDataDbContext.Database.BeginTransactionAsync())
                 {
                     try
                     {
+                        if (await IsPatientDataExistAsync(patientData))
+                            return;
+
                         Patient patient = await PatientsDataDbContext
                             .Patients
                             .FirstOrDefaultAsync(x => x.MedicalHistoryNumber == patientData.Id);
@@ -81,6 +84,23 @@ namespace PatientsResolver.API.Data.Repository
                     }
                 }
             });           
+        }
+
+
+        private async Task<bool> IsPatientDataExistAsync(PatientData patientData)
+        {
+#warning ERROR - The expression 'x.Influence' is invalid inside an 'Include' operation, since it does not represent a property access: 't => t.MyProperty'. To target navigations.
+            //TODO возможное решение - https://stackoverflow.com/questions/66229722/invalid-inside-an-include-operation-since-it-does-not-represent-a-property-ac
+            List<PatientData> data = await PatientsDataDbContext
+                .PatientDatas.Where(x => x.PatientId == patientData.PatientId
+                && x.Timestamp == patientData.Timestamp)
+                .Include(x=>x.Influence)
+                .Include(x=>x.Parameters)
+                .ToListAsync();
+            return data.Any() && data
+                .FirstOrDefault(x=>x.Influence != null 
+                && new InfluenceComparer().Equals(x.Influence, patientData.Influence)) != null;
+
         }
 
 
