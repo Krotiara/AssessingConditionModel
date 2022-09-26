@@ -9,5 +9,6 @@ namespace InfluenceCalculator.API.Models
         public DateTime EndTimestamp { get; set; }
         public InfluenceTypes InfluenceType { get; set; }
         public string MedicineName { get; set; }
+        public int PatientId { get; set; }
     }
 }

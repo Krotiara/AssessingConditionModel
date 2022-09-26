@@ -12,6 +12,8 @@ namespace PatientsResolver.API.Data
 
         public virtual DbSet<Patient> Patients { get; set; }
 
+        public virtual DbSet<Influence> Influences { get; set; }
+
 
         public PatientsDataDbContext():base()
         {
@@ -34,6 +36,11 @@ namespace PatientsResolver.API.Data
                 .HasOne<Patient>()
                 .WithMany()
                 .HasForeignKey(x => x.PatientId);
+            modelBuilder.Entity<PatientData>()
+                .HasOne<Influence>()
+                .WithMany()
+                .HasForeignKey(x=>x.PatientId)
+                .HasPrincipalKey(x=>x.PatientId);
             base.OnModelCreating(modelBuilder);
         }
     }

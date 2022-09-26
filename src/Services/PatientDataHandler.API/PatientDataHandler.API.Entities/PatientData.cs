@@ -27,5 +27,7 @@ namespace PatientDataHandler.API.Entities
         public IList<IPatientParameter> Parameters { get ; set ; }
 
         public IPatient Patient { get; set; }
+
+        public IInfluence Influence { get; set; }
     }
 }

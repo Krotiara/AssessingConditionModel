@@ -10,6 +10,8 @@ namespace Interfaces
     {
         public int Id { get; set; }
 
+        public int PatientId { get; set; }
+
         public DateTime StartTimestamp { get; set; }
    
         public DateTime EndTimestamp { get; set; }

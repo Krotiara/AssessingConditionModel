@@ -21,6 +21,8 @@ namespace PatientDataHandler.API.Entities
         /// <returns></returns>
         public IList<IList<string>> PreProcessData(IList<IList<string>> data)
         {
+            data[0] = data[0].Select(x => x.Trim().ToLower()).ToList();
+
             int genderIndex = data[0]
                 .Select(x=> x.Trim().ToLower())
                 .Select((Value, Index) => new { Value, Index })

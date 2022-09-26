@@ -10,12 +10,12 @@ namespace Interfaces
     public enum InfluenceTypes
     {
         [Display(Name = "Антигипоксическое")]
-        Antihypoxic,
+        Antihypoxic = 0,
         [Display(Name = "Антиоксидантное")]
-        Antioxidant,
+        Antioxidant = 1,
         [Display(Name = "Противовоспалительное")]
-        AntiInflammatory,
+        AntiInflammatory = 2,
         [Display(Name = "Биологически активная добавка")]
-        BiologicallyActiveAdditive
+        BiologicallyActiveAdditive = 3
     }
 }

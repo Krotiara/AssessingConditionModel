@@ -49,5 +49,12 @@ namespace PatientsResolver.API.Entities
             set { Patient = (Patient)value; }
         }
 
+        [NotMapped]
+        IInfluence IPatientData.Influence {
+            get { return Influence;  }
+            set { Influence = (Influence)value; }
+        }
+
+        public Influence Influence { get; set; }
     }
 }

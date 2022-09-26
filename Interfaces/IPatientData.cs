@@ -15,6 +15,8 @@ namespace Interfaces
 
         public IPatient Patient { get; set; }
 
+        public IInfluence Influence { get; set; }
+
         public int PatientId { get; set; }
 
         public int InfluenceId { get; set; }

@@ -4,6 +4,7 @@ using PatientsResolver.API.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using System.Transactions;
@@ -59,25 +60,8 @@ namespace PatientsResolver.API.Data.Repository
                             .Patients
                             .FirstOrDefaultAsync(x => x.MedicalHistoryNumber == patientData.Id);
 
-                        if (patient == null)
-                        {
-                            patient = patientData.Patient != null ?
-                                patientData.Patient :
-                                new Patient()
-                                {
-                                    Name = "",
-                                    MedicalHistoryNumber = patientData.PatientId,
-                                    Birthday = DateTime.MinValue
-                                };
-
-                            await PatientsDataDbContext.Patients.AddAsync(patient, cancellationToken);
-                            await PatientsDataDbContext.SaveChangesAsync();
-                        }
-
-                        patientData.PatientId = patient.MedicalHistoryNumber;
-                        patientData.Patient = patient;
-
-                        //TODO same thing with influence
+                        await ProcessPatientAsync(patient, patientData, cancellationToken);
+                        await ProcessInfluenceAsync(patientData, cancellationToken);
 
                         if (patientData.Parameters != null)
                         {
@@ -85,7 +69,7 @@ namespace PatientsResolver.API.Data.Repository
                             await PatientsDataDbContext.SaveChangesAsync();
                         }
 
-                        await PatientsDataDbContext.PatientDatas.AddAsync(patientData);
+                        await PatientsDataDbContext.PatientDatas.AddAsync(patientData, cancellationToken);
                         await PatientsDataDbContext.SaveChangesAsync();
 
                         await t.CommitAsync(cancellationToken);
@@ -97,6 +81,56 @@ namespace PatientsResolver.API.Data.Repository
                     }
                 }
             });           
+        }
+
+
+        private async Task ProcessPatientAsync(Patient patient, PatientData patientData, CancellationToken cancellationToken)
+        {
+            if (patient == null)
+            {
+                patient = patientData.Patient != null ?
+                    patientData.Patient :
+                    new Patient()
+                    {
+                        Name = "",
+                        MedicalHistoryNumber = patientData.PatientId,
+                        Birthday = DateTime.MinValue
+                    };
+
+                await PatientsDataDbContext.Patients.AddAsync(patient, cancellationToken);
+                await PatientsDataDbContext.SaveChangesAsync();          
+            }
+            patientData.PatientId = patient.MedicalHistoryNumber;
+            patientData.Patient = patient;
+            if(patientData.Influence != null)
+                patientData.Influence.PatientId = patient.MedicalHistoryNumber;
+        }
+
+
+        private async Task ProcessInfluenceAsync(PatientData patientData, CancellationToken cancellationToken)
+        {
+            if (patientData.Influence != null)
+            { 
+                //TODO разобраться, как засунуть в EF свой EqualityComparer
+                Influence influence = await PatientsDataDbContext
+                .Influences.FirstOrDefaultAsync(x =>x.PatientId == patientData.Influence.PatientId 
+                && x.MedicineName == patientData.Influence.MedicineName
+                && x.StartTimestamp == patientData.Influence.StartTimestamp
+                && x.EndTimestamp == patientData.Influence.EndTimestamp);
+
+                if (influence != null)
+                {
+                    patientData.Influence = influence;
+                    patientData.InfluenceId = influence.Id;
+                }
+
+                else //Добавить воздействие, если такого еще нет
+                {
+                    await PatientsDataDbContext.Influences.AddAsync(patientData.Influence, cancellationToken);
+                    await PatientsDataDbContext.SaveChangesAsync();
+                    patientData.InfluenceId = patientData.Influence.Id; //TODO мб избавиться от Id полей, раз есть сами сущности.
+                }
+            }
         }
     }
 }

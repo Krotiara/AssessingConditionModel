@@ -4,6 +4,9 @@ using OfficeOpenXml;
 
 namespace PatientDataHandler.API.Entities
 {
+    /// <summary>
+    /// Парсер тестового формата данных.
+    /// </summary>
     public class ExcelDataProvider : IDataProvider
     {
         public ExcelDataProvider()
@@ -44,6 +47,15 @@ namespace PatientDataHandler.API.Entities
                 {
                     IList<string> row = data[rowNum];
 
+                    string influenceName = data[rowNum][headers.IndexOf("группа")];
+                    Influence influence = new Influence()
+                    {
+                        InfluenceType = InfluenceTypes.BiologicallyActiveAdditive,
+                        MedicineName = influenceName,
+                        StartTimestamp = DateTime.Now,
+                        EndTimestamp = DateTime.Now
+                    };
+
                     if (row[0] == "динамика")
                     {
                         isDynamicRows = true;
@@ -59,7 +71,8 @@ namespace PatientDataHandler.API.Entities
                         patientData = new PatientData()
                         {
                             PatientId = id,
-                            Parameters = new List<IPatientParameter>()
+                            Parameters = new List<IPatientParameter>(),
+                            Influence = influence                 
                         };
                         patientParameters[id] = patientData;
                     }
