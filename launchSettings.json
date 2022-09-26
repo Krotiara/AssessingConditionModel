@@ -1,0 +1,16 @@
+{
+  "profiles": {
+    "Docker Compose": {
+      "commandName": "DockerCompose",
+      "commandVersion": "1.0",
+      "serviceActions": {
+        "influencecalculator.api": "StartDebugging",
+        "patientdatahandler.api": "StartDebugging",
+        "patientsresolver.api": "StartDebugging",
+        "pgadmin": "StartWithoutDebugging",
+        "postgres_image": "StartWithoutDebugging",
+        "rabbitmq": "StartWithoutDebugging"
+      }
+    }
+  }
+}

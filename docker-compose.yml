@@ -5,7 +5,7 @@ services:
     image: ${DOCKER_REGISTRY-}patientsresolverapi
     build:
       context: .
-      dockerfile: PatientsResolver.API/Dockerfile
+      dockerfile: src/Services/PatientsResolver.API/PatientsResolver.API/Dockerfile
     volumes:
       - "C:/TestData:/data"
 
@@ -13,13 +13,13 @@ services:
     image: ${DOCKER_REGISTRY-}influencecalculatorapi
     build:
       context: .
-      dockerfile: InfluenceCalculator.API/Dockerfile
+      dockerfile: src/Services/InfluenceCalculator.API/InfluenceCalculator.API/Dockerfile
 
   patientdatahandler.api:
     image: ${DOCKER_REGISTRY-}patientdatahandlerapi
     build:
       context: .
-      dockerfile: PatientDataHandler.API/Dockerfile
+      dockerfile: src/Services/PatientDataHandler.API/PatientDataHandler.API/Dockerfile
 
   rabbitmq:
     container_name: rabbitmq
