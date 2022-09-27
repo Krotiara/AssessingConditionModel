@@ -20,14 +20,17 @@ namespace PatientsResolver.API.Entities
         public int Id { get; set; }
 
         [NotNull]
+        [Required]
         [Column("Name")]
         public string Name { get; set; }
 
         [NotNull]
+        [Required]
         [Column("Birthday")]
         public DateTime Birthday { get; set; }
 
         [NotNull]
+        [Required]
         [Column("MedicalHistoryNumber")]
         public int MedicalHistoryNumber { get; set; }
     }
