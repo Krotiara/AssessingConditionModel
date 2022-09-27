@@ -11,7 +11,7 @@ namespace PatientsResolver.API.Data.Repository
     {
         Task<Patient> GetPatientDataByIdAsync(int patientMedHistoryNumber, CancellationToken cancellationToken);
 
-        Task<List<PatientData>> GetPatientData(int patientId);
+        Task<List<PatientData>> GetPatientData(int patientId, DateTime startTimestamp, DateTime endTimestamp);
 
         Task AddPatientData(PatientData patientData, CancellationToken cancellationToken);
 

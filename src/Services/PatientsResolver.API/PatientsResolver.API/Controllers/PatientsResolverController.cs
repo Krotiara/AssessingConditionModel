@@ -2,6 +2,7 @@
 using Interfaces;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.EntityFrameworkCore;
 using PatientsResolver.API.Entities;
 using PatientsResolver.API.Service.Command;
@@ -24,11 +25,17 @@ namespace PatientsResolver.API.Controllers
 
 
         [HttpGet("patientsData/{patientId}")]
-        public async Task<ActionResult<List<PatientData>>> GetPatientsDataAsync(int patientId)
+        public async Task<ActionResult<List<PatientData>>> GetPatientsData(int patientId,
+            DateTime? startTimestamp, DateTime? endTimestamp)
         {
             try
             {
-                return Ok(await mediator.Send(new GetPatientDataQuery() { PatientId = patientId}));
+                if (startTimestamp == null)
+                    startTimestamp = DateTime.MinValue;
+                if (endTimestamp == null)
+                    endTimestamp = DateTime.MaxValue;
+                return Ok(await mediator.Send(new GetPatientDataQuery(patientId, 
+                    (DateTime)startTimestamp, (DateTime)endTimestamp)));
             }
             catch(Exception ex)
             {

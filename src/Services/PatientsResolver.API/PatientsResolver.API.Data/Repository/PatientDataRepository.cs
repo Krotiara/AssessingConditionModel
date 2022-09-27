@@ -29,16 +29,17 @@ namespace PatientsResolver.API.Data.Repository
         }
 
 
-        public async Task<List<PatientData>> GetPatientData(int patientId)
+        public async Task<List<PatientData>> GetPatientData(int patientId, 
+            DateTime startTimestamp, DateTime endTimestamp)
         {
             IQueryable<PatientData> patientDatas = PatientsDataDbContext
                         .PatientDatas
-                        .Where(x => x.PatientId == patientId);
+                        .Where(x => x.PatientId == patientId)
+                        .Where(x=>x.Timestamp >= startTimestamp || x.Timestamp <= endTimestamp);
 
             if (patientDatas.Count() == 0)
                 return new List<PatientData>();
 
-#warning Выскакивала ошибка The expression 'x.Parameters' is invalid inside an 'Include' operation
             List<PatientData> datas = await patientDatas
                 .Include(x => x.Patient)
                 .Include(x => x.Parameters)

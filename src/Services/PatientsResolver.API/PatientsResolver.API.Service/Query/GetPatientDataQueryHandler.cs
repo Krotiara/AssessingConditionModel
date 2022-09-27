@@ -15,7 +15,8 @@ namespace PatientsResolver.API.Service.Query
 
         public async Task<List<PatientData>> Handle(GetPatientDataQuery request, CancellationToken cancellationToken)
         {
-            return await patientDataRepository.GetPatientData(request.PatientId);
+            return await patientDataRepository.GetPatientData(request.PatientId, 
+                request.StartTimestamp, request.EndTimestamp);
         }
     }
 }
