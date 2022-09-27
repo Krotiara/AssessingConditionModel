@@ -35,7 +35,7 @@ namespace PatientsResolver.API.Data.Repository
             IQueryable<PatientData> patientDatas = PatientsDataDbContext
                         .PatientDatas
                         .Where(x => x.PatientId == patientId)
-                        .Where(x=>x.Timestamp >= startTimestamp || x.Timestamp <= endTimestamp);
+                        .Where(x=>x.Timestamp >= startTimestamp && x.Timestamp <= endTimestamp);
 
             if (patientDatas.Count() == 0)
                 return new List<PatientData>();
