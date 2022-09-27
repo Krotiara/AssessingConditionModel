@@ -52,8 +52,8 @@ namespace PatientDataHandler.API.Entities
                     {
                         InfluenceType = InfluenceTypes.BiologicallyActiveAdditive,
                         MedicineName = influenceName,
-                        StartTimestamp = DateTime.Now,
-                        EndTimestamp = DateTime.Now
+                        StartTimestamp = DateTime.MinValue, //TODO указывать во входных данных,
+                        EndTimestamp = DateTime.MinValue //TODO указывать во входных данных
                     };
 
                     if (row[0] == "динамика")
@@ -72,8 +72,10 @@ namespace PatientDataHandler.API.Entities
                         {
                             PatientId = id,
                             Parameters = new List<IPatientParameter>(),
+                            Timestamp = DateTime.MinValue, //TODO указывать во входных данных
                             Influence = influence                 
                         };
+                        patientData.Influence.PatientId = id;
                         patientParameters[id] = patientData;
                     }
 
@@ -87,7 +89,7 @@ namespace PatientDataHandler.API.Entities
                                 patientParameter = new PatientParameter()
                                 {
                                     Name = headers[j],
-                                    Timestamp = DateTime.Now, //TODO  нужно указывать во входных данных.
+                                    Timestamp = DateTime.MinValue, //TODO  нужно указывать во входных данных.
                                     PatientId = id,
                                     PositiveDynamicCoef = 1 //TODO нужно указывать во входных данных.
                                 };

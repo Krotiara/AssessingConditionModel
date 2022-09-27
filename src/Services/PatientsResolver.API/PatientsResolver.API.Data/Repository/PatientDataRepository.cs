@@ -94,13 +94,18 @@ namespace PatientsResolver.API.Data.Repository
             List<PatientData> data = await PatientsDataDbContext
                 .PatientDatas.Where(x => x.PatientId == patientData.PatientId
                 && x.Timestamp == patientData.Timestamp)
+                .Include(x => x.Patient)
                 .Include(x=>x.Influence)
-                .Include(x=>x.Parameters)
+                .Include(x => x.Parameters)
+                .Where(x => x.Influence != null)
                 .ToListAsync();
-            return data.Any() && data
-                .FirstOrDefault(x=>x.Influence != null 
-                && new InfluenceComparer().Equals(x.Influence, patientData.Influence)) != null;
 
+            if (!data.Any())
+                return false;
+            foreach (PatientData pD in data)
+                if (new InfluenceComparer().Equals(pD.Influence, patientData.Influence))
+                    return true;
+            return false;
         }
 
 

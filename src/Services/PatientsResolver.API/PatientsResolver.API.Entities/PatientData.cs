@@ -33,14 +33,13 @@ namespace PatientsResolver.API.Entities
         
         public IList<PatientParameter> Parameters { get ; set ; }
 
-        [NotMapped]
-        IList<IPatientParameter> IPatientData.Parameters
-        {
-            get { return (IList<IPatientParameter>)Parameters; }
-            set { Parameters = value as IList<PatientParameter>; }
-        }
-
+       
+        [ForeignKey(nameof(PatientId))]
         public Patient Patient { get; set; }
+
+      
+        [ForeignKey(nameof(InfluenceId))]
+        public Influence Influence { get; set; }
 
         [NotMapped]
         IPatient IPatientData.Patient
@@ -50,11 +49,18 @@ namespace PatientsResolver.API.Entities
         }
 
         [NotMapped]
-        IInfluence IPatientData.Influence {
-            get { return Influence;  }
+        IInfluence IPatientData.Influence
+        {
+            get { return Influence; }
             set { Influence = (Influence)value; }
         }
 
-        public Influence Influence { get; set; }
+        [NotMapped]
+        IList<IPatientParameter> IPatientData.Parameters
+        {
+            get { return Parameters.Select(x=>x as IPatientParameter).ToList(); }
+            set { Parameters = value.Select(x=>x as PatientParameter).ToList(); }
+        }
+
     }
 }

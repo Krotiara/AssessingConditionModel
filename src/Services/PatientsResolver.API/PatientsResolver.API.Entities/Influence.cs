@@ -12,6 +12,12 @@ namespace PatientsResolver.API.Entities
 {
     public class Influence : IInfluence
     {
+
+        public Influence()
+        {
+
+        }
+
         [Key]
         [NotNull]
         [Column("Id")]
