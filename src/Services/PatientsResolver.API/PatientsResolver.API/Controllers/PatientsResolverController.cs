@@ -95,9 +95,6 @@ namespace PatientsResolver.API.Controllers
             {
                 return BadRequest(ex.Message);
             }
-        }
-
-
-        
+        }     
     }
 }
