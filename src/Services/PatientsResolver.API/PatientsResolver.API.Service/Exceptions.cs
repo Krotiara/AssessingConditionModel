@@ -8,12 +8,30 @@ namespace PatientsResolver.API.Service.Exceptions
 {
     public class AddPatientException : Exception
     {
-        public AddPatientException(string message):base(message)
+        public AddPatientException(string message) : 
+            base(message)
         {
 
         }
 
-        public AddPatientException(string message, Exception innerException): base(message,innerException)
+        public AddPatientException(string message, Exception innerException) : 
+            base(message, innerException)
+        {
+
+        }
+    }
+
+
+    public class AddInfluenceException : Exception
+    {
+        public AddInfluenceException(string message) :
+            base(message)
+        {
+
+        }
+
+        public AddInfluenceException(string message, Exception innerException): 
+            base(message, innerException)
         {
 
         }

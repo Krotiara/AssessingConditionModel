@@ -50,6 +50,7 @@ builder.Services.AddSingleton<IRepository<PatientData>, Repository<PatientData>>
 builder.Services.AddSingleton<IPatientDataRepository, PatientDataRepository>();
 builder.Services.AddSingleton<IPatientFileDataSender, PatientFileDataSender>();
 builder.Services.AddSingleton<PatientsRepository>(); //МБ это криво
+builder.Services.AddSingleton<InfluenceRepository>();
 builder.Services.AddOptions();
 
 #region rabbitMQ
@@ -75,6 +76,8 @@ builder.Services.AddTransient<IRequestHandler<SendPatientDataFileSourceCommand, 
     SendPatientDataFileSourceCommandHandler>();
 builder.Services.AddTransient<IRequestHandler<AddPatientCommand, bool>,
     AddPatientCommandHandler>();
+builder.Services.AddTransient<IRequestHandler<AddInfluenceCommand, bool>, 
+    AddInfluenceCommandHandler>();
 
 if (serviceClientSettings.Enabled)
 {

@@ -84,17 +84,32 @@ namespace PatientsResolver.API.Controllers
 
 
         [HttpPost("addPatient")]
-        public async Task<ActionResult<Patient>> AddPatient(Patient patient)
+        public async Task<ActionResult<bool>> AddPatient(Patient patient)
         {
             try
             {
-                await mediator.Send(new AddPatientCommand() { Patient = patient });
-                return Ok(true);
+                bool status = await mediator.Send(new AddPatientCommand() { Patient = patient });
+                return Ok(status);
             }
             catch(AddPatientException ex)
             {
                 return BadRequest(ex.Message);
             }
-        }     
+        }
+
+
+        [HttpPost("addInfluence")]
+        public async Task<ActionResult<bool>> AddInfluence(Influence influence)
+        {
+            try
+            {
+                bool status = await mediator.Send(new AddInfluenceCommand() { Influence = influence });
+                return Ok(status);
+            }
+            catch(AddInfluenceException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }
