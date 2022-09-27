@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -18,22 +20,26 @@ namespace PatientsResolver.API.Data.Repository
 
         public async Task<TEntity> AddAsync(TEntity entity)
         {
-            if (entity == null)
+            IExecutionStrategy strategy = PatientsDataDbContext.Database.CreateExecutionStrategy();
+            return await strategy.ExecuteAsync(async () =>
             {
-                throw new ArgumentNullException($"{nameof(AddAsync)} entity must not be null");
-            }
+                if (entity == null)
+                {
+                    throw new ArgumentNullException($"{nameof(AddAsync)} entity must not be null");
+                }
 
-            try
-            {
-                await PatientsDataDbContext.AddAsync(entity);
-                await PatientsDataDbContext.SaveChangesAsync();
+                try
+                {
+                    await PatientsDataDbContext.AddAsync(entity);
+                    await PatientsDataDbContext.SaveChangesAsync();
 
-                return entity;
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"{nameof(entity)} could not be saved {ex.Message}");
-            }
+                    return entity;
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception($"{nameof(entity)} could not be saved {ex.Message}");
+                }
+            });  
         }
 
         public async Task<List<TEntity>> AddRangeAsync(List<TEntity> entities)

@@ -22,6 +22,7 @@ namespace PatientsResolver.API.Service.Command
 
         public async Task<bool> Handle(AddPatientCommand request, CancellationToken cancellationToken)
         {
+
             bool isPatientExist = patientsRepository.GetAll().FirstOrDefault(x => x.MedicalHistoryNumber == request.Patient.MedicalHistoryNumber) != null;
             if (isPatientExist)
                 throw new AddPatientException($"Patient with medical history number = {request.Patient.MedicalHistoryNumber} is already exist.");
