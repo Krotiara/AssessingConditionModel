@@ -78,6 +78,7 @@ builder.Services.AddTransient<IRequestHandler<AddPatientCommand, bool>,
     AddPatientCommandHandler>();
 builder.Services.AddTransient<IRequestHandler<AddInfluenceCommand, bool>, 
     AddInfluenceCommandHandler>();
+builder.Services.AddTransient<IRequestHandler<GetPatientInfluencesQuery, List<Influence>>, GetPatientInfluencesQueryHandler>();
 
 if (serviceClientSettings.Enabled)
 {
