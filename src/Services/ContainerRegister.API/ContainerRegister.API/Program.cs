@@ -23,6 +23,8 @@ builder.Services.AddSwaggerGen(c =>
 
 builder.Services.AddTransient<IContainerRegisterService, ContainerRegisterService>();
 
+builder.Services.AddOptions();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

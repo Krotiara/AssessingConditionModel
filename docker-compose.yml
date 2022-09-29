@@ -26,6 +26,8 @@ services:
     build:
       context: .
       dockerfile: src/Services/ContainerRegister.API/ContainerRegister.API/Dockerfile
+    ports:
+      - 8001:80
 
   rabbitmq:
     container_name: rabbitmq

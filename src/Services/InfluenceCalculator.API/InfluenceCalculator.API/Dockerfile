@@ -7,15 +7,15 @@ EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
-COPY ["InfluenceCalculator.API/InfluenceCalculator.API.csproj", "InfluenceCalculator.API/"]
+COPY ["src/Services/InfluenceCalculator.API/InfluenceCalculator.API/InfluenceCalculator.API.csproj", "src/Services/InfluenceCalculator.API/InfluenceCalculator.API/"]
 COPY ["Interfaces/Interfaces.csproj", "Interfaces/"]
-RUN dotnet restore "InfluenceCalculator.API/InfluenceCalculator.API.csproj"
+RUN dotnet restore "src/Services/InfluenceCalculator.API/InfluenceCalculator.API/InfluenceCalculator.API.csproj"
 COPY . .
-WORKDIR "/src/InfluenceCalculator.API"
+WORKDIR "/src/src/Services/InfluenceCalculator.API/InfluenceCalculator.API"
 RUN dotnet build "InfluenceCalculator.API.csproj" -c Release -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "InfluenceCalculator.API.csproj" -c Release -o /app/publish
+RUN dotnet publish "InfluenceCalculator.API.csproj" -c Release -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app
