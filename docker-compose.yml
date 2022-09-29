@@ -21,6 +21,12 @@ services:
       context: .
       dockerfile: src/Services/PatientDataHandler.API/PatientDataHandler.API/Dockerfile
 
+  containerregister.api:
+    image: ${DOCKER_REGISTRY-}containerregisterapi
+    build:
+      context: .
+      dockerfile: src/Services/ContainerRegister.API/ContainerRegister.API/Dockerfile
+
   rabbitmq:
     container_name: rabbitmq
     tty: true

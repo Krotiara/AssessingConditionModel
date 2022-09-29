@@ -7,6 +7,7 @@
         "influencecalculator.api": "StartDebugging",
         "patientdatahandler.api": "StartDebugging",
         "patientsresolver.api": "StartDebugging",
+        "containerregister.api": "StartDebugging",
         "pgadmin": "StartWithoutDebugging",
         "postgres_image": "StartWithoutDebugging",
         "rabbitmq": "StartWithoutDebugging"
