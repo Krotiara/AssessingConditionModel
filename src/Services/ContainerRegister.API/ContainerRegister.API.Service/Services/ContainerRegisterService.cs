@@ -33,16 +33,23 @@ namespace ContainerRegister.API.Service.Services
 
         public async void InitContainer(string imageName)
         {
-#warning Постоянно выскакивает ошибка cannot resolve address или connection refused.
-            //throw new NotImplementedException();
-            imageName = "patientdatahandlerapi:dev";
+
+            imageName = "containerregisterapi:dev";
+
+            IList<ContainerListResponse> containers = await client.Containers.ListContainersAsync(
+    new ContainersListParameters()
+    {
+        Limit = 10,
+    });
 
             CreateContainerResponse response = await client.Containers.CreateContainerAsync(new CreateContainerParameters()
             {
                 Name = "test",
-                Image = imageName
+                Image = imageName,
+                Tty = true,
+                Cmd = new List<string> {"-it", "-d" }      
             });
-            await client.Containers.StartContainerAsync(response.ID, new ContainerStartParameters());
+            bool isStarted = await client.Containers.StartContainerAsync(response.ID, new ContainerStartParameters());
 
             //         await using var environment = new DockerEnvironmentBuilder()
             //.AddContainer(p => p with
