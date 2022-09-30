@@ -8,8 +8,6 @@
 
   <ItemGroup>
     <PackageReference Include="Docker.DotNet" Version="3.125.12" />
-    <PackageReference Include="Testcontainers" Version="2.1.0" />
-    <PackageReference Include="TestEnvironment.Docker" Version="2.1.4" />
   </ItemGroup>
 
 </Project>

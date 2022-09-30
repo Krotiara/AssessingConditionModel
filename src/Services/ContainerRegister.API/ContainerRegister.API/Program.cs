@@ -21,7 +21,7 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
-builder.Services.AddTransient<IContainerRegisterService, ContainerRegisterService>();
+builder.Services.AddSingleton<IContainerRegisterService, ContainerRegisterService>();
 
 builder.Services.AddOptions();
 

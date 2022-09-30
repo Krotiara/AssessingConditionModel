@@ -23,11 +23,14 @@ services:
 
   containerregister.api:
     image: ${DOCKER_REGISTRY-}containerregisterapi
+    tty: true
     build:
       context: .
       dockerfile: src/Services/ContainerRegister.API/ContainerRegister.API/Dockerfile
     ports:
       - 8001:80
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
 
   rabbitmq:
     container_name: rabbitmq

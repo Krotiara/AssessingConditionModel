@@ -61,6 +61,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ContainerRegister.API", "sr
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ContainerRegister.API.Service", "src\Services\ContainerRegister.API\ContainerRegister.API.Service\ContainerRegister.API.Service.csproj", "{453BD59D-5584-4599-8937-D320B5D46481}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ContainerRegister.API.Entities", "src\Services\ContainerRegister.API\ContainerRegister.API.Entities\ContainerRegister.API.Entities.csproj", "{319D6C94-CD2A-403E-BE6A-0F18B200FCD6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -147,6 +149,10 @@ Global
 		{453BD59D-5584-4599-8937-D320B5D46481}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{453BD59D-5584-4599-8937-D320B5D46481}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{453BD59D-5584-4599-8937-D320B5D46481}.Release|Any CPU.Build.0 = Release|Any CPU
+		{319D6C94-CD2A-403E-BE6A-0F18B200FCD6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{319D6C94-CD2A-403E-BE6A-0F18B200FCD6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{319D6C94-CD2A-403E-BE6A-0F18B200FCD6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{319D6C94-CD2A-403E-BE6A-0F18B200FCD6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -176,6 +182,7 @@ Global
 		{41DF15D3-5F46-4F4F-96C9-907074D348C6} = {5926CB45-6876-4826-BAC9-5159CFE72BD6}
 		{B531A35B-C54F-440C-B745-C913F41D5F01} = {41DF15D3-5F46-4F4F-96C9-907074D348C6}
 		{453BD59D-5584-4599-8937-D320B5D46481} = {41DF15D3-5F46-4F4F-96C9-907074D348C6}
+		{319D6C94-CD2A-403E-BE6A-0F18B200FCD6} = {41DF15D3-5F46-4F4F-96C9-907074D348C6}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {6FA4C998-2594-48A2-A283-C474A19E73B5}
