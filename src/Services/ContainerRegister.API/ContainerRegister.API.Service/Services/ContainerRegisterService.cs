@@ -34,7 +34,10 @@ namespace ContainerRegister.API.Service.Services
         public async void InitContainer(string imageName)
         {
 
-            imageName = "containerregisterapi:dev";
+            imageName = "influencecalculatorapi:dev";
+            string mContainerPort = "5080";
+            string mHostPort = "5081";
+
 
             IList<ContainerListResponse> containers = await client.Containers.ListContainersAsync(
     new ContainersListParameters()
@@ -47,27 +50,14 @@ namespace ContainerRegister.API.Service.Services
                 Name = "test",
                 Image = imageName,
                 Tty = true,
-                Cmd = new List<string> {"-it", "-d" }      
+                ExposedPorts = new Dictionary<string, EmptyStruct>() { { mContainerPort, default(EmptyStruct) } },
+                HostConfig = new HostConfig
+                {
+                    PortBindings = new Dictionary<string, IList<PortBinding>>
+                    {{mContainerPort, new List<PortBinding> {new PortBinding {HostPort = mHostPort}}}}
+                }
             });
             bool isStarted = await client.Containers.StartContainerAsync(response.ID, new ContainerStartParameters());
-
-            //         await using var environment = new DockerEnvironmentBuilder()
-            //.AddContainer(p => p with
-            //{
-            //    ImageName = imageName
-            //}).Build();
-
-            //         //         // Up it.
-            //         //         await environment.UpAsync();
-            //using (var client = new DockerClientConfiguration(new Uri("http://127.0.0.1:2375")).CreateClient())
-            //{
-            //    IList<ContainerListResponse> containers = await client.Containers.ListContainersAsync(
-            //     new ContainersListParameters()
-            //     {
-            //         Limit = 10,
-            //     });
-            //}
-
         }
     }
 }
