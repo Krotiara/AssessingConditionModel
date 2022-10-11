@@ -1,17 +1,21 @@
 ﻿using ExcelDataReader;
 using Interfaces;
 using OfficeOpenXml;
+using PatientDataHandler.API.Entities;
 
-namespace PatientDataHandler.API.Entities
+namespace PatientDataHandler.API.Service.Services
 {
     /// <summary>
     /// Парсер тестового формата данных.
     /// </summary>
     public class ExcelDataProvider : IDataProvider
     {
-        public ExcelDataProvider()
+
+        private readonly IPropertiesMatcherService propertiesMatcherService;
+
+        public ExcelDataProvider(IPropertiesMatcherService propertiesMatcherService)
         {
-           
+           this.propertiesMatcherService = propertiesMatcherService;
         }
  
 
@@ -83,12 +87,12 @@ namespace PatientDataHandler.API.Entities
                     {
                         try
                         {
-                            IPatientParameter patientParameter = patientData.Parameters.FirstOrDefault(x => x.Name == headers[j]);
+                            Parameters parameterName = propertiesMatcherService.GetParameterBy(headers[j]);
+                            IPatientParameter patientParameter = patientData.Parameters.FirstOrDefault(x => x.ParameterName == parameterName);
                             if (patientParameter == null)
                             {
-                                patientParameter = new PatientParameter()
+                                patientParameter = new PatientParameter(parameterName)
                                 {
-                                    Name = headers[j],
                                     Timestamp = DateTime.MinValue, //TODO  нужно указывать во входных данных.
                                     PatientId = id,
                                     PositiveDynamicCoef = 1 //TODO нужно указывать во входных данных.
@@ -101,7 +105,13 @@ namespace PatientDataHandler.API.Entities
                             else
                                 patientParameter.Value = row[j];
                         }
-                        catch(Exception ex)
+                        catch(KeyNotFoundException ex)
+                        {
+                            //Не найден Parameters
+                            //TODO log
+                            continue;
+                        }
+                        catch (Exception ex)
                         {
                             //TODO add log
                             continue;

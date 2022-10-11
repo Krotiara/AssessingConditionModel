@@ -56,6 +56,7 @@ builder.Services.AddMediatR(Assembly.GetExecutingAssembly(), typeof(IParsePatien
 builder.Services.AddTransient<IRequestHandler<SendPatientsDataFileCommand, Unit>, SendPatientsDataFileCommandHandler>();
 builder.Services.AddTransient<IPatientsDataSender, PatientsDataSender>();
 builder.Services.AddTransient<IParsePatientsDataService, ParsePatientsDataService>();
+builder.Services.AddTransient<IPropertiesMatcherService, PropertiesMatcherService>();
 
 if (serviceClientSettings.Enabled)
 {

@@ -13,6 +13,12 @@ namespace PatientDataHandler.API.Entities
 
         }
 
+        public PatientParameter(Parameters parameterName)
+        {
+            ParameterName = parameterName;
+            NameTextDescription = parameterName.GetDisplayAttributeValue();
+        }
+
         [NotNull]
         [Column("Id")]
         [Key]
@@ -34,7 +40,7 @@ namespace PatientDataHandler.API.Entities
 
         [NotNull]
         [Required]
-        public string Name { get ; set ; }
+        public string NameTextDescription { get ; set ; }
 
         [NotNull]
         [Required]
@@ -45,5 +51,6 @@ namespace PatientDataHandler.API.Entities
         [NotNull]
         [Required]
         public int PositiveDynamicCoef { get ; set ; }
+        public Parameters ParameterName { get; set; }
     }
 }

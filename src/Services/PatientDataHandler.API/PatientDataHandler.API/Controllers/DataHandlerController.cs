@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PatientDataHandler.API.Entities;
 using PatientDataHandler.API.Models;
+using PatientDataHandler.API.Service.Services;
 
 namespace PatientDataHandler.API.Controllers
 {

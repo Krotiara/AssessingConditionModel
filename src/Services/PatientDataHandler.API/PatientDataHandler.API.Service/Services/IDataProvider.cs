@@ -1,6 +1,6 @@
 ﻿using Interfaces;
 
-namespace PatientDataHandler.API.Entities
+namespace PatientDataHandler.API.Service.Services
 {
     public interface IDataProvider
     {

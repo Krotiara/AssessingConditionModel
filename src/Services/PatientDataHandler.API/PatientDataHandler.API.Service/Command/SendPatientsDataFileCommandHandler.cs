@@ -1,6 +1,7 @@
 ﻿using Interfaces;
 using MediatR;
 using PatientDataHandler.API.Entities;
+using PatientDataHandler.API.Service.Services;
 using PatientDataHandler.API_Messaging.Send.Sender;
 using System;
 using System.Collections.Generic;

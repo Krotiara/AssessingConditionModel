@@ -12,7 +12,7 @@ namespace InfluenceCalculator.API.Models
         public PatientParameter(int patientId, DateTime timestamp, string name, string value,
             int positiveDynamicCoef = 1, string? dynamicValue = null)
         {
-            Name = name;
+            NameTextDescription = name;
             Value = value;
             PositiveDynamicCoef = positiveDynamicCoef;
             DynamicValue = dynamicValue;
@@ -22,12 +22,13 @@ namespace InfluenceCalculator.API.Models
 
         public int PatientDataId { get; set; }
 
-        public string Name { get; set; }
+        public string NameTextDescription { get; set; }
         public string Value { get; set; }
         public string? DynamicValue { get; set; }
 
         public int PositiveDynamicCoef { get; set; } = 1;
         public int PatientId { get; set; }
         public DateTime Timestamp { get; set; }
+        public Parameters ParameterName { get => throw new NotImplementedException(); set => throw new NotImplementedException(); } //TODO по имени получить Parameters.
     }
 }
