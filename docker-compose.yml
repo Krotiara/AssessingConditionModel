@@ -5,18 +5,86 @@ services:
     image: ${DOCKER_REGISTRY-}patientsresolverapi
     build:
       context: .
-      dockerfile: PatientsResolver.API/Dockerfile
+      dockerfile: src/Services/PatientsResolver.API/PatientsResolver.API/Dockerfile
+    volumes:
+      - "C:/TestData:/data"
 
   influencecalculator.api:
     image: ${DOCKER_REGISTRY-}influencecalculatorapi
     build:
       context: .
-      dockerfile: InfluenceCalculator.API/Dockerfile
-
+      dockerfile: src/Services/InfluenceCalculator.API/InfluenceCalculator.API/Dockerfile
 
   patientdatahandler.api:
     image: ${DOCKER_REGISTRY-}patientdatahandlerapi
     build:
       context: .
-      dockerfile: PatientDataHandler.API/Dockerfile
+      dockerfile: src/Services/PatientDataHandler.API/PatientDataHandler.API/Dockerfile
+
+  containerregister.api:
+    image: ${DOCKER_REGISTRY-}containerregisterapi
+    tty: true
+    build:
+      context: .
+      dockerfile: src/Services/ContainerRegister.API/ContainerRegister.API/Dockerfile
+    ports:
+      - 8001:80
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+
+  rabbitmq:
+    container_name: rabbitmq
+    tty: true
+    hostname: rabbitmq
+    ports:
+        - "15672:15672"
+        - "5672:5672"
+    image: rabbitmq:3-management
+    environment:
+        - RABBITMQ_DEFAULT_USER=user
+        - RABBITMQ_DEFAULT_PASS=password
+
+  postgres_image:
+    container_name: postgresql
+    image: postgres:latest
+    ports:
+      - "5432:5432"
+    restart: always
+    volumes:
+      - postgresData:/var/lib/postgresql/data
+      - ./sql:/docker-entrypoint-initdb.d
+    environment:
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "lisa2021"
+      POSTGRES_DB: "PatientData_db"
+    #networks:
+    #  - postgres
+
+  pgadmin:
+     container_name: pgadmin_container
+     image: dpage/pgadmin4:5.7
+     environment:
+         PGADMIN_DEFAULT_EMAIL: "70dog@mail.ru"
+         PGADMIN_DEFAULT_PASSWORD: "password"
+         PGADMIN_CONFIG_SERVER_MODE: "False"
+     volumes:
+      - ./pgadmin:/var/lib/pgadmin
+      #- ./sql:/tmp
+     ports:
+      - "5050:80"
+     restart: unless-stopped
+     #networks:
+     # - postgres
+
+volumes:
+   db_volume:
+   pgadmin:
+   postgresData:
+       external: true
+
+#networks:
+#  postgres:
+#    driver: bridge
+
+    
 
