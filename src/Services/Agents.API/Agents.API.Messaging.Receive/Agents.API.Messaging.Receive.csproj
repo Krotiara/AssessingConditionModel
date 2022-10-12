@@ -15,6 +15,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\Interfaces\Interfaces.csproj" />
+    <ProjectReference Include="..\Agents.API.Entities\Agents.API.Entities.csproj" />
   </ItemGroup>
 
 </Project>

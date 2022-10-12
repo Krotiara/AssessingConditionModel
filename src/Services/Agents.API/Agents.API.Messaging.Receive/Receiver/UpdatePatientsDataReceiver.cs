@@ -9,6 +9,7 @@ using System.Text;
 using Newtonsoft.Json;
 using System.Threading.Tasks;
 using Interfaces;
+using Agents.API.Entities;
 
 namespace Agents.API.Messaging.Receive.Receiver
 {
@@ -84,11 +85,9 @@ namespace Agents.API.Messaging.Receive.Receiver
                 try
                 {
                     string content = Encoding.UTF8.GetString(ea.Body.ToArray());
-                    //TODO Может выскочить ошибка из-за интерфейса, но по идее тут должен сработать DI
-                    IUpdatePatientsInfo updateInfo = JsonConvert.DeserializeObject<IUpdatePatientsInfo>(content);
+                    IUpdatePatientsInfo updateInfo = JsonConvert.DeserializeObject<UpdatePatientsInfo>(content);
 
-
-                    //addPatientsDataFromSourceService.AddPatientsData(data);
+                    throw new NotImplementedException(); //TODO обработка сообщения. Через сервис
                     channel.BasicAck(ea.DeliveryTag, false);
                 }
                 catch (Newtonsoft.Json.JsonSerializationException ex)
