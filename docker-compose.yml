@@ -21,6 +21,14 @@ services:
       context: .
       dockerfile: src/Services/PatientDataHandler.API/PatientDataHandler.API/Dockerfile
 
+  agents.api:
+    image: ${DOCKER_REGISTRY-}agentsapi
+    build:
+      context: .
+      dockerfile: src/Services/Agents.API/Agents.API/Dockerfile
+    ports:
+      - 8002:80
+
   containerregister.api:
     image: ${DOCKER_REGISTRY-}containerregisterapi
     tty: true
