@@ -9,6 +9,6 @@ namespace PatientDataHandler.API_Messaging.Send.Sender
 {
     public interface IPatientsDataSender
     {
-        void SendPatientsData(IList<IPatientData> data);
+        void SendPatientsData(IList<IPatientData<IPatientParameter, IPatient, IInfluence>> data);
     }
 }

@@ -8,10 +8,10 @@ namespace InfluenceCalculator.API.Models
     public class InfluenceModel: IInfluenceEffectivenessCalculator
     {
 
-        public IInfluenceResult CalculateInfluence(IPatientData patientData)
+        public IInfluenceResult CalculateInfluence(IPatientData<IPatientParameter,IPatient,IInfluence> patientData)
         {
             double effectiveness = 0;
-            foreach(IPatientParameter patientParameter in patientData.Parameters)
+            foreach(IPatientParameter patientParameter in patientData.Parameters.Values)
             {
 
                 if (double.TryParse(patientParameter.Value, out _) && double.TryParse(patientParameter.DynamicValue, out _))

@@ -29,6 +29,6 @@ namespace InfluenceCalculator.API.Models
         public int PositiveDynamicCoef { get; set; } = 1;
         public int PatientId { get; set; }
         public DateTime Timestamp { get; set; }
-        public Parameters ParameterName { get => throw new NotImplementedException(); set => throw new NotImplementedException(); } //TODO по имени получить Parameters.
+        public ParameterNames ParameterName { get => throw new NotImplementedException(); set => throw new NotImplementedException(); } //TODO по имени получить Parameters.
     }
 }

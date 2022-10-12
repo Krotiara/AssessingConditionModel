@@ -27,7 +27,7 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
-builder.Services.AddScoped<IPatientData, PatientData>();
+builder.Services.AddScoped<IPatientData<IPatientParameter, IPatient, IInfluence>, PatientData>();
 builder.Services.AddScoped<IPatientParameter, PatientParameter>();
 builder.Services.AddScoped<IInfluence, Influence>();
 
@@ -56,7 +56,6 @@ builder.Services.AddMediatR(Assembly.GetExecutingAssembly(), typeof(IParsePatien
 builder.Services.AddTransient<IRequestHandler<SendPatientsDataFileCommand, Unit>, SendPatientsDataFileCommandHandler>();
 builder.Services.AddTransient<IPatientsDataSender, PatientsDataSender>();
 builder.Services.AddTransient<IParsePatientsDataService, ParsePatientsDataService>();
-builder.Services.AddTransient<IPropertiesMatcherService, PropertiesMatcherService>();
 
 if (serviceClientSettings.Enabled)
 {

@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Interfaces;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using PatientsResolver.API.Entities;
 using System;
@@ -17,7 +18,6 @@ namespace PatientsResolver.API.Data.Repository
         public PatientDataRepository(PatientsDataDbContext patientsDataDbContext)
             :base(patientsDataDbContext)
         {
-
         }
 
 
@@ -42,8 +42,26 @@ namespace PatientsResolver.API.Data.Repository
 
             List<PatientData> datas = await patientDatas
                 .Include(x => x.Patient)
-                .Include(x => x.Parameters)
+                //.Include(x => x.Parameters)
                 .ToListAsync();
+
+            datas.ForEach(x =>
+            {
+                IQueryable<PatientParameter> parameters = PatientsDataDbContext
+                .PatientsParameters
+                .Where(y => y.PatientDataId == x.Id);
+                foreach(PatientParameter p in parameters)
+                    try
+                    {
+                        p.ParameterName = p.NameTextDescription.GetParameterByDescription(); //TODO Может есть выход лучше?
+                        x.Parameters[p.ParameterName] = p;
+                    }
+                    catch(Exception ex)
+                    {
+                        //TODO log
+                        continue;
+                    } 
+            });
             return datas;
         }
 
@@ -67,14 +85,11 @@ namespace PatientsResolver.API.Data.Repository
                         await ProcessPatientAsync(patient, patientData, cancellationToken);
                         await ProcessInfluenceAsync(patientData, cancellationToken);
 
-                        if (patientData.Parameters != null)
-                        {
-                            await PatientsDataDbContext.PatientsParameters.AddRangeAsync(patientData.Parameters, cancellationToken);
-                            await PatientsDataDbContext.SaveChangesAsync();
-                        }
-
                         await PatientsDataDbContext.PatientDatas.AddAsync(patientData, cancellationToken);
                         await PatientsDataDbContext.SaveChangesAsync();
+
+                        if (patientData.Parameters != null) //после PatientDatas SaveChangesAsync для установки айдишников
+                            await ProcessParametersAsync(patientData, patientData.Parameters.Values, cancellationToken);
 
                         await t.CommitAsync(cancellationToken);
                     }
@@ -90,14 +105,12 @@ namespace PatientsResolver.API.Data.Repository
 
         private async Task<bool> IsPatientDataExistAsync(PatientData patientData)
         {
-#warning ERROR - The expression 'x.Influence' is invalid inside an 'Include' operation, since it does not represent a property access: 't => t.MyProperty'. To target navigations.
-            //TODO возможное решение - https://stackoverflow.com/questions/66229722/invalid-inside-an-include-operation-since-it-does-not-represent-a-property-ac
             List<PatientData> data = await PatientsDataDbContext
                 .PatientDatas.Where(x => x.PatientId == patientData.PatientId
                 && x.Timestamp == patientData.Timestamp)
                 .Include(x => x.Patient)
                 .Include(x=>x.Influence)
-                .Include(x => x.Parameters)
+                //.Include(x => x.Parameters)
                 .Where(x => x.Influence != null)
                 .ToListAsync();
 
@@ -157,6 +170,15 @@ namespace PatientsResolver.API.Data.Repository
                     patientData.InfluenceId = patientData.Influence.Id; //TODO мб избавиться от Id полей, раз есть сами сущности.
                 }
             }
+        }
+
+
+        private async Task ProcessParametersAsync(PatientData patientData, IEnumerable<PatientParameter> parameters, CancellationToken cancellationToken)
+        {
+            foreach (PatientParameter parameter in parameters)
+                parameter.PatientDataId = patientData.Id;
+            await PatientsDataDbContext.PatientsParameters.AddRangeAsync(patientData.Parameters.Values, cancellationToken);
+            await PatientsDataDbContext.SaveChangesAsync();
         }
     }
 }

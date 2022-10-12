@@ -19,12 +19,12 @@ namespace PatientDataHandler.API.Controllers
 
 
         [HttpGet("parseData/{pathToFile}")]
-        public ActionResult<IList<IPatientData>> ParsePatientData(string pathToFile)
+        public ActionResult<IList<IPatientData<IPatientParameter,IPatient, IInfluence>>> ParsePatientData(string pathToFile)
         {
             // TODO try catch
             //TODO определение типа данных
             IDataProvider dataProvider = dataParserResolver.Invoke(DataParserTypes.TestVahitova);
-            IList<IPatientData> patientDatas = dataProvider.ParseData(pathToFile);
+            var patientDatas = dataProvider.ParseData(pathToFile);
             return Ok(patientDatas);
         }
     }

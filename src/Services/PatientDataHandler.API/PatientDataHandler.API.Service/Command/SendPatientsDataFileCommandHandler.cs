@@ -29,7 +29,7 @@ namespace PatientDataHandler.API.Service.Command
         {
             FileData fileData = request.Data; //TODO по FileData определение DataParserTypes
             IDataProvider dataProvider = dataParserResolver.Invoke(DataParserTypes.TestVahitova);
-            IList<IPatientData> patientDatas = dataProvider.ParseData(fileData.RawData);
+            IList<IPatientData<IPatientParameter, IPatient, IInfluence>> patientDatas = dataProvider.ParseData(fileData.RawData);
             patientsDataSender.SendPatientsData(patientDatas);
             return Unit.Task;
 

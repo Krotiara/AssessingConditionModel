@@ -46,6 +46,8 @@ namespace PatientsResolver.API.Entities
         [NotNull]
         [Required]
         public int PositiveDynamicCoef { get ; set ; }
-        public Parameters ParameterName { get => throw new NotImplementedException(); set => throw new NotImplementedException(); } //TODO по имени получить Parameters.
+
+        [NotMapped]
+        public ParameterNames ParameterName { get; set ; } 
     }
 }
