@@ -1,3 +1,11 @@
+using Agents.API.Messaging.Receive;
+using Microsoft.Extensions.DependencyInjection;
+using System.Reflection;
+using MediatR;
+using Interfaces;
+using Agents.API.Entities;
+using Agents.API.Messaging.Receive.Receiver;
+
 var builder = WebApplication.CreateBuilder(args);
 
 
@@ -21,6 +29,20 @@ builder.Services.AddSwaggerGen(c =>
         }
     });
 });
+
+#region rabbitMQ
+var configReceive = builder.Configuration.GetSection("RabbitMq");
+var serviceClientReceiveSettings = configReceive.Get<RabbitMqConfiguration>();
+builder.Services.Configure<RabbitMqConfiguration>(configReceive);
+/*Теперь вы можете выполнять ваши запросы. Для этого вам потребуется получить экземпляр интерфейса IMediator. Он регистрируется в вашем контейнере зависимостей той же командой AddMediatR.*/
+builder.Services.AddMediatR(Assembly.GetExecutingAssembly());
+if (serviceClientReceiveSettings.Enabled)
+{
+    builder.Services.AddHostedService<UpdatePatientsDataReceiver>();
+}
+#endregion
+
+builder.Services.AddScoped<IUpdatePatientsInfo, UpdatePatientsInfo>();
 
 var app = builder.Build();
 

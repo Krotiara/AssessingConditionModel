@@ -10,8 +10,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="MediatR" Version="11.0.0" />
+    <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.17.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Agents.API.Entities\Agents.API.Entities.csproj" />
+    <ProjectReference Include="..\Agents.API.Messaging.Receive\Agents.API.Messaging.Receive.csproj" />
   </ItemGroup>
 
 </Project>
