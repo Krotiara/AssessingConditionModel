@@ -27,11 +27,11 @@ namespace PatientsResolver.API.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {      
-            modelBuilder.Entity<PatientData>()
-                .HasMany<PatientParameter>(x=>x.Parameters)
-                .WithOne()
-                .HasForeignKey(x => x.PatientDataId)
-                .IsRequired();
+            //modelBuilder.Entity<PatientData>()
+            //    .HasMany<PatientParameter>(x=>x.Parameters)
+            //    .WithOne()
+            //    .HasForeignKey(x => x.PatientDataId)
+            //    .IsRequired();
             modelBuilder.Entity<PatientData>()
                 .HasOne<Patient>(x=>x.Patient);
             modelBuilder.Entity<PatientData>()

@@ -39,7 +39,7 @@ builder.Services.AddDbContext<PatientsDataDbContext>(options => options.UseNpgsq
     builder.EnableRetryOnFailure(5, TimeSpan.FromSeconds(2), null);
 }), ServiceLifetime.Singleton); // Registration dbContext as service.
 
-builder.Services.AddScoped<IPatientData, PatientData>();
+builder.Services.AddScoped<IPatientData<PatientParameter, Patient, Influence>, PatientData>();
 builder.Services.AddScoped<IPatientParameter, PatientParameter>();
 builder.Services.AddScoped<IPatient, Patient>();
 builder.Services.AddScoped<IFileData, FileData>();

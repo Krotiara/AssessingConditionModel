@@ -4,7 +4,7 @@ namespace InfluenceCalculator.API.Models
 {
     public interface IInfluenceEffectivenessCalculator
     {
-        public IInfluenceResult CalculateInfluence(IPatientData patientData);
+        public IInfluenceResult CalculateInfluence(IPatientData<IPatientParameter, IPatient, IInfluence> patientData);
 
     }
 }

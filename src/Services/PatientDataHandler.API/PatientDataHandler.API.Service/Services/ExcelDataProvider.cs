@@ -1,21 +1,27 @@
 ﻿using ExcelDataReader;
 using Interfaces;
 using OfficeOpenXml;
+using PatientDataHandler.API.Entities;
+using System.Collections.Concurrent;
+using System.Diagnostics;
+using System.Linq;
 
-namespace PatientDataHandler.API.Entities
+namespace PatientDataHandler.API.Service.Services
 {
     /// <summary>
     /// Парсер тестового формата данных.
     /// </summary>
     public class ExcelDataProvider : IDataProvider
     {
+
+       
         public ExcelDataProvider()
         {
-           
+
         }
  
 
-        public IList<IPatientData> ParseData(string filePath)
+        public IList<IPatientData<IPatientParameter, IPatient, IInfluence>> ParseData(string filePath)
         {
             //TODO add try catch
             Stream stream = File.Open(filePath, FileMode.Open, FileAccess.Read);
@@ -27,27 +33,33 @@ namespace PatientDataHandler.API.Entities
         }
 
 
-        public IList<IPatientData> ParseData(byte[] bytesData)
+        public IList<IPatientData<IPatientParameter, IPatient, IInfluence>> ParseData(byte[] bytesData)
         {
             IList<IList<string>> rawData = LoadData(bytesData);
             DataPreprocessor dataPreprocessor = new DataPreprocessor();
             rawData = dataPreprocessor.PreProcessData(rawData);
-            IList<IPatientData> data = ParseExcelData(rawData[0], rawData.Skip(1).ToList());
+            IList<IPatientData<IPatientParameter, IPatient, IInfluence>> data = ParseExcelData(rawData[0], rawData.Skip(1).ToList());
             return data;
         }
 
 
-        private IList<IPatientData> ParseExcelData(IList<string> headers, IList<IList<string>> data)
+        private IList<IPatientData<IPatientParameter, IPatient, IInfluence>> ParseExcelData(IList<string> headers, IList<IList<string>> data)
         {
-            Dictionary<int, IPatientData> patientParameters = new Dictionary<int, IPatientData>();
+            Dictionary<int, IPatientData<IPatientParameter, IPatient, IInfluence>> patientParameters = 
+                new Dictionary<int, IPatientData<IPatientParameter, IPatient, IInfluence>>();
             bool isDynamicRows = false;
+            int groupIndex = headers.IndexOf("группа");
+
+            IList<ParameterNames> headerParamsNames = headers
+                .Select(x => x.GetParameterByDescription())
+                .ToList();
+
             for (int rowNum = 0; rowNum <= data.Count; rowNum++) //select starting row here
             {
                 try
                 {
                     IList<string> row = data[rowNum];
-
-                    string influenceName = data[rowNum][headers.IndexOf("группа")];
+                    string influenceName = data[rowNum][groupIndex];
                     Influence influence = new Influence()
                     {
                         InfluenceType = InfluenceTypes.BiologicallyActiveAdditive,
@@ -62,7 +74,7 @@ namespace PatientDataHandler.API.Entities
                         continue;
                     }
 
-                    IPatientData patientData = null;
+                    IPatientData<IPatientParameter, IPatient, IInfluence> patientData = null;
                     int id = int.Parse(row[0]);
                     if (isDynamicRows)
                         patientData = patientParameters[id];
@@ -71,7 +83,6 @@ namespace PatientDataHandler.API.Entities
                         patientData = new PatientData()
                         {
                             PatientId = id,
-                            Parameters = new List<IPatientParameter>(),
                             Timestamp = DateTime.MinValue, //TODO указывать во входных данных
                             Influence = influence                 
                         };
@@ -79,34 +90,42 @@ namespace PatientDataHandler.API.Entities
                         patientParameters[id] = patientData;
                     }
 
-                    for (int j = 1; j < row.Count; j++)
+                    
+                    Parallel.For(1, row.Count, j =>
                     {
                         try
                         {
-                            IPatientParameter patientParameter = patientData.Parameters.FirstOrDefault(x => x.Name == headers[j]);
-                            if (patientParameter == null)
+                            if (headerParamsNames[j] == ParameterNames.None)
+                                return;
+                            ParameterNames parameterName = headerParamsNames[j]; //Доступ к общему листу problem
+
+                            if (!patientData.Parameters.ContainsKey(parameterName))
                             {
-                                patientParameter = new PatientParameter()
+                                patientData.Parameters[parameterName] = new PatientParameter(parameterName)
                                 {
-                                    Name = headers[j],
                                     Timestamp = DateTime.MinValue, //TODO  нужно указывать во входных данных.
                                     PatientId = id,
                                     PositiveDynamicCoef = 1 //TODO нужно указывать во входных данных.
                                 };
-                                patientData.Parameters.Add(patientParameter);
                             };
 
                             if (isDynamicRows)
-                                patientParameter.DynamicValue = row[j];
+                                patientData.Parameters[parameterName].DynamicValue = row[j];
                             else
-                                patientParameter.Value = row[j];
+                                patientData.Parameters[parameterName].Value = row[j];
                         }
-                        catch(Exception ex)
+                        catch (KeyNotFoundException ex)
+                        {
+                            //Не найден Parameters
+                            //TODO log
+                            return;
+                        }
+                        catch (Exception ex)
                         {
                             //TODO add log
-                            continue;
+                            return;
                         }
-                    }
+                    });                   
                 }
                 catch(Exception ex)
                 {
@@ -114,7 +133,7 @@ namespace PatientDataHandler.API.Entities
                     continue;
                 }
             }
-               
+
             return patientParameters.Values.ToList();
         }
 

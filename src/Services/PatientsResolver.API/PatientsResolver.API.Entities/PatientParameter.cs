@@ -34,7 +34,8 @@ namespace PatientsResolver.API.Entities
 
         [NotNull]
         [Required]
-        public string Name { get ; set ; }
+        [Column("Name")]
+        public string NameTextDescription { get ; set ; }
 
         [NotNull]
         [Required]
@@ -45,5 +46,8 @@ namespace PatientsResolver.API.Entities
         [NotNull]
         [Required]
         public int PositiveDynamicCoef { get ; set ; }
+
+        [NotMapped]
+        public ParameterNames ParameterName { get; set ; } 
     }
 }

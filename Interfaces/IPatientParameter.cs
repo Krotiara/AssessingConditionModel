@@ -17,7 +17,9 @@ namespace Interfaces
 
         public DateTime Timestamp { get; set; }
 
-        public string Name { get; set; }
+        public ParameterNames ParameterName { get; set; }
+
+        public string NameTextDescription { get; set; }
 
         public string Value { get;  set; }
 

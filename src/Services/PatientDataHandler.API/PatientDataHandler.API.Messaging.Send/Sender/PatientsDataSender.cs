@@ -32,7 +32,7 @@ namespace PatientDataHandler.API_Messaging.Send.Sender
             CreateConnection();
         }
 
-        public void SendPatientsData(IList<IPatientData> data)
+        public void SendPatientsData(IList<IPatientData<IPatientParameter, IPatient, IInfluence>> data)
         {
             if (connection == null)
                 CreateConnection();

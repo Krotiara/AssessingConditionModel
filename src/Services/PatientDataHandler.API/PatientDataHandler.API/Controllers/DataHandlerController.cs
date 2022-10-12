@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PatientDataHandler.API.Entities;
 using PatientDataHandler.API.Models;
+using PatientDataHandler.API.Service.Services;
 
 namespace PatientDataHandler.API.Controllers
 {
@@ -18,12 +19,12 @@ namespace PatientDataHandler.API.Controllers
 
 
         [HttpGet("parseData/{pathToFile}")]
-        public ActionResult<IList<IPatientData>> ParsePatientData(string pathToFile)
+        public ActionResult<IList<IPatientData<IPatientParameter,IPatient, IInfluence>>> ParsePatientData(string pathToFile)
         {
             // TODO try catch
             //TODO определение типа данных
             IDataProvider dataProvider = dataParserResolver.Invoke(DataParserTypes.TestVahitova);
-            IList<IPatientData> patientDatas = dataProvider.ParseData(pathToFile);
+            var patientDatas = dataProvider.ParseData(pathToFile);
             return Ok(patientDatas);
         }
     }
