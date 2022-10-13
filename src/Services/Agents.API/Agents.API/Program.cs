@@ -1,4 +1,3 @@
-using Agents.API.Messaging.Receive;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 using MediatR;
@@ -7,6 +6,8 @@ using Agents.API.Entities;
 using Agents.API.Messaging.Receive.Receiver;
 using Microsoft.EntityFrameworkCore;
 using Agents.API.Data.Database;
+using Agents.API.Service.Services;
+using Agents.API.Messaging.Receive.Configs;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -33,15 +34,16 @@ builder.Services.AddSwaggerGen(c =>
 });
 
 #region rabbitMQ
-var configReceive = builder.Configuration.GetSection("RabbitMq");
-var serviceClientReceiveSettings = configReceive.Get<RabbitMqConfiguration>();
-builder.Services.Configure<RabbitMqConfiguration>(configReceive);
+var configReceiveAddData = builder.Configuration.GetSection("RabbitMqAddData");
+
+builder.Services.Configure<RabbitMqConfiguration>(builder.Configuration.GetSection("RabbitMq"));
+builder.Services.Configure<RabbitMqConfiguration>(builder.Configuration.GetSection("RabbitMqAddData"));
 /*Теперь вы можете выполнять ваши запросы. Для этого вам потребуется получить экземпляр интерфейса IMediator. Он регистрируется в вашем контейнере зависимостей той же командой AddMediatR.*/
 builder.Services.AddMediatR(Assembly.GetExecutingAssembly());
-if (serviceClientReceiveSettings.Enabled)
-{
+if (builder.Configuration.GetSection("RabbitMq").Get<RabbitMqConfiguration>().Enabled)
     builder.Services.AddHostedService<UpdatePatientsDataReceiver>();
-}
+if(builder.Configuration.GetSection("RabbitMqAddData").Get<RabbitMqConfiguration>().Enabled)
+    builder.Services.AddHostedService<AddPatientsReceiver>();
 #endregion
 
 string connectionString = builder.Configuration.GetConnectionString("PostgresConnection");
@@ -54,6 +56,7 @@ AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
 builder.Services.AddScoped<IUpdatePatientsInfo, UpdatePatientsInfo>();
 builder.Services.AddTransient<IWebRequester, RestWebRequester>();
+builder.Services.AddTransient<IInitPatientAgentsService, InitPatientAgentsService>();
 builder.Services.AddSingleton<IAgentPatientsRepository, AgentPatientsRepository>();
 var app = builder.Build();
 

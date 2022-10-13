@@ -2,7 +2,7 @@
 
 namespace PatientsResolver.API.Messaging.Send.Configurations
 {
-    public class RabbitMqConfiguration : IRabbitMqConfiguration
+    public class RabbitMqConfiguration : Interfaces.RabbitMqConfiguration
     {
         public string Hostname { get; set; }
 

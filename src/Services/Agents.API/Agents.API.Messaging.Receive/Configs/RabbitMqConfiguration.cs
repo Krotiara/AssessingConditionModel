@@ -1,8 +1,8 @@
 ﻿using Interfaces;
 
-namespace PatientDataHandler.API.Messaging.Send
+namespace Agents.API.Messaging.Receive.Configs
 {
-    public class RabbitMqConfiguration: Interfaces.RabbitMqConfiguration
+    public class RabbitMqConfiguration : IRabbitMqConfiguration
     {
         public string Hostname { get; set; }
 

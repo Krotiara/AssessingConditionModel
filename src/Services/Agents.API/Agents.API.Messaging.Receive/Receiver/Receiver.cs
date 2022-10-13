@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.Hosting;
+﻿using Agents.API.Messaging.Receive.Configs;
+using Interfaces;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
@@ -6,26 +8,23 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Newtonsoft.Json;
 using System.Threading.Tasks;
-using Interfaces;
-using Agents.API.Entities;
 
 namespace Agents.API.Messaging.Receive.Receiver
 {
-    public class UpdatePatientsDataReceiver : BackgroundService
+    public abstract class Receiver : BackgroundService
     {
         private IModel channel;
         private IConnection connection;
 
-        private readonly string hostname;
-        private readonly string queueName;
-        private readonly string username;
-        private readonly string password;
-        private readonly string exchange;
-        private readonly string routingKey;
+        private  string hostname;
+        private  string queueName;
+        private  string username;
+        private  string password;
+        private  string exchange;
+        private  string routingKey;
 
-        public UpdatePatientsDataReceiver(IOptions<RabbitMqConfiguration> rabbitMqOptions)
+        public void InitReceiver(Action<string> receiveAction, IOptions<IRabbitMqConfiguration> rabbitMqOptions)
         {
             hostname = rabbitMqOptions.Value.Hostname;
             queueName = rabbitMqOptions.Value.QueueName;
@@ -33,8 +32,11 @@ namespace Agents.API.Messaging.Receive.Receiver
             password = rabbitMqOptions.Value.Password;
             exchange = rabbitMqOptions.Value.Exchange;
             routingKey = rabbitMqOptions.Value.RoutingKey;
+            this.receiveAction = receiveAction;
             InitializeRabbitMqListener();
         }
+
+        private Action<string> receiveAction;
 
         private void InitializeRabbitMqListener()
         {
@@ -52,8 +54,8 @@ namespace Agents.API.Messaging.Receive.Receiver
                 channel = connection.CreateModel();
 
                 QueueDeclareOk status = channel
-                        .QueueDeclare(queue: queueName, 
-                        durable: false, exclusive: false, 
+                        .QueueDeclare(queue: queueName,
+                        durable: false, exclusive: false,
                         autoDelete: false, arguments: null);
             }
             catch (Exception ex)
@@ -64,6 +66,7 @@ namespace Agents.API.Messaging.Receive.Receiver
         }
 
         private void RabbitMQ_ConnectionShutdown(object sender, ShutdownEventArgs e) { }
+
 
         public override void Dispose()
         {
@@ -76,7 +79,7 @@ namespace Agents.API.Messaging.Receive.Receiver
         protected override Task ExecuteAsync(CancellationToken stoppingToken)
         {
             if (channel == null)
-                return Task.FromException(new Exception("Agents.API.Messaging.Receive.Receiver channel is null"));
+                return Task.FromException(new Exception("Channel is null"));
             stoppingToken.ThrowIfCancellationRequested();
 
             EventingBasicConsumer consumer = new EventingBasicConsumer(channel);
@@ -85,9 +88,8 @@ namespace Agents.API.Messaging.Receive.Receiver
                 try
                 {
                     string content = Encoding.UTF8.GetString(ea.Body.ToArray());
-                    IUpdatePatientsInfo updateInfo = JsonConvert.DeserializeObject<UpdatePatientsInfo>(content);
 
-                    throw new NotImplementedException(); //TODO обработка сообщения. Через сервис
+                    receiveAction.Invoke(content);
 
                     channel.BasicAck(ea.DeliveryTag, false);
                 }
@@ -95,13 +97,13 @@ namespace Agents.API.Messaging.Receive.Receiver
                 {
                     //TODO add log
                     channel.BasicReject(ea.DeliveryTag, false);
-                } 
+                }
             };
 
             channel.BasicConsume(queueName, false, consumer);
 
             return Task.CompletedTask;
-
         }
+
     }
 }

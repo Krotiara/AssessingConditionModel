@@ -1,8 +1,8 @@
 ﻿using Interfaces;
 
-namespace Agents.API.Messaging.Receive
+namespace Agents.API.Messaging.Receive.Configs
 {
-    public class RabbitMqConfiguration: IRabbitMqConfiguration
+    public class RabbitMqConfigurationAddData : IRabbitMqConfiguration
     {
         public string Hostname { get; set; }
 
