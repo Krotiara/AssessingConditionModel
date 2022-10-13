@@ -54,7 +54,7 @@ AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
 builder.Services.AddScoped<IUpdatePatientsInfo, UpdatePatientsInfo>();
 builder.Services.AddTransient<IWebRequester, RestWebRequester>();
-
+builder.Services.AddSingleton<IAgentPatientsRepository, AgentPatientsRepository>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

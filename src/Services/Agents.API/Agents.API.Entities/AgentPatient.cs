@@ -15,6 +15,8 @@ namespace Agents.API.Entities
             this.webRequester = webRequester;
         }
 
+        public AgentPatient() { }
+
         public int Id { get; set; }
         public string Name { get ; set ; }
         public StateDiagram StateDiagram { get ; set ; }
