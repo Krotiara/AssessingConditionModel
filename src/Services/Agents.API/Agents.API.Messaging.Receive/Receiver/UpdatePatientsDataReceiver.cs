@@ -10,6 +10,7 @@ using Newtonsoft.Json;
 using System.Threading.Tasks;
 using Interfaces;
 using Agents.API.Entities;
+using Agents.API.Messaging.Receive.Configs;
 
 namespace Agents.API.Messaging.Receive.Receiver
 {

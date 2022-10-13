@@ -2,7 +2,7 @@
 
 namespace PatientDataHandler.API.Messaging.Receive
 {
-    public class RabbitMqConfiguration: Interfaces.RabbitMqConfiguration
+    public class RabbitMqConfiguration: IRabbitMqConfiguration
     {
         public string Hostname { get; set; }
 

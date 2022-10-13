@@ -26,9 +26,14 @@ namespace PatientsResolver.API.Service.Services
             {
                 List<PatientData> addedData = 
                     await mediator.Send(new AddPatientDataCommand() { Data = data });
+
                 IUpdatePatientsInfo updateInfo = new UpdatePatientsInfo() 
                 { UpdatedIds = new HashSet<int>(addedData.Select(x => x.PatientId)) };
                 await mediator.Send(new SendUpdatePatientsInfoCommand() { UpdatePatientsInfo = updateInfo });
+
+                //TODO отлов добавленных пациентов. Пока дял теста берем все
+                List<Patient> testPatients = addedData.Select(x => x.Patient).ToList();
+                await mediator.Send(new SendPatientsCommand() { Patients = testPatients });
             }
             catch(Exception ex)
             {

@@ -15,7 +15,7 @@ namespace Agents.API.Messaging.Receive.Receiver
     {
         IInitPatientAgentsService initPatientAgentsService;
 
-        public AddPatientsReceiver(IInitPatientAgentsService initPatientAgentsService, IOptions<RabbitMqConfigurationAddData> rabbitMqOptions)
+        public AddPatientsReceiver(IInitPatientAgentsService initPatientAgentsService, IOptions<RabbitMqConfiguration> rabbitMqOptions)
         {
             this.initPatientAgentsService = initPatientAgentsService;
             InitReceiver(ReceiveAction, rabbitMqOptions);
