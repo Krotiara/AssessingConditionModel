@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using Interfaces;
+using System.ComponentModel;
 
 namespace Agents.API.Entities
 {
@@ -6,7 +7,7 @@ namespace Agents.API.Entities
     {
         public string Name { get; set; }
 
-       // public StateDiagram StateDiagram { get; set; }
+        public StateDiagram StateDiagram { get; set; }
 
         public List<IAgent> Connections { get; set; }
 

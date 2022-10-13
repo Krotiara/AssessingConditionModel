@@ -43,6 +43,7 @@ if (serviceClientReceiveSettings.Enabled)
 #endregion
 
 builder.Services.AddScoped<IUpdatePatientsInfo, UpdatePatientsInfo>();
+builder.Services.AddTransient<IWebRequester, RestWebRequester>();
 
 var app = builder.Build();
 
