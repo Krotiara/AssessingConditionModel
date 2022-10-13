@@ -1,4 +1,5 @@
-﻿using PatientsResolver.API.Entities;
+﻿using Interfaces;
+using PatientsResolver.API.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
