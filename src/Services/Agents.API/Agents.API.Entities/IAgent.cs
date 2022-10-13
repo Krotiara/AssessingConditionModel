@@ -5,6 +5,9 @@ namespace Agents.API.Entities
 {
     public interface IAgent
     {
+
+        public int Id { get; set; }
+
         public string Name { get; set; }
 
         public StateDiagram StateDiagram { get; set; }

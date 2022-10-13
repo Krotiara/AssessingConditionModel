@@ -15,9 +15,11 @@ namespace Agents.API.Entities
             this.webRequester = webRequester;
         }
 
+        public int Id { get; set; }
         public string Name { get ; set ; }
         public StateDiagram StateDiagram { get ; set ; }
         public List<IAgent> Connections { get ; set ; }
+        
 
         public void InitStateDiagram()
         {

@@ -5,6 +5,8 @@ using MediatR;
 using Interfaces;
 using Agents.API.Entities;
 using Agents.API.Messaging.Receive.Receiver;
+using Microsoft.EntityFrameworkCore;
+using Agents.API.Data.Database;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -41,6 +43,14 @@ if (serviceClientReceiveSettings.Enabled)
     builder.Services.AddHostedService<UpdatePatientsDataReceiver>();
 }
 #endregion
+
+string connectionString = builder.Configuration.GetConnectionString("PostgresConnection");
+builder.Services.AddDbContext<AgentsDbContext>(options => options.UseNpgsql(connectionString, builder =>
+{
+    builder.EnableRetryOnFailure(5, TimeSpan.FromSeconds(2), null);
+}), ServiceLifetime.Singleton); // Registration dbContext as service.
+//Для избежания ошибки Cannot write DateTime with Kind=Local to PostgreSQL type 'timestamp with time zone', only UTC is supported.
+AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
 builder.Services.AddScoped<IUpdatePatientsInfo, UpdatePatientsInfo>();
 builder.Services.AddTransient<IWebRequester, RestWebRequester>();
