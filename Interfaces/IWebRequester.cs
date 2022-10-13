@@ -10,6 +10,8 @@ namespace Interfaces
 {
     public interface IWebRequester
     {
-        public T GetResponse<T>(string requestUriStr, string method, string jsonBody);   
+        public T GetResponse<T>(string requestUriStr, string method, string jsonBody);
+
+       
     }
 }
