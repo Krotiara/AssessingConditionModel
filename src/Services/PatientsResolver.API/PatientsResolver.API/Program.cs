@@ -74,6 +74,8 @@ builder.Services.AddTransient<IRequestHandler<SendPatientDataFileSourceCommand, 
     SendPatientDataFileSourceCommandHandler>();
 builder.Services.AddTransient<IRequestHandler<SendPatientsCommand, Unit>, 
     SendPatientsCommandHandler>();
+builder.Services.AddTransient<IRequestHandler<AddNotExistedPatientsCommand, IList<Patient>>,
+    AddNotExistedPatientsCommandHandler>();
 builder.Services.AddTransient<IRequestHandler<AddPatientCommand, bool>,
     AddPatientCommandHandler>();
 builder.Services.AddTransient<IRequestHandler<AddInfluenceCommand, bool>, 

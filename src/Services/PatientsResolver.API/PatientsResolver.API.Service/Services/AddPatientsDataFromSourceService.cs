@@ -24,16 +24,18 @@ namespace PatientsResolver.API.Service.Services
         {
             try
             {
-                List<PatientData> addedData = 
-                    await mediator.Send(new AddPatientDataCommand() { Data = data });
+#warning error на данный момент Patient из входных данных = null.
+                IList<Patient> addedPatients = await mediator.Send(new AddNotExistedPatientsCommand() 
+                { Patients = data.Select(x => x.Patient).ToList() });
+
+                if(addedPatients.Count > 0)
+                await mediator.Send(new SendPatientsCommand() { Patients = addedPatients.ToList()});
+
+                List<PatientData> addedData = await mediator.Send(new AddPatientDataCommand() { Data = data });
 
                 IUpdatePatientsInfo updateInfo = new UpdatePatientsInfo() 
                 { UpdatedIds = new HashSet<int>(addedData.Select(x => x.PatientId)) };
-                await mediator.Send(new SendUpdatePatientsInfoCommand() { UpdatePatientsInfo = updateInfo });
-
-                //TODO отлов добавленных пациентов. Пока дял теста берем все
-                List<Patient> testPatients = addedData.Select(x => x.Patient).ToList();
-                await mediator.Send(new SendPatientsCommand() { Patients = testPatients });
+                await mediator.Send(new SendUpdatePatientsInfoCommand() { UpdatePatientsInfo = updateInfo }); 
             }
             catch(Exception ex)
             {
