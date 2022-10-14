@@ -25,7 +25,7 @@ namespace PatientsResolver.API.Controllers
 
 
         [HttpGet("patientsData/{patientId}")]
-        public async Task<ActionResult<List<PatientData>>> GetPatientsData(int patientId,
+        public async Task<ActionResult<List<IPatientData<IPatientParameter, IPatient, IInfluence>>>> GetPatientsData(int patientId,
             DateTime? startTimestamp, DateTime? endTimestamp)
         {
             try

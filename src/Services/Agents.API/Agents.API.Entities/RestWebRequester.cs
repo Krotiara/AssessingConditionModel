@@ -10,10 +10,10 @@ namespace Agents.API.Entities
 {
     public class RestWebRequester : IWebRequester
     {
-        public T GetResponse<T>(string requestUriStr, string method, string? jsonBody = null)
+        public async Task<T> GetResponse<T>(string requestUriStr, string method, string? jsonBody = null)
         {
             HttpWebRequest webRequest = CreateRequest(requestUriStr, method, jsonBody);
-            return GetResponse<T>(webRequest);
+            return await GetResponseAsync<T>(webRequest);
         }
 
 
@@ -37,10 +37,12 @@ namespace Agents.API.Entities
             return webRequest;
         }
 
-        private T GetResponse<T>(HttpWebRequest webRequest)
+        private async Task<T> GetResponseAsync<T>(HttpWebRequest webRequest)
         {
             //TODO try catch
-            HttpWebResponse webResponse = webRequest.GetResponse() as HttpWebResponse;
+            HttpWebResponse webResponse = (HttpWebResponse)await Task.Factory.FromAsync(
+                    webRequest.BeginGetResponse, webRequest.EndGetResponse, null);
+            /*webRequest.GetResponse() as HttpWebResponse;*/
             if (webResponse.StatusCode != HttpStatusCode.Accepted)
                 throw new ApplicationException("Unexpected Response Code. - " + webResponse.StatusCode);
             string response;

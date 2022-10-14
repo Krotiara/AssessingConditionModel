@@ -32,37 +32,42 @@ namespace PatientsResolver.API.Data.Repository
         public async Task<List<PatientData>> GetPatientData(int patientId, 
             DateTime startTimestamp, DateTime endTimestamp)
         {
-            IQueryable<PatientData> patientDatas = PatientsDataDbContext
+            IExecutionStrategy strategy = PatientsDataDbContext.Database.CreateExecutionStrategy();
+            return await strategy.ExecuteAsync(async () =>
+            {
+                IQueryable<PatientData> patientDatas = PatientsDataDbContext
                         .PatientDatas
                         .Where(x => x.PatientId == patientId)
-                        .Where(x=>x.Timestamp >= startTimestamp && x.Timestamp <= endTimestamp);
+                        .Where(x => x.Timestamp >= startTimestamp && x.Timestamp <= endTimestamp);
 
-            if (patientDatas.Count() == 0)
-                return new List<PatientData>();
+                if (patientDatas.Count() == 0)
+                    return new List<PatientData>();
 
-            List<PatientData> datas = await patientDatas
-                .Include(x => x.Patient)
-                //.Include(x => x.Parameters)
-                .ToListAsync();
+                List<PatientData> datas = await patientDatas
+                    .Include(x => x.Patient)
+                    //.Include(x => x.Parameters)
+                    .ToListAsync();
 
-            datas.ForEach(x =>
-            {
-                IQueryable<PatientParameter> parameters = PatientsDataDbContext
-                .PatientsParameters
-                .Where(y => y.PatientDataId == x.Id);
-                foreach(PatientParameter p in parameters)
-                    try
-                    {
-                        p.ParameterName = p.NameTextDescription.GetParameterByDescription(); //TODO Может есть выход лучше?
-                        x.Parameters[p.ParameterName] = p;
-                    }
-                    catch(Exception ex)
-                    {
-                        //TODO log
-                        continue;
-                    } 
+                datas.ForEach(x =>
+                {
+                    IQueryable<PatientParameter> parameters = PatientsDataDbContext
+                    .PatientsParameters
+                    .Where(y => y.PatientDataId == x.Id);
+                    foreach (PatientParameter p in parameters)
+                        try
+                        {
+                            p.ParameterName = p.NameTextDescription.GetParameterByDescription(); //TODO Может есть выход лучше?
+                            x.Parameters[p.ParameterName] = p;
+                        }
+                        catch (Exception ex)
+                        {
+                            //TODO log
+                            continue;
+                        }
+                });
+                return datas;
             });
-            return datas;
+           
         }
 
 
@@ -80,7 +85,7 @@ namespace PatientsResolver.API.Data.Repository
 
                         Patient patient = await PatientsDataDbContext
                             .Patients
-                            .FirstOrDefaultAsync(x => x.MedicalHistoryNumber == patientData.Id);
+                            .FirstOrDefaultAsync(x => x.MedicalHistoryNumber == patientData.PatientId);
 
                         await ProcessPatientAsync(patient, patientData, cancellationToken);
                         await ProcessInfluenceAsync(patientData, cancellationToken);
