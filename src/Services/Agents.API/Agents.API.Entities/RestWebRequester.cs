@@ -12,8 +12,17 @@ namespace Agents.API.Entities
     {
         public async Task<T> GetResponse<T>(string requestUriStr, string method, string? jsonBody = null)
         {
-            HttpWebRequest webRequest = CreateRequest(requestUriStr, method, jsonBody);
-            return await GetResponseAsync<T>(webRequest);
+            try
+            {
+#warning Вылезает ошибка The remote certificate is invalid according to the validation procedure: RemoteCertificateNameMismatch, RemoteCertificateChainErrors
+                HttpWebRequest webRequest = CreateRequest(requestUriStr, method, jsonBody);
+                return await GetResponseAsync<T>(webRequest);
+            }
+            catch(Exception ex)
+            {
+                //TODO notmal try catch
+                throw new NotImplementedException();
+            }
         }
 
 

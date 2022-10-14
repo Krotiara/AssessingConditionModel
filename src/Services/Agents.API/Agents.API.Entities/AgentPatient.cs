@@ -1,4 +1,5 @@
 ﻿using Interfaces;
+using MediatR;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -14,7 +15,7 @@ namespace Agents.API.Entities
     public class AgentPatient : IAgent
     {
         private IWebRequester webRequester;
-        
+       
         public AgentPatient() { }
 
         [NotNull]
@@ -46,14 +47,15 @@ namespace Agents.API.Entities
             {
                 StateDiagram.AddState(state.GetDisplayAttributeValue());
             }
+            StateDiagram.UpdateStateAsync();
         }
 
 
-        private State DetermineState()
+        private async Task<State> DetermineState()
         {
             //TODO get patient params
             //https://localhost:60571/patientsData/2
-
+            var patientDatas = await GetPatientData(DateTime.MinValue, DateTime.MaxValue);
             //TODO get bioAge from webRequest
             // calc delta
             //TODO check ненулевые значения.
@@ -73,6 +75,20 @@ namespace Agents.API.Entities
 
             return StateDiagram.GetState(rang.GetDisplayAttributeValue());
         }
+
+
+        private async Task<IList<IPatientData<IPatientParameter,IPatient,IInfluence>>> GetPatientData(DateTime startTime, DateTime endTime)
+        {
+            //TODO указание времени.
+            //TODO IList<IPatientData<IPatientParameter, IPatient, IInfluence>> - выглядит перегруженно.
+            string url = $"http://host.docker.internal:8003/patientsData/{PatientId}";
+            //string url = $"http://localhost:8003/patientsData/{PatientId}";
+            var a = await webRequester
+                .GetResponse<IList<IPatientData<IPatientParameter, IPatient, IInfluence>>>(
+                url, "GET");
+            return a;
+        }
+
 
         public void ProcessPrivateTransitions()
         {

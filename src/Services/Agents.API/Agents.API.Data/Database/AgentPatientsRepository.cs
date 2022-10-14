@@ -1,6 +1,7 @@
 ﻿using Agents.API.Data.Repository;
 using Agents.API.Entities;
 using Interfaces;
+using MediatR;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +12,8 @@ namespace Agents.API.Data.Database
 {
     public class AgentPatientsRepository : Repository<AgentPatient>, IAgentPatientsRepository
     {
-        private IWebRequester webRequester;
+        //private IWebRequester webRequester;
+        IWebRequester webRequester;
 
         public AgentPatientsRepository(AgentsDbContext agentsDbContext, IWebRequester webRequester) : base(agentsDbContext)
         {
@@ -31,8 +33,8 @@ namespace Agents.API.Data.Database
                     PatientId = patient.MedicalHistoryNumber,
                     Name = patient.MedicalHistoryNumber.ToString()
                 };
-                agentPatient.InitStateDiagram();
                 agentPatient.InitWebRequester(webRequester);
+                agentPatient.InitStateDiagram();
                 await AgentsDbContext.AddAsync<AgentPatient>(agentPatient);
                 await AgentsDbContext.SaveChangesAsync();
             }   

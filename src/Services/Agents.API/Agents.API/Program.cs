@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Agents.API.Data.Database;
 using Agents.API.Service.Services;
 using Agents.API.Messaging.Receive.Configs;
+using Agents.API.Service.Command;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -46,6 +47,9 @@ if(builder.Configuration.GetSection("RabbitMqAddInfo").Get<AddDataConfig>().Enab
     builder.Services.AddHostedService<AddPatientsReceiver>();
 #endregion
 
+/*Теперь вы можете выполнять ваши запросы. Для этого вам потребуется получить экземпляр интерфейса IMediator. Он регистрируется в вашем контейнере зависимостей той же командой AddMediatR.*/
+builder.Services.AddMediatR(Assembly.GetExecutingAssembly());
+
 string connectionString = builder.Configuration.GetConnectionString("PostgresConnection");
 builder.Services.AddDbContext<AgentsDbContext>(options => options.UseNpgsql(connectionString, builder =>
 {
@@ -58,6 +62,11 @@ builder.Services.AddScoped<IUpdatePatientsInfo, UpdatePatientsInfo>();
 builder.Services.AddTransient<IWebRequester, RestWebRequester>();
 builder.Services.AddTransient<IInitPatientAgentsService, InitPatientAgentsService>();
 builder.Services.AddSingleton<IAgentPatientsRepository, AgentPatientsRepository>();
+
+builder.Services.AddTransient<IRequestHandler<GetPatientDatasCommand, IList<IPatientData<IPatientParameter, IPatient, IInfluence>>>,
+    GetPatientDatasCommandHandler>();
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

@@ -8,6 +8,8 @@ services:
       dockerfile: src/Services/PatientsResolver.API/PatientsResolver.API/Dockerfile
     volumes:
       - "C:/TestData:/data"
+    ports:
+      - 8003:80
 
   influencecalculator.api:
     image: ${DOCKER_REGISTRY-}influencecalculatorapi
