@@ -23,7 +23,7 @@ namespace PatientsResolver.API.Messaging.Send.Sender
         private readonly string routingKey;
         private IConnection connection;
 
-        public PatientsSender(IOptions<RabbitMqUpdateInfoConfig> rabbitMqOptions)
+        public PatientsSender(IOptions<RabbitMqAddInfoConfig> rabbitMqOptions)
         {
             queueName = rabbitMqOptions.Value.QueueName;
             hostname = rabbitMqOptions.Value.Hostname;

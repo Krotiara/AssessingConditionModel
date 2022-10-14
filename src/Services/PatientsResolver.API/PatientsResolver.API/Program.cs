@@ -58,9 +58,10 @@ builder.Services.AddOptions();
 #region rabbitMQ
 #warning Скорее всего плохоже решение с доп секцией.
 var serviceClientSettingsConfigData = builder.Configuration.GetSection("RabbitMq1");
-builder.Services.Configure<PatientsResolver.API.Messaging.Send.Configurations.RabbitMqConfiguration>(builder.Configuration.GetSection("RabbitMq"));
+builder.Services.Configure<RabbitMqConfiguration>(builder.Configuration.GetSection("RabbitMq"));
 builder.Services.Configure<PatientsResolver.API.Messaging.Receive.RabbitMqConfiguration>(serviceClientSettingsConfigData);
 builder.Services.Configure<RabbitMqUpdateInfoConfig>(builder.Configuration.GetSection("RabbitMqSendUpdateInfo"));
+builder.Services.Configure<RabbitMqAddInfoConfig>(builder.Configuration.GetSection("RabbitMqSendAddInfo"));
 /*Теперь вы можете выполнять ваши запросы. Для этого вам потребуется получить экземпляр интерфейса IMediator. Он регистрируется в вашем контейнере зависимостей той же командой AddMediatR.*/
 builder.Services.AddMediatR(Assembly.GetExecutingAssembly());
 

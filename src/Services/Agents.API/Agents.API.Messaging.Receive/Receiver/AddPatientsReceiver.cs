@@ -1,4 +1,5 @@
-﻿using Agents.API.Messaging.Receive.Configs;
+﻿using Agents.API.Entities;
+using Agents.API.Messaging.Receive.Configs;
 using Agents.API.Service.Services;
 using Interfaces;
 using Microsoft.Extensions.Options;
@@ -15,7 +16,7 @@ namespace Agents.API.Messaging.Receive.Receiver
     {
         IInitPatientAgentsService initPatientAgentsService;
 
-        public AddPatientsReceiver(IInitPatientAgentsService initPatientAgentsService, IOptions<RabbitMqConfiguration> rabbitMqOptions)
+        public AddPatientsReceiver(IInitPatientAgentsService initPatientAgentsService, IOptions<AddDataConfig> rabbitMqOptions)
         {
             this.initPatientAgentsService = initPatientAgentsService;
             InitReceiver(ReceiveAction, rabbitMqOptions);
@@ -24,7 +25,9 @@ namespace Agents.API.Messaging.Receive.Receiver
 
         private void ReceiveAction(string serializedStr)
         {
-            List<IPatient> data = JsonConvert.DeserializeObject<List<IPatient>>(serializedStr);
+            List<IPatient> data = JsonConvert.DeserializeObject<List<Patient>>(serializedStr)
+                .Cast<IPatient>()
+                .ToList();
             initPatientAgentsService.InitPatientAgents(data);
         }
     }
