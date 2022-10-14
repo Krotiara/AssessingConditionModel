@@ -9,6 +9,6 @@ namespace Agents.API.Service.Services
 {
     public interface IInitPatientAgentsService
     {
-        public void InitPatientAgents(IList<IPatient> patients);
+        public Task InitPatientAgentsAsync(IList<IPatient> patients);
     }
 }

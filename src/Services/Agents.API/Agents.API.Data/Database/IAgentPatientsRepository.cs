@@ -10,8 +10,8 @@ namespace Agents.API.Data.Database
 {
     public interface IAgentPatientsRepository: IRepository<AgentPatient>
     {
-        public Task<AgentPatient> AddAgentPatient(IPatient patient);
+        public Task<AgentPatient> InitAgentPatient(IPatient patient);
 
-        public Task StartAgent(AgentPatient agentPatient);
+        public Task StartAgents();
     }
 }

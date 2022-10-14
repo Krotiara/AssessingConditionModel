@@ -28,7 +28,7 @@ namespace Agents.API.Messaging.Receive.Receiver
             List<IPatient> data = JsonConvert.DeserializeObject<List<Patient>>(serializedStr)
                 .Cast<IPatient>()
                 .ToList();
-            initPatientAgentsService.InitPatientAgents(data);
+            initPatientAgentsService.InitPatientAgentsAsync(data);
         }
     }
 }

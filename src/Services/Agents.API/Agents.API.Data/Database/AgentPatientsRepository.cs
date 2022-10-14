@@ -16,16 +16,35 @@ namespace Agents.API.Data.Database
         public AgentPatientsRepository(AgentsDbContext agentsDbContext, IWebRequester webRequester) : base(agentsDbContext)
         {
             this.webRequester = webRequester;
+            StartAgents();
         }
 
-        public Task<AgentPatient> AddAgentPatient(IPatient patient)
+        public async Task<AgentPatient> InitAgentPatient(IPatient patient)
         {
-            throw new NotImplementedException();
+            //TODO try catch
+            AgentPatient? agentPatient = AgentsDbContext
+                .AgentPatients.FirstOrDefault(x => x.PatientId == patient.MedicalHistoryNumber);
+            if (agentPatient == null)
+            {
+                agentPatient = new AgentPatient()
+                {
+                    PatientId = patient.MedicalHistoryNumber,
+                    Name = patient.MedicalHistoryNumber.ToString()
+                };
+                agentPatient.InitStateDiagram();
+                agentPatient.InitWebRequester(webRequester);
+                await AgentsDbContext.AddAsync<AgentPatient>(agentPatient);
+                await AgentsDbContext.SaveChangesAsync();
+            }   
+            return agentPatient;
         }
 
-        public Task StartAgent(AgentPatient agentPatient)
+
+        public Task StartAgents()
         {
-            throw new NotImplementedException();
+            foreach (AgentPatient agentPatient in AgentsDbContext.AgentPatients)
+                agentPatient.InitWebRequester(webRequester);
+            return Task.CompletedTask;
         }
     }
 }

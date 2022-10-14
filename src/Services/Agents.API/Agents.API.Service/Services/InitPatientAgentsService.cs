@@ -1,4 +1,5 @@
 ﻿using Agents.API.Data.Database;
+using Agents.API.Entities;
 using Interfaces;
 using System;
 using System.Collections.Generic;
@@ -18,9 +19,10 @@ namespace Agents.API.Service.Services
             this.agentPatientsRepository = agentPatientsRepository;
         }
 
-        public void InitPatientAgents(IList<IPatient> patients)
+        public async Task InitPatientAgentsAsync(IList<IPatient> patients)
         {
-            throw new NotImplementedException();
+            foreach (IPatient patient in patients)
+                await agentPatientsRepository.InitAgentPatient(patient);
         }
     }
 }
