@@ -78,6 +78,8 @@ services:
      volumes:
       - ./pgadmin:/var/lib/pgadmin
       #- ./sql:/tmp
+     depends_on:
+      - postgres_image
      ports:
       - "5050:80"
      restart: unless-stopped

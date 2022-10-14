@@ -25,13 +25,15 @@ namespace PatientsResolver.API.Service.Services
             try
             {
 #warning error на данный момент Patient из входных данных = null.
-                IList<Patient> addedPatients = await mediator.Send(new AddNotExistedPatientsCommand() 
-                { Patients = data.Select(x => x.Patient).ToList() });
+                IList<Patient> addedPatients = 
+                    await mediator.Send(new AddNotExistedPatientsCommand() 
+                    { Patients = data.Select(x => x.Patient).ToList() });
 
                 if(addedPatients.Count > 0)
-                await mediator.Send(new SendPatientsCommand() { Patients = addedPatients.ToList()});
+                    await mediator.Send(new SendPatientsCommand() { Patients = addedPatients.ToList()});
 
-                List<PatientData> addedData = await mediator.Send(new AddPatientDataCommand() { Data = data });
+                List<PatientData> addedData = 
+                    await mediator.Send(new AddPatientDataCommand() { Data = data });
 
                 IUpdatePatientsInfo updateInfo = new UpdatePatientsInfo() 
                 { UpdatedIds = new HashSet<int>(addedData.Select(x => x.PatientId)) };

@@ -21,14 +21,27 @@ namespace PatientsResolver.API.Service.Command
         public async Task<IList<Patient>> Handle(AddNotExistedPatientsCommand request, CancellationToken cancellationToken)
         {
             //TODO add try catch
+            if (!request.Patients.Any(x => x != null))
+                throw new NotImplementedException(); //TODO throw ex
+
+            //request.Patients.Add(new Patient() { MedicalHistoryNumber = 434343, Name = "test", Birthday = DateTime.MaxValue });
+
             IList<Patient> addedPatients = new List<Patient>();
             foreach(Patient patient in request.Patients)
                 if(patientsRepository
                     .GetAll()
                     .FirstOrDefault(x => x.MedicalHistoryNumber ==  patient.MedicalHistoryNumber) == null)
                 {
-                    await patientsRepository.AddAsync(patient);
-                    addedPatients.Add(patient);
+                    try
+                    {
+                        await patientsRepository.AddAsync(patient);
+                        addedPatients.Add(patient);
+                    }
+                    catch(Exception ex)
+                    {
+                        //TODO try catch with custom exceptions
+                        continue;
+                    }
                 }
             return addedPatients;
         }
