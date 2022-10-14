@@ -23,7 +23,6 @@ namespace PatientsResolver.API.Service.Services
         {
             try
             {
-#warning error на данный момент Patient из входных данных = null.
                 IList<Patient> addedPatients = await mediator.Send(new AddNotExistedPatientsCommand() 
                 { Patients = data.Select(x => x.Patient).ToList() });
 
