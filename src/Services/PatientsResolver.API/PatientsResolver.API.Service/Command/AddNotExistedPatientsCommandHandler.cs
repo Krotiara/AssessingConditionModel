@@ -24,7 +24,7 @@ namespace PatientsResolver.API.Service.Command
             if (!request.Patients.Any(x => x != null))
                 throw new NotImplementedException(); //TODO throw ex
 
-            request.Patients.Add(new Patient() { MedicalHistoryNumber = 434344144, Name = "test", Birthday = DateTime.MaxValue });
+            request.Patients.Add(new Patient() { MedicalHistoryNumber = 434344444, Name = "test", Birthday = DateTime.MaxValue });
 
             IList<Patient> addedPatients = new List<Patient>();
             foreach(Patient patient in request.Patients)

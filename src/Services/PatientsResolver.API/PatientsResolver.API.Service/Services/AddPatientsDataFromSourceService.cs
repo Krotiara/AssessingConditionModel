@@ -1,5 +1,4 @@
-﻿using Agents.API.Entities;
-using Interfaces;
+﻿using Interfaces;
 using MediatR;
 using PatientsResolver.API.Entities;
 using PatientsResolver.API.Service.Command;
@@ -25,9 +24,8 @@ namespace PatientsResolver.API.Service.Services
             try
             {
 #warning error на данный момент Patient из входных данных = null.
-                IList<Patient> addedPatients = 
-                    await mediator.Send(new AddNotExistedPatientsCommand() 
-                    { Patients = data.Select(x => x.Patient).ToList() });
+                IList<Patient> addedPatients = await mediator.Send(new AddNotExistedPatientsCommand() 
+                { Patients = data.Select(x => x.Patient).ToList() });
 
                 if(addedPatients.Count > 0)
                     await mediator.Send(new SendPatientsCommand() { Patients = addedPatients.ToList()});
