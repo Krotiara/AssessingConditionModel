@@ -33,6 +33,11 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
+builder.Services.AddHttpsRedirection(options =>
+{
+    options.HttpsPort = 443;
+});
+
 string connectionString = builder.Configuration.GetConnectionString("PostgresConnection");
 builder.Services.AddDbContext<PatientsDataDbContext>(options => options.UseNpgsql(connectionString, builder =>
 {
