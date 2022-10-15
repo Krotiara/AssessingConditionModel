@@ -23,7 +23,7 @@ namespace Agents.API.Service.Command
         {
             return await webRequester
                 .GetResponse<IList<IPatientData<IPatientParameter, IPatient, IInfluence>>>(
-                $"http://localhost:62168/patientsData/{request.PatientId}", "GET", "");
+                $"https://localhost:62168/patientsData/{request.PatientId}", "GET", "");
         }
     }
 }

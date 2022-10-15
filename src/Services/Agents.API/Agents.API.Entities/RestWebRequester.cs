@@ -15,6 +15,7 @@ namespace Agents.API.Entities
             try
             {
 #warning Вылезает ошибка The remote certificate is invalid according to the validation procedure: RemoteCertificateNameMismatch, RemoteCertificateChainErrors
+#warning После замены http на https вылезает c# Cannot determine the frame size or a corrupted frame was received.
                 HttpWebRequest webRequest = CreateRequest(requestUriStr, method, jsonBody);
                 return await GetResponseAsync<T>(webRequest);
             }
@@ -52,6 +53,9 @@ namespace Agents.API.Entities
             HttpWebResponse webResponse = (HttpWebResponse)await Task.Factory.FromAsync(
                     webRequest.BeginGetResponse, webRequest.EndGetResponse, null);
             /*webRequest.GetResponse() as HttpWebResponse;*/
+
+            //HttpWebResponse webResponse = webRequest.GetResponse() as HttpWebResponse;
+
             if (webResponse.StatusCode != HttpStatusCode.Accepted)
                 throw new ApplicationException("Unexpected Response Code. - " + webResponse.StatusCode);
             string response;

@@ -81,8 +81,10 @@ namespace Agents.API.Entities
         {
             //TODO указание времени.
             //TODO IList<IPatientData<IPatientParameter, IPatient, IInfluence>> - выглядит перегруженно.
-            string url = $"http://host.docker.internal:8003/patientsData/{PatientId}";
-            //string url = $"http://localhost:8003/patientsData/{PatientId}";
+            //string url = $"https://host.docker.internal:8003/patientsData/{PatientId}";
+           
+            string url = $"https://patientsresolver.api:8003/patientsData/{PatientId}";
+            //string url = $"https://localhost:8003/patientsData/{PatientId}";
             var a = await webRequester
                 .GetResponse<IList<IPatientData<IPatientParameter, IPatient, IInfluence>>>(
                 url, "GET");
