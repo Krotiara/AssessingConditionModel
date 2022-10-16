@@ -53,12 +53,15 @@ namespace Agents.API.Entities
 
         private async Task<State> DetermineState()
         {
+            //TODO получение последнего значения параметров
             IList<PatientData> patientDatas = await GetPatientData(DateTime.MinValue, DateTime.MaxValue);
             if (patientDatas == null)
                 throw new DetermineStateException($"No patient data to determine state. Patient id = {PatientId}");
 
-
             //TODO get bioAge from webRequest
+
+            double bioAge = await GetBioAge(patientDatas.Last());
+
             // calc delta
             //TODO check ненулевые значения.
             //double ageDelta = AgeDelta;
@@ -94,6 +97,32 @@ namespace Agents.API.Entities
                 return null; //TODO custom exception
             }
             catch(Exception unexpectedEx)
+            {
+                //TODO
+                throw new NotImplementedException();
+            }
+        }
+
+
+        private async Task<double> GetBioAge(PatientData patientData)
+        {
+            try
+            {
+                BioAgeCalculationParameters calculationParameters = new BioAgeCalculationParameters()
+                {
+                    CalculationType = BioAgeCalculationType.ByFunctionalParameters,
+                    Parameters = patientData.Parameters.ToDictionary(entry => entry.Key, entry => entry.Value)
+                };
+
+                string requestBody = Newtonsoft.Json.JsonConvert.SerializeObject(calculationParameters);
+                string url = $"https://host.docker.internal:8006/bioAge/";
+                return await webRequester.GetResponse<double>(url, "GET", requestBody);
+            }
+            catch (GetWebResponceException ex)
+            {
+                throw new NotImplementedException();
+            }
+            catch (Exception unexpectedEx)
             {
                 //TODO
                 throw new NotImplementedException();
