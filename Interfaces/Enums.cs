@@ -143,6 +143,24 @@ namespace Interfaces
         FinalDiastolicVolume,
         [Display(Name = "фв")]
         [ParamDescription(Descriptions = new string[] { "фв" })]
-        EjectionFraction
+        EjectionFraction,
+        [Display(Name = "здвдох")]
+        [ParamDescription(Descriptions = new string[] { "здвдох" })]
+        InhaleBreathHolding,
+        [Display(Name = "здвыдох")]
+        [ParamDescription(Descriptions = new string[] { "здвыдох" })]
+        OuthaleBreathHolding,
+        [Display(Name = "жел")]
+        [ParamDescription(Descriptions = new string[] { "жел" })]
+        LungCapacity,
+        [Display(Name = "аккомодация")]
+        [ParamDescription(Descriptions = new string[] { "аккомодация" })]
+        Accommodation,
+        [Display(Name = "острота слуха")]
+        [ParamDescription(Descriptions = new string[] { "острота слуха" })]
+        HearingAcuity,
+        [Display(Name = "стат.балансировка")]
+        [ParamDescription(Descriptions = new string[] { "cтат.балансировка" })]
+        StaticBalancing
     }
 }
