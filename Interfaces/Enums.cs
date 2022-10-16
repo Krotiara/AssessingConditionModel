@@ -19,6 +19,11 @@ namespace Interfaces
         BiologicallyActiveAdditive = 3
     }
 
+    public enum BioAgeCalculationType
+    {
+        ByFunctionalParameters = 0
+    }
+
     public enum ParameterNames
     {
         None = 0,
