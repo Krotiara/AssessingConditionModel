@@ -53,9 +53,11 @@ namespace Agents.API.Entities
 
         private async Task<State> DetermineState()
         {
-            //TODO get patient params
-            //https://localhost:60571/patientsData/2
-            var patientDatas = await GetPatientData(DateTime.MinValue, DateTime.MaxValue);
+            IList<PatientData> patientDatas = await GetPatientData(DateTime.MinValue, DateTime.MaxValue);
+            if (patientDatas == null)
+                throw new DetermineStateException($"No patient data to determine state. Patient id = {PatientId}");
+
+
             //TODO get bioAge from webRequest
             // calc delta
             //TODO check ненулевые значения.
@@ -87,9 +89,14 @@ namespace Agents.API.Entities
                 return await webRequester
                     .GetResponse<IList<PatientData>>(url, "GET");
             }
-            catch(Exception ex)
+            catch(GetWebResponceException ex)
             {
                 return null; //TODO custom exception
+            }
+            catch(Exception unexpectedEx)
+            {
+                //TODO
+                throw new NotImplementedException();
             }
         }
 

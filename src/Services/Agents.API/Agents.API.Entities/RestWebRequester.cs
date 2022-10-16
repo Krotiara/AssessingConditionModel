@@ -14,21 +14,23 @@ namespace Agents.API.Entities
         {
             try
             {
-#warning Вылезает ошибка The remote certificate is invalid according to the validation procedure: RemoteCertificateNameMismatch, RemoteCertificateChainErrors
-#warning После замены http на https вылезает c# Cannot determine the frame size or a corrupted frame was received.
                 HttpWebRequest webRequest = CreateRequest(requestUriStr, method, jsonBody);
                 return await GetResponseAsync<T>(webRequest);
             }
+            catch(ApplicationException ex)
+            {
+                throw new GetWebResponceException("unexpected response code", ex);
+            }
             catch(Exception ex)
             {
-                //TODO notmal try catch
-                throw ex;
+                throw new GetWebResponceException("get responce error", ex);
             }
         }
 
 
         private HttpWebRequest CreateRequest(string requestUriStr, string method, string? jsonBody = null)
         {
+            //TODO заменить на HTTP Client
             HttpWebRequest webRequest = WebRequest.Create(requestUriStr) as HttpWebRequest;
             webRequest.Method = method;
             webRequest.Credentials = CredentialCache.DefaultCredentials; //or account you wish to connect as
@@ -49,13 +51,8 @@ namespace Agents.API.Entities
 
         private async Task<T> GetResponseAsync<T>(HttpWebRequest webRequest)
         {
-            //TODO try catch
             HttpWebResponse webResponse = (HttpWebResponse)await Task.Factory.FromAsync(
                     webRequest.BeginGetResponse, webRequest.EndGetResponse, null);
-            /*webRequest.GetResponse() as HttpWebResponse;*/
-
-            //HttpWebResponse webResponse = webRequest.GetResponse() as HttpWebResponse;
-
             if (webResponse.StatusCode != HttpStatusCode.Accepted && webResponse.StatusCode != HttpStatusCode.OK)
                 throw new ApplicationException("Unexpected Response Code. - " + webResponse.StatusCode);
             string response;

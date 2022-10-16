@@ -45,7 +45,14 @@ namespace Agents.API.Entities
 
         public async Task UpdateStateAsync()
         {
-            CurrentState = await DetermineState();
+            try
+            {
+                CurrentState = await DetermineState();
+            }
+            catch(DetermineStateException ex)
+            {
+                //TODO log
+            }
         }
     }
 }
