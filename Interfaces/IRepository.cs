@@ -4,8 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PatientsResolver.API.Data.Repository
-{
+namespace Interfaces
+{ 
     public interface IRepository<TEntity> where TEntity : class, new()
     {
         public IEnumerable<TEntity> GetAll();

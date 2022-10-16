@@ -65,10 +65,7 @@ namespace PatientsResolver.API.Messaging.Receive.Receiver
 
         }
 
-        private void RabbitMQ_ConnectionShutdown(object sender, ShutdownEventArgs e)
-        {
-
-        }
+        private void RabbitMQ_ConnectionShutdown(object sender, ShutdownEventArgs e){}
 
         public override void Dispose()
         {

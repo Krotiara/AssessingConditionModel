@@ -5,7 +5,7 @@ using PatientsResolver.API.Data;
 using PatientsResolver.API.Data.Repository;
 using PatientsResolver.API.Entities;
 using PatientsResolver.API.Messaging.Receive.Receiver;
-using PatientsResolver.API.Messaging.Send;
+using PatientsResolver.API.Messaging.Send.Configurations;
 using PatientsResolver.API.Messaging.Send.Sender;
 using PatientsResolver.API.Models;
 using PatientsResolver.API.Service.Command;
@@ -33,6 +33,11 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
+builder.Services.AddHttpsRedirection(options =>
+{
+    options.HttpsPort = 443;
+});
+
 string connectionString = builder.Configuration.GetConnectionString("PostgresConnection");
 builder.Services.AddDbContext<PatientsDataDbContext>(options => options.UseNpgsql(connectionString, builder =>
 {
@@ -49,20 +54,19 @@ builder.Services.AddTransient<IAddPatientsDataFromSourceService, AddPatientsData
 builder.Services.AddSingleton<IRepository<PatientData>, Repository<PatientData>>();
 builder.Services.AddSingleton<IPatientDataRepository, PatientDataRepository>();
 builder.Services.AddSingleton<IPatientFileDataSender, PatientFileDataSender>();
+builder.Services.AddSingleton<IUpdatePatientsSender, UpdatePatientsSender>();
+builder.Services.AddSingleton<IPatientsSender, PatientsSender>();
 builder.Services.AddSingleton<PatientsRepository>(); //МБ это криво
 builder.Services.AddSingleton<InfluenceRepository>();
 builder.Services.AddOptions();
 
 #region rabbitMQ
-
-
-var serviceClientSettingsConfigFiles = builder.Configuration.GetSection("RabbitMq");
 #warning Скорее всего плохоже решение с доп секцией.
 var serviceClientSettingsConfigData = builder.Configuration.GetSection("RabbitMq1");
-var serviceClientSettings = serviceClientSettingsConfigData.Get<RabbitMqConfiguration>();
-
-builder.Services.Configure<PatientsResolver.API.Messaging.Send.RabbitMqConfiguration>(serviceClientSettingsConfigFiles);
+builder.Services.Configure<RabbitMqConfiguration>(builder.Configuration.GetSection("RabbitMq"));
 builder.Services.Configure<PatientsResolver.API.Messaging.Receive.RabbitMqConfiguration>(serviceClientSettingsConfigData);
+builder.Services.Configure<RabbitMqUpdateInfoConfig>(builder.Configuration.GetSection("RabbitMqSendUpdateInfo"));
+builder.Services.Configure<RabbitMqAddInfoConfig>(builder.Configuration.GetSection("RabbitMqSendAddInfo"));
 /*Теперь вы можете выполнять ваши запросы. Для этого вам потребуется получить экземпляр интерфейса IMediator. Он регистрируется в вашем контейнере зависимостей той же командой AddMediatR.*/
 builder.Services.AddMediatR(Assembly.GetExecutingAssembly());
 
@@ -74,12 +78,20 @@ builder.Services.AddTransient<IRequestHandler<AddPatientDataCommand, List<Patien
     AddPatientDataCommandHandler>();
 builder.Services.AddTransient<IRequestHandler<SendPatientDataFileSourceCommand, Unit>,
     SendPatientDataFileSourceCommandHandler>();
+builder.Services.AddTransient<IRequestHandler<SendPatientsCommand, Unit>, 
+    SendPatientsCommandHandler>();
+builder.Services.AddTransient<IRequestHandler<AddNotExistedPatientsCommand, IList<Patient>>,
+    AddNotExistedPatientsCommandHandler>();
 builder.Services.AddTransient<IRequestHandler<AddPatientCommand, bool>,
     AddPatientCommandHandler>();
 builder.Services.AddTransient<IRequestHandler<AddInfluenceCommand, bool>, 
     AddInfluenceCommandHandler>();
-builder.Services.AddTransient<IRequestHandler<GetPatientInfluencesQuery, List<Influence>>, GetPatientInfluencesQueryHandler>();
+builder.Services.AddTransient<IRequestHandler<GetPatientInfluencesQuery, List<Influence>>, 
+    GetPatientInfluencesQueryHandler>();
+builder.Services.AddTransient<IRequestHandler<SendUpdatePatientsInfoCommand, Unit>, 
+    SendUpdatePatientsInfoCommandHandler>();
 
+var serviceClientSettings = serviceClientSettingsConfigData.Get<PatientsResolver.API.Messaging.Send.Configurations.RabbitMqConfiguration>();
 if (serviceClientSettings.Enabled)
 {
     builder.Services.AddHostedService<AddPatientsDataFromSourceReceiver>();

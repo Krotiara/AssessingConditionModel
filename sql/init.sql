@@ -40,4 +40,12 @@ CREATE TABLE "Influences"
     "MedicineName" text COLLATE pg_catalog."default" NOT NULL
 );
 
+CREATE TABLE "PatientAgents"
+(
+    "Id" bigint NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 9223372036854775807 CACHE 1 ),
+    "PatientId" bigint NOT NULL,
+    "Name" text COLLATE pg_catalog."default" NOT NULL,
+    CONSTRAINT "PatientAgents_pkey" PRIMARY KEY ("Id")
+);
+
 

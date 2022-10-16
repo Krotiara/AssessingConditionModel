@@ -7,11 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="MediatR" Version="10.0.1" />
+    <PackageReference Include="MediatR" Version="11.0.0" />
     <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="10.0.1" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Agents.API\Agents.API.Entities\Agents.API.Entities.csproj" />
     <ProjectReference Include="..\PatientsResolver.API.Data\PatientsResolver.API.Data.csproj" />
     <ProjectReference Include="..\PatientsResolver.API.Entities\PatientsResolver.API.Entities.csproj" />
     <ProjectReference Include="..\PatientsResolver.API.Messaging.Send\PatientsResolver.API.Messaging.Send.csproj" />

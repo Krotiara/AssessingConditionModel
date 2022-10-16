@@ -1,8 +1,8 @@
 ﻿using Interfaces;
 
-namespace PatientsResolver.API.Messaging.Send
+namespace PatientsResolver.API.Messaging.Send.Configurations
 {
-    public class RabbitMqConfiguration: IRabbitMqConfiguration
+    public class RabbitMqConfiguration : IRabbitMqConfiguration
     {
         public string Hostname { get; set; }
 

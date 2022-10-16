@@ -86,6 +86,12 @@ namespace PatientDataHandler.API.Service.Services
                             Timestamp = DateTime.MinValue, //TODO указывать во входных данных
                             Influence = influence                 
                         };
+                        patientData.Patient = new Patient()
+                        {
+                            MedicalHistoryNumber = id,
+                            Name = "",
+                            Birthday = DateTime.MinValue
+                        };
                         patientData.Influence.PatientId = id;
                         patientParameters[id] = patientData;
                     }

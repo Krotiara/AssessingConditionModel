@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using PatientsResolver.API.Entities;
+using PatientsResolver.API.Messaging.Send.Configurations;
 using RabbitMQ.Client;
 using System;
 using System.Collections.Generic;

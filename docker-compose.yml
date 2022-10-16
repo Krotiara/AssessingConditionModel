@@ -8,6 +8,19 @@ services:
       dockerfile: src/Services/PatientsResolver.API/PatientsResolver.API/Dockerfile
     volumes:
       - "C:/TestData:/data"
+      - ~/.aspnet/https:/https:ro
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - ASPNETCORE_URLS=https://+:443;http://+:80
+      - ASPNETCORE_HTTPS_PORT=8004
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=lisa2021
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/localhost.pfx
+    ports:
+      - 8003:80
+      - 8004:443
+    extra_hosts:
+      - host.docker.internal:host-gateway
 
   influencecalculator.api:
     image: ${DOCKER_REGISTRY-}influencecalculatorapi
@@ -20,6 +33,34 @@ services:
     build:
       context: .
       dockerfile: src/Services/PatientDataHandler.API/PatientDataHandler.API/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=lisa2021
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/localhost.pfx
+    ports:
+      - 8005:80
+    volumes:
+      - ~/.aspnet/https:/https:ro
+    extra_hosts:
+      - host.docker.internal:host-gateway
+
+  agents.api:
+    image: ${DOCKER_REGISTRY-}agentsapi
+    build:
+      context: .
+      dockerfile: src/Services/Agents.API/Agents.API/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=lisa2021
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/localhost.pfx
+    ports:
+      - 8002:80
+    volumes:
+      - ~/.aspnet/https:/https:ro
+    extra_hosts:
+      - host.docker.internal:host-gateway
 
   containerregister.api:
     image: ${DOCKER_REGISTRY-}containerregisterapi
@@ -70,6 +111,8 @@ services:
      volumes:
       - ./pgadmin:/var/lib/pgadmin
       #- ./sql:/tmp
+     depends_on:
+      - postgres_image
      ports:
       - "5050:80"
      restart: unless-stopped
