@@ -77,20 +77,78 @@ namespace Agents.API.Entities
         }
 
 
-        private async Task<IList<IPatientData<IPatientParameter,IPatient,IInfluence>>> GetPatientData(DateTime startTime, DateTime endTime)
+        private async Task<IList<PatientData>> GetPatientData(DateTime startTime, DateTime endTime)
         {
             //TODO указание времени.
             //TODO IList<IPatientData<IPatientParameter, IPatient, IInfluence>> - выглядит перегруженно.
-            //string url = $"https://host.docker.internal:8003/patientsData/{PatientId}";
-           
-            string url = $"https://patientsresolver.api:443/patientsData/{PatientId}";
-            //string url = $"https://localhost:8003/patientsData/{PatientId}";
-            var a = await webRequester
-                .GetResponse<IList<IPatientData<IPatientParameter, IPatient, IInfluence>>>(
-                url, "GET");
-            return a;
+            try
+            {
+                string url = $"https://host.docker.internal:8004/patientsData/{PatientId}";
+                return await webRequester
+                    .GetResponse<IList<PatientData>>(url, "GET");
+            }
+            catch(Exception ex)
+            {
+                return null; //TODO custom exception
+            }
         }
 
+
+        #region test stuff
+        private async Task TryAll(string hostName)
+        {
+            string url = $"https://patientsresolver.api:443/patientsData/{PatientId}";
+            //string url = $"https://localhost:8003/patientsData/{PatientId}";
+
+            IList<IPatientData<IPatientParameter, IPatient, IInfluence>> data =
+                new List<IPatientData<IPatientParameter, IPatient, IInfluence>>();
+
+            try
+            {
+                url = $"https://{hostName}:443/patientsData/{PatientId}";
+                data = await webRequester
+                    .GetResponse<IList<IPatientData<IPatientParameter, IPatient, IInfluence>>>(
+                    url, "GET");
+            }
+            catch (Exception ex)
+            {
+
+            }
+            try
+            {
+                url = $"http://{hostName}:80/patientsData/{PatientId}";
+                data = await webRequester
+                   .GetResponse<IList<IPatientData<IPatientParameter, IPatient, IInfluence>>>(
+                   url, "GET");
+            }
+            catch (Exception ex)
+            {
+
+            }
+            try
+            {
+                url = $"https://{hostName}:8004/patientsData/{PatientId}";
+                data = await webRequester
+                   .GetResponse<IList<IPatientData<IPatientParameter, IPatient, IInfluence>>>(
+                   url, "GET");
+            }
+            catch (Exception ex)
+            {
+
+            }
+            try
+            {
+                url = $"http://{hostName}:8003/patientsData/{PatientId}";
+                data = await webRequester
+                   .GetResponse<IList<IPatientData<IPatientParameter, IPatient, IInfluence>>>(
+                   url, "GET");
+            }
+            catch (Exception ex)
+            {
+
+            }
+        }
+        #endregion
 
         public void ProcessPrivateTransitions()
         {

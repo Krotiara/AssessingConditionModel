@@ -19,6 +19,8 @@ services:
     ports:
       - 8003:80
       - 8004:443
+    extra_hosts:
+      - host.docker.internal:host-gateway
 
   influencecalculator.api:
     image: ${DOCKER_REGISTRY-}influencecalculatorapi
@@ -40,6 +42,8 @@ services:
       - 8005:80
     volumes:
       - ~/.aspnet/https:/https:ro
+    extra_hosts:
+      - host.docker.internal:host-gateway
 
   agents.api:
     image: ${DOCKER_REGISTRY-}agentsapi
@@ -55,6 +59,8 @@ services:
       - 8002:80
     volumes:
       - ~/.aspnet/https:/https:ro
+    extra_hosts:
+      - host.docker.internal:host-gateway
 
   containerregister.api:
     image: ${DOCKER_REGISTRY-}containerregisterapi

@@ -56,7 +56,7 @@ namespace Agents.API.Entities
 
             //HttpWebResponse webResponse = webRequest.GetResponse() as HttpWebResponse;
 
-            if (webResponse.StatusCode != HttpStatusCode.Accepted)
+            if (webResponse.StatusCode != HttpStatusCode.Accepted && webResponse.StatusCode != HttpStatusCode.OK)
                 throw new ApplicationException("Unexpected Response Code. - " + webResponse.StatusCode);
             string response;
             using (System.IO.StreamReader readResponse = new System.IO.StreamReader(webResponse.GetResponseStream()))
