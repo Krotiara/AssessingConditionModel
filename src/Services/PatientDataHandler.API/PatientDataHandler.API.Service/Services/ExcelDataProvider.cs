@@ -48,6 +48,7 @@ namespace PatientDataHandler.API.Service.Services
             Dictionary<int, IPatientData<IPatientParameter, IPatient, IInfluence>> patientParameters = 
                 new Dictionary<int, IPatientData<IPatientParameter, IPatient, IInfluence>>();
             bool isDynamicRows = false;
+#warning Узкое место в названии препарата.
             int groupIndex = headers.IndexOf("группа");
 
             IList<ParameterNames> headerParamsNames = headers
