@@ -73,9 +73,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Agents.API.Entities", "src\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Agents.API.Messaging.Receive", "src\Services\Agents.API\Agents.API.Messaging.Receive\Agents.API.Messaging.Receive.csproj", "{2E51F25C-00CA-4D05-A521-C2A8CE20119A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Agents.API.Data", "src\Services\Agents.API\Agents.API.Data\Agents.API.Data.csproj", "{DBA3C5DE-E38F-4189-BF2A-02116A25704F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Agents.API.Data", "src\Services\Agents.API\Agents.API.Data\Agents.API.Data.csproj", "{DBA3C5DE-E38F-4189-BF2A-02116A25704F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Agents.API.Service", "src\Services\Agents.API\Agents.API.Service\Agents.API.Service.csproj", "{61859384-5A95-412C-8263-75E5536F61C2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Agents.API.Service", "src\Services\Agents.API\Agents.API.Service\Agents.API.Service.csproj", "{61859384-5A95-412C-8263-75E5536F61C2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

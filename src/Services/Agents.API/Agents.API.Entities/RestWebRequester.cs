@@ -22,7 +22,7 @@ namespace Agents.API.Entities
             catch(Exception ex)
             {
                 //TODO notmal try catch
-                throw new NotImplementedException();
+                throw ex;
             }
         }
 
