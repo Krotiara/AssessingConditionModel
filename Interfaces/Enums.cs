@@ -82,10 +82,10 @@ namespace Interfaces
         [ParamDescription(Descriptions = new string[] { "баллы по шокс" })]
         Shock,
         [Display(Name = "сад")]
-        [ParamDescription(Descriptions = new string[] { "сад" })]
+        [ParamDescription(Descriptions = new string[] { "сад","адс" })]
         SystolicPressure,
         [Display(Name = "дад")]
-        [ParamDescription(Descriptions = new string[] { "дад" })]
+        [ParamDescription(Descriptions = new string[] { "дад","адд" })]
         DiastolicPressure,
         [Display(Name = "чсс")]
         [ParamDescription(Descriptions = new string[] { "чсс" })]
@@ -115,7 +115,7 @@ namespace Interfaces
         [ParamDescription(Descriptions = new string[] { "хбп" })]
         StageOfChronicKidneyDisease,
         [Display(Name = "вес")]
-        [ParamDescription(Descriptions = new string[] { "вес" })]
+        [ParamDescription(Descriptions = new string[] { "вес", "масса тела" })]
         Weight,
         [Display(Name = "рост")]
         [ParamDescription(Descriptions = new string[] { "рост" })]
