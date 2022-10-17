@@ -23,22 +23,30 @@ namespace Agents.API.Data.Database
 
         public async Task<AgentPatient> InitAgentPatient(IPatient patient)
         {
-            //TODO try catch
-            AgentPatient? agentPatient = AgentsDbContext
-                .AgentPatients.FirstOrDefault(x => x.PatientId == patient.MedicalHistoryNumber);
-            if (agentPatient == null)
+            if (patient == null)
+                throw new InitAgentException("patient is null");
+            try
             {
-                agentPatient = new AgentPatient()
+                AgentPatient? agentPatient = AgentsDbContext
+                    .AgentPatients.FirstOrDefault(x => x.PatientId == patient.MedicalHistoryNumber);
+                if (agentPatient == null)
                 {
-                    PatientId = patient.MedicalHistoryNumber,
-                    Name = patient.MedicalHistoryNumber.ToString()
-                };
-                agentPatient.InitWebRequester(webRequester);
-                agentPatient.InitStateDiagram();
-                await AgentsDbContext.AddAsync<AgentPatient>(agentPatient);
-                await AgentsDbContext.SaveChangesAsync();
-            }   
-            return agentPatient;
+                    agentPatient = new AgentPatient()
+                    {
+                        PatientId = patient.MedicalHistoryNumber,
+                        Name = patient.MedicalHistoryNumber.ToString()
+                    };
+                    agentPatient.InitWebRequester(webRequester);
+                    agentPatient.InitStateDiagram();
+                    await AgentsDbContext.AddAsync<AgentPatient>(agentPatient);
+                    await AgentsDbContext.SaveChangesAsync();
+                }
+                return agentPatient;
+            }
+            catch(Exception ex)
+            {
+                throw new InitAgentException($"Init agent error.", ex);
+            }
         }
 
 

@@ -22,7 +22,17 @@ namespace Agents.API.Service.Services
         public async Task InitPatientAgentsAsync(IList<IPatient> patients)
         {
             foreach (IPatient patient in patients)
-                await agentPatientsRepository.InitAgentPatient(patient);
+            {
+                try
+                {
+                    await agentPatientsRepository.InitAgentPatient(patient);
+                }
+                catch(InitAgentException ex)
+                {
+                    continue;
+                    //TODO log
+                }
+            }      
         }
     }
 }

@@ -18,11 +18,24 @@ namespace Agents.API.Service.Services
             IEnumerable<AgentPatient> patients = agentPatientsRepository.GetAll();
             foreach (int patientId in patientIds)
             {
-                //TODO сейчас выглядит костыльно через получение сначала всех пациентов, а затем нужного.
-                AgentPatient agent = patients.FirstOrDefault(x => x.PatientId == patientId);
-                if (agent == null)
-                    throw new AgentNotFoundException($"Agent patient with patient id = {patientId} was not found."); //TODO
-                await agent.StateDiagram.UpdateStateAsync();
+                try
+                {
+                    //TODO сейчас выглядит костыльно через получение сначала всех пациентов, а затем нужного.
+                    AgentPatient agent = patients.FirstOrDefault(x => x.PatientId == patientId);
+                    if (agent == null)
+                        throw new AgentNotFoundException($"Agent patient with patient id = {patientId} was not found.");
+                    await agent.StateDiagram.UpdateStateAsync();
+                }
+                catch(AgentNotFoundException ex)
+                {
+                    //TODO log
+                    continue;
+                }
+                catch(DetermineStateException ex)
+                {
+                    //TODO log
+                    continue;
+                }
             }
         }
     }

@@ -27,4 +27,11 @@ namespace Agents.API.Entities
         public AgentNotFoundException(string message, Exception innerException) : base(message, innerException) { }
     }
 
+    public class InitAgentException : Exception
+    {
+        public InitAgentException(string message) : base(message) { }
+
+        public InitAgentException(string message, Exception innerException) : base(message, innerException) { }
+    }
+
 }
