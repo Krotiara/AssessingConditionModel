@@ -12,7 +12,7 @@ using System.Text;
 
 namespace PatientsResolver.API.Controllers
 {
-    public class PatientsResolverController: Controller
+    public class PatientsResolverController : Controller
     {
         private readonly IMediator mediator;
         //private readonly IMapper mapper;
@@ -21,6 +21,34 @@ namespace PatientsResolver.API.Controllers
         {
             //this.mapper = mapper;
             this.mediator = mediator;
+        }
+
+
+        [HttpGet("update/{patientId}")]
+        public async Task<ActionResult> UpdatePatient(int patientId)
+        {
+            try
+            {
+                return Ok(await mediator.Send(new SendUpdatePatientsInfoCommand() { UpdatePatientsInfo = new UpdatePatientsInfo() { UpdatedIds = new HashSet<int> { patientId } } }));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+
+            }
+        }
+
+        [HttpGet("latestPatientParameters/{patientId}")]
+        public async Task<ActionResult<List<IPatientParameter>>> GetLatestPatientParameters(int patientId)
+        {
+            try
+            {
+                return Ok(await mediator.Send(new GetLatesPatientParametersQuery() { PatientId = patientId }));
+            }
+            catch(Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
 
