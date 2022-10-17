@@ -24,6 +24,7 @@ namespace PatientsResolver.API.Controllers
         }
 
 
+#warning для тестируемых нужд
         [HttpGet("update/{patientId}")]
         public async Task<ActionResult> UpdatePatient(int patientId)
         {
