@@ -58,6 +58,7 @@ builder.Services.AddSingleton<IUpdatePatientsSender, UpdatePatientsSender>();
 builder.Services.AddSingleton<IPatientsSender, PatientsSender>();
 builder.Services.AddSingleton<PatientsRepository>(); //МБ это криво
 builder.Services.AddSingleton<InfluenceRepository>();
+builder.Services.AddSingleton<PatientParametersRepository>();
 builder.Services.AddOptions();
 
 #region rabbitMQ
@@ -90,6 +91,8 @@ builder.Services.AddTransient<IRequestHandler<GetPatientInfluencesQuery, List<In
     GetPatientInfluencesQueryHandler>();
 builder.Services.AddTransient<IRequestHandler<SendUpdatePatientsInfoCommand, Unit>, 
     SendUpdatePatientsInfoCommandHandler>();
+builder.Services.AddTransient<IRequestHandler<GetLatesPatientParametersQuery, List<PatientParameter>>, 
+    GetLatesPatientParametersQueryHandler>();
 
 var serviceClientSettings = serviceClientSettingsConfigData.Get<PatientsResolver.API.Messaging.Send.Configurations.RabbitMqConfiguration>();
 if (serviceClientSettings.Enabled)
