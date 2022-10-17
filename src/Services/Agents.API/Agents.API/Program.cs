@@ -65,6 +65,7 @@ AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 builder.Services.AddScoped<IUpdatePatientsInfo, UpdatePatientsInfo>();
 builder.Services.AddTransient<IWebRequester, RestWebRequester>();
 builder.Services.AddTransient<IInitPatientAgentsService, InitPatientAgentsService>();
+builder.Services.AddTransient<IUpdatePatientAgentsService, UpdatePatientAgentsService>();
 builder.Services.AddSingleton<IAgentPatientsRepository, AgentPatientsRepository>();
 
 builder.Services.AddTransient<IRequestHandler<GetPatientDatasCommand, IList<IPatientData<IPatientParameter, IPatient, IInfluence>>>,

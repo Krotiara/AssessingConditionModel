@@ -20,4 +20,11 @@ namespace Agents.API.Entities
         public DetermineStateException(string message, Exception innerException) : base(message, innerException) { }
     }
 
+    public class AgentNotFoundException : Exception
+    {
+        public AgentNotFoundException(string message) : base(message) { }
+
+        public AgentNotFoundException(string message, Exception innerException) : base(message, innerException) { }
+    }
+
 }

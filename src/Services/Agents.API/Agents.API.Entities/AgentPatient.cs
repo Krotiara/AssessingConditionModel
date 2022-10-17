@@ -16,7 +16,10 @@ namespace Agents.API.Entities
     {
         private IWebRequester webRequester;
        
-        public AgentPatient() { }
+        public AgentPatient() 
+        {
+            InitStateDiagram();
+        }
 
         [NotNull]
         [Key]
@@ -47,7 +50,6 @@ namespace Agents.API.Entities
             {
                 StateDiagram.AddState(state.GetDisplayAttributeValue());
             }
-            StateDiagram.UpdateStateAsync();
         }
 
 
