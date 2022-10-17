@@ -118,7 +118,7 @@ namespace Agents.API.Entities
 
                 string requestBody = Newtonsoft.Json.JsonConvert.SerializeObject(calculationParameters);
                 string url = $"https://host.docker.internal:8006/bioAge/";
-                return await webRequester.GetResponse<double>(url, "GET", requestBody);
+                return await webRequester.GetResponse<double>(url, "PUT", requestBody);
             }
             catch (GetWebResponceException ex)
             {

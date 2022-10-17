@@ -16,19 +16,35 @@ namespace BioAge.API.Service.Command
             try
             {
                 Dictionary<ParameterNames, PatientParameter> paramsDict = request.BioAgeCalculationParameters.Parameters;
-                double systolicPressure = double.Parse(paramsDict[ParameterNames.SystolicPressure].Value);
-                double diastolicPressure = double.Parse(paramsDict[ParameterNames.DiastolicPressure].Value);
+                double systolicPressure = double.Parse(
+                    paramsDict[ParameterNames.SystolicPressure].Value.Replace(",","."));
+                double diastolicPressure = double.Parse(
+                    paramsDict[ParameterNames.DiastolicPressure].Value.Replace(",", "."));
+                double inhaleBreathHolding = double.Parse(
+                    paramsDict[ParameterNames.InhaleBreathHolding].Value.Replace(",", "."));
+                double outhaleBreathHolding = double.Parse(
+                    paramsDict[ParameterNames.OuthaleBreathHolding].Value.Replace(",", "."));
+                double lungCapacity = double.Parse(
+                    paramsDict[ParameterNames.LungCapacity].Value.Replace(",", "."));
+                double weight = double.Parse(
+                    paramsDict[ParameterNames.Weight].Value.Replace(",", "."));
+                double accommodation = double.Parse(
+                    paramsDict[ParameterNames.Accommodation].Value.Replace(",", "."));
+                double hearingAcuity = double.Parse(
+                    paramsDict[ParameterNames.HearingAcuity].Value.Replace(",", "."));
+                double staticBalancing = double.Parse(
+                    paramsDict[ParameterNames.StaticBalancing].Value.Replace(",", "."));
                 return await Task.FromResult<double>(
-                   -1.07 * systolicPressure
+                   - 1.07 * systolicPressure
                    + 1.1 * diastolicPressure
                    + 1.94 * (systolicPressure - diastolicPressure)
-                   - 1.45 * double.Parse(paramsDict[ParameterNames.InhaleBreathHolding].Value)
-                   + 1.32 * double.Parse(paramsDict[ParameterNames.OuthaleBreathHolding].Value)
-                   - 3.46 * double.Parse(paramsDict[ParameterNames.LungCapacity].Value)
-                   + 0.15 * double.Parse(paramsDict[ParameterNames.Weight].Value)
-                   - 4.35 * double.Parse(paramsDict[ParameterNames.Accommodation].Value)
-                   + 5.57 * double.Parse(paramsDict[ParameterNames.HearingAcuity].Value)
-                   - 2.6 * double.Parse(paramsDict[ParameterNames.StaticBalancing].Value));
+                   - 1.45 * inhaleBreathHolding
+                   + 1.32 * outhaleBreathHolding
+                   - 3.46 * lungCapacity
+                   + 0.15 * weight
+                   - 4.35 * accommodation
+                   + 5.57 * hearingAcuity
+                   - 2.6 * staticBalancing);
             }
             catch (KeyNotFoundException ex)
             {

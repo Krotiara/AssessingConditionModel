@@ -160,7 +160,7 @@ namespace Interfaces
         [ParamDescription(Descriptions = new string[] { "острота слуха" })]
         HearingAcuity,
         [Display(Name = "стат.балансировка")]
-        [ParamDescription(Descriptions = new string[] { "cтат.балансировка" })]
+        [ParamDescription(Descriptions = new string[] { "стат.балансировка" })]
         StaticBalancing
     }
 }

@@ -19,7 +19,8 @@ namespace BioAge.API.Controllers
 
 
 #warning Может переделать под другой формат входных параметров?
-        [HttpGet("bioAge/")]
+       // [HttpGet("bioAge/")] 17.10.2022 На данный момент заменен, так как get запрос не может содержать body.
+        [HttpPut("bioAge/")]
         public async Task<ActionResult<double>> GetBioAge([FromBody]BioAgeCalculationParameters calculationParams)
         {
             try
