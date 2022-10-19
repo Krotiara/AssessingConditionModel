@@ -7,12 +7,21 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="CNTK.CPUOnly" Version="2.7.0" />
     <PackageReference Include="MediatR" Version="11.0.0" />
+    <PackageReference Include="Microsoft.ML" Version="1.7.0" />
+    <PackageReference Include="Microsoft.ML.OnnxRuntime" Version="1.12.1" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\Interfaces\Interfaces.csproj" />
     <ProjectReference Include="..\BioAge.API.Entites\BioAge.API.Entites.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Resources\BioAgeByFuncParamsModel.onnx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

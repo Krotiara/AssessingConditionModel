@@ -20,4 +20,10 @@
     <ProjectReference Include="..\BioAge.API.Service\BioAge.API.Service.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="Resources\bioAgeFuncModel.onnx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>
