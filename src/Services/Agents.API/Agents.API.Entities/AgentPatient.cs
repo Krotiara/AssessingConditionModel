@@ -80,29 +80,7 @@ namespace Agents.API.Entities
 
             return StateDiagram.GetState(rang.GetDisplayAttributeValue());
         }
-
-
-        //private async Task<IList<PatientData>> GetPatientData(DateTime startTime, DateTime endTime)
-        //{
-        //    //TODO указание времени.
-        //    //TODO IList<IPatientData<IPatientParameter, IPatient, IInfluence>> - выглядит перегруженно.
-        //    try
-        //    {
-        //        string url = $"https://host.docker.internal:8004/patientsData/{PatientId}";
-        //        return await webRequester
-        //            .GetResponse<IList<PatientData>>(url, "GET");
-        //    }
-        //    catch(GetWebResponceException ex)
-        //    {
-        //        return null; //TODO custom exception
-        //    }
-        //    catch(Exception unexpectedEx)
-        //    {
-        //        //TODO
-        //        throw new NotImplementedException();
-        //    }
-        //}
-
+       
 
         private async Task<IList<PatientParameter>> GetLatestPatientParameters(IAgentDetermineStateProperties determineStateProperties)
         {
