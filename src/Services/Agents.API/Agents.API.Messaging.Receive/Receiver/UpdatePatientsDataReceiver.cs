@@ -90,7 +90,7 @@ namespace Agents.API.Messaging.Receive.Receiver
                     string content = Encoding.UTF8.GetString(ea.Body.ToArray());
                     IUpdatePatientsInfo updateInfo = JsonConvert.DeserializeObject<UpdatePatientsInfo>(content);
                     if (updateInfo != null)
-                        await updatePatientAgentsService.UpdatePatientAgents(updateInfo.UpdatedIds);
+                        await updatePatientAgentsService.UpdatePatientAgents(updateInfo.UpdatedIds, new AgentDetermineStateProperties());
                     else
                         throw new NotImplementedException(); //TODO
 

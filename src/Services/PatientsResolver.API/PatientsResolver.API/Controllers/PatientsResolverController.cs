@@ -39,12 +39,14 @@ namespace PatientsResolver.API.Controllers
             }
         }
 
-        [HttpGet("latestPatientParameters/{patientId}")]
-        public async Task<ActionResult<List<IPatientParameter>>> GetLatestPatientParameters(int patientId)
+        [HttpPost("latestPatientParameters/{patientId}")]
+        public async Task<ActionResult<List<IPatientParameter>>> GetLatestPatientParameters(int patientId, [FromBody]DateTime[] timeSpan)
         {
             try
-            {
-                return Ok(await mediator.Send(new GetLatesPatientParametersQuery() { PatientId = patientId }));
+            {  
+                return Ok(await mediator.Send(new GetLatesPatientParametersQuery() { PatientId = patientId, 
+                    StartTimestamp = timeSpan.FirstOrDefault(), 
+                    EndTimestamp = timeSpan.LastOrDefault()}));
             }
             catch(Exception ex)
             {

@@ -17,10 +17,12 @@ namespace PatientsResolver.API.Data.Repository
         }
 
 
-        public async Task<List<PatientParameter>> GetLatestParameters(int patientId)
+        public async Task<List<PatientParameter>> GetLatestParameters(int patientId, DateTime startTimestamp, DateTime endTimestamp)
         {
             List<PatientParameter> parameters = 
-                PatientsDataDbContext.PatientsParameters.Where(x => x.PatientId == patientId).ToList();
+                PatientsDataDbContext.PatientsParameters
+                .Where(x => x.PatientId == patientId && x.Timestamp >= startTimestamp && x.Timestamp <= endTimestamp)
+                .ToList();
             foreach(PatientParameter parameter in parameters)
                 parameter.ParameterName = parameter.NameTextDescription.GetParameterByDescription();
             var groupedParams = parameters.GroupBy(x => x.ParameterName);

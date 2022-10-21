@@ -53,9 +53,9 @@ namespace Agents.API.Entities
         }
 
 
-        private async Task<State> DetermineState()
+        private async Task<State> DetermineState(IAgentDetermineStateProperties determineStateProperties)
         {
-            IList<PatientParameter> patientParams = await GetLatestPatientParameters();
+            IList<PatientParameter> patientParams = await GetLatestPatientParameters(determineStateProperties);
             if (patientParams == null)
                 throw new DetermineStateException($"No patient parameters to determine state. Patient id = {PatientId}");
             PatientParameter ageParam = patientParams.FirstOrDefault(x => x.ParameterName == ParameterNames.Age);
@@ -104,13 +104,16 @@ namespace Agents.API.Entities
         //}
 
 
-        private async Task<IList<PatientParameter>> GetLatestPatientParameters()
+        private async Task<IList<PatientParameter>> GetLatestPatientParameters(IAgentDetermineStateProperties determineStateProperties)
         {
             try
             {
+                DateTime startTimestamp = (determineStateProperties.StartTimestamp == null ? DateTime.MinValue : (DateTime)determineStateProperties.StartTimestamp);
+                DateTime endTimestamp = (determineStateProperties.EndTimestamp == null ? DateTime.MaxValue : (DateTime)determineStateProperties.EndTimestamp);
+                string body = Newtonsoft.Json.JsonConvert.SerializeObject(new DateTime[2] { startTimestamp, endTimestamp });
                 string url = $"https://host.docker.internal:8004/latestPatientParameters/{PatientId}";
                 return await webRequester
-                  .GetResponse<IList<PatientParameter>>(url, "GET");
+                  .GetResponse<IList<PatientParameter>>(url, "POST", body);
             }
             catch (GetWebResponceException ex)
             {

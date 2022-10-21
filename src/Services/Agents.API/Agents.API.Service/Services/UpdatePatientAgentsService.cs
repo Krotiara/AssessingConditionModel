@@ -13,7 +13,7 @@ namespace Agents.API.Service.Services
             this.agentPatientsRepository = agentPatientsRepository;
         }
 
-        public async Task UpdatePatientAgents(IEnumerable<int> patientIds)
+        public async Task UpdatePatientAgents(IEnumerable<int> patientIds, IAgentDetermineStateProperties determineStateProperties)
         {
             IEnumerable<AgentPatient> patients = agentPatientsRepository.GetAll();
             foreach (int patientId in patientIds)
@@ -24,7 +24,7 @@ namespace Agents.API.Service.Services
                     AgentPatient agent = patients.FirstOrDefault(x => x.PatientId == patientId);
                     if (agent == null)
                         throw new AgentNotFoundException($"Agent patient with patient id = {patientId} was not found.");
-                    await agent.StateDiagram.UpdateStateAsync();
+                    await agent.StateDiagram.UpdateStateAsync(determineStateProperties);
                 }
                 catch(AgentNotFoundException ex)
                 {
