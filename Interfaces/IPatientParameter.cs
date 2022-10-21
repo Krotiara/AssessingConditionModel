@@ -11,7 +11,7 @@ namespace Interfaces
 
         public int Id { get; set; }
 
-        public int PatientDataId { get; set; }
+        public int InfluenceId { get; set; }
 
         public int PatientId { get; set; }
 
@@ -23,7 +23,9 @@ namespace Interfaces
 
         public string Value { get;  set; }
 
-        public string DynamicValue { get; set; }
+        public bool IsDynamic { get; set; }
+
+        //public string DynamicValue { get; set; }
 
         /// <summary>
         /// Коэффициент направления улучшения показателя. 

@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 
 namespace PatientsResolver.API.Service.Services
 {
-    public interface IAddPatientsDataFromSourceService
+    public interface IAddInfluencesDataFromSourceService
     {
-        public void AddPatientsData(List<PatientData> data);
+        public void AddInfluencesData(List<Influence> data);
     }
 }

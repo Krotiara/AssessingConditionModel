@@ -39,6 +39,9 @@ namespace Interfaces
         [Display(Name = "дата вступления")]
         [ParamDescription(Descriptions = new string[] { "дата вступления" })]
         HospitalizationDate,
+        [Display(Name = "дата внесения")]
+        [ParamDescription(Descriptions = new string[] { "дата внесения" })]
+        ParameterTimestamp,
         [Display(Name = "анамнез")]
         [ParamDescription(Descriptions = new string[] { "анамнез" })]
         Anamnesis,

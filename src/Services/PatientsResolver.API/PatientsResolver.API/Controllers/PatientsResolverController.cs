@@ -53,26 +53,6 @@ namespace PatientsResolver.API.Controllers
         }
 
 
-        [HttpGet("patientsData/{patientId}")]
-        public async Task<ActionResult<List<IPatientData<IPatientParameter, IPatient, IInfluence>>>> GetPatientsData(int patientId,
-            DateTime? startTimestamp, DateTime? endTimestamp)
-        {
-            try
-            {
-                if (startTimestamp == null)
-                    startTimestamp = DateTime.MinValue;
-                if (endTimestamp == null)
-                    endTimestamp = DateTime.MaxValue;
-                return Ok(await mediator.Send(new GetPatientDataQuery(patientId, 
-                    (DateTime)startTimestamp, (DateTime)endTimestamp)));
-            }
-            catch(Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
-
-
         [HttpGet("influence/{patientId}")]
         public async Task<ActionResult<List<Influence>>> GetPatientInfluences(int patientId,
             DateTime? startTimestamp, DateTime? endTimestamp)
@@ -151,21 +131,6 @@ namespace PatientsResolver.API.Controllers
                 return Ok(addedPatients.Count > 0);
             }
             catch(AddPatientException ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
-
-
-        [HttpPost("addInfluence")]
-        public async Task<ActionResult<bool>> AddInfluence(Influence influence)
-        {
-            try
-            {
-                bool status = await mediator.Send(new AddInfluenceCommand() { Influence = influence });
-                return Ok(status);
-            }
-            catch(AddInfluenceException ex)
             {
                 return BadRequest(ex.Message);
             }

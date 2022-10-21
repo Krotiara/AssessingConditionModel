@@ -27,7 +27,7 @@ namespace PatientDataHandler.API.Entities
 
         [NotNull]
         [Column("PatientDataId")]
-        public int PatientDataId { get; set; } 
+        public int InfluenceId { get; set; } 
 
 
         [NotNull]
@@ -45,12 +45,15 @@ namespace PatientDataHandler.API.Entities
         [NotNull]
         [Required]
         public string Value { get ; set ; }
-       
-        public string DynamicValue { get ; set ; }
+
+
         
         [NotNull]
         [Required]
         public int PositiveDynamicCoef { get ; set ; }
+
         public ParameterNames ParameterName { get; set; }
+
+        public bool IsDynamic { get; set; }
     }
 }

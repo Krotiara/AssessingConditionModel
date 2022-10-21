@@ -1,5 +1,6 @@
 ﻿using Interfaces;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -10,12 +11,13 @@ using System.Threading.Tasks;
 
 namespace PatientsResolver.API.Entities
 {
-    public class Influence : IInfluence
+    public class Influence : IInfluence<Patient,PatientParameter>
     {
 
         public Influence()
         {
-
+            StartParameters = new ConcurrentDictionary<ParameterNames, PatientParameter>();
+            DynamicParameters = new ConcurrentDictionary<ParameterNames, PatientParameter>();
         }
 
         [Key]
@@ -42,5 +44,14 @@ namespace PatientsResolver.API.Entities
         [NotNull]
         [Column("PatientId")]
         public int PatientId { get; set; }
+
+        [ForeignKey(nameof(PatientId))]
+        public Patient Patient { get; set; }
+
+        [NotMapped]
+        public ConcurrentDictionary<ParameterNames, PatientParameter> StartParameters { get; set; }
+
+        [NotMapped]
+        public ConcurrentDictionary<ParameterNames, PatientParameter> DynamicParameters { get; set; }
     }
 }

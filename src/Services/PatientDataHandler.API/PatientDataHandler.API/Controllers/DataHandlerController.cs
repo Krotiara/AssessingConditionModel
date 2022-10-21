@@ -19,7 +19,7 @@ namespace PatientDataHandler.API.Controllers
 
 
         [HttpGet("parseData/{pathToFile}")]
-        public ActionResult<IList<IPatientData<IPatientParameter,IPatient, IInfluence>>> ParsePatientData(string pathToFile)
+        public ActionResult<IList<Influence>> ParsePatientData(string pathToFile)
         {
             // TODO try catch
             //TODO определение типа данных

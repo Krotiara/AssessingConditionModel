@@ -10,16 +10,16 @@ using System.Threading.Tasks;
 
 namespace PatientsResolver.API.Service.Services
 {
-    public class AddPatientsDataFromSourceService : IAddPatientsDataFromSourceService
+    public class AddInfluencesDataFromSourceService : IAddInfluencesDataFromSourceService
     {
         private readonly IMediator mediator;
 
-        public AddPatientsDataFromSourceService(IMediator mediator)
+        public AddInfluencesDataFromSourceService(IMediator mediator)
         {
             this.mediator = mediator;
         }
 
-        public async void AddPatientsData(List<PatientData> data)
+        public async void AddInfluencesData(List<Influence> data)
         {
             try
             {
@@ -29,8 +29,8 @@ namespace PatientsResolver.API.Service.Services
                 if(addedPatients.Count > 0)
                     await mediator.Send(new SendPatientsCommand() { Patients = addedPatients.ToList()});
 
-                List<PatientData> addedData = 
-                    await mediator.Send(new AddPatientDataCommand() { Data = data });
+                List<Influence> addedData = 
+                    await mediator.Send(new AddInfluenceDataCommand() { Data = data });
 
                 IUpdatePatientsInfo updateInfo = new UpdatePatientsInfo() 
                 { UpdatedIds = new HashSet<int>(addedData.Select(x => x.PatientId)) };

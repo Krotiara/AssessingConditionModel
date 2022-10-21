@@ -11,16 +11,16 @@ namespace PatientsResolver.API.Service.Query
 {
     public class GetPatientQueryHandler: IRequestHandler<GetPatientQuery, Patient>
     {
-        private readonly IPatientDataRepository patientDataRepository;
+        private readonly PatientsRepository patientDataRepository;
 
-        public GetPatientQueryHandler(IPatientDataRepository patientDataRepository)
+        public GetPatientQueryHandler(PatientsRepository patientDataRepository)
         {
             this.patientDataRepository = patientDataRepository;
         }
 
         public async Task<Patient> Handle(GetPatientQuery request, CancellationToken cancellationToken)
         {
-            return await patientDataRepository.GetPatientDataByIdAsync(request.PatientId, cancellationToken);
+            return patientDataRepository.GetAll().FirstOrDefault(x => x.MedicalHistoryNumber == request.PatientId);
         }
     }
 }
