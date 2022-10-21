@@ -55,11 +55,15 @@ namespace PatientDataHandler.API.Service.Services
                 .Select(x => x.GetParameterByDescription())
                 .ToList();
 
+            int parameterTimestampIndex = headerParamsNames.IndexOf(ParameterNames.ParameterTimestamp);
+
             for (int rowNum = 0; rowNum <= data.Count; rowNum++) //select starting row here
             {
                 try
                 {
                     IList<string> row = data[rowNum];
+
+                    DateTime parameterTimestamp = parameterTimestampIndex == -1 || row[parameterTimestampIndex] =="" ? DateTime.MinValue : DateTime.Parse(row[parameterTimestampIndex]);
                     string influenceName = data[rowNum][groupIndex];
                     
                     if (row[0] == "динамика")
@@ -106,7 +110,7 @@ namespace PatientDataHandler.API.Service.Services
                             {
                                 curDict[parameterName] = new PatientParameter(parameterName)
                                 {
-                                    Timestamp = DateTime.MinValue, //TODO  нужно указывать во входных данных.
+                                    Timestamp = parameterTimestamp,
                                     PatientId = id,
                                     PositiveDynamicCoef = 1, //TODO нужно указывать во входных данных.
                                     IsDynamic = isDynamicRows,
