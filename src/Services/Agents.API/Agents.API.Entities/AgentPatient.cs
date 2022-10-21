@@ -58,13 +58,14 @@ namespace Agents.API.Entities
             IList<PatientParameter> patientParams = await GetLatestPatientParameters();
             if (patientParams == null)
                 throw new DetermineStateException($"No patient parameters to determine state. Patient id = {PatientId}");
+            PatientParameter ageParam = patientParams.FirstOrDefault(x => x.ParameterName == ParameterNames.Age);
+            if(ageParam == null)
+                throw new DetermineStateException($"No patient age in input patient parameters. Patient id = {PatientId}");
 
+            double age = double.Parse(ageParam.Value);
             double bioAge = await GetBioAge(patientParams);
+            double ageDelta = bioAge-age;
 
-            // calc delta
-            //TODO check ненулевые значения.
-            //double ageDelta = AgeDelta;
-            double ageDelta = 0;
             AgentBioAgeStates rang;
             if (ageDelta <= -9)
                 rang = AgentBioAgeStates.RangI;

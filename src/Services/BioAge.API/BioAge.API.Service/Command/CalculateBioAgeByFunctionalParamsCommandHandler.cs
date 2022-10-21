@@ -53,17 +53,6 @@ namespace BioAge.API.Service.Command
                 float staticBalancing = float.Parse(
                     paramsDict[ParameterNames.StaticBalancing].Value.Replace(",", "."));
 
-
-
-                //var a = DeviceDescriptor.AllDevices();
-                //var deviceDescriptor = DeviceDescriptor.AllDevices().First();
-                //var function = Function.Load("modelPath", deviceDescriptor, ModelFormat.ONNX);
-
-                //var data = mlContext.Data.LoadFromEnumerable(new List<TestInput>());
-                //var pipeline = mlContext.Transforms ApplyOnnxModel(modelFile: modelPath, outputColumnNames: new[] { "bioAge"}, inputColumnNames: new[] { "input.1" });
-                //// Fit scoring pipeline
-                //var model = pipeline.Fit(data);
-
                 string modelPath = Path.Combine(Directory.GetCurrentDirectory(), @"Resources/bioAgeFuncModel.onnx");
                 var session = new InferenceSession(modelPath);
 
@@ -73,26 +62,15 @@ namespace BioAge.API.Service.Command
                     hearingAcuity, staticBalancing };
 
                 Tensor<float> t1 = new DenseTensor<float>(input, new int[] {1,10});
-                NamedOnnxValue t1Value = NamedOnnxValue.CreateFromTensor("input.1", t1);
+                NamedOnnxValue t1Value = NamedOnnxValue.CreateFromTensor("float_input", t1);
 
-
-                //var inputs = new List<NamedOnnxValue>() {NamedOnnxValue.CreateFromTensor<float>(null, t1)};
                 using (var outPut = session.Run(new List<NamedOnnxValue> { t1Value }))
                 {
-                    var a = 1;
+                    DisposableNamedOnnxValue bioAgeOV = outPut.First();
+                    DenseTensor<float> value = bioAgeOV.Value as DenseTensor<float>;
+                    double bioAge = Convert.ToDouble(value.Buffer.ToArray()[0]);
+                    return Math.Round(bioAge);
                 }
-
-                return await Task.FromResult<double>(
-                   - 1.07 * systolicPressure
-                   + 1.1 * diastolicPressure
-                   + 1.94 * (systolicPressure - diastolicPressure)
-                   - 1.45 * inhaleBreathHolding
-                   + 1.32 * outhaleBreathHolding
-                   - 3.46 * lungCapacity
-                   + 0.15 * weight
-                   - 4.35 * accommodation
-                   + 5.57 * hearingAcuity
-                   - 2.6 * staticBalancing);
             }
             catch (KeyNotFoundException ex)
             {
