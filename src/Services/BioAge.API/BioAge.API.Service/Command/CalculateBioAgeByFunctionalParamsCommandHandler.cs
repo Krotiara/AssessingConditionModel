@@ -10,6 +10,7 @@ using Microsoft.ML.OnnxRuntime.Tensors;
 using Microsoft.ML;
 using Microsoft.ML.Data;
 using CNTK;
+using Microsoft.ML.OnnxRuntime;
 
 namespace BioAge.API.Service.Command
 {
@@ -52,7 +53,7 @@ namespace BioAge.API.Service.Command
                 float staticBalancing = float.Parse(
                     paramsDict[ParameterNames.StaticBalancing].Value.Replace(",", "."));
 
-                //string modelPath =Path.Combine(Directory.GetCurrentDirectory(), @"Resources/bioAgeFuncModel.onnx");
+
 
                 //var a = DeviceDescriptor.AllDevices();
                 //var deviceDescriptor = DeviceDescriptor.AllDevices().First();
@@ -63,23 +64,23 @@ namespace BioAge.API.Service.Command
                 //// Fit scoring pipeline
                 //var model = pipeline.Fit(data);
 
+                string modelPath = Path.Combine(Directory.GetCurrentDirectory(), @"Resources/bioAgeFuncModel.onnx");
+                var session = new InferenceSession(modelPath);
 
-                //var session = new InferenceSession(modelPath);
+                float[] input = { systolicPressure, diastolicPressure, 
+                    (systolicPressure - diastolicPressure), inhaleBreathHolding, 
+                    outhaleBreathHolding, lungCapacity, weight, accommodation, 
+                    hearingAcuity, staticBalancing };
 
-                //float[] input = { systolicPressure, diastolicPressure, 
-                //    (systolicPressure - diastolicPressure), inhaleBreathHolding, 
-                //    outhaleBreathHolding, lungCapacity, weight, accommodation, 
-                //    hearingAcuity, staticBalancing };
+                Tensor<float> t1 = new DenseTensor<float>(input, new int[] {1,10});
+                NamedOnnxValue t1Value = NamedOnnxValue.CreateFromTensor("input.1", t1);
 
 
-
-                //Tensor<float> t1 = new DenseTensor<float>(input, new int[] {1,10});
-               
                 //var inputs = new List<NamedOnnxValue>() {NamedOnnxValue.CreateFromTensor<float>(null, t1)};
-                //using(var outPut  = session.Run(inputs))
-                //{
-                //    var a = 1;
-                //}
+                using (var outPut = session.Run(new List<NamedOnnxValue> { t1Value }))
+                {
+                    var a = 1;
+                }
 
                 return await Task.FromResult<double>(
                    - 1.07 * systolicPressure
