@@ -92,6 +92,7 @@ namespace PatientsResolver.API.Controllers
         [HttpPost("addData/{pathToDataFile}")]
         public async Task<ActionResult> AddData(string pathToDataFile)
         {
+            #warning Необходимо переделать под массив байт в body
             try
             {
                 pathToDataFile = pathToDataFile.Replace("%2F", "/"); //TODO вынести в отдельный метод

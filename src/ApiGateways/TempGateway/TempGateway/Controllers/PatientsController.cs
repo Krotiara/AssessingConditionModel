@@ -33,5 +33,12 @@ namespace TempGateway.Controllers
         {
             throw new NotImplementedException();
         }
+
+
+        [HttpPost("addInfluenceData/{filePath}")]
+        public async Task<ActionResult> AddInfluenceData(string filePath)
+        {
+            throw new NotImplementedException(); //TODO Преобразовать в массив байт и отослать
+        }
     }
 }
