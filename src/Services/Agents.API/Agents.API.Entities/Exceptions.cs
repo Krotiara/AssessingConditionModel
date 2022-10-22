@@ -12,12 +12,19 @@ namespace Agents.API.Entities
 
         public GetWebResponceException(string message, Exception innerException) : base(message, innerException) { }
     }
-
+    
     public class DetermineStateException : Exception
     {
         public DetermineStateException(string message) : base(message) { }
 
         public DetermineStateException(string message, Exception innerException) : base(message, innerException) { }
+    }
+
+    public class GetAgingStateException : Exception
+    {
+        public GetAgingStateException(string message) : base(message) { }
+
+        public GetAgingStateException(string message, Exception innerException) : base(message, innerException) { }
     }
 
     public class AgentNotFoundException : Exception

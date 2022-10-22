@@ -50,11 +50,13 @@ namespace Agents.API.Data.Database
         }
 
 
-        public Task StartAgents()
+        public async Task StartAgents()
         {
             foreach (AgentPatient agentPatient in AgentsDbContext.AgentPatients)
+            {
                 agentPatient.InitWebRequester(webRequester);
-            return Task.CompletedTask;
+                await agentPatient.StateDiagram.UpdateStateAsync(new AgentDetermineStateProperties());
+            }
         }
     }
 }

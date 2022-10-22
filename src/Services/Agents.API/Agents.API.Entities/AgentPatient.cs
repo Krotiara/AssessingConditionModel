@@ -47,7 +47,10 @@ namespace Agents.API.Entities
 
         [NotMapped]
         public double CurrentBioAge { get; set; }
-        
+
+        [NotMapped]
+        public AgentBioAgeStates CurrentAgeRang { get; set; }
+
 
         public void InitStateDiagram()
         {
@@ -71,10 +74,7 @@ namespace Agents.API.Entities
             double age = double.Parse(ageParam.Value);
             double bioAge = await GetBioAge(patientParams);
             double ageDelta = bioAge-age;
-
-            CurrentAge = age;
-            CurrentBioAge = bioAge;
-
+        
             AgentBioAgeStates rang;
             if (ageDelta <= -9)
                 rang = AgentBioAgeStates.RangI;
@@ -86,6 +86,10 @@ namespace Agents.API.Entities
                 rang = AgentBioAgeStates.RangIV;
             else
                 rang = AgentBioAgeStates.RangV;
+
+            CurrentAge = age;
+            CurrentBioAge = bioAge;
+            CurrentAgeRang = rang;
 
             return StateDiagram.GetState(rang.GetDisplayAttributeValue());
         }

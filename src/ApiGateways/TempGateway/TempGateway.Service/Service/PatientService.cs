@@ -22,9 +22,11 @@ namespace TempGateway.Service.Service
             throw new NotImplementedException();
         }
 
-        public Task<IAgingPatientState> GetAgingPatientStateByPatientId(int patientId)
+        public async Task<IAgingPatientState> GetAgingPatientStateByPatientId(int patientId)
         {
-            throw new NotImplementedException();
+#warning Выскакивает ошибка запроса
+            string url = $"https://host.docker.internal:8012/agingState/{patientId}";
+            return await webRequester.GetResponse<AgingPatientState>(url, "GET");
         }
 
         public async Task<IPatient> GetPatientById(int id)

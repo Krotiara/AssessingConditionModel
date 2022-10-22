@@ -74,10 +74,12 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:80
+      - ASPNETCORE_URLS=https://+:443;http://+:80
       - ASPNETCORE_Kestrel__Certificates__Default__Password=lisa2021
       - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/localhost.pfx
     ports:
       - 8002:80
+      - 8012:443
     volumes:
       - ~/.aspnet/https:/https:ro
     extra_hosts:
