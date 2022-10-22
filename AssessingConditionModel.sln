@@ -87,9 +87,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BioAge.API.Service", "src\S
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TempGateway", "TempGateway", "{8A503F90-245D-4AEE-8276-3D562CBAF7EB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TempGateway", "src\ApiGateways\TempGateway\TempGateway\TempGateway.csproj", "{7706E2DA-6501-4BBC-BC3A-3034EECF1F9D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TempGateway", "src\ApiGateways\TempGateway\TempGateway\TempGateway.csproj", "{7706E2DA-6501-4BBC-BC3A-3034EECF1F9D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TempGateway.Service", "src\ApiGateways\TempGateway\TempGateway.Service\TempGateway.Service.csproj", "{16D65310-C626-43D5-A270-559E0ECFBCF2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TempGateway.Service", "src\ApiGateways\TempGateway\TempGateway.Service\TempGateway.Service.csproj", "{16D65310-C626-43D5-A270-559E0ECFBCF2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TempGateway.Entities", "src\ApiGateways\TempGateway\TempGateway.Entities\TempGateway.Entities.csproj", "{98072978-370F-4FDD-B357-879684CD6CD8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -221,6 +223,10 @@ Global
 		{16D65310-C626-43D5-A270-559E0ECFBCF2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{16D65310-C626-43D5-A270-559E0ECFBCF2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{16D65310-C626-43D5-A270-559E0ECFBCF2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{98072978-370F-4FDD-B357-879684CD6CD8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{98072978-370F-4FDD-B357-879684CD6CD8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{98072978-370F-4FDD-B357-879684CD6CD8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{98072978-370F-4FDD-B357-879684CD6CD8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -265,6 +271,7 @@ Global
 		{8A503F90-245D-4AEE-8276-3D562CBAF7EB} = {9CE2D4ED-29AC-4114-9906-BE4E7B6169DC}
 		{7706E2DA-6501-4BBC-BC3A-3034EECF1F9D} = {8A503F90-245D-4AEE-8276-3D562CBAF7EB}
 		{16D65310-C626-43D5-A270-559E0ECFBCF2} = {8A503F90-245D-4AEE-8276-3D562CBAF7EB}
+		{98072978-370F-4FDD-B357-879684CD6CD8} = {8A503F90-245D-4AEE-8276-3D562CBAF7EB}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {6FA4C998-2594-48A2-A283-C474A19E73B5}
