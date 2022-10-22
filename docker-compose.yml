@@ -62,7 +62,6 @@ services:
     extra_hosts:
       - host.docker.internal:host-gateway
 
-
   bioAge.api:
     image: ${DOCKER_REGISTRY-}bioageapi
     build:
@@ -76,13 +75,12 @@ services:
       - ASPNETCORE_Kestrel__Certificates__Default__Password=lisa2021
       - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/localhost.pfx
     ports:
-      - 8005:80
+      - 8007:80
       - 8006:443
     volumes:
       - ~/.aspnet/https:/https:ro
     extra_hosts:
       - host.docker.internal:host-gateway
-
 
   containerregister.api:
     image: ${DOCKER_REGISTRY-}containerregisterapi
@@ -136,10 +134,19 @@ services:
      depends_on:
       - postgres_image
      ports:
-      - "5050:80"
+      - "5051:80"
      restart: unless-stopped
      #networks:
      # - postgres
+
+  #bioAge.mlServer:
+  #   image: ${DOCKER_REGISTRY-}bioagemlserver
+  #   build:
+  #      context: .
+  #      dockerfile: src/Services/BioAge.MLServer/BioAge.MLServer/Dockerfile
+  #   ports:
+  #     - "8080:80"
+
 
 volumes:
    db_volume:

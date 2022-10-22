@@ -1,6 +1,7 @@
 ﻿using Interfaces;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
+using PatientDataHandler.API.Entities;
 using PatientDataHandler.API.Messaging.Send;
 using RabbitMQ.Client;
 using System;
@@ -32,7 +33,7 @@ namespace PatientDataHandler.API_Messaging.Send.Sender
             CreateConnection();
         }
 
-        public void SendPatientsData(IList<IPatientData<IPatientParameter, IPatient, IInfluence>> data)
+        public void SendPatientsData(IList<Influence> data)
         {
             if (connection == null)
                 CreateConnection();

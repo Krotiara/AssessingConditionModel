@@ -12,7 +12,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Agents.API\Agents.API.Entities\Agents.API.Entities.csproj" />
     <ProjectReference Include="..\PatientsResolver.API.Data\PatientsResolver.API.Data.csproj" />
     <ProjectReference Include="..\PatientsResolver.API.Entities\PatientsResolver.API.Entities.csproj" />
     <ProjectReference Include="..\PatientsResolver.API.Messaging.Send\PatientsResolver.API.Messaging.Send.csproj" />

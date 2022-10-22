@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using Interfaces;
 using Agents.API.Entities;
 using Agents.API.Messaging.Receive.Configs;
+using Agents.API.Service.Services;
 
 namespace Agents.API.Messaging.Receive.Receiver
 {
@@ -18,7 +19,7 @@ namespace Agents.API.Messaging.Receive.Receiver
     {
         private IModel channel;
         private IConnection connection;
-
+        private readonly IUpdatePatientAgentsService updatePatientAgentsService;
         private readonly string hostname;
         private readonly string queueName;
         private readonly string username;
@@ -26,7 +27,7 @@ namespace Agents.API.Messaging.Receive.Receiver
         private readonly string exchange;
         private readonly string routingKey;
 
-        public UpdatePatientsDataReceiver(IOptions<RabbitMqConfiguration> rabbitMqOptions)
+        public UpdatePatientsDataReceiver(IUpdatePatientAgentsService updatePatientAgentsService, IOptions<RabbitMqConfiguration> rabbitMqOptions)
         {
             hostname = rabbitMqOptions.Value.Hostname;
             queueName = rabbitMqOptions.Value.QueueName;
@@ -34,6 +35,7 @@ namespace Agents.API.Messaging.Receive.Receiver
             password = rabbitMqOptions.Value.Password;
             exchange = rabbitMqOptions.Value.Exchange;
             routingKey = rabbitMqOptions.Value.RoutingKey;
+            this.updatePatientAgentsService = updatePatientAgentsService;
             InitializeRabbitMqListener();
         }
 
@@ -81,14 +83,16 @@ namespace Agents.API.Messaging.Receive.Receiver
             stoppingToken.ThrowIfCancellationRequested();
 
             EventingBasicConsumer consumer = new EventingBasicConsumer(channel);
-            consumer.Received += (ch, ea) =>
+            consumer.Received += async (ch, ea) =>
             {
                 try
                 {
                     string content = Encoding.UTF8.GetString(ea.Body.ToArray());
                     IUpdatePatientsInfo updateInfo = JsonConvert.DeserializeObject<UpdatePatientsInfo>(content);
-
-                    throw new NotImplementedException(); //TODO обработка сообщения. Через сервис
+                    if (updateInfo != null)
+                        await updatePatientAgentsService.UpdatePatientAgents(updateInfo.UpdatedIds, new AgentDetermineStateProperties());
+                    else
+                        throw new NotImplementedException(); //TODO
 
                     channel.BasicAck(ea.DeliveryTag, false);
                 }
@@ -97,6 +101,11 @@ namespace Agents.API.Messaging.Receive.Receiver
                     //TODO add log
                     channel.BasicReject(ea.DeliveryTag, false);
                 } 
+                catch(AgentNotFoundException ex)
+                {
+                    //TODO add log
+                    channel.BasicReject(ea.DeliveryTag, false);
+                }
             };
 
             channel.BasicConsume(queueName, false, consumer);

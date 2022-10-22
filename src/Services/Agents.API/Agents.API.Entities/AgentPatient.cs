@@ -16,7 +16,10 @@ namespace Agents.API.Entities
     {
         private IWebRequester webRequester;
        
-        public AgentPatient() { }
+        public AgentPatient() 
+        {
+            InitStateDiagram();
+        }
 
         [NotNull]
         [Key]
@@ -38,6 +41,12 @@ namespace Agents.API.Entities
 
         [NotMapped]
         public List<IAgent> Connections { get ; set ; }
+
+        [NotMapped]
+        public double CurrentAge { get; set; }
+
+        [NotMapped]
+        public double CurrentBioAge { get; set; }
         
 
         public void InitStateDiagram()
@@ -47,22 +56,25 @@ namespace Agents.API.Entities
             {
                 StateDiagram.AddState(state.GetDisplayAttributeValue());
             }
-            StateDiagram.UpdateStateAsync();
         }
 
 
-        private async Task<State> DetermineState()
+        private async Task<State> DetermineState(IAgentDetermineStateProperties determineStateProperties)
         {
-            IList<PatientData> patientDatas = await GetPatientData(DateTime.MinValue, DateTime.MaxValue);
-            if (patientDatas == null)
-                throw new DetermineStateException($"No patient data to determine state. Patient id = {PatientId}");
+            IList<PatientParameter> patientParams = await GetLatestPatientParameters(determineStateProperties);
+            if (patientParams == null)
+                throw new DetermineStateException($"No patient parameters to determine state. Patient id = {PatientId}");
+            PatientParameter ageParam = patientParams.FirstOrDefault(x => x.ParameterName == ParameterNames.Age);
+            if(ageParam == null)
+                throw new DetermineStateException($"No patient age in input patient parameters. Patient id = {PatientId}");
 
+            double age = double.Parse(ageParam.Value);
+            double bioAge = await GetBioAge(patientParams);
+            double ageDelta = bioAge-age;
 
-            //TODO get bioAge from webRequest
-            // calc delta
-            //TODO check ненулевые значения.
-            //double ageDelta = AgeDelta;
-            double ageDelta = 0;
+            CurrentAge = age;
+            CurrentBioAge = bioAge;
+
             AgentBioAgeStates rang;
             if (ageDelta <= -9)
                 rang = AgentBioAgeStates.RangI;
@@ -77,23 +89,24 @@ namespace Agents.API.Entities
 
             return StateDiagram.GetState(rang.GetDisplayAttributeValue());
         }
+       
 
-
-        private async Task<IList<PatientData>> GetPatientData(DateTime startTime, DateTime endTime)
+        private async Task<IList<PatientParameter>> GetLatestPatientParameters(IAgentDetermineStateProperties determineStateProperties)
         {
-            //TODO указание времени.
-            //TODO IList<IPatientData<IPatientParameter, IPatient, IInfluence>> - выглядит перегруженно.
             try
             {
-                string url = $"https://host.docker.internal:8004/patientsData/{PatientId}";
+                DateTime startTimestamp = (determineStateProperties.StartTimestamp == null ? DateTime.MinValue : (DateTime)determineStateProperties.StartTimestamp);
+                DateTime endTimestamp = (determineStateProperties.EndTimestamp == null ? DateTime.MaxValue : (DateTime)determineStateProperties.EndTimestamp);
+                string body = Newtonsoft.Json.JsonConvert.SerializeObject(new DateTime[2] { startTimestamp, endTimestamp });
+                string url = $"https://host.docker.internal:8004/latestPatientParameters/{PatientId}";
                 return await webRequester
-                    .GetResponse<IList<PatientData>>(url, "GET");
+                  .GetResponse<IList<PatientParameter>>(url, "POST", body);
             }
-            catch(GetWebResponceException ex)
+            catch (GetWebResponceException ex)
             {
                 return null; //TODO custom exception
             }
-            catch(Exception unexpectedEx)
+            catch (Exception unexpectedEx)
             {
                 //TODO
                 throw new NotImplementedException();
@@ -101,66 +114,37 @@ namespace Agents.API.Entities
         }
 
 
-        #region test stuff
-        private async Task TryAll(string hostName)
+        private async Task<double> GetBioAge(IList<PatientParameter> patientParams)
         {
-            string url = $"https://patientsresolver.api:443/patientsData/{PatientId}";
-            //string url = $"https://localhost:8003/patientsData/{PatientId}";
-
-            IList<IPatientData<IPatientParameter, IPatient, IInfluence>> data =
-                new List<IPatientData<IPatientParameter, IPatient, IInfluence>>();
-
             try
             {
-                url = $"https://{hostName}:443/patientsData/{PatientId}";
-                data = await webRequester
-                    .GetResponse<IList<IPatientData<IPatientParameter, IPatient, IInfluence>>>(
-                    url, "GET");
-            }
-            catch (Exception ex)
-            {
+                BioAgeCalculationParameters calculationParameters = new BioAgeCalculationParameters()
+                {
+                    CalculationType = BioAgeCalculationType.ByFunctionalParameters,
+                    Parameters = patientParams.ToDictionary(entry => entry.ParameterName, entry => entry)
+                };
 
+                string requestBody = Newtonsoft.Json.JsonConvert.SerializeObject(calculationParameters);
+                string url = $"https://host.docker.internal:8006/bioAge/";
+                return await webRequester.GetResponse<double>(url, "PUT", requestBody);
             }
-            try
+            catch (GetWebResponceException ex)
             {
-                url = $"http://{hostName}:80/patientsData/{PatientId}";
-                data = await webRequester
-                   .GetResponse<IList<IPatientData<IPatientParameter, IPatient, IInfluence>>>(
-                   url, "GET");
+                throw new NotImplementedException();
             }
-            catch (Exception ex)
+            catch (Exception unexpectedEx)
             {
-
-            }
-            try
-            {
-                url = $"https://{hostName}:8004/patientsData/{PatientId}";
-                data = await webRequester
-                   .GetResponse<IList<IPatientData<IPatientParameter, IPatient, IInfluence>>>(
-                   url, "GET");
-            }
-            catch (Exception ex)
-            {
-
-            }
-            try
-            {
-                url = $"http://{hostName}:8003/patientsData/{PatientId}";
-                data = await webRequester
-                   .GetResponse<IList<IPatientData<IPatientParameter, IPatient, IInfluence>>>(
-                   url, "GET");
-            }
-            catch (Exception ex)
-            {
-
+                //TODO
+                throw new NotImplementedException();
             }
         }
-        #endregion
 
+  
         public void ProcessPrivateTransitions()
         {
             throw new NotImplementedException();
         }
+
 
         public void InitWebRequester(IWebRequester webRequester)
         {

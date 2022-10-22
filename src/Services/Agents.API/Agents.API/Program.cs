@@ -8,7 +8,6 @@ using Microsoft.EntityFrameworkCore;
 using Agents.API.Data.Database;
 using Agents.API.Service.Services;
 using Agents.API.Messaging.Receive.Configs;
-using Agents.API.Service.Command;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -65,10 +64,8 @@ AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 builder.Services.AddScoped<IUpdatePatientsInfo, UpdatePatientsInfo>();
 builder.Services.AddTransient<IWebRequester, RestWebRequester>();
 builder.Services.AddTransient<IInitPatientAgentsService, InitPatientAgentsService>();
+builder.Services.AddTransient<IUpdatePatientAgentsService, UpdatePatientAgentsService>();
 builder.Services.AddSingleton<IAgentPatientsRepository, AgentPatientsRepository>();
-
-builder.Services.AddTransient<IRequestHandler<GetPatientDatasCommand, IList<IPatientData<IPatientParameter, IPatient, IInfluence>>>,
-    GetPatientDatasCommandHandler>();
 
 
 var app = builder.Build();

@@ -39,6 +39,9 @@ namespace Interfaces
         [Display(Name = "дата вступления")]
         [ParamDescription(Descriptions = new string[] { "дата вступления" })]
         HospitalizationDate,
+        [Display(Name = "дата внесения")]
+        [ParamDescription(Descriptions = new string[] { "дата внесения" })]
+        ParameterTimestamp,
         [Display(Name = "анамнез")]
         [ParamDescription(Descriptions = new string[] { "анамнез" })]
         Anamnesis,
@@ -82,10 +85,10 @@ namespace Interfaces
         [ParamDescription(Descriptions = new string[] { "баллы по шокс" })]
         Shock,
         [Display(Name = "сад")]
-        [ParamDescription(Descriptions = new string[] { "сад" })]
+        [ParamDescription(Descriptions = new string[] { "сад","адс" })]
         SystolicPressure,
         [Display(Name = "дад")]
-        [ParamDescription(Descriptions = new string[] { "дад" })]
+        [ParamDescription(Descriptions = new string[] { "дад","адд" })]
         DiastolicPressure,
         [Display(Name = "чсс")]
         [ParamDescription(Descriptions = new string[] { "чсс" })]
@@ -115,7 +118,7 @@ namespace Interfaces
         [ParamDescription(Descriptions = new string[] { "хбп" })]
         StageOfChronicKidneyDisease,
         [Display(Name = "вес")]
-        [ParamDescription(Descriptions = new string[] { "вес" })]
+        [ParamDescription(Descriptions = new string[] { "вес", "масса тела" })]
         Weight,
         [Display(Name = "рост")]
         [ParamDescription(Descriptions = new string[] { "рост" })]
@@ -143,6 +146,24 @@ namespace Interfaces
         FinalDiastolicVolume,
         [Display(Name = "фв")]
         [ParamDescription(Descriptions = new string[] { "фв" })]
-        EjectionFraction
+        EjectionFraction,
+        [Display(Name = "здвдох")]
+        [ParamDescription(Descriptions = new string[] { "здвдох" })]
+        InhaleBreathHolding,
+        [Display(Name = "здвыдох")]
+        [ParamDescription(Descriptions = new string[] { "здвыдох" })]
+        OuthaleBreathHolding,
+        [Display(Name = "жел")]
+        [ParamDescription(Descriptions = new string[] { "жел" })]
+        LungCapacity,
+        [Display(Name = "аккомодация")]
+        [ParamDescription(Descriptions = new string[] { "аккомодация" })]
+        Accommodation,
+        [Display(Name = "острота слуха")]
+        [ParamDescription(Descriptions = new string[] { "острота слуха" })]
+        HearingAcuity,
+        [Display(Name = "стат.балансировка")]
+        [ParamDescription(Descriptions = new string[] { "стат.балансировка" })]
+        StaticBalancing
     }
 }

@@ -19,10 +19,22 @@ namespace BioAge.API.Controllers
 
 
 #warning Может переделать под другой формат входных параметров?
-        [HttpGet("bioAge/")]
-        public async Task<ActionResult<double>> GetBioAge(BioAgeCalculationParameters calculationParams)
+       // [HttpGet("bioAge/")] 17.10.2022 На данный момент заменен, так как get запрос не может содержать body.
+        [HttpPut("bioAge/")]
+        public async Task<ActionResult<double>> GetBioAge([FromBody]BioAgeCalculationParameters calculationParams)
         {
-            throw new NotImplementedException();
+            try
+            {
+                return Ok(await bioAgeCalculationService.CalculateBioAge(calculationParams));
+            }
+            catch(BioAgeCalculationException ex)
+            {
+                return BadRequest($"Bio age calculation error:{ex.Message}");
+            }
+            catch(Exception ex)
+            {
+                return BadRequest($"Unexpected error:{ex.Message}");
+            }
         }
     }
 }

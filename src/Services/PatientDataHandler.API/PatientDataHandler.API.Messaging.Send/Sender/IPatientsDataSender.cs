@@ -1,4 +1,5 @@
 ﻿using Interfaces;
+using PatientDataHandler.API.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,6 @@ namespace PatientDataHandler.API_Messaging.Send.Sender
 {
     public interface IPatientsDataSender
     {
-        void SendPatientsData(IList<IPatientData<IPatientParameter, IPatient, IInfluence>> data);
+        void SendPatientsData(IList<Influence> data);
     }
 }

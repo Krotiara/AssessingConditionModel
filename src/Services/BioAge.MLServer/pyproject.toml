@@ -1,0 +1,26 @@
+[tool.poetry]
+name = "BioAge.MLServer"
+version = "0.1.0"
+description = ""
+authors = ["Anton Zotov <anton@zotov.online>"]
+
+[tool.poetry.dependencies]
+python = ">=3.8,<3.11.0"
+Flask = "^2.1.1"
+pandas = "^1.4.2"
+SQLAlchemy = "^1.4.35"
+Flask-Cors = "^3.0.10"
+boto3 = "^1.21.44"
+psycopg2-binary = "^2.9.3"
+scikit-learn = "^1.0.2"
+scikeras = "^0.8.0"
+dill = "^0.3.5"
+
+[tool.poetry.dev-dependencies]
+pytest = "^5.2"
+flake8 = "^4.0.1"
+autopep8 = "^1.6.0"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

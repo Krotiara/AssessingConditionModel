@@ -20,7 +20,7 @@ namespace InfluenceCalculator.API.Models
 
         public int Id { get; set; }
 
-        public int PatientDataId { get; set; }
+        public int InfluenceId { get; set; }
 
         public string NameTextDescription { get; set; }
         public string Value { get; set; }
@@ -30,5 +30,6 @@ namespace InfluenceCalculator.API.Models
         public int PatientId { get; set; }
         public DateTime Timestamp { get; set; }
         public ParameterNames ParameterName { get => throw new NotImplementedException(); set => throw new NotImplementedException(); } //TODO по имени получить Parameters.
+        public bool IsDynamic { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
     }
 }

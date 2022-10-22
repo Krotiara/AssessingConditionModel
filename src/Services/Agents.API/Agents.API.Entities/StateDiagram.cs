@@ -20,9 +20,9 @@ namespace Agents.API.Entities
         public int CurrentStateIndex { get; private set; }
         public State CurrentState { get; private set; }
 
-        public Func<Task<State>> DetermineState { get; set; }
+        public Func<IAgentDetermineStateProperties, Task<State>> DetermineState { get; set; }
 
-        public StateDiagram(Func<Task<State>> determineStateFunc)
+        public StateDiagram(Func<IAgentDetermineStateProperties, Task<State>> determineStateFunc)
         {
             CurrentStateIndex = 0;
             States = new Dictionary<string, State>();
@@ -43,16 +43,9 @@ namespace Agents.API.Entities
         }
 
 
-        public async Task UpdateStateAsync()
+        public async Task UpdateStateAsync(IAgentDetermineStateProperties determineStateProperties)
         {
-            try
-            {
-                CurrentState = await DetermineState();
-            }
-            catch(DetermineStateException ex)
-            {
-                //TODO log
-            }
+            CurrentState = await DetermineState(determineStateProperties);
         }
     }
 }

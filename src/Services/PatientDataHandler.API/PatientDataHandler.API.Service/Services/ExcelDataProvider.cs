@@ -21,7 +21,7 @@ namespace PatientDataHandler.API.Service.Services
         }
  
 
-        public IList<IPatientData<IPatientParameter, IPatient, IInfluence>> ParseData(string filePath)
+        public IList<Influence> ParseData(string filePath)
         {
             //TODO add try catch
             Stream stream = File.Open(filePath, FileMode.Open, FileAccess.Read);
@@ -33,70 +33,68 @@ namespace PatientDataHandler.API.Service.Services
         }
 
 
-        public IList<IPatientData<IPatientParameter, IPatient, IInfluence>> ParseData(byte[] bytesData)
+        public IList<Influence> ParseData(byte[] bytesData)
         {
             IList<IList<string>> rawData = LoadData(bytesData);
             DataPreprocessor dataPreprocessor = new DataPreprocessor();
             rawData = dataPreprocessor.PreProcessData(rawData);
-            IList<IPatientData<IPatientParameter, IPatient, IInfluence>> data = ParseExcelData(rawData[0], rawData.Skip(1).ToList());
+            IList<Influence> data = ParseExcelData(rawData[0], rawData.Skip(1).ToList());
             return data;
         }
 
 
-        private IList<IPatientData<IPatientParameter, IPatient, IInfluence>> ParseExcelData(IList<string> headers, IList<IList<string>> data)
+        private IList<Influence> ParseExcelData(IList<string> headers, IList<IList<string>> data)
         {
-            Dictionary<int, IPatientData<IPatientParameter, IPatient, IInfluence>> patientParameters = 
-                new Dictionary<int, IPatientData<IPatientParameter, IPatient, IInfluence>>();
+            Dictionary<int, Influence> patientsInfluences  = new Dictionary<int, Influence>();
             bool isDynamicRows = false;
+
+#warning Узкое место в названии препарата.
             int groupIndex = headers.IndexOf("группа");
 
             IList<ParameterNames> headerParamsNames = headers
                 .Select(x => x.GetParameterByDescription())
                 .ToList();
 
+            int parameterTimestampIndex = headerParamsNames.IndexOf(ParameterNames.ParameterTimestamp);
+
             for (int rowNum = 0; rowNum <= data.Count; rowNum++) //select starting row here
             {
                 try
                 {
                     IList<string> row = data[rowNum];
-                    string influenceName = data[rowNum][groupIndex];
-                    Influence influence = new Influence()
-                    {
-                        InfluenceType = InfluenceTypes.BiologicallyActiveAdditive,
-                        MedicineName = influenceName,
-                        StartTimestamp = DateTime.MinValue, //TODO указывать во входных данных,
-                        EndTimestamp = DateTime.MinValue //TODO указывать во входных данных
-                    };
 
+                    DateTime parameterTimestamp = parameterTimestampIndex == -1 || row[parameterTimestampIndex] =="" ? DateTime.MinValue : DateTime.Parse(row[parameterTimestampIndex]);
+                    string influenceName = data[rowNum][groupIndex];
+                    
                     if (row[0] == "динамика")
                     {
                         isDynamicRows = true;
                         continue;
                     }
 
-                    IPatientData<IPatientParameter, IPatient, IInfluence> patientData = null;
+                    Influence influenceData = null;
                     int id = int.Parse(row[0]);
                     if (isDynamicRows)
-                        patientData = patientParameters[id];
+                        influenceData = patientsInfluences[id];
                     else
                     {
-                        patientData = new PatientData()
+                        influenceData = new Influence()
                         {
+                            InfluenceType = InfluenceTypes.BiologicallyActiveAdditive,
+                            MedicineName = influenceName,
+                            StartTimestamp = DateTime.MinValue, //TODO указывать во входных данных,
+                            EndTimestamp = DateTime.MinValue, //TODO указывать во входных данных
                             PatientId = id,
-                            Timestamp = DateTime.MinValue, //TODO указывать во входных данных
-                            Influence = influence                 
+                            Patient = new Patient()
+                            {
+                                MedicalHistoryNumber = id,
+                                Name = "",
+                                Birthday = DateTime.MinValue
+                            }
                         };
-                        patientData.Patient = new Patient()
-                        {
-                            MedicalHistoryNumber = id,
-                            Name = "",
-                            Birthday = DateTime.MinValue
-                        };
-                        patientData.Influence.PatientId = id;
-                        patientParameters[id] = patientData;
+                        patientsInfluences[id] = influenceData;
                     }
-
-                    
+                     
                     Parallel.For(1, row.Count, j =>
                     {
                         try
@@ -105,20 +103,20 @@ namespace PatientDataHandler.API.Service.Services
                                 return;
                             ParameterNames parameterName = headerParamsNames[j]; //Доступ к общему листу problem
 
-                            if (!patientData.Parameters.ContainsKey(parameterName))
+                            ConcurrentDictionary<ParameterNames, PatientParameter> curDict = isDynamicRows ? 
+                            influenceData.DynamicParameters : influenceData.StartParameters;
+
+                            if (!curDict.ContainsKey(parameterName) && row[j] != "") //Не добавлять пустые значения параметров
                             {
-                                patientData.Parameters[parameterName] = new PatientParameter(parameterName)
+                                curDict[parameterName] = new PatientParameter(parameterName)
                                 {
-                                    Timestamp = DateTime.MinValue, //TODO  нужно указывать во входных данных.
+                                    Timestamp = parameterTimestamp,
                                     PatientId = id,
-                                    PositiveDynamicCoef = 1 //TODO нужно указывать во входных данных.
+                                    PositiveDynamicCoef = 1, //TODO нужно указывать во входных данных.
+                                    IsDynamic = isDynamicRows,
+                                    Value = row[j]
                                 };
                             };
-
-                            if (isDynamicRows)
-                                patientData.Parameters[parameterName].DynamicValue = row[j];
-                            else
-                                patientData.Parameters[parameterName].Value = row[j];
                         }
                         catch (KeyNotFoundException ex)
                         {
@@ -140,7 +138,9 @@ namespace PatientDataHandler.API.Service.Services
                 }
             }
 
-            return patientParameters.Values.ToList();
+            return patientsInfluences
+                .Values
+                .ToList();
         }
 
 

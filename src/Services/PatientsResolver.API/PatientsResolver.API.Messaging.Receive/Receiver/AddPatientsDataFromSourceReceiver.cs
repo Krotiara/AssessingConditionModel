@@ -17,7 +17,7 @@ namespace PatientsResolver.API.Messaging.Receive.Receiver
     {
         private IModel channel;
         private IConnection connection;
-        private readonly IAddPatientsDataFromSourceService addPatientsDataFromSourceService;
+        private readonly IAddInfluencesDataFromSourceService addPatientsDataFromSourceService;
         private readonly string hostname;
         private readonly string queueName;
         private readonly string username;
@@ -25,7 +25,7 @@ namespace PatientsResolver.API.Messaging.Receive.Receiver
         private readonly string exchange;
         private readonly string routingKey;
 
-        public AddPatientsDataFromSourceReceiver(IAddPatientsDataFromSourceService addPatientsDataFromSourceService, IOptions<RabbitMqConfiguration> rabbitMqOptions)
+        public AddPatientsDataFromSourceReceiver(IAddInfluencesDataFromSourceService addPatientsDataFromSourceService, IOptions<RabbitMqConfiguration> rabbitMqOptions)
         {
             hostname = rabbitMqOptions.Value.Hostname;
             queueName = rabbitMqOptions.Value.QueueName;
@@ -86,9 +86,9 @@ namespace PatientsResolver.API.Messaging.Receive.Receiver
                 try
                 {
                     string content = Encoding.UTF8.GetString(ea.Body.ToArray());
-                    List<PatientData> data = JsonConvert.DeserializeObject<List<PatientData>>(content);
+                    List<Influence> data = JsonConvert.DeserializeObject<List<Influence>>(content);
 
-                    addPatientsDataFromSourceService.AddPatientsData(data);
+                    addPatientsDataFromSourceService.AddInfluencesData(data);
                     channel.BasicAck(ea.DeliveryTag, false);
                 }
                 catch (Newtonsoft.Json.JsonSerializationException ex)
