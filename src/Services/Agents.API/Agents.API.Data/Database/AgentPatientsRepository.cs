@@ -18,7 +18,26 @@ namespace Agents.API.Data.Database
         public AgentPatientsRepository(AgentsDbContext agentsDbContext, IWebRequester webRequester) : base(agentsDbContext)
         {
             this.webRequester = webRequester;
-            StartAgents();
+            //StartAgents();
+        }
+
+        public async Task<AgentPatient> GetAgentPatient(int patientId)
+        {
+            AgentPatient? agentPatient = AgentsDbContext
+                    .AgentPatients.FirstOrDefault(x => x.PatientId == patientId);
+            if (agentPatient == null)
+                throw new AgentNotFoundException($"Not found patient agent with patient id = {patientId}.");
+            try
+            {
+                agentPatient.InitWebRequester(webRequester);
+                agentPatient.InitStateDiagram();
+                await agentPatient.StateDiagram.UpdateStateAsync(new AgentDetermineStateProperties());
+                return agentPatient;
+            }
+            catch(Exception ex)
+            {
+                throw new AgentNotFoundException($"Get patient agent error", ex);
+            }
         }
 
         public async Task<AgentPatient> InitAgentPatient(IPatient patient)
@@ -50,13 +69,13 @@ namespace Agents.API.Data.Database
         }
 
 
-        public async Task StartAgents()
-        {
-            foreach (AgentPatient agentPatient in AgentsDbContext.AgentPatients)
-            {
-                agentPatient.InitWebRequester(webRequester);
-                await agentPatient.StateDiagram.UpdateStateAsync(new AgentDetermineStateProperties());
-            }
-        }
+        //public async Task StartAgents()
+        //{
+        //    foreach (AgentPatient agentPatient in AgentsDbContext.AgentPatients)
+        //    {
+        //        agentPatient.InitWebRequester(webRequester);
+        //        await agentPatient.StateDiagram.UpdateStateAsync(new AgentDetermineStateProperties());
+        //    }
+        //}
     }
 }

@@ -20,20 +20,27 @@ namespace Agents.API.Service.Query
 
         public async Task<AgingPatientState> Handle(GetAgingStateQuery request, CancellationToken cancellationToken)
         {
-            AgentPatient agentPatient = agentPatientsRepository.GetAll().FirstOrDefault(x => x.PatientId == request.PatientId);
-            if (agentPatient == null)
-                throw new GetAgingStateException($"Agent patient for patient with id = {request.PatientId} not found.");
-            AgingPatientState state = new AgingPatientState()
+            try
             {
-                PatientId = request.PatientId,
-                Age = agentPatient.CurrentAge,
-                BioAge = agentPatient.CurrentBioAge,
-                AgentBioAgeState = agentPatient.CurrentAgeRang,
+                AgentPatient agentPatient = await agentPatientsRepository.GetAgentPatient(request.PatientId);
+                if (agentPatient == null)
+                    throw new GetAgingStateException($"Agent patient for patient with id = {request.PatientId} not found.");
+                AgingPatientState state = new AgingPatientState()
+                {
+                    PatientId = request.PatientId,
+                    Age = agentPatient.CurrentAge,
+                    BioAge = agentPatient.CurrentBioAge,
+                    AgentBioAgeState = agentPatient.CurrentAgeRang,
 #warning TODO нормальные даты по датам влияния.
-                StartTimestamp = DateTime.MinValue, 
-                EndTimestamp = DateTime.MaxValue
-            };
-            return state;
+                    StartTimestamp = DateTime.MinValue,
+                    EndTimestamp = DateTime.MaxValue
+                };
+                return state;
+            }
+            catch(AgentNotFoundException ex)
+            {
+                throw new GetAgingStateException("Agent was not found", ex);
+            }
         }
     }
 }

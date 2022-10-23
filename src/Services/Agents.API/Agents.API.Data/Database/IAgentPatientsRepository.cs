@@ -12,6 +12,8 @@ namespace Agents.API.Data.Database
     {
         public Task<AgentPatient> InitAgentPatient(IPatient patient);
 
-        public Task StartAgents();
+        //public Task StartAgents();
+
+        public Task<AgentPatient> GetAgentPatient(int patientId);
     }
 }

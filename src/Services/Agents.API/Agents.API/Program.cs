@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Agents.API.Data.Database;
 using Agents.API.Service.Services;
 using Agents.API.Messaging.Receive.Configs;
+using Agents.API.Service.Query;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -66,6 +67,9 @@ builder.Services.AddTransient<IWebRequester, RestWebRequester>();
 builder.Services.AddTransient<IInitPatientAgentsService, InitPatientAgentsService>();
 builder.Services.AddTransient<IUpdatePatientAgentsService, UpdatePatientAgentsService>();
 builder.Services.AddSingleton<IAgentPatientsRepository, AgentPatientsRepository>();
+
+builder.Services.AddScoped<IRequestHandler<GetAgingStateQuery, AgingPatientState>, 
+    GetAgingStateQueryHandler>();
 
 
 var app = builder.Build();

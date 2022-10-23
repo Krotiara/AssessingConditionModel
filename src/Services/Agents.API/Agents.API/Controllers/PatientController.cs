@@ -29,6 +29,10 @@ namespace Agents.API.Controllers
             {
                 return BadRequest(ex.Message);
             }
+            catch(Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
 
