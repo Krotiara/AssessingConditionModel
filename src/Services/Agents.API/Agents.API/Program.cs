@@ -70,6 +70,10 @@ builder.Services.AddSingleton<IAgentPatientsRepository, AgentPatientsRepository>
 
 builder.Services.AddScoped<IRequestHandler<GetAgingStateQuery, AgingPatientState>, 
     GetAgingStateQueryHandler>();
+builder.Services.AddScoped<IRequestHandler<GetPatientInfluencesQuery, List<Influence>>, 
+    GetPatientInfluencesQueryHandler>();
+builder.Services.AddScoped<IRequestHandler<GetAgingDynamicsQuery, List<IAgingPatientState>>, 
+    GetAgingDynamicsQueryHandler>();
 
 
 var app = builder.Build();

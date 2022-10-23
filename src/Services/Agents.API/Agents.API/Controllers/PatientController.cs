@@ -36,10 +36,24 @@ namespace Agents.API.Controllers
         }
 
 
-        [HttpGet("agingDynamics/{patientId}")]
-        public async Task<ActionResult<IList<IAgingPatientState>>> GetAgingDynamics(int patientId, [FromBody] DateTime[] timeSpan)
+        [HttpPost("agingDynamics/{patientId}")]
+        public async Task<ActionResult<IList<IAgingPatientState>>> GetAgingDynamics(int patientId, [FromBody]DateTime[] timeSpan)
         {
-            throw new NotImplementedException();
+            try
+            {
+                DateTime start = DateTime.MinValue;
+                DateTime end = DateTime.MaxValue;
+                if(timeSpan != null && timeSpan.Length == 2)
+                {
+                    start = timeSpan[0];
+                    end = timeSpan[1];
+                }
+                return await mediator.Send(new GetAgingDynamicsQuery() { PatientId = patientId, StartTimestamp = start, EndTimestamp = end });
+            }
+            catch(Exception ex)
+            {
+                throw new NotImplementedException(); //TODO
+            }
         }
     }
 }

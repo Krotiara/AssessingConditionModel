@@ -1,6 +1,7 @@
 ﻿using Interfaces;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using TempGateway.Entities;
 using TempGateway.Service.Service;
 
 namespace TempGateway.Controllers
@@ -40,7 +41,15 @@ namespace TempGateway.Controllers
         [HttpPost("agingDynamics/{patientId}")]
         public async Task<ActionResult<IList<IAgingPatientState>>> GetPatientAgingDynamics(int patientId, [FromBody] DateTime[] timeSpan)
         {
-            IList<IAgingPatientState> agingPatientStates = await patientService.GetAgingDynamicsByPatientId(patientId);
+            DateTime startTime = DateTime.MinValue;
+            DateTime endTime = DateTime.MaxValue;
+            if (timeSpan != null && timeSpan.Length == 2)
+            {
+                startTime = timeSpan[0];
+                endTime = timeSpan[1];
+            }
+            
+            IList<AgingPatientState> agingPatientStates = await patientService.GetAgingDynamicsByPatientId(patientId, startTime, endTime);
             if(agingPatientStates == null)
                 return BadRequest($"No aging patient states found for id {patientId}");
             return Ok(agingPatientStates);

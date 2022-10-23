@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TempGateway.Entities;
 
 namespace TempGateway.Service.Service
 {
@@ -13,6 +14,6 @@ namespace TempGateway.Service.Service
 
         public Task<IAgingPatientState> GetAgingPatientStateByPatientId(int patientId);
 
-        public Task<IList<IAgingPatientState>> GetAgingDynamicsByPatientId(int patientId);
+        public Task<IList<AgingPatientState>> GetAgingDynamicsByPatientId(int patientId, DateTime startTimestamp, DateTime endTimestamp);
     }
 }
