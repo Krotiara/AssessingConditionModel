@@ -129,7 +129,10 @@ namespace PatientDataHandler.API.Service.Services
                             //TODO add log
                             return;
                         }
-                    });                   
+                    });
+
+                    
+
                 }
                 catch(Exception ex)
                 {
@@ -138,9 +141,23 @@ namespace PatientDataHandler.API.Service.Services
                 }
             }
 
+            foreach(KeyValuePair<int, Influence> inf in patientsInfluences)
+                SetInfluenceTimeByParamsTime(inf.Value);
+
             return patientsInfluences
                 .Values
                 .ToList();
+        }
+
+
+#warning Временное решение для указания даты воздействия.
+        private void SetInfluenceTimeByParamsTime(Influence influence)
+        {
+            DateTime start = influence.StartParameters.Values.OrderBy(x => x.Timestamp).First().Timestamp;
+            DateTime end = influence.DynamicParameters.Count > 0 ? 
+                influence.DynamicParameters.Values.OrderBy(x => x.Timestamp).Last().Timestamp : DateTime.MaxValue;
+            influence.StartTimestamp = start;
+            influence.EndTimestamp = end;
         }
 
 
