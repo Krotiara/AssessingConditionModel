@@ -63,7 +63,8 @@ namespace PatientDataHandler.API.Service.Services
                 {
                     IList<string> row = data[rowNum];
 
-                    DateTime parameterTimestamp = parameterTimestampIndex == -1 || row[parameterTimestampIndex] =="" ? DateTime.MinValue : DateTime.Parse(row[parameterTimestampIndex]);
+                    DateTime parameterTimestamp = parameterTimestampIndex == -1 || row[parameterTimestampIndex] =="" ? 
+                        DateTime.MinValue : DateTime.Parse(row[parameterTimestampIndex]);
                     string influenceName = data[rowNum][groupIndex];
                     
                     if (row[0] == "динамика")
