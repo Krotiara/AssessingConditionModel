@@ -1,6 +1,7 @@
 using Interfaces;
 using MediatR;
 using System.Reflection;
+using TempGateway.Entities;
 using TempGateway.Service.Service;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -31,6 +32,7 @@ builder.Services.AddSwaggerGen(c =>
 /*Теперь вы можете выполнять ваши запросы. Для этого вам потребуется получить экземпляр интерфейса IMediator. Он регистрируется в вашем контейнере зависимостей той же командой AddMediatR.*/
 builder.Services.AddMediatR(Assembly.GetExecutingAssembly());
 
+builder.Services.AddTransient<IAgingDynamics<AgingPatientState>, AgingDynamics>();
 builder.Services.AddScoped<IPatientService, PatientService>();
 builder.Services.AddScoped<IWebRequester, RestWebRequester>();
 

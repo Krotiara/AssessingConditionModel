@@ -17,12 +17,12 @@ namespace TempGateway.Service.Service
             this.webRequester = webRequester;
         }
 
-        public async Task<IList<AgingPatientState>> GetAgingDynamicsByPatientId(int patientId, DateTime startTimestamp, DateTime endTimestamp)
+        public async Task<IList<AgingDynamics>> GetAgingDynamicsByPatientId(int patientId, DateTime startTimestamp, DateTime endTimestamp)
         {
             string url = $"https://host.docker.internal:8012/agingDynamics/{patientId}";
             string body = Newtonsoft.Json.JsonConvert.SerializeObject(new DateTime[2] { startTimestamp, endTimestamp });
             return await webRequester
-                  .GetResponse<IList<AgingPatientState>>(url, "POST", body);
+                  .GetResponse<IList<AgingDynamics>>(url, "POST", body);
         }
 
         public async Task<IAgingPatientState> GetAgingPatientStateByPatientId(int patientId)

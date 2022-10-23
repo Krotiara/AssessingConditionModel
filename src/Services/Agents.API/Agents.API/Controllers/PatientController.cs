@@ -37,7 +37,7 @@ namespace Agents.API.Controllers
 
 
         [HttpPost("agingDynamics/{patientId}")]
-        public async Task<ActionResult<IList<IAgingPatientState>>> GetAgingDynamics(int patientId, [FromBody]DateTime[] timeSpan)
+        public async Task<ActionResult<IList<IAgingDynamics<AgingPatientState>>>> GetAgingDynamics(int patientId, [FromBody]DateTime[] timeSpan)
         {
             try
             {

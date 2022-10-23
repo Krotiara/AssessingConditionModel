@@ -30,10 +30,7 @@ namespace Agents.API.Service.Query
                     PatientId = request.PatientId,
                     Age = agentPatient.CurrentAge,
                     BioAge = agentPatient.CurrentBioAge,
-                    AgentBioAgeState = agentPatient.CurrentAgeRang,
-#warning TODO нормальные даты по датам влияния.
-                    StartTimestamp = DateTime.MinValue,
-                    EndTimestamp = DateTime.MaxValue
+                    AgentBioAgeState = agentPatient.CurrentAgeRang
                 };
                 return state;
             }

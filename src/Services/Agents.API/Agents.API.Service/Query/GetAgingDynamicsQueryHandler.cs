@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Agents.API.Service.Query
 {
-    public class GetAgingDynamicsQueryHandler : IRequestHandler<GetAgingDynamicsQuery, List<IAgingPatientState>>
+    public class GetAgingDynamicsQueryHandler : IRequestHandler<GetAgingDynamicsQuery, List<IAgingDynamics<AgingPatientState>>>
     {
         private readonly IAgentPatientsRepository agentPatientsRepository;
         private readonly IMediator mediator;
@@ -21,7 +21,7 @@ namespace Agents.API.Service.Query
             this.mediator = mediator;
         }
 
-        public async Task<List<IAgingPatientState>> Handle(GetAgingDynamicsQuery request, CancellationToken cancellationToken)
+        public async Task<List<IAgingDynamics<AgingPatientState>>> Handle(GetAgingDynamicsQuery request, CancellationToken cancellationToken)
         {
             try
             {
@@ -32,24 +32,25 @@ namespace Agents.API.Service.Query
                     StartTimestamp = request.StartTimestamp,
                     EndTimestamp = request.EndTimestamp
                 });
-#warning TODO Нужна установка дат в Influence
-                List<IAgingPatientState> res = new List<IAgingPatientState>();
+
+                List<IAgingDynamics<AgingPatientState>> res = new List<IAgingDynamics<AgingPatientState>>();
                 foreach(Influence influence in influences)
                 {
-                    await agent.StateDiagram.UpdateStateAsync(new AgentDetermineStateProperties()
+                    AgingDynamics agingDynamics = new AgingDynamics()
                     {
-                        StartTimestamp = influence.StartTimestamp,
-                        EndTimestamp = influence.EndTimestamp
-                    });
-                    res.Add(new AgingPatientState()
-                    {
-                        PatientId = request.PatientId,
                         StartTimestamp = influence.StartTimestamp,
                         EndTimestamp = influence.EndTimestamp,
-                        Age = agent.CurrentAge,
-                        BioAge = agent.CurrentBioAge,
-                        AgentBioAgeState = agent.CurrentAgeRang
-                    });
+                        InfluenceType = influence.InfluenceType,
+                        MedicineName = influence.MedicineName,
+                        PatientId = request.PatientId,
+
+                    };
+
+                    agingDynamics.AgentStateInInfluenceStart = await CalcAgentStateInInfluenceStartAsync(agent, influence);
+                    agingDynamics.AgentStateInInfluenceEnd = await CalcAgentStateInInfluenceEndAsync(agent, influence);
+
+                    res.Add(agingDynamics);
+                   
                 }
                 return res;
             }
@@ -61,7 +62,42 @@ namespace Agents.API.Service.Query
             {
                 throw new NotImplementedException(); //TODO
             }
+        }
 
+
+        private async Task<AgingPatientState> CalcAgentStateInInfluenceStartAsync(AgentPatient agent, Influence influence)
+        {
+            await agent.StateDiagram.UpdateStateAsync(new AgentDetermineStateProperties()
+            {
+                StartTimestamp = influence.StartTimestamp,
+                EndTimestamp = influence.StartTimestamp //Для расчета в начале воздействия берем параметры только из начала воздействия.
+            });
+
+            return new AgingPatientState()
+            {
+                PatientId = agent.PatientId,
+                Age = agent.CurrentAge,
+                BioAge = agent.CurrentBioAge,
+                AgentBioAgeState = agent.CurrentAgeRang
+            };
+        }
+
+
+        private async Task<AgingPatientState> CalcAgentStateInInfluenceEndAsync(AgentPatient agent, Influence influence)
+        {
+            await agent.StateDiagram.UpdateStateAsync(new AgentDetermineStateProperties()
+            {
+                StartTimestamp = influence.StartTimestamp,
+                EndTimestamp = influence.EndTimestamp
+            });
+
+            return new AgingPatientState()
+            {
+                PatientId = agent.PatientId,
+                Age = agent.CurrentAge,
+                BioAge = agent.CurrentBioAge,
+                AgentBioAgeState = agent.CurrentAgeRang
+            };
         }
     }
 }

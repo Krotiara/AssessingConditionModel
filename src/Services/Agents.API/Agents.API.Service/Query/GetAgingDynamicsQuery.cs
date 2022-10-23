@@ -1,4 +1,5 @@
-﻿using Interfaces;
+﻿using Agents.API.Entities;
+using Interfaces;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Agents.API.Service.Query
 {
-    public class GetAgingDynamicsQuery: IRequest<List<IAgingPatientState>>
+    public class GetAgingDynamicsQuery: IRequest<List<IAgingDynamics<AgingPatientState>>>
     {
         public int PatientId { get; set; }
 

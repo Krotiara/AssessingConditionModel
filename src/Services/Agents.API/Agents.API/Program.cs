@@ -67,12 +67,13 @@ builder.Services.AddTransient<IWebRequester, RestWebRequester>();
 builder.Services.AddTransient<IInitPatientAgentsService, InitPatientAgentsService>();
 builder.Services.AddTransient<IUpdatePatientAgentsService, UpdatePatientAgentsService>();
 builder.Services.AddSingleton<IAgentPatientsRepository, AgentPatientsRepository>();
+builder.Services.AddTransient<IAgingDynamics<AgingPatientState>, AgingDynamics>();
 
 builder.Services.AddScoped<IRequestHandler<GetAgingStateQuery, AgingPatientState>, 
     GetAgingStateQueryHandler>();
 builder.Services.AddScoped<IRequestHandler<GetPatientInfluencesQuery, List<Influence>>, 
     GetPatientInfluencesQueryHandler>();
-builder.Services.AddScoped<IRequestHandler<GetAgingDynamicsQuery, List<IAgingPatientState>>, 
+builder.Services.AddScoped<IRequestHandler<GetAgingDynamicsQuery, List<IAgingDynamics<AgingPatientState>>>, 
     GetAgingDynamicsQueryHandler>();
 
 

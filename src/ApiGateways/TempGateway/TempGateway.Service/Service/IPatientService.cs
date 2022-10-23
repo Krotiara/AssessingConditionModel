@@ -14,6 +14,6 @@ namespace TempGateway.Service.Service
 
         public Task<IAgingPatientState> GetAgingPatientStateByPatientId(int patientId);
 
-        public Task<IList<AgingPatientState>> GetAgingDynamicsByPatientId(int patientId, DateTime startTimestamp, DateTime endTimestamp);
+        public Task<IList<AgingDynamics>> GetAgingDynamicsByPatientId(int patientId, DateTime startTimestamp, DateTime endTimestamp);
     }
 }
