@@ -2,6 +2,7 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using TempGateway.Entities;
+using TempGateway.Service.Command;
 using TempGateway.Service.Service;
 
 namespace TempGateway.Controllers
@@ -59,7 +60,19 @@ namespace TempGateway.Controllers
         [HttpPost("addInfluenceData/{filePath}")]
         public async Task<ActionResult> AddInfluenceData(string filePath)
         {
-            throw new NotImplementedException(); //TODO Преобразовать в массив байт и отослать
+            try
+            {
+                await mediator.Send(new AddInfluenceDataCommand() { FilePath = filePath });
+                return Ok();
+            }
+            catch(AddInfluenceDataException ex)
+            {
+                return BadRequest($"Add data error:{ex.Message}");
+            }
+            catch(Exception ex)
+            {
+                return BadRequest($"Unexpected error:{ex.Message}");
+            }
         }
     }
 }

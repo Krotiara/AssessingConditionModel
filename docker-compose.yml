@@ -18,6 +18,7 @@ services:
       - 8008:80
       - 8009:443
     volumes:
+      - "C:/TestData:/data"
       - ~/.aspnet/https:/https:ro
     extra_hosts:
       - host.docker.internal:host-gateway
@@ -157,8 +158,8 @@ services:
       #- ./sql:/tmp
      depends_on:
       - postgres_image
-     ports:
-      - "5051:80"
+     #ports:
+      #- "5051:80"
      restart: unless-stopped
      #networks:
      # - postgres

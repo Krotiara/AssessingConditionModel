@@ -35,11 +35,18 @@ namespace PatientDataHandler.API.Service.Services
 
         public IList<Influence> ParseData(byte[] bytesData)
         {
-            IList<IList<string>> rawData = LoadData(bytesData);
-            DataPreprocessor dataPreprocessor = new DataPreprocessor();
-            rawData = dataPreprocessor.PreProcessData(rawData);
-            IList<Influence> data = ParseExcelData(rawData[0], rawData.Skip(1).ToList());
-            return data;
+            try
+            {
+                IList<IList<string>> rawData = LoadData(bytesData);
+                DataPreprocessor dataPreprocessor = new DataPreprocessor();
+                rawData = dataPreprocessor.PreProcessData(rawData);
+                IList<Influence> data = ParseExcelData(rawData[0], rawData.Skip(1).ToList());
+                return data;
+            }
+            catch(Exception ex)
+            {
+                throw new ParseInfluenceDataException("Parse data exception", ex);
+            }
         }
 
 
