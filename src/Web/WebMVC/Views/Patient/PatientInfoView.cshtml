@@ -56,7 +56,7 @@
 
 <script>
     function GetAgingDynamics() {
-        var pId = @Model.Patient.MedicalHistoryNumber;
+        var pId = @Model.Patient.MedicalHistoryNumber.ToString();
         var startTime = $('#dt1').datetimepicker({format: 'L', locale: 'en-GB'});
         var endTime = $('#dt2').datetimepicker({format: 'L', locale: 'en-GB'});
          $.ajax({
