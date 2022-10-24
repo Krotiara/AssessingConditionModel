@@ -58,12 +58,12 @@ namespace TempGateway.Controllers
 
 
         [HttpPost("addInfluenceData/{filePath}")]
-        public async Task<ActionResult> AddInfluenceData(string filePath)
+        public async Task<ActionResult<bool>> AddInfluenceData(string filePath)
         {
             try
             {
                 await mediator.Send(new AddInfluenceDataCommand() { FilePath = filePath });
-                return Ok();
+                return Ok(true);
             }
             catch(AddInfluenceDataException ex)
             {

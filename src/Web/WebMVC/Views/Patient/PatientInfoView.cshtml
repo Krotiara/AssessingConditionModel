@@ -1,0 +1,73 @@
+﻿@model PatientInfo
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+
+<html>
+    <head>
+        <title>Информация о пациенте</title>
+    </head>
+    <body>
+        <div>
+            <table class="table table-bordered table-hover table-sm">
+                <thead>
+                    <tr>
+                        <th>Номер карты</th>
+                        <th>Возраст</th>
+                        <th>Биовозраст</th>
+                        <th>Состояние</th>
+
+                    </tr>
+                </thead>
+                <tr>   
+                    <th>@Model.Patient.MedicalHistoryNumber</th>
+                    <th>@Model.AgingPatientState.Age</th>
+                    <th>@Model.AgingPatientState.BioAge</th>
+                    <th>@Model.AgingPatientState.AgentBioAgeState</th>
+                </tr>
+            </table>
+        </div>
+        <div>
+            <p style="font-size:18px">Динамика биовозраста пациента</p>
+            <div class="form-group">
+                <label for="end">Start date:</label><br />
+                <div class='input-group date' id='dt1'>
+                    @Html.TextBox("StartDateFilter", null, new { @class = "form-control" })
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="end">Start date:</label><br />
+                <div class='input-group date' id='dt2'>
+                    @Html.TextBox("EndDateFilter", null, new { @class = "form-control" })
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                </div>
+            </div>
+            <button onclick="GetAgingDynamics()">Поиск</button>
+        </div>      
+        <div id="DynamicsInfo"></div>
+    </body>
+</html>
+
+
+<script>
+    function GetAgingDynamics() {
+        var pId = @Model.Patient.MedicalHistoryNumber;
+        var startTime = $('#dt1').datetimepicker({format: 'L', locale: 'en-GB'});
+        var endTime = $('#dt2').datetimepicker({format: 'L', locale: 'en-GB'});
+         $.ajax({
+            url: '@Url.Action("GetPatientAgingDynamics", "Patient")',
+            data: {patientId: pId, startTimestamp:startTime, endTimestamp:endTime},
+            type: 'get',
+            cache: false,
+            async: true,
+            success: function (result) {
+                $('#DynamicsInfo').html(result);
+            }
+        });
+    }
+</script>

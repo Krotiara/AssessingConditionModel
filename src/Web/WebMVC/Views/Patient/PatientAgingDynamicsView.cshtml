@@ -1,0 +1,60 @@
+﻿@model IList<AgingDynamics>
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+<html>
+    <head>
+        <title>Информация о динамике биовозраста пациента</title>
+    </head>
+    <body>
+        <div>
+                       
+                @foreach(AgingDynamics agingDynamics in Model)
+                {
+                    <div>
+                        <div class="row">
+                            <div>Тип воздействия:</div>
+                            <div>@agingDynamics.InfluenceType</div>
+                        </div>
+                        <div class="row">
+                            <div>Наименование препарата:</div>
+                            <div>@agingDynamics.MedicineName</div>
+                        </div>
+                        <div class="row">
+                            <div>Начало воздействия:</div>
+                            <div>@agingDynamics.StartTimestamp</div>
+                        </div>
+                        <div class="row">
+                            <div>Окончание воздействия:</div>
+                            <div>@agingDynamics.EndTimestamp</div>
+                        </div>
+                        <table class="table table-bordered table-hover table-sm"> 
+                            <thead>
+                                <tr>
+                                    <th>Возраст в начале воздействия</th>
+                                    <th>Биовозраст в начале воздействия</th>
+                                    <th>Состояние в начале воздействия</th>
+                                    <th>Возраст в конце воздействия</th>
+                                    <th>Биовозраст в конце воздействия</th>
+                                    <th>Состояние в конце воздействия</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <th>@agingDynamics.AgentStateInInfluenceStart.Age</th>
+                                    <th>@agingDynamics.AgentStateInInfluenceStart.BioAge</th>
+                                    <th>@agingDynamics.AgentStateInInfluenceStart.AgentBioAgeState</th>
+                                    <th>@agingDynamics.AgentStateInInfluenceEnd.Age</th>
+                                    <th>@agingDynamics.AgentStateInInfluenceEnd.BioAge</th>
+                                    <th>@agingDynamics.AgentStateInInfluenceEnd.AgentBioAgeState</th>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                }
+        </div>
+    </body>
+</html>

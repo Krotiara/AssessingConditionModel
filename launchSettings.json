@@ -2,10 +2,10 @@
   "profiles": {
     "Docker Compose": {
       "commandName": "DockerCompose",
-      "commandVersion": "1.0",
       "composeLaunchAction": "LaunchBrowser",
-      "composeLaunchServiceName": "tempgateway",
+      "composeLaunchServiceName": "web",
       "composeLaunchUrl": "{Scheme}://localhost:{ServicePort}",
+      "commandVersion": "1.0",
       "serviceActions": {
         "influencecalculator.api": "StartDebugging",
         "patientdatahandler.api": "StartDebugging",
@@ -16,7 +16,8 @@
         "rabbitmq": "StartWithoutDebugging",
         "agents.api": "StartDebugging",
         "bioAge.api": "StartDebugging",
-        "tempgateway": "StartDebugging"
+        "tempgateway": "StartDebugging",
+        "web": "StartDebugging"
       }
     }
   }
