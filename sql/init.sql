@@ -28,7 +28,7 @@ CREATE TABLE "Patients"
     "MedicalHistoryNumber" bigint NOT NULL,
     "Name" text COLLATE pg_catalog."default" NOT NULL,
     "Birthday" date NOT NULL,
-    CONSTRAINT "Patients_pkey" PRIMARY KEY ("Id")
+    CONSTRAINT "Patients_pkey" PRIMARY KEY ("MedicalHistoryNumber")
 );
 
 CREATE TABLE "Influences"

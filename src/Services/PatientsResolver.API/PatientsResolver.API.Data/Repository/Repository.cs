@@ -38,7 +38,7 @@ namespace PatientsResolver.API.Data.Repository
                 }
                 catch (Exception ex)
                 {
-                    throw new Exception($"{nameof(entity)} could not be saved {ex.Message}");
+                    throw new Exception($"{nameof(entity)} could not be saved {ex.Message}", ex);
                 }
             });  
         }
