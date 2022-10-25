@@ -8,6 +8,11 @@
 </head>
 <body>
     <div>
+         <p style="font-size:18px">Загрузка данных:</p>
+         <input type="file" id="fileLoader" name="files" title="Load File" />   
+         <button onclick="LoadInfluences()">Загрузить</button>
+    </div>
+    <div>
         <p style="font-size:18px">Поиск пациента:</p>
         <input type="text" id="patientId" placeholder="Номер медицинской карты" style = "width:300px"/>
         <button onclick="SearchPatient()">Поиск</button>
@@ -31,4 +36,71 @@
             }
         });
     }
+</script>
+<script>
+function LoadInfluences() {
+    //var fileSelect = document.getElementById('fileLoader');       
+    //var files = fileSelect.files;
+    //var file = files[0]; 
+    var reader = new FileReader();
+    var selectedFile = document.getElementById("fileLoader").files[0];
+    reader.onload = function() {
+        var comma = this.result.indexOf(',');
+        var base64 = this.result.substr(comma + 1);
+        console.log(base64);
+        $.ajax({
+            url: '@Url.Action("AddInfluencesFromFile", "Patient")',
+            contentType: "application/json; charset=uft-8",
+            data: { data: base64 },
+            type: 'POST',
+            processData: false,
+            cache: false,
+            async: true,
+            success: function(data) {
+
+            },
+            error: function(xhr, status, error) {
+
+            }
+        });
+    };
+    reader.readAsDataURL(selectedFile);
+
+    //fr.onload = function() {
+    //    var binaryString = this.result;
+
+    //    $.ajax({
+    //        url: '@Url.Action("AddInfluencesFromFile", "Patient")',
+    //        contentType: "application/octet-stream",
+    //        data: { data: binaryString },
+    //        type: 'POST',
+    //        processData: false,
+    //        cache: false,
+    //        async: true,
+    //        success: function(data) {
+
+    //        },
+    //        error: function(xhr, status, error) {
+
+    //        }
+    //    });
+
+    //    //$.ajax({
+    //    //    url: "http://localhost/Uploader/ServiceUploader.svc/saveDocument",
+    //    //    data: JSON.stringify(objUploader),
+    //    //    dataType: "json",
+    //    //    type: "POST",
+    //    //    contentType: "application/json; charset=uft-8",
+    //    //    success: function (data) {
+
+    //    //    },
+    //    //    error: function (xhr, status, error) {
+
+    //    //    }
+    //    //});
+
+    //});
+    ////reading file
+    //fr.readAsArrayBuffer(file);        
+}
 </script>

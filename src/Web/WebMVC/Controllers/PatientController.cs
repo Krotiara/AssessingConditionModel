@@ -47,8 +47,19 @@ namespace WebMVC.Controllers
         [HttpPost]
         public async Task AddInfluencesFromFile(string filePath)
         {
+            var fileName = Path.GetFileName(filePath);
             throw new NotImplementedException();
             
+
+
+        }
+
+        [HttpPost]
+        public async Task AddInfluencesFromFile(byte[] data)
+        {
+            
+            throw new NotImplementedException();
+
 
 
         }
