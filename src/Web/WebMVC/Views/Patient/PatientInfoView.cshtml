@@ -31,21 +31,17 @@
             <p style="font-size:18px">Динамика биовозраста пациента</p>
             <div class="form-group">
                 <label for="end">Start date:</label><br />
-                <div class='input-group date' id='dt1'>
+                <input type="datetime-local" id="dt1"/>
+                @*<div class='input-group date' id='dt1'>
                     @Html.TextBox("StartDateFilter", null, new { @class = "form-control" })
                     <span class="input-group-addon">
                         <span class="glyphicon glyphicon-calendar"></span>
                     </span>
-                </div>
+                </div>*@
             </div>
             <div class="form-group">
                 <label for="end">Start date:</label><br />
-                <div class='input-group date' id='dt2'>
-                    @Html.TextBox("EndDateFilter", null, new { @class = "form-control" })
-                    <span class="input-group-addon">
-                        <span class="glyphicon glyphicon-calendar"></span>
-                    </span>
-                </div>
+                 <input type="datetime-local" id="dt2"/>
             </div>
             <button onclick="GetAgingDynamics()">Поиск</button>
         </div>      
@@ -56,9 +52,9 @@
 
 <script>
     function GetAgingDynamics() {
-        var pId = @Model.Patient.MedicalHistoryNumber.ToString();
-        var startTime = $('#dt1').datetimepicker({format: 'L', locale: 'en-GB'});
-        var endTime = $('#dt2').datetimepicker({format: 'L', locale: 'en-GB'});
+        var pId = @Model.Patient.MedicalHistoryNumber;
+        var startTime = document.getElementById("dt1").value;
+        var endTime = document.getElementById("dt2").value;
          $.ajax({
             url: '@Url.Action("GetPatientAgingDynamics", "Patient")',
             data: {patientId: pId, startTimestamp:startTime, endTimestamp:endTime},

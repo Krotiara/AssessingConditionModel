@@ -33,14 +33,24 @@ namespace WebMVC.Controllers
 
 
         [HttpGet]
-        public async Task<IActionResult> GetPatientAgingDynamics(string patientId, DateTime startTimestamp, DateTime endTimestamp)
+        public async Task<IActionResult> GetPatientAgingDynamics(int patientId, DateTime startTimestamp, DateTime endTimestamp)
         {
             //TODO try catch
-            int id = int.Parse(patientId);
+           // int id = int.Parse(patientId);
             IList<AgingDynamics> agingDynamics = await 
-                patientsService.GetPatientAgingDynamics(id, startTimestamp, endTimestamp);
+                patientsService.GetPatientAgingDynamics(patientId, startTimestamp, endTimestamp);
 
             return PartialView("PatientAgingDynamicsView", agingDynamics);
+        }
+
+
+        [HttpPost]
+        public async Task AddInfluencesFromFile(string filePath)
+        {
+            throw new NotImplementedException();
+            
+
+
         }
     }
 }
