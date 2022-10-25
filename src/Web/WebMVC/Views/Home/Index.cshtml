@@ -5,6 +5,9 @@
 <html>
 <head>
     <title>Главная страница</title>
+    <style>
+            th {text-align: center;}
+    </style>
 </head>
 <body>
     <div>
@@ -12,11 +15,14 @@
          <input type="file" id="fileLoader" name="files" title="Load File" />   
          <button onclick="LoadInfluences()">Загрузить</button>
     </div>
-    <div>
-        <p style="font-size:18px">Поиск пациента:</p>
-        <input type="text" id="patientId" placeholder="Номер медицинской карты" style = "width:300px"/>
-        <button onclick="SearchPatient()">Поиск</button>
-    </div>
+    <table class="table table-bordered table-hover table-sm">
+        <tr>
+            <th><p>Поиск пациента:</p></th>
+            <th><input type="text" id="patientId" placeholder="Номер медицинской карты" style = "width:300px"/></th>
+            <th><button onclick="SearchPatient()">Поиск</button></th>
+        </tr>
+    </table>
+    
     <div id="PatientInfo"></div>
 </body>
 </html>

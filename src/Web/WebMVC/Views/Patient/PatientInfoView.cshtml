@@ -6,6 +6,9 @@
 <html>
     <head>
         <title>Информация о пациенте</title>
+        <style>
+            th {text-align: center;}
+        </style>
     </head>
     <body>
         <div>
@@ -29,23 +32,17 @@
         </div>
         <div>
             <p style="font-size:18px">Динамика биовозраста пациента</p>
-            <div class="form-group">
-                <label for="end">Start date:</label><br />
-                <input type="datetime-local" id="dt1"/>
-                @*<div class='input-group date' id='dt1'>
-                    @Html.TextBox("StartDateFilter", null, new { @class = "form-control" })
-                    <span class="input-group-addon">
-                        <span class="glyphicon glyphicon-calendar"></span>
-                    </span>
-                </div>*@
-            </div>
-            <div class="form-group">
-                <label for="end">Start date:</label><br />
-                 <input type="datetime-local" id="dt2"/>
-            </div>
-            <button onclick="GetAgingDynamics()">Поиск</button>
+            <table>
+                <tr>
+                    <th>Начало периода:</th>
+                    <th><input type="datetime-local" id="dt1"/></th>
+                    <th>Окончание периода:</th>
+                    <th><input type="datetime-local" id="dt2"/></th>
+                    <th><button onclick="GetAgingDynamics()">Показать</button></th>
+                </tr>
+            </table>   
+            <div id="DynamicsInfo"></div>
         </div>      
-        <div id="DynamicsInfo"></div>
     </body>
 </html>
 

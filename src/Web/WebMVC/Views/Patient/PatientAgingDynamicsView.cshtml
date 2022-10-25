@@ -5,56 +5,88 @@
 @{
 }
 
+
+
 <html>
     <head>
         <title>Информация о динамике биовозраста пациента</title>
+        <style >
+            .centerCell
+            {
+                text-align: left;
+            }
+        </style>
     </head>
+    
     <body>
-        <div>
-                       
+        <table class="table-bordered table-hover  table-sm">                  
                 @foreach(AgingDynamics agingDynamics in Model)
                 {
-                    <div>
-                        <div class="row">
-                            <div>Тип воздействия:</div>
-                            <div>@agingDynamics.InfluenceType</div>
-                        </div>
-                        <div class="row">
-                            <div>Наименование препарата:</div>
-                            <div>@agingDynamics.MedicineName</div>
-                        </div>
-                        <div class="row">
-                            <div>Начало воздействия:</div>
-                            <div>@agingDynamics.StartTimestamp</div>
-                        </div>
-                        <div class="row">
-                            <div>Окончание воздействия:</div>
-                            <div>@agingDynamics.EndTimestamp</div>
-                        </div>
-                        <table class="table table-bordered table-hover table-sm"> 
+                    <tr>
+                        <th>
+                             <table class="table-sm">
+                                 <tr><p>Тип воздействия: @agingDynamics.InfluenceType</p></tr>
+                                 <tr><p>Наименование препарата: @agingDynamics.MedicineName</p></tr>
+                                 <tr><p>Начало воздействия: @agingDynamics.StartTimestamp</p></tr>
+                                 <tr><p>Окончание воздействия: @agingDynamics.EndTimestamp</p></tr>
+                             </table>
+                             @*</th>
+                             <th>*@
+                             <table class="table-bordered table-sm"> 
+                            <thead>
+                                <tr class="centerCell">
+                                    <th><p>Возраст в начале воздействия</p></th>
+                                    <th><p>Биовозраст в начале воздействия</p></th>
+                                    <th><p>Состояние в начале воздействия</p></th>
+                                    <th><p>Возраст в конце воздействия</p></th>
+                                    <th><p>Биовозраст в конце воздействия</p></th>
+                                    <th><p>Состояние в конце воздействия</p></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="centerCell">
+                                    <th><p>@agingDynamics.AgentStateInInfluenceStart.Age</p></th>
+                                    <th><p>@agingDynamics.AgentStateInInfluenceStart.BioAge</p></th>
+                                    <th><p>@agingDynamics.AgentStateInInfluenceStart.AgentBioAgeState</p></th>
+                                    <th><p>@agingDynamics.AgentStateInInfluenceEnd.Age</p></th>
+                                    <th><p>@agingDynamics.AgentStateInInfluenceEnd.BioAge</p></th>
+                                    <th><p>@agingDynamics.AgentStateInInfluenceEnd.AgentBioAgeState</p></th>
+                                </tr>
+                            </tbody>
+                        </table>
+                        </th>
+                       
+                       @* <div class="row">
+                            <div><p>Тип воздействия: @agingDynamics.InfluenceType</p></div>
+                            <div><p>Наименование препарата: @agingDynamics.MedicineName</p></div>
+                            <div><p>Начало воздействия: @agingDynamics.StartTimestamp</p></div>
+                            <div><p>Окончание воздействия: @agingDynamics.EndTimestamp</p></div>
+                        </div>*@
+                        
+                       @* <table class="table table-bordered table-hover table-sm"> 
                             <thead>
                                 <tr>
-                                    <th>Возраст в начале воздействия</th>
-                                    <th>Биовозраст в начале воздействия</th>
-                                    <th>Состояние в начале воздействия</th>
-                                    <th>Возраст в конце воздействия</th>
-                                    <th>Биовозраст в конце воздействия</th>
-                                    <th>Состояние в конце воздействия</th>
+                                    <th><p>Возраст в начале воздействия</p></th>
+                                    <th><p>Биовозраст в начале воздействия</p></th>
+                                    <th><p>Состояние в начале воздействия</p></th>
+                                    <th><p>Возраст в конце воздействия</p></th>
+                                    <th><p>Биовозраст в конце воздействия</p></th>
+                                    <th><p>Состояние в конце воздействия</p></th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
-                                    <th>@agingDynamics.AgentStateInInfluenceStart.Age</th>
-                                    <th>@agingDynamics.AgentStateInInfluenceStart.BioAge</th>
-                                    <th>@agingDynamics.AgentStateInInfluenceStart.AgentBioAgeState</th>
-                                    <th>@agingDynamics.AgentStateInInfluenceEnd.Age</th>
-                                    <th>@agingDynamics.AgentStateInInfluenceEnd.BioAge</th>
-                                    <th>@agingDynamics.AgentStateInInfluenceEnd.AgentBioAgeState</th>
+                                    <th><p>@agingDynamics.AgentStateInInfluenceStart.Age</p></th>
+                                    <th><p>@agingDynamics.AgentStateInInfluenceStart.BioAge</p></th>
+                                    <th><p>@agingDynamics.AgentStateInInfluenceStart.AgentBioAgeState</p></th>
+                                    <th><p>@agingDynamics.AgentStateInInfluenceEnd.Age</p></th>
+                                    <th><p>@agingDynamics.AgentStateInInfluenceEnd.BioAge</p></th>
+                                    <th><p>@agingDynamics.AgentStateInInfluenceEnd.AgentBioAgeState</p></th>
                                 </tr>
                             </tbody>
-                        </table>
-                    </div>
+                        </table>*@
+                    </tr>
                 }
-        </div>
+        </table>
     </body>
 </html>
