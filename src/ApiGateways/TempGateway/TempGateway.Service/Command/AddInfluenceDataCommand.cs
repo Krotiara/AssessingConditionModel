@@ -10,6 +10,6 @@ namespace TempGateway.Service.Command
 {
     public class AddInfluenceDataCommand: IRequest
     {
-        public string FilePath { get; set; }
+        public FileData Data { get; set; }
     }
 }

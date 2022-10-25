@@ -57,19 +57,19 @@ namespace TempGateway.Controllers
         }
 
 
-        [HttpPost("addInfluenceData/{filePath}")]
-        public async Task<ActionResult<bool>> AddInfluenceData(string filePath)
+        [HttpPost("addInfluenceData/")]
+        public async Task<ActionResult<bool>> AddInfluenceData([FromBody] FileData fD)
         {
             try
             {
-                await mediator.Send(new AddInfluenceDataCommand() { FilePath = filePath });
+                await mediator.Send(new AddInfluenceDataCommand() { Data = fD });
                 return Ok(true);
             }
-            catch(AddInfluenceDataException ex)
+            catch (AddInfluenceDataException ex)
             {
                 return BadRequest($"Add data error:{ex.Message}");
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return BadRequest($"Unexpected error:{ex.Message}");
             }

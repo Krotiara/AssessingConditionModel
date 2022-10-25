@@ -36,7 +36,6 @@ namespace WebMVC.Controllers
         public async Task<IActionResult> GetPatientAgingDynamics(int patientId, DateTime startTimestamp, DateTime endTimestamp)
         {
             //TODO try catch
-           // int id = int.Parse(patientId);
             IList<AgingDynamics> agingDynamics = await 
                 patientsService.GetPatientAgingDynamics(patientId, startTimestamp, endTimestamp);
 
@@ -45,23 +44,11 @@ namespace WebMVC.Controllers
 
 
         [HttpPost]
-        public async Task AddInfluencesFromFile(string filePath)
+        public async Task AddInfluencesFromFile([FromBody]string data)
         {
-            var fileName = Path.GetFileName(filePath);
-            throw new NotImplementedException();
-            
-
-
-        }
-
-        [HttpPost]
-        public async Task AddInfluencesFromFile(byte[] data)
-        {
-            
-            throw new NotImplementedException();
-
-
-
+            //TODO try catch
+            byte[] bytes = Convert.FromBase64String(data);
+            _ = await patientsService.AddPatientsInluenceData(bytes);      
         }
     }
 }

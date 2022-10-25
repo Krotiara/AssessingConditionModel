@@ -20,10 +20,12 @@ namespace WebMVC.Services
             this.webRequester = webRequester;
         }
 
-        public async Task<bool> AddPatientsInluenceData(string pathToFile)
+        public async Task<bool> AddPatientsInluenceData(byte[] data)
         {
-            string url = $"https://host.docker.internal:8009/addInfluenceData/{pathToFile}";
-            return await webRequester.GetResponse<bool>(url, "POST");
+            string url = $"https://host.docker.internal:8009/addInfluenceData/";
+            FileData fD = new FileData() { RawData = data };
+            string body = Newtonsoft.Json.JsonConvert.SerializeObject(fD);
+            return await webRequester.GetResponse<bool>(url, "POST", body);
         }
 
         public async Task<Patient> GetPatient(int id)

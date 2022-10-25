@@ -48,19 +48,23 @@ function LoadInfluences() {
         var comma = this.result.indexOf(',');
         var base64 = this.result.substr(comma + 1);
         console.log(base64);
+
+        var postData = JSON.stringify({ 'data': base64});
+
+    console.log(postData);
+
         $.ajax({
             url: '@Url.Action("AddInfluencesFromFile", "Patient")',
             contentType: "application/json; charset=uft-8",
-            data: { data: base64 },
+            data: JSON.stringify(base64),
             type: 'POST',
-            processData: false,
-            cache: false,
             async: true,
+            dataType: "json",
             success: function(data) {
-
+                 console.log('success');
             },
             error: function(xhr, status, error) {
-
+                console.log(error);
             }
         });
     };
