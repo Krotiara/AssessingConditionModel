@@ -7,12 +7,12 @@
     <head>
         <title>Информация о пациенте</title>
         <style>
-            th {text-align: center;}
+            th {text-align: center; font-weight: normal;}
         </style>
     </head>
     <body>
         <div>
-            <div><p style="font-size:20px" align="left">Общая информация</p></div>
+            <div><p style="font-size:20px; font-weight:bold;" align="left">Общая информация</p></div>
             <table class="table table-bordered table-sm">
                 <thead>
                     <tr>
@@ -26,12 +26,12 @@
                     <th>@Model.Patient.MedicalHistoryNumber</th>
                     <th>@Model.AgingPatientState.Age</th>
                     <th>@Model.AgingPatientState.BioAge</th>
-                    <th>@Model.AgingPatientState.AgentBioAgeState</th>
+                    <th>@Model.AgingPatientState.AgentBioAgeState.GetDisplayAttributeValue()</th>
                 </tr>
             </table>
         </div>
         <div>
-            <div><p style="font-size:20px">Динамика биовозраста пациента</p></div>
+            <div><p style="font-size:20px;font-weight:bold;">Динамика биовозраста пациента</p></div>
             <table style="table-layout: fixed;" class="table table-sm">
                 <tr>
                     <th colspan="2">Начало периода:</th>
