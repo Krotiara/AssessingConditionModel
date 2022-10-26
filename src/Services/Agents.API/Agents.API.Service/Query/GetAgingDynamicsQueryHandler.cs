@@ -43,7 +43,6 @@ namespace Agents.API.Service.Query
                         InfluenceType = influence.InfluenceType,
                         MedicineName = influence.MedicineName,
                         PatientId = request.PatientId,
-
                     };
 
                     agingDynamics.AgentStateInInfluenceStart = await CalcAgentStateInInfluenceStartAsync(agent, influence);
