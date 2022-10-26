@@ -32,13 +32,13 @@
         </div>
         <div>
             <div><p style="font-size:20px">Динамика биовозраста пациента</p></div>
-            <table>
+            <table style="table-layout: fixed;" class="table table-sm">
                 <tr>
-                    <th>Начало периода:</th>
-                    <th><input type="datetime-local" id="dt1"/></th>
-                    <th>Окончание периода:</th>
-                    <th><input type="datetime-local" id="dt2"/></th>
-                    <th><button onclick="GetAgingDynamics()">Показать</button></th>
+                    <th colspan="2">Начало периода:</th>
+                    <th colspan="2"><input style = "width:100%" type="datetime-local" id="dt1"/></th>
+                    <th colspan="2">Окончание периода:</th>
+                    <th colspan="2"><input style = "width:100%" type="datetime-local" id="dt2"/></th>
+                    <th colspan="2"><button style = "width:100%" onclick="GetAgingDynamics()">Показать</button></th>
                 </tr>
             </table>   
             <div id="DynamicsInfo"></div>
