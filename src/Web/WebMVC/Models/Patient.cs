@@ -16,5 +16,7 @@ namespace WebMVC.Models
         public string Name { get ; set ; }
         public DateTime Birthday { get ; set ; }
         public int MedicalHistoryNumber { get ; set ; }
+
+        public GenderEnum Gender { get; set; }
     }
 }

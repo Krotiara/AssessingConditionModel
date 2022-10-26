@@ -139,8 +139,9 @@ namespace PatientDataHandler.API.Service.Services
                         }
                     });
 
+                    influenceData.Patient.Gender = influenceData.StartParameters.ContainsKey(ParameterNames.Gender) ? 
+                        GetPatientGender(influenceData.StartParameters[ParameterNames.Gender]) : GenderEnum.None;
                     
-
                 }
                 catch(Exception ex)
                 {
@@ -166,6 +167,19 @@ namespace PatientDataHandler.API.Service.Services
                 influence.DynamicParameters.Values.OrderBy(x => x.Timestamp).Last().Timestamp : DateTime.MaxValue;
             influence.StartTimestamp = start;
             influence.EndTimestamp = end;
+        }
+
+#warning Временное решение.
+        private GenderEnum GetPatientGender(PatientParameter genderParameter)
+        {
+            if (genderParameter.ParameterName != ParameterNames.Gender)
+                throw new NotImplementedException(); //TODO
+            string val = genderParameter.Value;
+            if (val == "ж" || val.Contains("жен"))
+                return GenderEnum.Female;
+            else if (val == "м" || val.Contains("муж"))
+                return GenderEnum.Male;
+            else return GenderEnum.None;
         }
 
 

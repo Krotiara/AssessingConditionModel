@@ -19,6 +19,16 @@ namespace Interfaces
         BiologicallyActiveAdditive = 3
     }
 
+    public enum GenderEnum
+    {
+        [Display(Name="-")]
+        None,
+        [Display(Name = "Мужской")]
+        Male,
+        [Display(Name = "Женский")]
+        Female
+    }
+
     public enum AgentBioAgeStates
     {
         [Display(Name = "Резко замедленный темп старения")]

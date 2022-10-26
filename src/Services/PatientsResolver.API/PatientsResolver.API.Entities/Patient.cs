@@ -34,5 +34,10 @@ namespace PatientsResolver.API.Entities
         [Key]
         [Column("MedicalHistoryNumber")]
         public int MedicalHistoryNumber { get; set; }
+
+        [NotNull]
+        [Required]
+        [Column("Gender")]
+        public GenderEnum Gender { get; set; }
     }
 }

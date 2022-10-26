@@ -17,6 +17,7 @@
                 <thead>
                     <tr>
                         <th>Номер карты</th>
+                        <th>Пол</th>
                         <th>Возраст</th>
                         <th>Биовозраст</th>
                         <th>Состояние</th>
@@ -24,6 +25,7 @@
                 </thead>
                 <tr>   
                     <th>@Model.Patient.MedicalHistoryNumber</th>
+                    <th>@Model.Patient.Gender.GetDisplayAttributeValue()</th>
                     <th>@Model.AgingPatientState.Age</th>
                     <th>@Model.AgingPatientState.BioAge</th>
                     <th>@Model.AgingPatientState.AgentBioAgeState.GetDisplayAttributeValue()</th>
