@@ -30,8 +30,15 @@ namespace WebMVC.Services
 
         public async Task<Patient> GetPatient(int id)
         {
-            string url = $"https://host.docker.internal:8009/patients/{id}";
-            return await webRequester.GetResponse<Patient>(url, "GET");
+            try
+            {
+                string url = $"https://host.docker.internal:8009/patients/{id}";
+                return await webRequester.GetResponse<Patient>(url, "GET");
+            }
+            catch(GetWebResponceException ex)
+            {
+                return null; //TODO log
+            }
         }
 
         public async Task<IList<AgingDynamics>> GetPatientAgingDynamics(int patientId, 

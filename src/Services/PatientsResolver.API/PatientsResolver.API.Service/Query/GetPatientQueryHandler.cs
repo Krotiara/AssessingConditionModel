@@ -20,7 +20,14 @@ namespace PatientsResolver.API.Service.Query
 
         public async Task<Patient> Handle(GetPatientQuery request, CancellationToken cancellationToken)
         {
-            return patientDataRepository.GetAll().FirstOrDefault(x => x.MedicalHistoryNumber == request.PatientId);
+            try
+            {
+                return patientDataRepository.GetAll().FirstOrDefault(x => x.MedicalHistoryNumber == request.PatientId);
+            }
+            catch(Exception ex)
+            {
+                return null; //TODO log
+            }
         }
     }
 }
