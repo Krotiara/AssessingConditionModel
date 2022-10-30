@@ -36,11 +36,11 @@
                                  </tr>
                                  <tr>
                                      <th colspan="5"> <p align="left">Начало воздействия:</p></th>
-                                     <th colspan="5"> <p align="left">@agingDynamics.StartTimestamp</p></th>   
+                                     <th colspan="5"> <p align="left">@Html.Label(agingDynamics.StartTimestamp.ToShortDateString())</p></th>   
                                  </tr>
                                  <tr>
-                                     <th colspan="5"><p align="left">Окончание воздействия:</p></th>
-                                     <th colspan="5"><p align="left">@agingDynamics.EndTimestamp</p></th> 
+                                     <th colspan="5"> <p align="left">Окончание воздействия:</p></th>
+                                     <th colspan="5"> <p align="left">@Html.Label(agingDynamics.EndTimestamp.ToShortDateString())</p></th> 
                                  </tr>
                              </table>
                              <table style="table-layout: fixed;width:100%;" class="table-bordered table-sm"> 
