@@ -14,10 +14,13 @@ namespace Agents.API.Data.Repository
     {
         //private IWebRequester webRequester;
         IWebRequester webRequester;
+        private readonly IAgingStatesRepository agingStatesRepository;
 
-        public AgentPatientsRepository(AgentsDbContext agentsDbContext, IWebRequester webRequester) : base(agentsDbContext)
+        public AgentPatientsRepository(AgentsDbContext agentsDbContext, IWebRequester webRequester, 
+            IAgingStatesRepository agingStatesRepository) : base(agentsDbContext)
         {
             this.webRequester = webRequester;
+            this.agingStatesRepository = agingStatesRepository;
             //StartAgents();
         }
 
@@ -30,6 +33,9 @@ namespace Agents.API.Data.Repository
             try
             {
                 agentPatient.InitWebRequester(webRequester);
+                agentPatient.InitDbRequester(
+                    async (x, y) => await agingStatesRepository.GetStateAsync(x, y),
+                    async (x) => await agingStatesRepository.AddState(x));
                 agentPatient.InitStateDiagram();
                 await agentPatient.StateDiagram.UpdateStateAsync(new AgentDetermineStateProperties());
                 return agentPatient;
@@ -39,6 +45,7 @@ namespace Agents.API.Data.Repository
                 throw new AgentNotFoundException($"Get patient agent error", ex);
             }
         }
+
 
         public async Task<AgentPatient> InitAgentPatient(IPatient patient)
         {
@@ -56,9 +63,13 @@ namespace Agents.API.Data.Repository
                         Name = patient.MedicalHistoryNumber.ToString()
                     };
                     agentPatient.InitWebRequester(webRequester);
+                    agentPatient.InitDbRequester(
+                       async (x, y) => await agingStatesRepository.GetStateAsync(x, y),
+                       async (x) => await agingStatesRepository.AddState(x));
                     agentPatient.InitStateDiagram();
                     await AgentsDbContext.AddAsync(agentPatient);
                     await AgentsDbContext.SaveChangesAsync();
+                    await agentPatient.StateDiagram.UpdateStateAsync(new AgentDetermineStateProperties());
                 }
                 return agentPatient;
             }

@@ -16,8 +16,4 @@
     <ProjectReference Include="..\Agents.API.Entities\Agents.API.Entities.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Command\" />
-  </ItemGroup>
-
 </Project>

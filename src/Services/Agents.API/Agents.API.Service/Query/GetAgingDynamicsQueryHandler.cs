@@ -67,8 +67,7 @@ namespace Agents.API.Service.Query
         {
             await agent.StateDiagram.UpdateStateAsync(new AgentDetermineStateProperties()
             {
-                StartTimestamp = influence.StartTimestamp,
-                EndTimestamp = influence.StartTimestamp //Для расчета в начале воздействия берем параметры только из начала воздействия.
+                Timestamp = influence.StartTimestamp
             });
 
             return new AgingPatientState()
@@ -85,8 +84,7 @@ namespace Agents.API.Service.Query
         {
             await agent.StateDiagram.UpdateStateAsync(new AgentDetermineStateProperties()
             {
-                StartTimestamp = influence.StartTimestamp,
-                EndTimestamp = influence.EndTimestamp
+                Timestamp = influence.EndTimestamp
             });
 
             return new AgingPatientState()

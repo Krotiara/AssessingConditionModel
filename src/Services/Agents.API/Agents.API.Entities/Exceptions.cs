@@ -27,6 +27,13 @@ namespace Agents.API.Entities
         public GetAgingStateException(string message, Exception innerException) : base(message, innerException) { }
     }
 
+    public class AddAgingStateException : Exception
+    {
+        public AddAgingStateException(string message) : base(message) { }
+
+        public AddAgingStateException(string message, Exception innerException) : base(message, innerException) { }
+    }
+
     public class AgentNotFoundException : Exception
     {
         public AgentNotFoundException(string message) : base(message) { }

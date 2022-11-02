@@ -10,7 +10,7 @@ namespace Interfaces
     {
         public int Id { get; set; }
 
-        public int AgentId { get; set; }
+        public int PatientId { get; set; }
 
         public DateTime Timestamp { get; set; }
 

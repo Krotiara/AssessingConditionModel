@@ -9,8 +9,8 @@ namespace Agents.API.Data.Repository
 {
     public interface IAgingStatesRepository
     {
-        public AgingState GetState(int agentId, DateTime timeStamp);
+        public Task<AgingState> GetStateAsync(int patientId, DateTime timeStamp);
 
-        public AgingState UpdateState(AgingState agingState);
+        public Task<AgingState> AddState(AgingState agingState);
     }
 }

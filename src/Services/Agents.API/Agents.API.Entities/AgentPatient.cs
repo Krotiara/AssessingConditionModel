@@ -1,4 +1,5 @@
-﻿using Interfaces;
+﻿using Agents.API.Entities;
+using Interfaces;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -15,7 +16,10 @@ namespace Agents.API.Entities
     public class AgentPatient : IAgent
     {
         private IWebRequester webRequester;
-       
+
+        private Func<int, DateTime, Task<AgingState>> GetAgingStateDb;
+        private Func<AgingState, Task<AgingState>> AddAgingStateDb;
+
         public AgentPatient() 
         {
             InitStateDiagram();
@@ -64,17 +68,53 @@ namespace Agents.API.Entities
 
         private async Task<State> DetermineState(IAgentDetermineStateProperties determineStateProperties)
         {
+            AgingState? state = await GetAgingStateDb.Invoke(PatientId, determineStateProperties.Timestamp);
+            if (state != null)
+            {
+                CurrentAge = state.Age;
+                CurrentBioAge = state.BioAge;
+                CurrentAgeRang = state.BioAgeState;
+            }
+            else
+            {
+                await DetermineStateByCalculation(determineStateProperties);
+                try
+                {
+                    await AddAgingStateDb.Invoke(new AgingState()
+                    {
+                        PatientId = PatientId,
+                        Timestamp = determineStateProperties.Timestamp,
+                        Age = CurrentAge,
+                        BioAge = CurrentBioAge,
+                        BioAgeState = CurrentAgeRang
+                    });
+                }
+                catch(AddAgingStateException ex)
+                {
+                    throw new NotImplementedException(); //TODO
+                }
+                catch(Exception ex)
+                {
+                    throw new NotImplementedException(); //TODO
+                }
+            }
+
+            return StateDiagram.GetState(CurrentAgeRang.GetDisplayAttributeValue());   
+        }
+
+        private async Task DetermineStateByCalculation(IAgentDetermineStateProperties determineStateProperties)
+        {
             IList<PatientParameter> patientParams = await GetLatestPatientParameters(determineStateProperties);
             if (patientParams == null)
                 throw new DetermineStateException($"No patient parameters to determine state. Patient id = {PatientId}");
             PatientParameter ageParam = patientParams.FirstOrDefault(x => x.ParameterName == ParameterNames.Age);
-            if(ageParam == null)
+            if (ageParam == null)
                 throw new DetermineStateException($"No patient age in input patient parameters. Patient id = {PatientId}");
 
             double age = double.Parse(ageParam.Value);
             double bioAge = await GetBioAge(patientParams);
-            double ageDelta = bioAge-age;
-        
+            double ageDelta = bioAge - age;
+
             AgentBioAgeStates rang;
             if (ageDelta <= -9)
                 rang = AgentBioAgeStates.RangI;
@@ -90,17 +130,16 @@ namespace Agents.API.Entities
             CurrentAge = age;
             CurrentBioAge = bioAge;
             CurrentAgeRang = rang;
-
-            return StateDiagram.GetState(rang.GetDisplayAttributeValue());
         }
-       
+
+
 
         private async Task<IList<PatientParameter>> GetLatestPatientParameters(IAgentDetermineStateProperties determineStateProperties)
         {
             try
             {
-                DateTime startTimestamp = (determineStateProperties.StartTimestamp == null ? DateTime.MinValue : (DateTime)determineStateProperties.StartTimestamp);
-                DateTime endTimestamp = (determineStateProperties.EndTimestamp == null ? DateTime.MaxValue : (DateTime)determineStateProperties.EndTimestamp);
+                DateTime startTimestamp = DateTime.MinValue;
+                DateTime endTimestamp = (determineStateProperties.Timestamp == null ? DateTime.MaxValue : (DateTime)determineStateProperties.Timestamp);
                 string body = Newtonsoft.Json.JsonConvert.SerializeObject(new DateTime[2] { startTimestamp, endTimestamp });
                 string url = $"https://host.docker.internal:8004/latestPatientParameters/{PatientId}";
                 return await webRequester
@@ -154,5 +193,14 @@ namespace Agents.API.Entities
         {
             this.webRequester = webRequester;
         }
+
+        public void InitDbRequester(Func<int, DateTime, Task<AgingState>> getAgingStateDb, 
+            Func<AgingState, Task<AgingState>> addAgingStateDb)
+        {
+#warning Кривая реализация
+            GetAgingStateDb = getAgingStateDb;
+            AddAgingStateDb = addAgingStateDb;
+        }
+
     }
 }

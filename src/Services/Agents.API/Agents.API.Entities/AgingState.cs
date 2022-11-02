@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 
 namespace Agents.API.Entities
 {
+    [Table("AgingStates")]
     public class AgingState : IAgingState
     {
         [NotNull]
@@ -18,8 +19,8 @@ namespace Agents.API.Entities
         public int Id { get; set; }
         [NotNull]
         [Required]
-        [Column("AgentId")]
-        public int AgentId { get; set; }
+        [Column("PatientId")]
+        public int PatientId { get; set; }
         [NotNull]
         [Required]
         [Column("Timestamp")]

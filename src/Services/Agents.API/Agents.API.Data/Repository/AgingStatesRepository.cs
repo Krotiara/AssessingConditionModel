@@ -1,5 +1,7 @@
 ﻿using Agents.API.Data.Database;
 using Agents.API.Entities;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,28 +16,32 @@ namespace Agents.API.Data.Repository
         {
         }
 
-        public AgingState GetState(int agentId, DateTime timeStamp)
+        public async Task<AgingState> GetStateAsync(int patientId, DateTime timeStamp)
         {
-            try
-            {
-                throw new NotImplementedException();
-            }
-            catch(Exception ex)
-            {
-                throw new NotImplementedException(); //TODO
-            }
+            return AgentsDbContext.AgingStates.FirstOrDefault(x => x.PatientId == patientId && x.Timestamp == timeStamp);
         }
 
-        public AgingState UpdateState(AgingState agingState)
+
+        public async Task<AgingState> AddState(AgingState agingState)
         {
-            try
+            IExecutionStrategy strategy = AgentsDbContext.Database.CreateExecutionStrategy();
+            return await strategy.ExecuteAsync(async () =>
             {
-                throw new NotImplementedException();
-            }
-            catch (Exception ex)
-            {
-                throw new NotImplementedException(); //TODO
-            }
+                AgingState? state = AgentsDbContext.AgingStates
+                .FirstOrDefault(x => x.PatientId == agingState.PatientId && x.Timestamp == agingState.Timestamp);
+                if (state != null)
+                    throw new AddAgingStateException($"State already exist:id={agingState.PatientId},timestamp={agingState.Timestamp}");
+                try
+                {
+                    await AgentsDbContext.AgingStates.AddAsync(agingState);
+                    await AgentsDbContext.SaveChangesAsync();
+                    return agingState;
+                }
+                catch(Exception ex)
+                {
+                    throw new AddAgingStateException("", ex);
+                }
+            });
         }
     }
 }
