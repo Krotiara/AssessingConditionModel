@@ -19,6 +19,30 @@ namespace Interfaces
         BiologicallyActiveAdditive = 3
     }
 
+    public enum GenderEnum
+    {
+        [Display(Name="-")]
+        None,
+        [Display(Name = "Мужской")]
+        Male,
+        [Display(Name = "Женский")]
+        Female
+    }
+
+    public enum AgentBioAgeStates
+    {
+        [Display(Name = "Резко замедленный темп старения")]
+        RangI,
+        [Display(Name = "Замедленный темп старения")]
+        RangII,
+        [Display(Name = "Примерное соответствие БВ и КВ")]
+        RangIII,
+        [Display(Name = "Ускоренный темп старения")]
+        RangIV,
+        [Display(Name = "Резко ускоренный темп старения.")]
+        RangV,
+    }
+
     public enum BioAgeCalculationType
     {
         ByFunctionalParameters = 0

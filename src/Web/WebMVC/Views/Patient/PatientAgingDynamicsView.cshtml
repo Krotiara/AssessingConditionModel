@@ -1,0 +1,71 @@
+﻿@model IList<AgingDynamics>
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+
+
+<html>
+    <head>
+        <title>Информация о динамике биовозраста пациента</title>
+        <style >
+            .centerCell
+            {
+                text-align: left;
+            }
+            th{font-weight: normal;}    
+        </style>
+    </head>
+    
+    <body>
+        <table style="table-layout: fixed;width:100%;" class="table-bordered table-hover  table-sm">                  
+                @foreach(AgingDynamics agingDynamics in Model)
+                {
+                    <tr>
+                        <th>
+                             <table  style="table-layout: fixed;" class="table-sm">
+                                 <tr>
+                                     <th colspan="5"><p align="left">Тип воздействия:</p></th>
+                                     <th colspan="5"><p align="left">@agingDynamics.InfluenceType.GetDisplayAttributeValue()</p></th>   
+                                  </tr>
+                                 <tr>
+                                     <th colspan="5"><p align="left">Наименование препарата:</p></th>
+                                     <th colspan="5"><p align="left">@agingDynamics.MedicineName</p></th>
+                                 </tr>
+                                 <tr>
+                                     <th colspan="5"> <p align="left">Начало воздействия:</p></th>
+                                     <th colspan="5"> <p align="left">@Html.Label(agingDynamics.StartTimestamp.ToShortDateString())</p></th>   
+                                 </tr>
+                                 <tr>
+                                     <th colspan="5"> <p align="left">Окончание воздействия:</p></th>
+                                     <th colspan="5"> <p align="left">@Html.Label(agingDynamics.EndTimestamp.ToShortDateString())</p></th> 
+                                 </tr>
+                             </table>
+                             <table style="table-layout: fixed;width:100%;" class="table-bordered table-sm"> 
+                                <thead>
+                                    <tr class="centerCell">
+                                        <th colspan="2"><p>Возраст</p></th>
+                                        <th colspan="2"><p>Биовозраст</p></th>
+                                        <th colspan="6"><p>Состояние</p></th>    
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="centerCell">
+                                        <th colspan="2">
+                                            <p>@agingDynamics.AgentStateInInfluenceStart.Age -> @agingDynamics.AgentStateInInfluenceEnd.Age</p></th>
+                                        <th colspan="2">
+                                            <p>@agingDynamics.AgentStateInInfluenceStart.BioAge -> @agingDynamics.AgentStateInInfluenceEnd.BioAge</p></th>
+                                        <th colspan="6">
+                                            <p>@agingDynamics.AgentStateInInfluenceStart.AgentBioAgeState.GetDisplayAttributeValue() 
+                                                -> @agingDynamics.AgentStateInInfluenceEnd.AgentBioAgeState.GetDisplayAttributeValue()</p></th>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </th>     
+                    </tr>
+                }
+        </table>
+    </body>
+</html>

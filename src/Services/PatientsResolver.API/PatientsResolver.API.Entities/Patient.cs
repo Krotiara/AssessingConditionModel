@@ -15,7 +15,7 @@ namespace PatientsResolver.API.Entities
         }
 
         [NotNull]
-        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Column("Id")]
         public int Id { get; set; }
 
@@ -31,7 +31,13 @@ namespace PatientsResolver.API.Entities
 
         [NotNull]
         [Required]
+        [Key]
         [Column("MedicalHistoryNumber")]
         public int MedicalHistoryNumber { get; set; }
+
+        [NotNull]
+        [Required]
+        [Column("Gender")]
+        public GenderEnum Gender { get; set; }
     }
 }

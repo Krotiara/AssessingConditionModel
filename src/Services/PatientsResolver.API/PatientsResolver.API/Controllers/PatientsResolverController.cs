@@ -55,20 +55,43 @@ namespace PatientsResolver.API.Controllers
         }
 
 
-        [HttpGet("influence/{patientId}")]
-        public async Task<ActionResult<List<Influence>>> GetPatientInfluences(int patientId,
-            DateTime? startTimestamp, DateTime? endTimestamp)
+        [HttpPost("influence/{patientId}")]
+        public async Task<ActionResult<List<Influence>>> GetPatientInfluences(int patientId, [FromBody]DateTime[] timeSpan)
         {
             try
             {
-                if (startTimestamp == null)
-                    startTimestamp = DateTime.MinValue;
-                if (endTimestamp == null)
-                    endTimestamp = DateTime.MaxValue;
-                return Ok(await mediator.Send(new GetPatientInfluencesQuery(patientId, 
-                    (DateTime)startTimestamp, (DateTime)endTimestamp)));
+                DateTime start = DateTime.MinValue;
+                DateTime end = DateTime.MaxValue;
+                if (timeSpan != null && timeSpan.Length == 2)
+                {
+                    start = timeSpan[0];
+                    end = timeSpan[1];
+                }
+               
+                return Ok(await mediator.Send(new GetPatientInfluencesQuery(patientId, start, end)));
             }
             catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+
+        [HttpPost("influences/")]
+        public async Task<ActionResult<List<Influence>>> GetInfluences([FromBody] DateTime[] timeSpan)
+        {
+            try
+            {
+                DateTime start = DateTime.MinValue;
+                DateTime end = DateTime.MaxValue;
+                if (timeSpan != null && timeSpan.Length == 2)
+                {
+                    start = timeSpan[0];
+                    end = timeSpan[1];
+                }
+                return Ok(await mediator.Send(new GetInfluencesQuery(start, end)));
+            }
+            catch(Exception ex)
             {
                 return BadRequest(ex.Message);
             }
@@ -89,36 +112,54 @@ namespace PatientsResolver.API.Controllers
         }
 
 
-        [HttpPost("addData/{pathToDataFile}")]
-        public async Task<ActionResult> AddData(string pathToDataFile)
+        [HttpPost("addInfluenceData/")]
+        public async Task<ActionResult<bool>> AddData([FromBody] FileData fileData)
         {
+            //TODO Добавить статус отсылки
             try
-            {
-                pathToDataFile = pathToDataFile.Replace("%2F", "/"); //TODO вынести в отдельный метод
-                using (Stream stream = System.IO.File.Open(pathToDataFile, FileMode.Open, FileAccess.Read))
-                {
-                    Func<Stream, byte[]> getStreamData = (stream) =>
-                    {
-                        stream.Position = 0;
-                        //StreamReader streamReader = new StreamReader(stream, encoding: Encoding.UTF8);
-                        //return streamReader.ReadToEnd();
-                        using(MemoryStream ms = new MemoryStream())
-                        {
-                            stream.CopyTo(ms);
-                            return ms.ToArray();
-                        }
-                    };
-                    byte[] data = getStreamData(stream);
-                    FileData fileData = new FileData() { RawData = data };
-                    await mediator.Send(new SendPatientDataFileSourceCommand() { Data = fileData });
-                }
-                return Ok();
+            { 
+                await mediator.Send(new SendPatientDataFileSourceCommand() { Data = fileData });
+                return Ok(true);
             }
             catch(Exception ex)
             {
+                //TODO Отлов кастомных ошибок
                 return BadRequest(ex.Message);
             }
+
         }
+
+
+        //[HttpPost("addData/{pathToDataFile}")]
+        //public async Task<ActionResult> AddData(string pathToDataFile)
+        //{
+        //    try
+        //    {
+        //        pathToDataFile = pathToDataFile.Replace("%2F", "/"); //TODO вынести в отдельный метод
+        //        using (Stream stream = System.IO.File.Open(pathToDataFile, FileMode.Open, FileAccess.Read))
+        //        {
+        //            Func<Stream, byte[]> getStreamData = (stream) =>
+        //            {
+        //                stream.Position = 0;
+        //                //StreamReader streamReader = new StreamReader(stream, encoding: Encoding.UTF8);
+        //                //return streamReader.ReadToEnd();
+        //                using(MemoryStream ms = new MemoryStream())
+        //                {
+        //                    stream.CopyTo(ms);
+        //                    return ms.ToArray();
+        //                }
+        //            };
+        //            byte[] data = getStreamData(stream);
+        //            FileData fileData = new FileData() { RawData = data };
+        //            await mediator.Send(new SendPatientDataFileSourceCommand() { Data = fileData });
+        //        }
+        //        return Ok();
+        //    }
+        //    catch(Exception ex)
+        //    {
+        //        return BadRequest(ex.Message);
+        //    }
+        //}
 
 
         [HttpPost("addPatient")]

@@ -32,9 +32,10 @@ namespace PatientsResolver.API.Service.Services
                 List<Influence> addedData = 
                     await mediator.Send(new AddInfluenceDataCommand() { Data = data });
 
-                IUpdatePatientsInfo updateInfo = new UpdatePatientsInfo() 
-                { UpdatedIds = new HashSet<int>(addedData.Select(x => x.PatientId)) };
-                await mediator.Send(new SendUpdatePatientsInfoCommand() { UpdatePatientsInfo = updateInfo }); 
+#warning Пока убрана отсылка обновления данных о пациентах агентам пациентов
+                //IUpdatePatientsInfo updateInfo = new UpdatePatientsInfo() 
+                //{ UpdatedIds = new HashSet<int>(addedData.Select(x => x.PatientId)) };
+                //await mediator.Send(new SendUpdatePatientsInfoCommand() { UpdatePatientsInfo = updateInfo }); 
             }
             catch(Exception ex)
             {

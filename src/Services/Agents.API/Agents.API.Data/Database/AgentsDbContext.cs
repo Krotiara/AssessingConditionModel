@@ -12,6 +12,8 @@ namespace Agents.API.Data.Database
     {
         public virtual DbSet<AgentPatient> AgentPatients { get; set; }
 
+        public virtual DbSet<AgingState> AgingStates { get; set; }
+
         public AgentsDbContext() : base() { }
 
         public AgentsDbContext(DbContextOptions<AgentsDbContext> options) : base(options) { }

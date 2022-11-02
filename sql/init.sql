@@ -28,7 +28,8 @@ CREATE TABLE "Patients"
     "MedicalHistoryNumber" bigint NOT NULL,
     "Name" text COLLATE pg_catalog."default" NOT NULL,
     "Birthday" date NOT NULL,
-    CONSTRAINT "Patients_pkey" PRIMARY KEY ("Id")
+    "Gender" int NOT NULL,
+    CONSTRAINT "Patients_pkey" PRIMARY KEY ("MedicalHistoryNumber")
 );
 
 CREATE TABLE "Influences"
@@ -48,5 +49,17 @@ CREATE TABLE "PatientAgents"
     "Name" text COLLATE pg_catalog."default" NOT NULL,
     CONSTRAINT "PatientAgents_pkey" PRIMARY KEY ("Id")
 );
+
+
+CREATE TABLE "AgingStates"
+(
+    "Id" bigint NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 9223372036854775807 CACHE 1 ),
+    "PatientId" bigint NOT NULL,
+    "Timestamp" date NOT NULL,
+    "Age" double precision NOT NULL,
+    "BioAge" double precision NOT NULL,
+    "State" int NOT NULL,
+    CONSTRAINT "AgingStates_pkey" PRIMARY KEY ("Id")
+)
 
 

@@ -23,8 +23,10 @@ namespace PatientsResolver.API.Data.Repository
                 PatientsDataDbContext.PatientsParameters
                 .Where(x => x.PatientId == patientId && x.Timestamp >= startTimestamp && x.Timestamp <= endTimestamp)
                 .ToList();
+#warning Вынести в отдельный репозиторий метод с установкой этого. Иначе так и будет теряться          
             foreach(PatientParameter parameter in parameters)
                 parameter.ParameterName = parameter.NameTextDescription.GetParameterByDescription();
+
             var groupedParams = parameters.GroupBy(x => x.ParameterName);
             List<PatientParameter> result = new List<PatientParameter>();
             foreach (IGrouping<ParameterNames, PatientParameter> group in groupedParams)

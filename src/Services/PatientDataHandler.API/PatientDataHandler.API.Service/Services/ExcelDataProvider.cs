@@ -35,11 +35,18 @@ namespace PatientDataHandler.API.Service.Services
 
         public IList<Influence> ParseData(byte[] bytesData)
         {
-            IList<IList<string>> rawData = LoadData(bytesData);
-            DataPreprocessor dataPreprocessor = new DataPreprocessor();
-            rawData = dataPreprocessor.PreProcessData(rawData);
-            IList<Influence> data = ParseExcelData(rawData[0], rawData.Skip(1).ToList());
-            return data;
+            try
+            {
+                IList<IList<string>> rawData = LoadData(bytesData);
+                DataPreprocessor dataPreprocessor = new DataPreprocessor();
+                rawData = dataPreprocessor.PreProcessData(rawData);
+                IList<Influence> data = ParseExcelData(rawData[0], rawData.Skip(1).ToList());
+                return data;
+            }
+            catch(Exception ex)
+            {
+                throw new ParseInfluenceDataException("Parse data exception", ex);
+            }
         }
 
 
@@ -63,7 +70,8 @@ namespace PatientDataHandler.API.Service.Services
                 {
                     IList<string> row = data[rowNum];
 
-                    DateTime parameterTimestamp = parameterTimestampIndex == -1 || row[parameterTimestampIndex] =="" ? DateTime.MinValue : DateTime.Parse(row[parameterTimestampIndex]);
+                    DateTime parameterTimestamp = parameterTimestampIndex == -1 || row[parameterTimestampIndex] =="" ? 
+                        DateTime.MinValue : DateTime.Parse(row[parameterTimestampIndex]);
                     string influenceName = data[rowNum][groupIndex];
                     
                     if (row[0] == "динамика")
@@ -129,7 +137,11 @@ namespace PatientDataHandler.API.Service.Services
                             //TODO add log
                             return;
                         }
-                    });                   
+                    });
+
+                    influenceData.Patient.Gender = influenceData.StartParameters.ContainsKey(ParameterNames.Gender) ? 
+                        GetPatientGender(influenceData.StartParameters[ParameterNames.Gender]) : GenderEnum.None;
+                    
                 }
                 catch(Exception ex)
                 {
@@ -138,9 +150,36 @@ namespace PatientDataHandler.API.Service.Services
                 }
             }
 
+            foreach(KeyValuePair<int, Influence> inf in patientsInfluences)
+                SetInfluenceTimeByParamsTime(inf.Value);
+
             return patientsInfluences
                 .Values
                 .ToList();
+        }
+
+
+#warning Временное решение для указания даты воздействия.
+        private void SetInfluenceTimeByParamsTime(Influence influence)
+        {
+            DateTime start = influence.StartParameters.Values.OrderBy(x => x.Timestamp).First().Timestamp;
+            DateTime end = influence.DynamicParameters.Count > 0 ? 
+                influence.DynamicParameters.Values.OrderBy(x => x.Timestamp).Last().Timestamp : DateTime.MaxValue;
+            influence.StartTimestamp = start;
+            influence.EndTimestamp = end;
+        }
+
+#warning Временное решение.
+        private GenderEnum GetPatientGender(PatientParameter genderParameter)
+        {
+            if (genderParameter.ParameterName != ParameterNames.Gender)
+                throw new NotImplementedException(); //TODO
+            string val = genderParameter.Value;
+            if (val == "ж" || val.Contains("жен"))
+                return GenderEnum.Female;
+            else if (val == "м" || val.Contains("муж"))
+                return GenderEnum.Male;
+            else return GenderEnum.None;
         }
 
 

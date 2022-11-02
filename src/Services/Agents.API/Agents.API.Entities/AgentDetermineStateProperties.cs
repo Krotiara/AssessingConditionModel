@@ -4,7 +4,11 @@ namespace Agents.API.Entities
 {
     public class AgentDetermineStateProperties : IAgentDetermineStateProperties
     {
-        public DateTime? StartTimestamp { get ; set ; }
-        public DateTime? EndTimestamp { get ; set ; }
+        public AgentDetermineStateProperties()
+        {
+            Timestamp = DateTime.MaxValue; //по-умолчанию
+        }
+
+        public DateTime Timestamp { get ; set ; }      
     }
 }

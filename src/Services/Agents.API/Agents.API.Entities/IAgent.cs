@@ -1,5 +1,6 @@
 ﻿using Interfaces;
 using System.ComponentModel;
+using Agents.API.Entities;
 
 namespace Agents.API.Entities
 {

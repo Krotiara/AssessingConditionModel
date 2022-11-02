@@ -1,6 +1,48 @@
 version: '3.4'
 
 services:
+  
+  web:
+    image: ${DOCKER_REGISTRY-}web
+    build:
+      context: .
+      dockerfile: src/Web/WebMVC/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - ASPNETCORE_URLS=https://+:443;http://+:80
+      - ASPNETCORE_HTTPS_PORT=8010
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=lisa2021
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/localhost.pfx
+    ports:
+      - 8011:80
+      - 8010:443
+    volumes:
+      - ~/.aspnet/https:/https:ro
+    extra_hosts:
+      - host.docker.internal:host-gateway
+
+  tempgateway:
+    image: ${DOCKER_REGISTRY-}tempgateway
+    build:
+      context: .
+      dockerfile: src/ApiGateways/TempGateway/TempGateway/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - ASPNETCORE_URLS=https://+:443;http://+:80
+      - ASPNETCORE_HTTPS_PORT=8009
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=lisa2021
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/localhost.pfx
+    ports:
+      - 8008:80
+      - 8009:443
+    volumes:
+      - "C:/TestData:/data"
+      - ~/.aspnet/https:/https:ro
+    extra_hosts:
+      - host.docker.internal:host-gateway
+
   patientsresolver.api:
     image: ${DOCKER_REGISTRY-}patientsresolverapi
     build:
@@ -17,7 +59,7 @@ services:
       - ASPNETCORE_Kestrel__Certificates__Default__Password=lisa2021
       - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/localhost.pfx
     ports:
-      - 8003:80
+      - 8033:80
       - 8004:443
     extra_hosts:
       - host.docker.internal:host-gateway
@@ -53,10 +95,13 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:80
+      - ASPNETCORE_URLS=https://+:443;http://+:80
+      - ASPNETCORE_HTTPS_PORT=8012
       - ASPNETCORE_Kestrel__Certificates__Default__Password=lisa2021
       - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/localhost.pfx
     ports:
       - 8002:80
+      - 8012:443
     volumes:
       - ~/.aspnet/https:/https:ro
     extra_hosts:
@@ -133,8 +178,8 @@ services:
       #- ./sql:/tmp
      depends_on:
       - postgres_image
-     ports:
-      - "5051:80"
+     #ports:
+      #- "5051:80"
      restart: unless-stopped
      #networks:
      # - postgres

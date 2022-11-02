@@ -8,6 +8,9 @@ using Microsoft.EntityFrameworkCore;
 using Agents.API.Data.Database;
 using Agents.API.Service.Services;
 using Agents.API.Messaging.Receive.Configs;
+using Agents.API.Service.Query;
+using Agents.API.Data.Repository;
+using Agents.API.Service.Command;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -66,6 +69,21 @@ builder.Services.AddTransient<IWebRequester, RestWebRequester>();
 builder.Services.AddTransient<IInitPatientAgentsService, InitPatientAgentsService>();
 builder.Services.AddTransient<IUpdatePatientAgentsService, UpdatePatientAgentsService>();
 builder.Services.AddSingleton<IAgentPatientsRepository, AgentPatientsRepository>();
+builder.Services.AddSingleton<IAgingStatesRepository, AgingStatesRepository>();
+builder.Services.AddTransient<IAgingDynamics<AgingPatientState>, AgingDynamics>();
+
+builder.Services.AddScoped<IRequestHandler<GetAgingStateQuery, AgingPatientState>, 
+    GetAgingStateQueryHandler>();
+builder.Services.AddScoped<IRequestHandler<GetPatientInfluencesQuery, List<Influence>>, 
+    GetPatientInfluencesQueryHandler>();
+builder.Services.AddScoped<IRequestHandler<GetAgingDynamicsQuery, List<IAgingDynamics<AgingPatientState>>>, 
+    GetAgingDynamicsQueryHandler>();
+builder.Services.AddScoped<IRequestHandler<GetAllPatientsAgingDynamicsQuery, List<IAgingDynamics<AgingPatientState>>>,
+    GetAllPatientsAgingDynamicsQueryHandler>();
+builder.Services.AddScoped<IRequestHandler<GetAgingStateQueryDb, AgingState>, 
+    GetAgingStateQueryDbHandler>();
+builder.Services.AddScoped<IRequestHandler<AddAgingStateCommand, AgingState>, 
+    AddAgingStateCommandHandler>();
 
 
 var app = builder.Build();
