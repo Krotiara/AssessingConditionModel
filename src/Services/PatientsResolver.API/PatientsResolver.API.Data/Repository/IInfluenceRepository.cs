@@ -12,6 +12,8 @@ namespace PatientsResolver.API.Data.Repository
     {
         Task<List<Influence>> GetPatientInfluences(int patientId, DateTime startTimestamp, DateTime endTimestamp);
 
+        Task<List<Influence>> GetInfluences(DateTime startTimestamp, DateTime endTimestamp);
+
         Task AddPatientInluence(Influence inluence, CancellationToken cancellationToken);
     }
 }

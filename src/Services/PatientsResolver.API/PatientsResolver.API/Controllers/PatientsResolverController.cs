@@ -77,6 +77,27 @@ namespace PatientsResolver.API.Controllers
         }
 
 
+        [HttpPost("influences/")]
+        public async Task<ActionResult<List<Influence>>> GetInfluences([FromBody] DateTime[] timeSpan)
+        {
+            try
+            {
+                DateTime start = DateTime.MinValue;
+                DateTime end = DateTime.MaxValue;
+                if (timeSpan != null && timeSpan.Length == 2)
+                {
+                    start = timeSpan[0];
+                    end = timeSpan[1];
+                }
+                return Ok(await mediator.Send(new GetInfluencesQuery(start, end)));
+            }
+            catch(Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+
         [HttpGet("patients/{patientId}")]
         public async Task<ActionResult<Patient>> GetPatient(int patientId)
         {

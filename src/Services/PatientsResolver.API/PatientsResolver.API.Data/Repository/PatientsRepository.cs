@@ -14,6 +14,5 @@ namespace PatientsResolver.API.Data.Repository
         {
 
         }
-
     }
 }

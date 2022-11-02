@@ -121,29 +121,57 @@ namespace PatientsResolver.API.Data.Repository
                     .Include(x => x.Patient)
                     .ToListAsync();
 
-                datas.ForEach(x =>
-                {
-                    IQueryable<PatientParameter> parameters = PatientsDataDbContext
-                    .PatientsParameters
-                    .Where(y => y.InfluenceId == x.Id);
-                    foreach (PatientParameter p in parameters)
-                        try
-                        {
-                            p.ParameterName = p.NameTextDescription.GetParameterByDescription(); //TODO Может есть выход лучше?
-                            if (p.IsDynamic)
-                                x.DynamicParameters[p.ParameterName] = p;
-                            else
-                                x.StartParameters[p.ParameterName] = p;
-                        }
-                        catch (Exception ex)
-                        {
-                            //TODO log
-                            continue;
-                        }
-                });
+                InitParameters(datas);
+
                 return datas;
             });
 
+        }
+
+        public async Task<List<Influence>> GetInfluences(DateTime startTimestamp, DateTime endTimestamp)
+        {
+            IExecutionStrategy strategy = PatientsDataDbContext.Database.CreateExecutionStrategy();
+            return await strategy.ExecuteAsync(async () =>
+            {
+                IQueryable<Influence> influences = PatientsDataDbContext
+                        .Influences
+                        .Where(x => x.StartTimestamp >= startTimestamp && x.EndTimestamp <= endTimestamp);
+                if (influences.Count() == 0)
+                    return new List<Influence>();
+
+                List<Influence> datas = await influences
+                   .Include(x => x.Patient)
+                   .ToListAsync();
+
+                InitParameters(datas);
+
+                return datas;
+            });
+        }
+
+
+        private void InitParameters(List<Influence> datas)
+        {
+            datas.ForEach(x =>
+            {
+                IQueryable<PatientParameter> parameters = PatientsDataDbContext
+                .PatientsParameters
+                .Where(y => y.InfluenceId == x.Id);
+                foreach (PatientParameter p in parameters)
+                    try
+                    {
+                        p.ParameterName = p.NameTextDescription.GetParameterByDescription(); //TODO Может есть выход лучше?
+                        if (p.IsDynamic)
+                            x.DynamicParameters[p.ParameterName] = p;
+                        else
+                            x.StartParameters[p.ParameterName] = p;
+                    }
+                    catch (Exception ex)
+                    {
+                        //TODO log
+                        continue;
+                    }
+            });
         }
     }
 }
