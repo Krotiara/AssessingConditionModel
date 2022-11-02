@@ -48,8 +48,7 @@ namespace Agents.API.Service.Query
                     agingDynamics.AgentStateInInfluenceStart = await CalcAgentStateInInfluenceStartAsync(agent, influence);
                     agingDynamics.AgentStateInInfluenceEnd = await CalcAgentStateInInfluenceEndAsync(agent, influence);
 
-                    res.Add(agingDynamics);
-                   
+                    res.Add(agingDynamics); 
                 }
                 return res;
             }

@@ -51,3 +51,15 @@ CREATE TABLE "PatientAgents"
 );
 
 
+CREATE TABLE "AgingStates"
+(
+    "Id" bigint NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 9223372036854775807 CACHE 1 ),
+    "AgentId" bigint NOT NULL,
+    "Timestamp" date NOT NULL,
+    "Age" double precision NOT NULL,
+    "BioAge" double precision NOT NULL,
+    "State" int NOT NULL,
+    CONSTRAINT "AgingStates_pkey" PRIMARY KEY ("Id")
+)
+
+

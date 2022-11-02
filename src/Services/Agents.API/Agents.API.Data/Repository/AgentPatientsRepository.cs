@@ -1,4 +1,4 @@
-﻿using Agents.API.Data.Repository;
+﻿using Agents.API.Data.Database;
 using Agents.API.Entities;
 using Interfaces;
 using MediatR;
@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Agents.API.Data.Database
+namespace Agents.API.Data.Repository
 {
     public class AgentPatientsRepository : Repository<AgentPatient>, IAgentPatientsRepository
     {
@@ -34,7 +34,7 @@ namespace Agents.API.Data.Database
                 await agentPatient.StateDiagram.UpdateStateAsync(new AgentDetermineStateProperties());
                 return agentPatient;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 throw new AgentNotFoundException($"Get patient agent error", ex);
             }
@@ -57,12 +57,12 @@ namespace Agents.API.Data.Database
                     };
                     agentPatient.InitWebRequester(webRequester);
                     agentPatient.InitStateDiagram();
-                    await AgentsDbContext.AddAsync<AgentPatient>(agentPatient);
+                    await AgentsDbContext.AddAsync(agentPatient);
                     await AgentsDbContext.SaveChangesAsync();
                 }
                 return agentPatient;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 throw new InitAgentException($"Init agent error.", ex);
             }

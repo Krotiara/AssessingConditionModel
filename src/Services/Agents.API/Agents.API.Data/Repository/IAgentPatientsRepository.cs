@@ -6,9 +6,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Agents.API.Data.Database
+namespace Agents.API.Data.Repository
 {
-    public interface IAgentPatientsRepository: IRepository<AgentPatient>
+    public interface IAgentPatientsRepository : IRepository<AgentPatient>
     {
         public Task<AgentPatient> InitAgentPatient(IPatient patient);
 
