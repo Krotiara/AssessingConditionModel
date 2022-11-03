@@ -91,6 +91,8 @@ builder.Services.AddScoped<IRequestHandler<GetAgingStateQueryDb, AgingState>,
     GetAgingStateQueryDbHandler>();
 builder.Services.AddScoped<IRequestHandler<AddAgingStateCommand, AgingState>, 
     AddAgingStateCommandHandler>();
+builder.Services.AddScoped<IRequestHandler<GetAllInfluencesQuery, List<Influence>>, 
+    GetAllInfluencesQueryHandler>();
 
 
 var app = builder.Build();
