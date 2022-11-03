@@ -95,12 +95,12 @@ namespace Agents.API.Messaging.Receive.Receiver
                 catch (Newtonsoft.Json.JsonSerializationException ex)
                 {
                     //TODO add log
-                    channel.BasicReject(ea.DeliveryTag, false);
+                    channel.BasicReject(ea.DeliveryTag, true);
                 }
                 catch(Exception ex)
                 {
                     //TODO log
-                    channel.BasicReject(ea.DeliveryTag, false);
+                    channel.BasicReject(ea.DeliveryTag, true);
                 }
             };
 

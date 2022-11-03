@@ -14,8 +14,9 @@ namespace Agents.API.Service.Services
             this.agentPatientsRepository = agentPatientsRepository;
         }
 
-        public async Task UpdatePatientAgents(IUpdatePatientsDataInfo updateInfo)
+        public async Task<int> UpdatePatientAgents(IUpdatePatientsDataInfo updateInfo)
         {
+            int successCount = 0;
             //TODO распараллелить
             foreach((int, DateTime) pair in updateInfo.UpdateInfo)
             {
@@ -28,18 +29,22 @@ namespace Agents.API.Service.Services
                         throw new AgentNotFoundException($"Agent patient with patient id = {patientId} was not found.");
                     AgentDetermineStateProperties agentDetermineStateProperties = new AgentDetermineStateProperties() { Timestamp = timeStamp, IsNeedRecalculation = true};
                     await agent.StateDiagram.UpdateStateAsync(agentDetermineStateProperties);
+                    successCount++;
                 }
                 catch (AgentNotFoundException ex)
                 {
                     //TODO log
+                   
                     continue;
                 }
                 catch (DetermineStateException ex)
                 {
                     //TODO log
+                    
                     continue;
                 }
             }
+            return successCount;
         }
     }
 }

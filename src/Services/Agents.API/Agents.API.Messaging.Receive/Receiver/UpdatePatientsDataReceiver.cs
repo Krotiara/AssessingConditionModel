@@ -39,7 +39,11 @@ namespace Agents.API.Messaging.Receive.Receiver
             {
                 IUpdatePatientsDataInfo updateInfo = JsonConvert.DeserializeObject<UpdatePatientsInfo>(serializedStr);
                 if (updateInfo != null)
-                    await updatePatientAgentsService.UpdatePatientAgents(updateInfo);
+                {
+                    int successCount = await updatePatientAgentsService.UpdatePatientAgents(updateInfo);
+                    if (successCount != updateInfo.UpdateInfo.Count)
+                        throw new UpdateAgentsGroupException("Some agents was not updated");
+                }
                 else
                     throw new NotImplementedException(); //TODO
             }

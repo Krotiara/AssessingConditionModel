@@ -71,7 +71,7 @@ builder.Services.AddTransient<IWebRequester, RestWebRequester>();
 builder.Services.AddTransient<IInitPatientAgentsService, InitPatientAgentsService>();
 builder.Services.AddTransient<IUpdatePatientAgentsService, UpdatePatientAgentsService>();
 builder.Services.AddScoped<IAgentPatientsRepository, AgentPatientsRepository>();
-builder.Services.AddScoped<IAgingStatesRepository, AgingStatesRepository>();
+builder.Services.AddScoped<IAgingStatesRepository, AgentPatientsRepository>();
 builder.Services.AddTransient<IAgingDynamics<AgingState>, AgingDynamics>();
 
 builder.Services.AddScoped<IRequestHandler<GetAgingStateQuery, AgingState>, 

@@ -10,6 +10,11 @@ namespace Agents.API.Service.Services
 {
     public interface IUpdatePatientAgentsService
     {
-        public Task UpdatePatientAgents(IUpdatePatientsDataInfo updateInfo);
+        /// <summary>
+        /// Обновить состояния агентов пациентов.
+        /// </summary>
+        /// <param name="updateInfo"></param>
+        /// <returns>Количество успешно обновленных агентов.</returns>
+        public Task<int> UpdatePatientAgents(IUpdatePatientsDataInfo updateInfo);
     }
 }
