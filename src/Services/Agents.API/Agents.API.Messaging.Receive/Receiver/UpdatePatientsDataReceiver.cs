@@ -31,12 +31,18 @@ namespace Agents.API.Messaging.Receive.Receiver
         private async Task ReceiveAction(string serializedStr)
         {
             //TODO try catch
-            
-            IUpdatePatientsDataInfo updateInfo = JsonConvert.DeserializeObject<UpdatePatientsInfo>(serializedStr);
-            if (updateInfo != null)
-                await updatePatientAgentsService.UpdatePatientAgents(updateInfo);
-            else
-                throw new NotImplementedException(); //TODO
+            try
+            {
+                IUpdatePatientsDataInfo updateInfo = JsonConvert.DeserializeObject<UpdatePatientsInfo>(serializedStr);
+                if (updateInfo != null)
+                    await updatePatientAgentsService.UpdatePatientAgents(updateInfo);
+                else
+                    throw new NotImplementedException(); //TODO
+            }
+            catch(Exception ex)
+            {
+                //TODO
+            }
         }       
     }
 }

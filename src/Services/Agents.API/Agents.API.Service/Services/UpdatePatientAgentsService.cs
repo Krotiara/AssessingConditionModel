@@ -16,7 +16,6 @@ namespace Agents.API.Service.Services
 
         public async Task UpdatePatientAgents(IUpdatePatientsDataInfo updateInfo)
         {
-            IEnumerable<AgentPatient> patientAgents = agentPatientsRepository.GetAll();
             //TODO распараллелить
             foreach((int, DateTime) pair in updateInfo.UpdateInfo)
             {
@@ -24,7 +23,7 @@ namespace Agents.API.Service.Services
                 {
                     int patientId = pair.Item1;
                     DateTime timeStamp = pair.Item2;
-                    AgentPatient agent = patientAgents.FirstOrDefault(x => x.PatientId == patientId);
+                    AgentPatient agent = await agentPatientsRepository.GetAgentPatient(patientId);
                     if (agent == null)
                         throw new AgentNotFoundException($"Agent patient with patient id = {patientId} was not found.");
                     AgentDetermineStateProperties agentDetermineStateProperties = new AgentDetermineStateProperties() { Timestamp = timeStamp, IsNeedRecalculation = true};

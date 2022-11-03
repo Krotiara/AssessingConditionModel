@@ -61,6 +61,8 @@ builder.Services.AddDbContext<AgentsDbContext>(options => options.UseNpgsql(conn
 {
     builder.EnableRetryOnFailure(5, TimeSpan.FromSeconds(2), null);
 }), ServiceLifetime.Singleton); // Registration dbContext as service.
+
+
 //Для избежания ошибки Cannot write DateTime with Kind=Local to PostgreSQL type 'timestamp with time zone', only UTC is supported.
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 

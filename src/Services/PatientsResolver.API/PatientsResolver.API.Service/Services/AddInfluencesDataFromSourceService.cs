@@ -32,15 +32,17 @@ namespace PatientsResolver.API.Service.Services
                 List<Influence> addedData = 
                     await mediator.Send(new AddInfluenceDataCommand() { Data = data });
 
-#warning Пока убрана отсылка обновления данных о пациентах агентам пациентов
-                IUpdatePatientsDataInfo updateInfo = new UpdatePatientsInfo();
-                foreach(Influence inf in addedData)
+                if(addedData.Count > 0)
                 {
-                    updateInfo.UpdateInfo.Add((inf.PatientId, inf.StartTimestamp));
-                    updateInfo.UpdateInfo.Add((inf.PatientId, inf.EndTimestamp));
+                    IUpdatePatientsDataInfo updateInfo = new UpdatePatientsInfo();
+                    foreach (Influence inf in addedData)
+                    {
+                        updateInfo.UpdateInfo.Add((inf.PatientId, inf.StartTimestamp));
+                        updateInfo.UpdateInfo.Add((inf.PatientId, inf.EndTimestamp));
+                    }
+                    await mediator.Send(new SendUpdatePatientsInfoCommand() { UpdatePatientsInfo = updateInfo });
                 }
                 
-                await mediator.Send(new SendUpdatePatientsInfoCommand() { UpdatePatientsInfo = updateInfo }); 
             }
             catch(Exception ex)
             {

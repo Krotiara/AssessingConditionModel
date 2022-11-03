@@ -2,6 +2,7 @@
 using Agents.API.Entities;
 using Interfaces;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,8 +27,8 @@ namespace Agents.API.Data.Repository
 
         public async Task<AgentPatient> GetAgentPatient(int patientId)
         {
-            AgentPatient? agentPatient = AgentsDbContext
-                    .AgentPatients.FirstOrDefault(x => x.PatientId == patientId);
+            AgentPatient? agentPatient = await AgentsDbContext
+                    .AgentPatients.FirstOrDefaultAsync(x => x.PatientId == patientId);
             if (agentPatient == null)
                 throw new AgentNotFoundException($"Not found patient agent with patient id = {patientId}.");
             try
@@ -53,8 +54,8 @@ namespace Agents.API.Data.Repository
                 throw new InitAgentException("patient is null");
             try
             {
-                AgentPatient? agentPatient = AgentsDbContext
-                    .AgentPatients.FirstOrDefault(x => x.PatientId == patient.MedicalHistoryNumber);
+                AgentPatient? agentPatient = await AgentsDbContext
+                    .AgentPatients.FirstOrDefaultAsync(x => x.PatientId == patient.MedicalHistoryNumber);
                 if (agentPatient == null)
                 {
                     agentPatient = new AgentPatient()

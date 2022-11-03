@@ -97,6 +97,11 @@ namespace Agents.API.Messaging.Receive.Receiver
                     //TODO add log
                     channel.BasicReject(ea.DeliveryTag, false);
                 }
+                catch(Exception ex)
+                {
+                    //TODO log
+                    channel.BasicReject(ea.DeliveryTag, false);
+                }
             };
 
             channel.BasicConsume(queueName, false, consumer);
