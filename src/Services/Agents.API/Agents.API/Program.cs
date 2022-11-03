@@ -57,10 +57,15 @@ if(builder.Configuration.GetSection("RabbitMqAddInfo").Get<AddDataConfig>().Enab
 #endregion
 
 string connectionString = builder.Configuration.GetConnectionString("PostgresConnection");
-builder.Services.AddDbContext<AgentsDbContext>(options => options.UseNpgsql(connectionString, builder =>
+//builder.Services.AddDbContext<AgentsDbContext>(options => options.UseNpgsql(connectionString, builder =>
+//{
+//    builder.EnableRetryOnFailure(5, TimeSpan.FromSeconds(2), null);
+//}), ServiceLifetime.Scoped); // Registration dbContext as service.
+
+builder.Services.AddDbContextFactory<AgentsDbContext>(options => options.UseNpgsql(connectionString, builder =>
 {
     builder.EnableRetryOnFailure(5, TimeSpan.FromSeconds(2), null);
-}), ServiceLifetime.Scoped); // Registration dbContext as service.
+}), ServiceLifetime.Scoped);
 
 
 //Для избежания ошибки Cannot write DateTime with Kind=Local to PostgreSQL type 'timestamp with time zone', only UTC is supported.
