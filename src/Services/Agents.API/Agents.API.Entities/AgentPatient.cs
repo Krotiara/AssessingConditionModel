@@ -69,7 +69,7 @@ namespace Agents.API.Entities
         private async Task<State> DetermineState(IAgentDetermineStateProperties determineStateProperties)
         {
             AgingState? state = await GetAgingStateDb.Invoke(PatientId, determineStateProperties.Timestamp);
-            if (state != null)
+            if (state != null && !determineStateProperties.IsNeedRecalculation)
             {
                 CurrentAge = state.Age;
                 CurrentBioAge = state.BioAge;

@@ -24,7 +24,7 @@ namespace Agents.API.Messaging.Receive.Receiver
         private  string exchange;
         private  string routingKey;
 
-        public void InitReceiver(Action<string> receiveAction, IOptions<IRabbitMqConfiguration> rabbitMqOptions)
+        public void InitReceiver(Func<string, Task> receiveAction, IOptions<IRabbitMqConfiguration> rabbitMqOptions)
         {
             hostname = rabbitMqOptions.Value.Hostname;
             queueName = rabbitMqOptions.Value.QueueName;
@@ -36,7 +36,7 @@ namespace Agents.API.Messaging.Receive.Receiver
             InitializeRabbitMqListener();
         }
 
-        private Action<string> receiveAction;
+        private Func<string, Task> receiveAction;
 
         private void InitializeRabbitMqListener()
         {
@@ -83,13 +83,12 @@ namespace Agents.API.Messaging.Receive.Receiver
             stoppingToken.ThrowIfCancellationRequested();
 
             EventingBasicConsumer consumer = new EventingBasicConsumer(channel);
-            consumer.Received += (ch, ea) =>
+            consumer.Received += async (ch, ea) =>
             {
                 try
                 {
                     string content = Encoding.UTF8.GetString(ea.Body.ToArray());
-
-                    receiveAction.Invoke(content);
+                    await receiveAction(content);
 
                     channel.BasicAck(ea.DeliveryTag, false);
                 }

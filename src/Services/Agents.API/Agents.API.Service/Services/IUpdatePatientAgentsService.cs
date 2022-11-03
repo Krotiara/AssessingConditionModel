@@ -1,4 +1,5 @@
 ﻿using Agents.API.Entities;
+using Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,6 @@ namespace Agents.API.Service.Services
 {
     public interface IUpdatePatientAgentsService
     {
-        public Task UpdatePatientAgents(IEnumerable<int> patientIds, IAgentDetermineStateProperties determineStateProperties);
+        public Task UpdatePatientAgents(IUpdatePatientsDataInfo updateInfo);
     }
 }

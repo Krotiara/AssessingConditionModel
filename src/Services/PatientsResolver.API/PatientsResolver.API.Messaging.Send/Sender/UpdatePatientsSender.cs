@@ -53,7 +53,7 @@ namespace PatientsResolver.API.Messaging.Send.Sender
         }
 
 
-        public void SendUpdatePatientsInfo(IUpdatePatientsInfo updatePatientsInfo)
+        public void SendUpdatePatientsInfo(IUpdatePatientsDataInfo updatePatientsInfo)
         {
             if (connection == null)
                 CreateConnection();

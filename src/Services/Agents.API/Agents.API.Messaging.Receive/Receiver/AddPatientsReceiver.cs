@@ -23,12 +23,12 @@ namespace Agents.API.Messaging.Receive.Receiver
         }
 
 
-        private void ReceiveAction(string serializedStr)
+        private async Task ReceiveAction(string serializedStr)
         {
             List<IPatient> data = JsonConvert.DeserializeObject<List<Patient>>(serializedStr)
                 .Cast<IPatient>()
                 .ToList();
-            initPatientAgentsService.InitPatientAgentsAsync(data);
+            await initPatientAgentsService.InitPatientAgentsAsync(data);
         }
     }
 }

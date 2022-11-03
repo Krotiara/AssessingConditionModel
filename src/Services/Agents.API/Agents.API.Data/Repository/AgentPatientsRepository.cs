@@ -62,15 +62,15 @@ namespace Agents.API.Data.Repository
                         PatientId = patient.MedicalHistoryNumber,
                         Name = patient.MedicalHistoryNumber.ToString()
                     };
-                    agentPatient.InitWebRequester(webRequester);
-                    agentPatient.InitDbRequester(
-                       async (x, y) => await agingStatesRepository.GetStateAsync(x, y),
-                       async (x) => await agingStatesRepository.AddState(x));
-                    agentPatient.InitStateDiagram();
                     await AgentsDbContext.AddAsync(agentPatient);
                     await AgentsDbContext.SaveChangesAsync();
-                    await agentPatient.StateDiagram.UpdateStateAsync(new AgentDetermineStateProperties());
                 }
+
+                agentPatient.InitWebRequester(webRequester);
+                agentPatient.InitDbRequester(
+                    async (x, y) => await agingStatesRepository.GetStateAsync(x, y),
+                    async (x) => await agingStatesRepository.AddState(x));
+                agentPatient.InitStateDiagram();
                 return agentPatient;
             }
             catch (Exception ex)
@@ -78,15 +78,5 @@ namespace Agents.API.Data.Repository
                 throw new InitAgentException($"Init agent error.", ex);
             }
         }
-
-
-        //public async Task StartAgents()
-        //{
-        //    foreach (AgentPatient agentPatient in AgentsDbContext.AgentPatients)
-        //    {
-        //        agentPatient.InitWebRequester(webRequester);
-        //        await agentPatient.StateDiagram.UpdateStateAsync(new AgentDetermineStateProperties());
-        //    }
-        //}
     }
 }

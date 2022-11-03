@@ -21,6 +21,7 @@ namespace Agents.API.Service.Services
 
         public async Task InitPatientAgentsAsync(IList<IPatient> patients)
         {
+            //TODO распараллелить
             foreach (IPatient patient in patients)
             {
                 try

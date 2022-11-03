@@ -1,5 +1,6 @@
 ﻿using Agents.API.Data.Repository;
 using Agents.API.Entities;
+using Interfaces;
 
 namespace Agents.API.Service.Services
 {
@@ -13,25 +14,28 @@ namespace Agents.API.Service.Services
             this.agentPatientsRepository = agentPatientsRepository;
         }
 
-        public async Task UpdatePatientAgents(IEnumerable<int> patientIds, IAgentDetermineStateProperties determineStateProperties)
+        public async Task UpdatePatientAgents(IUpdatePatientsDataInfo updateInfo)
         {
-            IEnumerable<AgentPatient> patients = agentPatientsRepository.GetAll();
-            foreach (int patientId in patientIds)
+            IEnumerable<AgentPatient> patientAgents = agentPatientsRepository.GetAll();
+            //TODO распараллелить
+            foreach((int, DateTime) pair in updateInfo.UpdateInfo)
             {
                 try
                 {
-                    //TODO сейчас выглядит костыльно через получение сначала всех пациентов, а затем нужного.
-                    AgentPatient agent = patients.FirstOrDefault(x => x.PatientId == patientId);
+                    int patientId = pair.Item1;
+                    DateTime timeStamp = pair.Item2;
+                    AgentPatient agent = patientAgents.FirstOrDefault(x => x.PatientId == patientId);
                     if (agent == null)
                         throw new AgentNotFoundException($"Agent patient with patient id = {patientId} was not found.");
-                    await agent.StateDiagram.UpdateStateAsync(determineStateProperties);
+                    AgentDetermineStateProperties agentDetermineStateProperties = new AgentDetermineStateProperties() { Timestamp = timeStamp, IsNeedRecalculation = true};
+                    await agent.StateDiagram.UpdateStateAsync(agentDetermineStateProperties);
                 }
-                catch(AgentNotFoundException ex)
+                catch (AgentNotFoundException ex)
                 {
                     //TODO log
                     continue;
                 }
-                catch(DetermineStateException ex)
+                catch (DetermineStateException ex)
                 {
                     //TODO log
                     continue;

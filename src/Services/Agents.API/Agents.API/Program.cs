@@ -64,7 +64,7 @@ builder.Services.AddDbContext<AgentsDbContext>(options => options.UseNpgsql(conn
 //Для избежания ошибки Cannot write DateTime with Kind=Local to PostgreSQL type 'timestamp with time zone', only UTC is supported.
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
-builder.Services.AddScoped<IUpdatePatientsInfo, UpdatePatientsInfo>();
+builder.Services.AddScoped<IUpdatePatientsDataInfo, UpdatePatientsInfo>();
 builder.Services.AddTransient<IWebRequester, RestWebRequester>();
 builder.Services.AddTransient<IInitPatientAgentsService, InitPatientAgentsService>();
 builder.Services.AddTransient<IUpdatePatientAgentsService, UpdatePatientAgentsService>();

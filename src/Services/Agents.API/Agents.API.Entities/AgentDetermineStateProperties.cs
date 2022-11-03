@@ -9,6 +9,8 @@ namespace Agents.API.Entities
             Timestamp = DateTime.MaxValue; //по-умолчанию
         }
 
-        public DateTime Timestamp { get ; set ; }      
+        public DateTime Timestamp { get ; set ; }
+
+        public bool IsNeedRecalculation { get; set; }
     }
 }

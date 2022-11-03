@@ -9,6 +9,6 @@ namespace PatientsResolver.API.Messaging.Send.Sender
 {
     public interface IUpdatePatientsSender
     {
-        void SendUpdatePatientsInfo(IUpdatePatientsInfo updatePatientsInfo);
+        void SendUpdatePatientsInfo(IUpdatePatientsDataInfo updatePatientsInfo);
     }
 }
