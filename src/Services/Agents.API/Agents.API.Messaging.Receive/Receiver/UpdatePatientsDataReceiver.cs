@@ -12,6 +12,7 @@ using Interfaces;
 using Agents.API.Entities;
 using Agents.API.Messaging.Receive.Configs;
 using Agents.API.Service.Services;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Agents.API.Messaging.Receive.Receiver
 {
@@ -19,11 +20,14 @@ namespace Agents.API.Messaging.Receive.Receiver
     {
         
         private readonly IUpdatePatientAgentsService updatePatientAgentsService;
-       
+        readonly IServiceScopeFactory serviceScopeFactory;
 
-        public UpdatePatientsDataReceiver(IUpdatePatientAgentsService updatePatientAgentsService, IOptions<RabbitMqConfiguration> rabbitMqOptions)
+        public UpdatePatientsDataReceiver(IServiceScopeFactory serviceScopeFactory, IOptions<RabbitMqConfiguration> rabbitMqOptions)
         {
-            this.updatePatientAgentsService = updatePatientAgentsService;
+            this.serviceScopeFactory = serviceScopeFactory;
+            IServiceScope scope = serviceScopeFactory.CreateScope();
+            updatePatientAgentsService = scope.ServiceProvider.GetRequiredService<IUpdatePatientAgentsService>();
+           // this.updatePatientAgentsService = updatePatientAgentsService;
             InitReceiver(ReceiveAction, rabbitMqOptions);
         }
 
@@ -41,6 +45,7 @@ namespace Agents.API.Messaging.Receive.Receiver
             }
             catch(Exception ex)
             {
+                throw new NotImplementedException();
                 //TODO
             }
         }       

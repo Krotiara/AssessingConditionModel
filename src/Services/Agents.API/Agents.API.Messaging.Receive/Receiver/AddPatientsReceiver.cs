@@ -2,6 +2,7 @@
 using Agents.API.Messaging.Receive.Configs;
 using Agents.API.Service.Services;
 using Interfaces;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using System;
@@ -16,9 +17,14 @@ namespace Agents.API.Messaging.Receive.Receiver
     {
         IInitPatientAgentsService initPatientAgentsService;
 
-        public AddPatientsReceiver(IInitPatientAgentsService initPatientAgentsService, IOptions<AddDataConfig> rabbitMqOptions)
+        readonly IServiceScopeFactory serviceScopeFactory;
+
+        public AddPatientsReceiver(IServiceScopeFactory serviceScopeFactory, IOptions<AddDataConfig> rabbitMqOptions)
         {
-            this.initPatientAgentsService = initPatientAgentsService;
+            this.serviceScopeFactory = serviceScopeFactory;
+            IServiceScope scope = serviceScopeFactory.CreateScope();
+            initPatientAgentsService = scope.ServiceProvider.GetRequiredService<IInitPatientAgentsService>();
+            //this.initPatientAgentsService = initPatientAgentsService;
             InitReceiver(ReceiveAction, rabbitMqOptions);
         }
 

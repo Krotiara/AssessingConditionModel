@@ -60,7 +60,7 @@ string connectionString = builder.Configuration.GetConnectionString("PostgresCon
 builder.Services.AddDbContext<AgentsDbContext>(options => options.UseNpgsql(connectionString, builder =>
 {
     builder.EnableRetryOnFailure(5, TimeSpan.FromSeconds(2), null);
-}), ServiceLifetime.Singleton); // Registration dbContext as service.
+}), ServiceLifetime.Scoped); // Registration dbContext as service.
 
 
 //Для избежания ошибки Cannot write DateTime with Kind=Local to PostgreSQL type 'timestamp with time zone', only UTC is supported.
@@ -70,8 +70,8 @@ builder.Services.AddScoped<IUpdatePatientsDataInfo, UpdatePatientsInfo>();
 builder.Services.AddTransient<IWebRequester, RestWebRequester>();
 builder.Services.AddTransient<IInitPatientAgentsService, InitPatientAgentsService>();
 builder.Services.AddTransient<IUpdatePatientAgentsService, UpdatePatientAgentsService>();
-builder.Services.AddSingleton<IAgentPatientsRepository, AgentPatientsRepository>();
-builder.Services.AddSingleton<IAgingStatesRepository, AgingStatesRepository>();
+builder.Services.AddScoped<IAgentPatientsRepository, AgentPatientsRepository>();
+builder.Services.AddScoped<IAgingStatesRepository, AgingStatesRepository>();
 builder.Services.AddTransient<IAgingDynamics<AgingState>, AgingDynamics>();
 
 builder.Services.AddScoped<IRequestHandler<GetAgingStateQuery, AgingState>, 
