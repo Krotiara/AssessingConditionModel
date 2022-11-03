@@ -43,6 +43,17 @@ namespace WebMVC.Controllers
         }
 
 
+        [HttpGet]
+        public async Task<IActionResult> GetAgingDynamics(DateTime startTimestamp, DateTime endTimestamp)
+        {
+            //TODO try catch
+            IList<AgingDynamics> agingDynamics = await
+               patientsService.GetAgingDynamics(startTimestamp, endTimestamp);
+            CommonAgingDynamics cad = new CommonAgingDynamics(agingDynamics, startTimestamp, endTimestamp);
+            return PartialView("CommonAgingDynamicsView", cad);
+        }
+
+
         [HttpPost]
         public async Task AddInfluencesFromFile([FromBody]string data)
         {

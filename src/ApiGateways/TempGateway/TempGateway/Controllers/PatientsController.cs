@@ -57,6 +57,23 @@ namespace TempGateway.Controllers
         }
 
 
+        [HttpPost("agingDynamics/")]
+        public async Task<ActionResult<IList<IAgingDynamics<AgingState>>>> GetPatientAgingDynamics([FromBody] DateTime[] timeSpan)
+        {
+            DateTime startTime = DateTime.MinValue;
+            DateTime endTime = DateTime.MaxValue;
+            if (timeSpan != null && timeSpan.Length == 2)
+            {
+                startTime = timeSpan[0];
+                endTime = timeSpan[1];
+            }
+            IList<AgingDynamics> agingPatientStates = await patientService.GetAgingDynamics(startTime, endTime);
+            if (agingPatientStates == null)
+                return BadRequest($"No aging patient states.");
+            return Ok(agingPatientStates);
+        }
+
+
         [HttpPost("addInfluenceData/")]
         public async Task<ActionResult<bool>> AddInfluenceData([FromBody] FileData fD)
         {

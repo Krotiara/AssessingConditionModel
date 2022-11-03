@@ -14,5 +14,8 @@ namespace WebMVC.Models
         public string MedicineName { get ; set ; }
         public AgingState AgentStateInInfluenceStart { get ; set ; }
         public AgingState AgentStateInInfluenceEnd { get ; set ; }
+
+        public double StartDelta => AgentStateInInfluenceStart.BioAge - AgentStateInInfluenceStart.Age;
+        public double EndDelta => AgentStateInInfluenceEnd.BioAge - AgentStateInInfluenceEnd.Age;
     }
 }
