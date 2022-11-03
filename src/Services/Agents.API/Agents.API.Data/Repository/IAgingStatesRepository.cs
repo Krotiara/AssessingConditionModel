@@ -11,6 +11,6 @@ namespace Agents.API.Data.Repository
     {
         public Task<AgingState> GetStateAsync(int patientId, DateTime timeStamp);
 
-        public Task<AgingState> AddState(AgingState agingState);
+        public Task<AgingState> AddState(AgingState agingState, bool isOverride);
     }
 }

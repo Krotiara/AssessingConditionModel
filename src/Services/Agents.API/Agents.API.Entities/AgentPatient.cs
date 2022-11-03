@@ -18,7 +18,7 @@ namespace Agents.API.Entities
         private IWebRequester webRequester;
 
         private Func<int, DateTime, Task<AgingState>> GetAgingStateDb;
-        private Func<AgingState, Task<AgingState>> AddAgingStateDb;
+        private Func<AgingState, bool, Task<AgingState>> AddAgingStateDb;
 
         public AgentPatient() 
         {
@@ -87,7 +87,7 @@ namespace Agents.API.Entities
                         Age = CurrentAge,
                         BioAge = CurrentBioAge,
                         BioAgeState = CurrentAgeRang
-                    });
+                    }, determineStateProperties.IsNeedRecalculation);
                 }
                 catch(AddAgingStateException ex)
                 {
@@ -195,7 +195,7 @@ namespace Agents.API.Entities
         }
 
         public void InitDbRequester(Func<int, DateTime, Task<AgingState>> getAgingStateDb, 
-            Func<AgingState, Task<AgingState>> addAgingStateDb)
+            Func<AgingState, bool, Task<AgingState>> addAgingStateDb)
         {
 #warning Кривая реализация
             GetAgingStateDb = getAgingStateDb;

@@ -36,7 +36,7 @@ namespace Agents.API.Data.Repository
                 agentPatient.InitWebRequester(webRequester);
                 agentPatient.InitDbRequester(
                     async (x, y) => await agingStatesRepository.GetStateAsync(x, y),
-                    async (x) => await agingStatesRepository.AddState(x));
+                    async (x, y) => await agingStatesRepository.AddState(x, y));
                 agentPatient.InitStateDiagram();
                 await agentPatient.StateDiagram.UpdateStateAsync(new AgentDetermineStateProperties());
                 return agentPatient;
@@ -70,7 +70,7 @@ namespace Agents.API.Data.Repository
                 agentPatient.InitWebRequester(webRequester);
                 agentPatient.InitDbRequester(
                     async (x, y) => await agingStatesRepository.GetStateAsync(x, y),
-                    async (x) => await agingStatesRepository.AddState(x));
+                    async (x, y) => await agingStatesRepository.AddState(x, y));
                 agentPatient.InitStateDiagram();
                 return agentPatient;
             }

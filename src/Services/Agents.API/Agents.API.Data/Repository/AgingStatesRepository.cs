@@ -18,28 +18,37 @@ namespace Agents.API.Data.Repository
 
         public async Task<AgingState> GetStateAsync(int patientId, DateTime timeStamp)
         {
-            return AgentsDbContext.AgingStates.FirstOrDefault(x => x.PatientId == patientId && x.Timestamp == timeStamp);
+            return await AgentsDbContext.AgingStates.FirstOrDefaultAsync(x => x.PatientId == patientId && x.Timestamp == timeStamp);
         }
 
 
-        public async Task<AgingState> AddState(AgingState agingState)
+        public async Task<AgingState> AddState(AgingState agingState, bool isOverride)
         {
             IExecutionStrategy strategy = AgentsDbContext.Database.CreateExecutionStrategy();
             return await strategy.ExecuteAsync(async () =>
             {
-                AgingState? state = AgentsDbContext.AgingStates
-                .FirstOrDefault(x => x.PatientId == agingState.PatientId && x.Timestamp == agingState.Timestamp);
-                if (state != null)
+                AgingState? state = await AgentsDbContext.AgingStates
+                .FirstOrDefaultAsync(x => x.PatientId == agingState.PatientId && x.Timestamp == agingState.Timestamp);
+                if (state != null && !isOverride)
                     throw new AddAgingStateException($"State already exist:id={agingState.PatientId},timestamp={agingState.Timestamp}");
-                try
+                else
                 {
-                    await AgentsDbContext.AgingStates.AddAsync(agingState);
-                    await AgentsDbContext.SaveChangesAsync();
-                    return agingState;
-                }
-                catch(Exception ex)
-                {
-                    throw new AddAgingStateException("", ex);
+                    try
+                    {
+                        if (state != null)
+                        {
+                            agingState.Id = state.Id;
+                            AgentsDbContext.Entry(state).CurrentValues.SetValues(agingState);
+                        }
+                        else
+                            await AgentsDbContext.AgingStates.AddAsync(agingState);
+                        await AgentsDbContext.SaveChangesAsync();
+                        return state != null ? state : agingState;
+                    }
+                    catch (Exception ex)
+                    {
+                        throw new AddAgingStateException("", ex);
+                    }
                 }
             });
         }
