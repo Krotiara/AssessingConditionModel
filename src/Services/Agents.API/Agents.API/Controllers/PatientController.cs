@@ -19,7 +19,7 @@ namespace Agents.API.Controllers
 
 
         [HttpGet("agingState/{patientId}")]
-        public async Task<ActionResult<IAgingPatientState>> GetAgingState(int patientId)
+        public async Task<ActionResult<IAgingState>> GetAgingState(int patientId)
         {
             try
             {
@@ -37,7 +37,7 @@ namespace Agents.API.Controllers
 
 
         [HttpPost("agingDynamics/{patientId}")]
-        public async Task<ActionResult<IList<IAgingDynamics<AgingPatientState>>>> GetAgingDynamics(int patientId, [FromBody]DateTime[] timeSpan)
+        public async Task<ActionResult<IList<IAgingDynamics<AgingState>>>> GetAgingDynamics(int patientId, [FromBody]DateTime[] timeSpan)
         {
             try
             {
@@ -58,7 +58,7 @@ namespace Agents.API.Controllers
 
 
         [HttpPost("agingDynamics/")]
-        public async Task<ActionResult<IList<IAgingDynamics<AgingPatientState>>>> GetAgingDynamics([FromBody] DateTime[] timeSpan)
+        public async Task<ActionResult<IList<IAgingDynamics<AgingState>>>> GetAgingDynamics([FromBody] DateTime[] timeSpan)
         {
             try
             {

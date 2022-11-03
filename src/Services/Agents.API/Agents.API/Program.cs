@@ -72,15 +72,15 @@ builder.Services.AddTransient<IInitPatientAgentsService, InitPatientAgentsServic
 builder.Services.AddTransient<IUpdatePatientAgentsService, UpdatePatientAgentsService>();
 builder.Services.AddSingleton<IAgentPatientsRepository, AgentPatientsRepository>();
 builder.Services.AddSingleton<IAgingStatesRepository, AgingStatesRepository>();
-builder.Services.AddTransient<IAgingDynamics<AgingPatientState>, AgingDynamics>();
+builder.Services.AddTransient<IAgingDynamics<AgingState>, AgingDynamics>();
 
-builder.Services.AddScoped<IRequestHandler<GetAgingStateQuery, AgingPatientState>, 
+builder.Services.AddScoped<IRequestHandler<GetAgingStateQuery, AgingState>, 
     GetAgingStateQueryHandler>();
 builder.Services.AddScoped<IRequestHandler<GetPatientInfluencesQuery, List<Influence>>, 
     GetPatientInfluencesQueryHandler>();
-builder.Services.AddScoped<IRequestHandler<GetAgingDynamicsQuery, List<IAgingDynamics<AgingPatientState>>>, 
+builder.Services.AddScoped<IRequestHandler<GetAgingDynamicsQuery, List<IAgingDynamics<AgingState>>>, 
     GetAgingDynamicsQueryHandler>();
-builder.Services.AddScoped<IRequestHandler<GetAllPatientsAgingDynamicsQuery, List<IAgingDynamics<AgingPatientState>>>,
+builder.Services.AddScoped<IRequestHandler<GetAllPatientsAgingDynamicsQuery, List<IAgingDynamics<AgingState>>>,
     GetAllPatientsAgingDynamicsQueryHandler>();
 builder.Services.AddScoped<IRequestHandler<GetAgingStateQueryDb, AgingState>, 
     GetAgingStateQueryDbHandler>();

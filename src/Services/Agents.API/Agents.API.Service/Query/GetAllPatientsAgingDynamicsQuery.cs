@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Agents.API.Service.Query
 {
-    public class GetAllPatientsAgingDynamicsQuery: IRequest<List<IAgingDynamics<AgingPatientState>>>
+    public class GetAllPatientsAgingDynamicsQuery: IRequest<List<IAgingDynamics<AgingState>>>
     {
         public DateTime StartTimestamp { get; set; }
 

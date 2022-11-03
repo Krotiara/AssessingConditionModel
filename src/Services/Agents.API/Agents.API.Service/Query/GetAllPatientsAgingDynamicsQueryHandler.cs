@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 namespace Agents.API.Service.Query
 {
     public class GetAllPatientsAgingDynamicsQueryHandler :
-        IRequestHandler<GetAllPatientsAgingDynamicsQuery, List<IAgingDynamics<AgingPatientState>>>
+        IRequestHandler<GetAllPatientsAgingDynamicsQuery, List<IAgingDynamics<AgingState>>>
     {
 
         private readonly IAgentPatientsRepository agentPatientsRepository;
@@ -23,14 +23,14 @@ namespace Agents.API.Service.Query
             this.mediator = mediator;
         }
 
-        public async Task<List<IAgingDynamics<AgingPatientState>>> Handle(GetAllPatientsAgingDynamicsQuery request, CancellationToken cancellationToken)
+        public async Task<List<IAgingDynamics<AgingState>>> Handle(GetAllPatientsAgingDynamicsQuery request, CancellationToken cancellationToken)
         {
-            List<IAgingDynamics<AgingPatientState>> result = new List<IAgingDynamics<AgingPatientState>>();
+            List<IAgingDynamics<AgingState>> result = new List<IAgingDynamics<AgingState>>();
             foreach(AgentPatient agentPatient in agentPatientsRepository.GetAll())
             {
                 try
                 {
-                    List<IAgingDynamics<AgingPatientState>> dynamics = await mediator.Send(new GetAgingDynamicsQuery()
+                    List<IAgingDynamics<AgingState>> dynamics = await mediator.Send(new GetAgingDynamicsQuery()
                     {
                         PatientId = agentPatient.PatientId,
                         StartTimestamp = request.StartTimestamp,

@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Agents.API.Service.Query
 {
-    public class GetAgingDynamicsQuery: IRequest<List<IAgingDynamics<AgingPatientState>>>
+    public class GetAgingDynamicsQuery: IRequest<List<IAgingDynamics<AgingState>>>
     {
         public int PatientId { get; set; }
 

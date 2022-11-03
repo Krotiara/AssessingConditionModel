@@ -34,7 +34,7 @@ builder.Services.AddSwaggerGen(c =>
 builder.Services.AddMediatR(Assembly.GetExecutingAssembly());
 
 builder.Services.AddTransient<IFileData, FileData>();
-builder.Services.AddTransient<IAgingDynamics<AgingPatientState>, AgingDynamics>();
+builder.Services.AddTransient<IAgingDynamics<AgingState>, AgingDynamics>();
 builder.Services.AddScoped<IPatientService, PatientService>();
 builder.Services.AddScoped<IWebRequester, RestWebRequester>();
 

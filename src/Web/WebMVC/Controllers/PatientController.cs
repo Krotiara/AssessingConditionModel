@@ -21,7 +21,7 @@ namespace WebMVC.Controllers
             //TODO try catch    
             int patientId = int.Parse(id);
             Patient patient = await patientsService.GetPatient(patientId);
-            AgingPatientState state = await patientsService.GetPatientCurrentAgingState(patientId);
+            AgingState state = await patientsService.GetPatientCurrentAgingState(patientId);
             PatientInfo patientInfo = new PatientInfo()
             {
                 Patient = patient,

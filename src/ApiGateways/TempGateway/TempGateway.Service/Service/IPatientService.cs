@@ -12,7 +12,7 @@ namespace TempGateway.Service.Service
     {
         public Task<IPatient> GetPatientById(int id);
 
-        public Task<IAgingPatientState> GetAgingPatientStateByPatientId(int patientId);
+        public Task<IAgingState> GetAgingPatientStateByPatientId(int patientId);
 
         public Task<IList<AgingDynamics>> GetAgingDynamicsByPatientId(int patientId, DateTime startTimestamp, DateTime endTimestamp);
     }

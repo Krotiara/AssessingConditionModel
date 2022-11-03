@@ -25,11 +25,11 @@ namespace TempGateway.Service.Service
                   .GetResponse<IList<AgingDynamics>>(url, "POST", body);
         }
 
-        public async Task<IAgingPatientState> GetAgingPatientStateByPatientId(int patientId)
+        public async Task<IAgingState> GetAgingPatientStateByPatientId(int patientId)
         {
 #warning Выскакивает ошибка запроса
             string url = $"https://host.docker.internal:8012/agingState/{patientId}";
-            return await webRequester.GetResponse<AgingPatientState>(url, "GET");
+            return await webRequester.GetResponse<AgingState>(url, "GET");
         }
 
         public async Task<IPatient> GetPatientById(int id)

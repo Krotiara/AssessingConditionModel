@@ -8,8 +8,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 
 
-builder.Services.AddTransient<IAgingPatientState, AgingPatientState>();
-builder.Services.AddTransient<IAgingDynamics<AgingPatientState>, AgingDynamics>();
+builder.Services.AddTransient<IAgingState, AgingState>();
+builder.Services.AddTransient<IAgingDynamics<AgingState>, AgingDynamics>();
 builder.Services.AddTransient<IPatient, Patient>();
 builder.Services.AddTransient<IWebRequester, RestWebRequester>();
 builder.Services.AddScoped<IPatientService, PatientService>();

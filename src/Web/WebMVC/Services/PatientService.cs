@@ -50,10 +50,10 @@ namespace WebMVC.Services
             return await webRequester.GetResponse<IList<AgingDynamics>>(url, "POST", body);
         }
 
-        public async Task<AgingPatientState> GetPatientCurrentAgingState(int patientId)
+        public async Task<AgingState> GetPatientCurrentAgingState(int patientId)
         {
             string url = $"https://host.docker.internal:8009/agingState/{patientId}";
-            return await webRequester.GetResponse<AgingPatientState>(url, "GET");
+            return await webRequester.GetResponse<AgingState>(url, "GET");
         }
     }
 }

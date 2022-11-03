@@ -30,9 +30,9 @@ namespace TempGateway.Controllers
 
 
         [HttpGet("agingState/{patientId}")]
-        public async Task<ActionResult<IAgingPatientState>> GetPatientAgingState(int patientId)
+        public async Task<ActionResult<IAgingState>> GetPatientAgingState(int patientId)
         {
-            IAgingPatientState agingState = await patientService.GetAgingPatientStateByPatientId(patientId);
+            IAgingState agingState = await patientService.GetAgingPatientStateByPatientId(patientId);
             if (agingState == null)
                 return BadRequest($"No aging patient state found for id {patientId}");
             return Ok(agingState);
@@ -40,7 +40,7 @@ namespace TempGateway.Controllers
 
 
         [HttpPost("agingDynamics/{patientId}")]
-        public async Task<ActionResult<IList<IAgingDynamics<AgingPatientState>>>> GetPatientAgingDynamics(int patientId, [FromBody] DateTime[] timeSpan)
+        public async Task<ActionResult<IList<IAgingDynamics<AgingState>>>> GetPatientAgingDynamics(int patientId, [FromBody] DateTime[] timeSpan)
         {
             DateTime startTime = DateTime.MinValue;
             DateTime endTime = DateTime.MaxValue;
