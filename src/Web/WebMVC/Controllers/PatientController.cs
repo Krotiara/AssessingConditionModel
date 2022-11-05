@@ -49,8 +49,8 @@ namespace WebMVC.Controllers
             //TODO try catch
             IList<AgingDynamics> agingDynamics = await
                patientsService.GetAgingDynamics(startTimestamp, endTimestamp);
-            CommonAgingDynamics cad = new CommonAgingDynamics(agingDynamics, startTimestamp, endTimestamp);
-            return PartialView("CommonAgingDynamicsView", cad);
+            CommonAgingDynamics dynamics = new CommonAgingDynamics(agingDynamics, startTimestamp, endTimestamp);
+            return PartialView("CommonAgingDynamicsView", dynamics);
         }
 
 
@@ -60,6 +60,13 @@ namespace WebMVC.Controllers
             //TODO try catch
             byte[] bytes = Convert.FromBase64String(data);
             _ = await patientsService.AddPatientsInluenceData(bytes);      
+        }
+
+
+        [HttpPost]
+        public async Task SaveDynamicsToFile(CommonAgingDynamics agingDynamics)
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -17,6 +17,8 @@ namespace WebMVC.Models
             
         }
 
+        public CommonAgingDynamics() { }
+
         public DateTime StartTimestamp { get; set; }
 
         public DateTime EndTimestamp { get; set; }

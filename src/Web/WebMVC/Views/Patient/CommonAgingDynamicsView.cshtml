@@ -19,7 +19,12 @@
             th{font-weight: normal;}    
         </style>
     </head>
-    <body>   
+    <body>
+        <form id="hidden-data">
+           @Html.HiddenFor(m => m.StartTimestamp)
+           @Html.HiddenFor(m => m.EndTimestamp)
+           @Html.HiddenFor(m => m.AgingDynamics)
+        </form>
         <div>
             @foreach(var group in groupedDynamics)
             {    
@@ -81,5 +86,23 @@
                 </table>     
             }
         </div>
+        <div><button style = "width:100%" onclick="SaveAgingDynamics()">Экспорт</button></div>
     </body>
 </html>
+<script>
+    function SaveAgingDynamics() {
+        var data = $('#hidden-data').serialize();
+        //alert(data);
+         $.ajax({
+            url: '@Url.Action("SaveDynamicsToFile", "Patient")',
+            contentType: "application/json; charset=uft-8",
+            dataType: "json",
+            data: {agingDynamics:data},
+            type: 'POST',
+            cache: false,
+            async: true,
+            success: function (result) {  }
+        });
+}
+</script>
+          
