@@ -44,12 +44,12 @@
                     <tr>
                         <th colspan="5"><p align="left">Средняя дельта биовозраста:</p></th>
                         <th colspan="5"><p align="left">
-                            @group.Select(x=>x.AgentStateInInfluenceEnd.BioAge - x.AgentStateInInfluenceStart.BioAge).Average()</p></th>
+                            @Math.Round(group.Select(x=>x.AgentStateInInfluenceEnd.BioAge - x.AgentStateInInfluenceStart.BioAge).Average(),2)</p></th>
                     </tr>
                     <tr>
                         <th colspan="5"><p align="left">Максимальная дельта биовозраста:</p></th>
                         <th colspan="5"><p align="left">
-                            @group.Select(x=>x.AgentStateInInfluenceEnd.BioAge - x.AgentStateInInfluenceStart.BioAge).Max()</p></th>
+                            @Math.Round(group.Select(x=>x.AgentStateInInfluenceEnd.BioAge - x.AgentStateInInfluenceStart.BioAge).Max(),2)</p></th>
                     </tr>
                 </table>
 
