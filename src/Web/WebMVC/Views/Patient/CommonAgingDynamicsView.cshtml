@@ -1,11 +1,14 @@
-﻿@model CommonAgingDynamics
+﻿@using Newtonsoft.Json
+@model CommonAgingDynamics
 @*
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
 @{
     var groupedDynamics = Model.AgingDynamics.GroupBy(x => 
         new { x.InfluenceType, x.MedicineName, x.StartTimestamp, x.EndTimestamp });
+    string val = JsonConvert.SerializeObject(Model);
     int count = 1;
+
 }
 
 <html>
@@ -86,18 +89,22 @@
                 </table>     
             }
         </div>
-        <div><button style = "width:100%" onclick="SaveAgingDynamics()">Экспорт</button></div>
+
+        <div>
+            <input type="file" id="fileLoader" name="files" title="Load File" style = "width:100%"/> 
+            <button style = "width:100%" onclick="SaveAgingDynamics()">Экспорт</button></div>
     </body>
 </html>
 <script>
     function SaveAgingDynamics() {
-        var data = $('#hidden-data').serialize();
-        //alert(data);
-         $.ajax({
+        var d=@Html.Raw(val);
+        var jsonD = JSON.stringify(d);
+      
+        $.ajax({
             url: '@Url.Action("SaveDynamicsToFile", "Patient")',
-            contentType: "application/json; charset=uft-8",
+            contentType: 'application/json; charset=utf-8',
             dataType: "json",
-            data: {agingDynamics:data},
+            data:jsonD,
             type: 'POST',
             cache: false,
             async: true,

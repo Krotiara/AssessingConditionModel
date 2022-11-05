@@ -8,21 +8,20 @@ namespace WebMVC.Models
 {
     public class CommonAgingDynamics
     {
-        public CommonAgingDynamics(IList<AgingDynamics> agingDynamics, 
+        public CommonAgingDynamics(List<AgingDynamics> agingDynamics, 
             DateTime startTimestamp, DateTime endTimestamp)
         {
             StartTimestamp = startTimestamp;
             EndTimestamp = endTimestamp;
-            AgingDynamics = agingDynamics;
-            
+            AgingDynamics = agingDynamics;          
         }
 
-        public CommonAgingDynamics() { }
+        public CommonAgingDynamics() {}
 
         public DateTime StartTimestamp { get; set; }
 
         public DateTime EndTimestamp { get; set; }
 
-        public IList<AgingDynamics> AgingDynamics { get; }
+        public List<AgingDynamics> AgingDynamics { get; set; }
     }
 }

@@ -8,10 +8,13 @@ namespace WebMVC.Controllers
     public class PatientController: Controller
     {
         private readonly IPatientService patientsService;
+        private readonly IAgingDynamicsSaveService agingDynamicsSaveService;
 
-        public PatientController(IPatientService patientsService)
+        public PatientController(IPatientService patientsService, 
+            IAgingDynamicsSaveService agingDynamicsSaveService)
         {
             this.patientsService = patientsService;
+            this.agingDynamicsSaveService = agingDynamicsSaveService;
         }
 
 
@@ -47,8 +50,8 @@ namespace WebMVC.Controllers
         public async Task<IActionResult> GetAgingDynamics(DateTime startTimestamp, DateTime endTimestamp)
         {
             //TODO try catch
-            IList<AgingDynamics> agingDynamics = await
-               patientsService.GetAgingDynamics(startTimestamp, endTimestamp);
+            List<AgingDynamics> agingDynamics = (await
+               patientsService.GetAgingDynamics(startTimestamp, endTimestamp)).ToList();
             CommonAgingDynamics dynamics = new CommonAgingDynamics(agingDynamics, startTimestamp, endTimestamp);
             return PartialView("CommonAgingDynamicsView", dynamics);
         }
@@ -64,9 +67,10 @@ namespace WebMVC.Controllers
 
 
         [HttpPost]
-        public async Task SaveDynamicsToFile(CommonAgingDynamics agingDynamics)
+        public async Task SaveDynamicsToFile([FromBody]CommonAgingDynamics dynamics)
         {
-            throw new NotImplementedException();
+#warning Проблема получения savePath с серверной части.
+            agingDynamicsSaveService.SaveToExcelFile(dynamics);
         }
     }
 }
