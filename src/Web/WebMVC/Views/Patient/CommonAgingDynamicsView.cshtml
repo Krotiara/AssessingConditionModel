@@ -3,7 +3,9 @@
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
 @{
-    var groupedDynamics = Model.AgingDynamics.GroupBy(x => new { x.InfluenceType, x.MedicineName });
+    var groupedDynamics = Model.AgingDynamics.GroupBy(x => 
+        new { x.InfluenceType, x.MedicineName, x.StartTimestamp, x.EndTimestamp });
+    int count = 1;
 }
 
 <html>
@@ -17,23 +19,12 @@
             th{font-weight: normal;}    
         </style>
     </head>
-    <body>
-        @*<div>
-            <table style="table-layout: fixed;width:100%;" class="table-bordered table-hover  table-sm">
-                <tr>
-                    <th colspan="5"><p align="left">Начальная дата:</p></th>
-                    <th colspan="5"><p align="left">@Model.StartTimestamp.ToShortDateString()</p></th>
-                </tr>
-                <tr>
-                    <th colspan="5"><p align="left">Конечная дата:</p></th>
-                    <th colspan="5"><p align="left">@Model.EndTimestamp.ToShortDateString()</p></th>
-                </tr>
-            </table>
-        </div>*@
+    <body>   
         <div>
             @foreach(var group in groupedDynamics)
-            {
-                <table style="table-layout: fixed;width:50%;" class="table-hover  table-sm">
+            {    
+                <table style="table-layout: fixed;width:50%;" class="table-sm">
+                    <tr><p align="left"><b>@(count++))</b></p></tr>
                     <tr>
                         <th colspan="5"><p align="left">Тип воздействия:</p></th>
                         <th colspan="5"><p align="left">@group.Key.InfluenceType.GetDisplayAttributeValue()</p></th>
@@ -41,6 +32,14 @@
                     <tr>
                         <th colspan="5"><p align="left">Наименование препарата:</p></th>
                         <th colspan="5"><p align="left">@group.Key.MedicineName</p></th>
+                    </tr>
+                    <tr>
+                        <th colspan="5"><p align="left">Начало воздействия:</p></th>
+                        <th colspan="5"><p align="left">@group.Key.StartTimestamp.ToShortDateString()</p></th>
+                    </tr>
+                    <tr>
+                        <th colspan="5"><p align="left">Окончание воздействия:</p></th>
+                        <th colspan="5"><p align="left">@group.Key.EndTimestamp.ToShortDateString()</p></th>
                     </tr>
                     <tr>
                         <th colspan="5"><p align="left">Средняя дельта биовозраста:</p></th>
@@ -54,16 +53,14 @@
                     </tr>
                 </table>
 
-                <table style="table-layout: fixed;width:100%;" class="table-bordered table-hover  table-sm">
+                <table style="table-layout: fixed;width:100%;" class="table-bordered table-sm">
                     <thead>
                         <tr class="centerCell">
                             <th colspan="1"><p>Пациент</p></th>
-                            <th colspan="1"><p>Начало воздействия</p></th>
-                            <th colspan="1"><p>Окончание воздействия</p></th>  
                             <th colspan="1"><p>Динамика возраста</p></th>
                             <th colspan="1"><p>Динамика биовозраста</p></th>
                             <th colspan="1"><p>Динамика дельты</p></th>
-                            <th colspan="3"><p>Динамика состояния</p></th>
+                            <th colspan="5"><p>Динамика состояния</p></th>
                             <th colspan="1"><p>Дельта дельты</p></th>  
                         </tr>
                     </thead>
@@ -71,13 +68,11 @@
                         @foreach(AgingDynamics aD in group)
                         {    
                          <tr class="centerCell">
-                            <th colspan="1"><p>@aD.PatientId</p></th>
-                            <th colspan="1"><p>@aD.AgentStateInInfluenceStart.Timestamp.ToShortDateString()</p></th>
-                            <th colspan="1"><p>@aD.AgentStateInInfluenceEnd.Timestamp.ToShortDateString()</p></th>  
+                            <th colspan="1"><p>@aD.PatientId</p></th>                            
                             <th colspan="1"><p>@aD.AgentStateInInfluenceStart.Age -> @aD.AgentStateInInfluenceEnd.Age</p></th>
                             <th colspan="1"><p>@aD.AgentStateInInfluenceStart.BioAge -> @aD.AgentStateInInfluenceEnd.BioAge</p></th>
                             <th colspan="1"><p>@aD.StartDelta -> @aD.EndDelta</p></th>
-                            <th colspan="3"><p>@aD.AgentStateInInfluenceStart.BioAgeState.GetDisplayAttributeValue() 
+                            <th colspan="5"><p>@aD.AgentStateInInfluenceStart.BioAgeState.GetDisplayAttributeValue() 
                                                 -> @aD.AgentStateInInfluenceEnd.BioAgeState.GetDisplayAttributeValue()</p></th>
                             <th colspan="1"><p>@(aD.EndDelta - aD.StartDelta)</p></th>   
                         </tr>

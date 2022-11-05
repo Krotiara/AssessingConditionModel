@@ -14,9 +14,7 @@ namespace WebMVC.Models
             StartTimestamp = startTimestamp;
             EndTimestamp = endTimestamp;
             AgingDynamics = agingDynamics;
-            BioAgeDeltas = AgingDynamics
-                .Select(x => x.AgentStateInInfluenceEnd.BioAge - x.AgentStateInInfluenceStart.BioAge)
-                .ToList();
+            
         }
 
         public DateTime StartTimestamp { get; set; }
@@ -24,12 +22,5 @@ namespace WebMVC.Models
         public DateTime EndTimestamp { get; set; }
 
         public IList<AgingDynamics> AgingDynamics { get; }
-
-        private IList<double> BioAgeDeltas { get; }
-
-        public double AverageBioAgeDelta => BioAgeDeltas.Average();
-
-        public double MaxBioAgeDelta => BioAgeDeltas.Max();
-
     }
 }
