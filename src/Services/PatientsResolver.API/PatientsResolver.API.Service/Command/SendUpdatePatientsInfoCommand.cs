@@ -10,6 +10,6 @@ namespace PatientsResolver.API.Service.Command
 {
     public class SendUpdatePatientsInfoCommand: IRequest
     {
-        public IUpdatePatientsInfo UpdatePatientsInfo { get; set; }
+        public IUpdatePatientsDataInfo UpdatePatientsInfo { get; set; }
     }
 }

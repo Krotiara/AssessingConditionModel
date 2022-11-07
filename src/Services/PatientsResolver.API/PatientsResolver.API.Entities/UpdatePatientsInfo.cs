@@ -7,8 +7,13 @@ using System.Threading.Tasks;
 
 namespace PatientsResolver.API.Entities
 {
-    public class UpdatePatientsInfo : IUpdatePatientsInfo
+    public class UpdatePatientsInfo : IUpdatePatientsDataInfo
     {
-        public HashSet<int> UpdatedIds { get ; set ; }
+        public UpdatePatientsInfo()
+        {
+            UpdateInfo = new HashSet<(int, DateTime)>();
+        }
+
+        public HashSet<(int, DateTime)> UpdateInfo { get; set; }
     }
 }

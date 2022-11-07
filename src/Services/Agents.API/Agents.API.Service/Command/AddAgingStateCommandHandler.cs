@@ -21,7 +21,7 @@ namespace Agents.API.Service.Command
 
         public async Task<AgingState> Handle(AddAgingStateCommand request, CancellationToken cancellationToken)
         {
-            return await agingStatesRepository.AddState(request.AgingStateToAdd); //TODO try catch
+            return await agingStatesRepository.AddState(request.AgingStateToAdd, false); //TODO try catch
         }
     }
 }

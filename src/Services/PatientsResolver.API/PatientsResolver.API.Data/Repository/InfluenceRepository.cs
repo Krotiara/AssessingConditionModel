@@ -19,17 +19,17 @@ namespace PatientsResolver.API.Data.Repository
         }
 
 
-        public async Task AddPatientInluence(Influence influence, CancellationToken cancellationToken)
+        public async Task<bool> AddPatientInluence(Influence influence, CancellationToken cancellationToken)
         {
             IExecutionStrategy strategy = PatientsDataDbContext.Database.CreateExecutionStrategy();
-            await strategy.ExecuteAsync(async () =>
+            return await strategy.ExecuteAsync(async () =>
             {
                 using (var t = await PatientsDataDbContext.Database.BeginTransactionAsync())
                 {
                     try
                     {
                         if (await IsInluenceExistAsync(influence))
-                            return;
+                            return false;
 
                         Patient patient = await PatientsDataDbContext
                             .Patients
@@ -46,11 +46,12 @@ namespace PatientsResolver.API.Data.Repository
                             await ProcessParametersAsync(influence.Id, influence.DynamicParameters.Values, cancellationToken);
 
                         await t.CommitAsync(cancellationToken);
+                        return true;
                     }
                     catch (Exception ex)
                     {
                         await t.RollbackAsync(cancellationToken);
-                        throw;
+                        throw; //TODO
                     }
                 }
             });

@@ -24,21 +24,6 @@ namespace PatientsResolver.API.Controllers
         }
 
 
-#warning для тестируемых нужд
-        [HttpGet("update/{patientId}")]
-        public async Task<ActionResult> UpdatePatient(int patientId)
-        {
-            try
-            {
-                return Ok(await mediator.Send(new SendUpdatePatientsInfoCommand() { UpdatePatientsInfo = new UpdatePatientsInfo() { UpdatedIds = new HashSet<int> { patientId } } }));
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-
-            }
-        }
-
         [HttpPost("latestPatientParameters/{patientId}")]
         public async Task<ActionResult<List<IPatientParameter>>> GetLatestPatientParameters(int patientId, [FromBody]DateTime[] timeSpan)
         {

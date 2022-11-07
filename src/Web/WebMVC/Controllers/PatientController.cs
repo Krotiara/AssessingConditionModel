@@ -8,10 +8,13 @@ namespace WebMVC.Controllers
     public class PatientController: Controller
     {
         private readonly IPatientService patientsService;
+        private readonly IAgingDynamicsSaveService agingDynamicsSaveService;
 
-        public PatientController(IPatientService patientsService)
+        public PatientController(IPatientService patientsService, 
+            IAgingDynamicsSaveService agingDynamicsSaveService)
         {
             this.patientsService = patientsService;
+            this.agingDynamicsSaveService = agingDynamicsSaveService;
         }
 
 
@@ -21,7 +24,7 @@ namespace WebMVC.Controllers
             //TODO try catch    
             int patientId = int.Parse(id);
             Patient patient = await patientsService.GetPatient(patientId);
-            AgingPatientState state = await patientsService.GetPatientCurrentAgingState(patientId);
+            AgingState state = await patientsService.GetPatientCurrentAgingState(patientId);
             PatientInfo patientInfo = new PatientInfo()
             {
                 Patient = patient,
@@ -43,12 +46,31 @@ namespace WebMVC.Controllers
         }
 
 
+        [HttpGet]
+        public async Task<IActionResult> GetAgingDynamics(DateTime startTimestamp, DateTime endTimestamp)
+        {
+            //TODO try catch
+            List<AgingDynamics> agingDynamics = (await
+               patientsService.GetAgingDynamics(startTimestamp, endTimestamp)).ToList();
+            CommonAgingDynamics dynamics = new CommonAgingDynamics(agingDynamics, startTimestamp, endTimestamp);
+            return PartialView("CommonAgingDynamicsView", dynamics);
+        }
+
+
         [HttpPost]
         public async Task AddInfluencesFromFile([FromBody]string data)
         {
             //TODO try catch
             byte[] bytes = Convert.FromBase64String(data);
             _ = await patientsService.AddPatientsInluenceData(bytes);      
+        }
+
+
+        [HttpPost]
+        public async Task SaveDynamicsToFile([FromBody]CommonAgingDynamics dynamics)
+        {
+#warning Проблема получения savePath с серверной части.
+            agingDynamicsSaveService.SaveToExcelFile(dynamics);
         }
     }
 }

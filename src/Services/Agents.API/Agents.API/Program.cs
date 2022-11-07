@@ -57,33 +57,42 @@ if(builder.Configuration.GetSection("RabbitMqAddInfo").Get<AddDataConfig>().Enab
 #endregion
 
 string connectionString = builder.Configuration.GetConnectionString("PostgresConnection");
-builder.Services.AddDbContext<AgentsDbContext>(options => options.UseNpgsql(connectionString, builder =>
+//builder.Services.AddDbContext<AgentsDbContext>(options => options.UseNpgsql(connectionString, builder =>
+//{
+//    builder.EnableRetryOnFailure(5, TimeSpan.FromSeconds(2), null);
+//}), ServiceLifetime.Scoped); // Registration dbContext as service.
+
+builder.Services.AddDbContextFactory<AgentsDbContext>(options => options.UseNpgsql(connectionString, builder =>
 {
     builder.EnableRetryOnFailure(5, TimeSpan.FromSeconds(2), null);
-}), ServiceLifetime.Singleton); // Registration dbContext as service.
+}), ServiceLifetime.Scoped);
+
+
 //Для избежания ошибки Cannot write DateTime with Kind=Local to PostgreSQL type 'timestamp with time zone', only UTC is supported.
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
-builder.Services.AddScoped<IUpdatePatientsInfo, UpdatePatientsInfo>();
+builder.Services.AddScoped<IUpdatePatientsDataInfo, UpdatePatientsInfo>();
 builder.Services.AddTransient<IWebRequester, RestWebRequester>();
 builder.Services.AddTransient<IInitPatientAgentsService, InitPatientAgentsService>();
 builder.Services.AddTransient<IUpdatePatientAgentsService, UpdatePatientAgentsService>();
-builder.Services.AddSingleton<IAgentPatientsRepository, AgentPatientsRepository>();
-builder.Services.AddSingleton<IAgingStatesRepository, AgingStatesRepository>();
-builder.Services.AddTransient<IAgingDynamics<AgingPatientState>, AgingDynamics>();
+builder.Services.AddScoped<IAgentPatientsRepository, AgentPatientsRepository>();
+builder.Services.AddScoped<IAgingStatesRepository, AgentPatientsRepository>();
+builder.Services.AddTransient<IAgingDynamics<AgingState>, AgingDynamics>();
 
-builder.Services.AddScoped<IRequestHandler<GetAgingStateQuery, AgingPatientState>, 
+builder.Services.AddScoped<IRequestHandler<GetAgingStateQuery, AgingState>, 
     GetAgingStateQueryHandler>();
 builder.Services.AddScoped<IRequestHandler<GetPatientInfluencesQuery, List<Influence>>, 
     GetPatientInfluencesQueryHandler>();
-builder.Services.AddScoped<IRequestHandler<GetAgingDynamicsQuery, List<IAgingDynamics<AgingPatientState>>>, 
+builder.Services.AddScoped<IRequestHandler<GetAgingDynamicsQuery, List<IAgingDynamics<AgingState>>>, 
     GetAgingDynamicsQueryHandler>();
-builder.Services.AddScoped<IRequestHandler<GetAllPatientsAgingDynamicsQuery, List<IAgingDynamics<AgingPatientState>>>,
+builder.Services.AddScoped<IRequestHandler<GetAllPatientsAgingDynamicsQuery, List<IAgingDynamics<AgingState>>>,
     GetAllPatientsAgingDynamicsQueryHandler>();
 builder.Services.AddScoped<IRequestHandler<GetAgingStateQueryDb, AgingState>, 
     GetAgingStateQueryDbHandler>();
 builder.Services.AddScoped<IRequestHandler<AddAgingStateCommand, AgingState>, 
     AddAgingStateCommandHandler>();
+builder.Services.AddScoped<IRequestHandler<GetAllInfluencesQuery, List<Influence>>, 
+    GetAllInfluencesQueryHandler>();
 
 
 var app = builder.Build();

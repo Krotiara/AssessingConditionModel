@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Agents.API.Service.Query
 {
-    public class GetAgingStateQuery: IRequest<AgingPatientState>
+    public class GetAgingStateQuery: IRequest<AgingState>
     {
         public int PatientId { get; set; }
     }

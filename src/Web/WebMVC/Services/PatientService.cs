@@ -28,6 +28,8 @@ namespace WebMVC.Services
             return await webRequester.GetResponse<bool>(url, "POST", body);
         }
 
+        
+
         public async Task<Patient> GetPatient(int id)
         {
             try
@@ -50,10 +52,20 @@ namespace WebMVC.Services
             return await webRequester.GetResponse<IList<AgingDynamics>>(url, "POST", body);
         }
 
-        public async Task<AgingPatientState> GetPatientCurrentAgingState(int patientId)
+
+        public async Task<IList<AgingDynamics>> GetAgingDynamics(DateTime startTimestamp, DateTime endTimestamp)
+        {
+            string url = $"https://host.docker.internal:8009/agingDynamics/";
+            string body = Newtonsoft.Json.JsonConvert.SerializeObject(
+                new DateTime[2] { startTimestamp, endTimestamp });
+            return await webRequester.GetResponse<IList<AgingDynamics>>(url, "POST", body);
+        }
+
+
+        public async Task<AgingState> GetPatientCurrentAgingState(int patientId)
         {
             string url = $"https://host.docker.internal:8009/agingState/{patientId}";
-            return await webRequester.GetResponse<AgingPatientState>(url, "GET");
+            return await webRequester.GetResponse<AgingState>(url, "GET");
         }
     }
 }

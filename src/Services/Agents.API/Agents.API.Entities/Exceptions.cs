@@ -48,4 +48,12 @@ namespace Agents.API.Entities
         public InitAgentException(string message, Exception innerException) : base(message, innerException) { }
     }
 
+
+    public class UpdateAgentsGroupException : Exception
+    {
+        public UpdateAgentsGroupException(string message) : base(message) { }
+
+        public UpdateAgentsGroupException(string message, Exception innerException) : base(message, innerException) { }
+    }
+
 }

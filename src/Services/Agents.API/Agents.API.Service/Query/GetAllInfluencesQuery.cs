@@ -1,5 +1,4 @@
 ﻿using Agents.API.Entities;
-using Interfaces;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -9,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Agents.API.Service.Query
 {
-    public class GetAllPatientsAgingDynamicsQuery: IRequest<List<IAgingDynamics<AgingState>>>
+    public class GetAllInfluencesQuery : IRequest<List<Influence>>
     {
         public DateTime StartTimestamp { get; set; }
 

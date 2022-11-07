@@ -9,5 +9,7 @@ namespace Agents.API.Entities
     public interface IAgentDetermineStateProperties
     {
         public DateTime Timestamp { get; set; }
+
+        public bool IsNeedRecalculation { get; set; }
     }
 }

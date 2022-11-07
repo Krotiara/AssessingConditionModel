@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Interfaces
 {
-    public interface IAgingDynamics<T> where T: IAgingPatientState
+    public interface IAgingDynamics<T> where T: IAgingState
     {
         public int PatientId { get; set; }
 

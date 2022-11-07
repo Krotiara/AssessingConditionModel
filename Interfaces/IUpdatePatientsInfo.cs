@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace Interfaces
 {
-    public interface IUpdatePatientsInfo
+    public interface IUpdatePatientsDataInfo
     {
-        public HashSet<int> UpdatedIds { get; set; }
+        public HashSet<(int, DateTime)> UpdateInfo { get; set; }
     }
 }

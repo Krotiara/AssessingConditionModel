@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 
 namespace Agents.API.Entities
 {
-    public class UpdatePatientsInfo : IUpdatePatientsInfo
+    public class UpdatePatientsInfo : IUpdatePatientsDataInfo
     {
-        public HashSet<int> UpdatedIds { get; set; }
+        public HashSet<(int, DateTime)> UpdateInfo { get; set; }
     }
 }

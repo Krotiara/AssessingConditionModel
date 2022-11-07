@@ -4,6 +4,6 @@
     {
         public Patient Patient { get; set; }
 
-        public AgingPatientState AgingPatientState { get; set; }
+        public AgingState AgingPatientState { get; set; }
     }
 }

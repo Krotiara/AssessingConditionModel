@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Agents.API.Service.Query
 {
-    public class GetAgingStateQueryHandler : IRequestHandler<GetAgingStateQuery, AgingPatientState>
+    public class GetAgingStateQueryHandler : IRequestHandler<GetAgingStateQuery, AgingState>
     {
         private readonly IAgentPatientsRepository agentPatientsRepository;
 
@@ -18,19 +18,20 @@ namespace Agents.API.Service.Query
             this.agentPatientsRepository = agentPatientsRepository;
         }
 
-        public async Task<AgingPatientState> Handle(GetAgingStateQuery request, CancellationToken cancellationToken)
+        public async Task<AgingState> Handle(GetAgingStateQuery request, CancellationToken cancellationToken)
         {
             try
             {
                 AgentPatient agentPatient = await agentPatientsRepository.GetAgentPatient(request.PatientId);
                 if (agentPatient == null)
                     throw new GetAgingStateException($"Agent patient for patient with id = {request.PatientId} not found.");
-                AgingPatientState state = new AgingPatientState()
+                AgingState state = new AgingState()
                 {
                     PatientId = request.PatientId,
                     Age = agentPatient.CurrentAge,
                     BioAge = agentPatient.CurrentBioAge,
-                    AgentBioAgeState = agentPatient.CurrentAgeRang
+                    BioAgeState = agentPatient.CurrentAgeRang,
+                    Timestamp = DateTime.Now //TODO переименовать query под currentState
                 };
                 return state;
             }
