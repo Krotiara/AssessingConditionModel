@@ -29,31 +29,13 @@ namespace PatientDataHandler.UnitTests
         }
 
 
-        //[Fact]
-        //public void ParseInCorrectBytesMustThrow()
-        //{
-        //    Mock<IDataProvider> dataProviderMock = new Mock<IDataProvider>();
-
-        //    Mock<Func<DataParserTypes, IDataProvider>> dataProviderResolverMock
-        //       = new Mock<Func<DataParserTypes, IDataProvider>>();
-        //    dataProviderResolverMock.Setup(x => x.Invoke(It.IsAny<DataParserTypes>())).Returns(dataProviderMock.Object);
-
-        //}
-
-
         private byte[] GetCorrectTestDataBytes()
         {
             string projectDirectory = Directory
                 .GetParent(Environment.CurrentDirectory).Parent.Parent.FullName;
-            string path = Path.Combine(projectDirectory, "TestFiles/correctDataBytes.txt");
+            string path = Path.Combine(projectDirectory, "TestFiles/correctData.xlsx");
             byte[] bytes = File.ReadAllBytes(path);
             return bytes;
         }
-
-
-        //private byte[] GetIncorrectTestDataBytes()
-        //{
-        //    return System.Text.Encoding.ASCII.GetBytes("wrong file str");
-        //}
     }
 }
