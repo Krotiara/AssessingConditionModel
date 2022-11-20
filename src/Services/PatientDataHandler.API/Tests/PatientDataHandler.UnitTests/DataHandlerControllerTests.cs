@@ -29,6 +29,18 @@ namespace PatientDataHandler.UnitTests
         }
 
 
+        //[Fact]
+        //public void ParseInCorrectBytesMustThrow()
+        //{
+        //    Mock<IDataProvider> dataProviderMock = new Mock<IDataProvider>();
+
+        //    Mock<Func<DataParserTypes, IDataProvider>> dataProviderResolverMock
+        //       = new Mock<Func<DataParserTypes, IDataProvider>>();
+        //    dataProviderResolverMock.Setup(x => x.Invoke(It.IsAny<DataParserTypes>())).Returns(dataProviderMock.Object);
+
+        //}
+
+
         private byte[] GetCorrectTestDataBytes()
         {
             string projectDirectory = Directory
@@ -37,5 +49,11 @@ namespace PatientDataHandler.UnitTests
             byte[] bytes = File.ReadAllBytes(path);
             return bytes;
         }
+
+
+        //private byte[] GetIncorrectTestDataBytes()
+        //{
+        //    return System.Text.Encoding.ASCII.GetBytes("wrong file str");
+        //}
     }
 }
