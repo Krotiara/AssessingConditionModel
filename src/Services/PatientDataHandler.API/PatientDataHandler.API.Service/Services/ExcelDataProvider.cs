@@ -64,7 +64,7 @@ namespace PatientDataHandler.API.Service.Services
 
             int parameterTimestampIndex = headerParamsNames.IndexOf(ParameterNames.ParameterTimestamp);
 
-            for (int rowNum = 0; rowNum <= data.Count; rowNum++) //select starting row here
+            for (int rowNum = 0; rowNum < data.Count; rowNum++) //select starting row here
             {
                 try
                 {
@@ -128,14 +128,13 @@ namespace PatientDataHandler.API.Service.Services
                         }
                         catch (KeyNotFoundException ex)
                         {
-                            //Не найден Parameters
                             //TODO log
-                            return;
+                            throw new ParseInfluenceDataException($"Error with getting header for column with number = {j}", ex);
                         }
                         catch (Exception ex)
                         {
                             //TODO add log
-                            return;
+                            throw new ParseInfluenceDataException($"Unexpected error for column with number = {j}", ex);
                         }
                     });
 
@@ -146,7 +145,7 @@ namespace PatientDataHandler.API.Service.Services
                 catch(Exception ex)
                 {
                     //TODO add log
-                    continue;
+                    throw new ParseInfluenceDataException($"Error for rowNum = {rowNum}", ex);
                 }
             }
 

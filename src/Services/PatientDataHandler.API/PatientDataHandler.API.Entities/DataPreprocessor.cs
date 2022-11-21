@@ -42,7 +42,9 @@ namespace PatientDataHandler.API.Entities
                 AdjustAge(ref row, ageIndex);
                 data[i] = row;
             }
-            return data;
+
+            return data
+                .Where(x=>!x.All(s=>s == null || s == "")).ToList();
         }
 
 
