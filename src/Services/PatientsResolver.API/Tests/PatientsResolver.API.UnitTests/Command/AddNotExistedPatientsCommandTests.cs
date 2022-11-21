@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Moq;
 using PatientsResolver.API.Data;
@@ -19,10 +20,11 @@ namespace PatientsResolver.API.UnitTests.Command
     {
 
         [Fact]
-        public async void AddExistedPatientMustNotReturnAfterAddTry()
+        public async void AddExistedPatientMustNotBeAdded()
         {   
             var options = new DbContextOptionsBuilder<PatientsDataDbContext>()
-                .UseInMemoryDatabase(databaseName: "test")
+                 .UseInMemoryDatabase(databaseName: "test")
+                 .ConfigureWarnings(x => x.Ignore(InMemoryEventId.TransactionIgnoredWarning))
                  .Options;
             // set delay time after which the CancellationToken will be canceled
             var cancellationTokenSource = new CancellationTokenSource(TimeSpan.FromMilliseconds(100));
@@ -45,7 +47,8 @@ namespace PatientsResolver.API.UnitTests.Command
         public async void AddPatientWithEmptFieldsMustThrow()
         {
             var options = new DbContextOptionsBuilder<PatientsDataDbContext>()
-                .UseInMemoryDatabase(databaseName: "test")
+                 .UseInMemoryDatabase(databaseName: "test")
+                 .ConfigureWarnings(x => x.Ignore(InMemoryEventId.TransactionIgnoredWarning))
                  .Options;
             // set delay time after which the CancellationToken will be canceled
             var cancellationTokenSource = new CancellationTokenSource(TimeSpan.FromMilliseconds(100));

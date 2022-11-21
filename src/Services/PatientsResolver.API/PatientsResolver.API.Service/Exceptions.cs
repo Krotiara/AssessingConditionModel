@@ -51,4 +51,20 @@ namespace PatientsResolver.API.Service.Exceptions
 
         }
     }
+
+
+    public class AddInfluenceRangeException : Exception
+    {
+        public AddInfluenceRangeException(string message) :
+            base(message)
+        {
+
+        }
+
+        public AddInfluenceRangeException(string message, Exception innerException) :
+            base(message, innerException)
+        {
+
+        }
+    }
 }

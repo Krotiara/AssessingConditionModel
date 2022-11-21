@@ -35,7 +35,10 @@ namespace PatientsResolver.API.Data.Repository
                             .Patients
                             .FirstOrDefaultAsync(x => x.MedicalHistoryNumber == influence.PatientId);
 
-                        await ProcessPatientAsync(patient, influence, cancellationToken);
+                        if (patient == null)
+                            throw new NullReferenceException($"Patient was not find with patientId = {influence.PatientId}");
+                        else
+                            await ProcessPatientAsync(patient, influence, cancellationToken);
 
                         await PatientsDataDbContext.Influences.AddAsync(influence, cancellationToken);
                         await PatientsDataDbContext.SaveChangesAsync();
@@ -69,20 +72,6 @@ namespace PatientsResolver.API.Data.Repository
 
         private async Task ProcessPatientAsync(Patient patient, Influence influence, CancellationToken cancellationToken)
         {
-            if (patient == null)
-            {
-                patient = influence.Patient != null ?
-                    influence.Patient :
-                    new Patient()
-                    {
-                        Name = "",
-                        MedicalHistoryNumber = influence.PatientId,
-                        Birthday = DateTime.MinValue
-                    };
-
-                await PatientsDataDbContext.Patients.AddAsync(patient, cancellationToken);
-                await PatientsDataDbContext.SaveChangesAsync();
-            }
             influence.PatientId = patient.MedicalHistoryNumber;
             influence.Patient = patient;
         }
