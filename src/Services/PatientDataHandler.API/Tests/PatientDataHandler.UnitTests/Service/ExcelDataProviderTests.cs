@@ -10,13 +10,6 @@ namespace PatientDataHandler.UnitTests.Service
 {
     public class ExcelDataProviderTests
     {
-        [Fact]
-        public void ParseIncorrectBytesMustThrow()
-        {
-            ExcelDataProvider dataProvider = new ExcelDataProvider();
-            Assert.Throws<ParseInfluenceDataException>(() => dataProvider.ParseData(GetIncorrectTestDataBytes()));          
-        }
-
 
         [Fact]
         public void ParseCorrectBytesMustContainsNotNullEntities()
@@ -49,10 +42,21 @@ namespace PatientDataHandler.UnitTests.Service
         }
 
 
-
-        private byte[] GetIncorrectTestDataBytes()
+        [Fact]
+        public void ParseNotExcelFileBytesMustThrow()
         {
-            return System.Text.Encoding.ASCII.GetBytes("wrong file str");
+            byte[] notExcelBytes = Encoding.ASCII.GetBytes("not excel");
+            ExcelDataProvider dataProvider = new ExcelDataProvider();
+            Assert.Throws<ParseInfluenceDataException>(() => dataProvider.ParseData(notExcelBytes));
+        }
+
+
+        [Fact]
+        public void ParseDataWithoutPatientIdMustThrow()
+        {
+            byte[] dataWithoutIds = GetTestDataBytes("dataWithoutIds.xlsx");
+            ExcelDataProvider dataProvider = new ExcelDataProvider();
+            Assert.Throws<ParseInfluenceDataException>(() => dataProvider.ParseData(dataWithoutIds));
         }
 
 
