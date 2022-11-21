@@ -1,0 +1,43 @@
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Moq;
+using PatientsResolver.API.Data;
+using PatientsResolver.API.Data.Repository;
+using PatientsResolver.API.Entities;
+using PatientsResolver.API.Service.Command;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Xunit;
+
+namespace PatientsResolver.API.UnitTests.Command
+{
+    public class AddNotExistedPatientsCommandTests
+    {
+
+        [Fact]
+        public async void AddExistedPatientMustNotReturnAfterAddTry()
+        {   
+            var options = new DbContextOptionsBuilder<PatientsDataDbContext>()
+                .UseInMemoryDatabase(databaseName: "test")
+                 .Options;
+            // set delay time after which the CancellationToken will be canceled
+            var cancellationTokenSource = new CancellationTokenSource(TimeSpan.FromMilliseconds(100));
+
+            using (PatientsDataDbContext dbContext = new PatientsDataDbContext(options))
+            {
+                PatientsRepository rep = new PatientsRepository(dbContext);
+                Patient testPatient = new Patient() { Name = "test", MedicalHistoryNumber = 000, Gender = Interfaces.GenderEnum.Female, Birthday = DateTime.Now };
+                await rep.AddAsync(testPatient);
+
+                AddNotExistedPatientsCommandHandler handler = new AddNotExistedPatientsCommandHandler(rep);
+                IList<Patient> addedPatients = await handler.Handle(new AddNotExistedPatientsCommand() { Patients = new List<Patient> { testPatient } }, cancellationTokenSource.Token);
+
+                Assert.Equal(0, addedPatients.Count);
+
+            }
+        }
+    }
+}
