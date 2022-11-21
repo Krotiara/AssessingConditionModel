@@ -5,6 +5,7 @@ using PatientsResolver.API.Data;
 using PatientsResolver.API.Data.Repository;
 using PatientsResolver.API.Entities;
 using PatientsResolver.API.Service.Command;
+using PatientsResolver.API.Service.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -36,7 +37,31 @@ namespace PatientsResolver.API.UnitTests.Command
                 IList<Patient> addedPatients = await handler.Handle(new AddNotExistedPatientsCommand() { Patients = new List<Patient> { testPatient } }, cancellationTokenSource.Token);
 
                 Assert.Equal(0, addedPatients.Count);
+            }
+        }
 
+
+        [Fact]
+        public async void AddPatientWithEmptFieldsMustThrow()
+        {
+            var options = new DbContextOptionsBuilder<PatientsDataDbContext>()
+                .UseInMemoryDatabase(databaseName: "test")
+                 .Options;
+            // set delay time after which the CancellationToken will be canceled
+            var cancellationTokenSource = new CancellationTokenSource(TimeSpan.FromMilliseconds(100));
+            Patient emptyHistory = new Patient() { Name = "test", Gender = Interfaces.GenderEnum.Female, Birthday = DateTime.Now };
+            Patient emptyGender = new Patient() { Name = "test", Birthday = DateTime.Now, MedicalHistoryNumber = 000};
+            Patient emptyBirthday = new Patient() { Name = "test", Gender = Interfaces.GenderEnum.Female, MedicalHistoryNumber = 000 };
+            using (PatientsDataDbContext dbContext = new PatientsDataDbContext(options))
+            {
+                PatientsRepository rep = new PatientsRepository(dbContext);
+                AddNotExistedPatientsCommandHandler handler = new AddNotExistedPatientsCommandHandler(rep);
+                await Assert.ThrowsAsync<AddPatientsRangeException>(
+                    () => handler.Handle(new AddNotExistedPatientsCommand() { Patients = new List<Patient> { emptyHistory } }, cancellationTokenSource.Token));
+                await Assert.ThrowsAsync<AddPatientsRangeException>(
+                    () => handler.Handle(new AddNotExistedPatientsCommand() { Patients = new List<Patient> { emptyGender } }, cancellationTokenSource.Token));
+                await Assert.ThrowsAsync<AddPatientsRangeException>(
+                    () => handler.Handle(new AddNotExistedPatientsCommand() { Patients = new List<Patient> { emptyBirthday } }, cancellationTokenSource.Token));
             }
         }
     }
