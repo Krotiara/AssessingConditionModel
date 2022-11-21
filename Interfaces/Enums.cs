@@ -9,14 +9,16 @@ namespace Interfaces
 {
     public enum InfluenceTypes
     {
+        [Display(Name = "-")]
+        None = 0,
         [Display(Name = "Антигипоксическое")]
-        Antihypoxic = 0,
+        Antihypoxic = 1,
         [Display(Name = "Антиоксидантное")]
-        Antioxidant = 1,
+        Antioxidant = 2,
         [Display(Name = "Противовоспалительное")]
-        AntiInflammatory = 2,
+        AntiInflammatory = 3,
         [Display(Name = "Биологически активная добавка")]
-        BiologicallyActiveAdditive = 3
+        BiologicallyActiveAdditive = 4
     }
 
     public enum GenderEnum
