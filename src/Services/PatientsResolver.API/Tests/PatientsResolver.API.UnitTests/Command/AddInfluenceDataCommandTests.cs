@@ -32,18 +32,20 @@ namespace PatientsResolver.API.UnitTests.Command
             using (PatientsDataDbContext dbContext = new PatientsDataDbContext(options))
             {
                 InfluenceRepository rep = new InfluenceRepository(dbContext);
-
+                int patientId = new Random().Next(1, 1000);
                 Influence influence = new Influence()
                 {
                     InfluenceType = Interfaces.InfluenceTypes.AntiInflammatory,
                     MedicineName = "test",
-                    Patient = new Patient() { MedicalHistoryNumber = 000, Gender = Interfaces.GenderEnum.Female, Birthday = DateTime.Now, Name = "" },
-                    StartTimestamp = DateTime.MinValue,
-                    EndTimestamp = DateTime.MaxValue,
+                    PatientId = patientId,
+                    Patient = new Patient() { MedicalHistoryNumber = patientId, 
+                        Gender = Interfaces.GenderEnum.Female, Birthday = DateTime.Now, Name = "" },
+                    StartTimestamp = DateTime.Today,
+                    EndTimestamp = DateTime.Today,     
                 };
 
                 await rep.AddAsync(influence);
-
+                
                 AddInfluenceDataCommandHandler handler = new AddInfluenceDataCommandHandler(rep);
                 List<Influence> res = await handler.Handle(new AddInfluenceDataCommand() { Data = new List<Influence>() { influence } }, cancellationTokenSource.Token);
                 Assert.Empty(res);
@@ -67,18 +69,10 @@ namespace PatientsResolver.API.UnitTests.Command
                 {
                     InfluenceRepository rep = new InfluenceRepository(dbContext);
                     AddInfluenceDataCommandHandler handler = new AddInfluenceDataCommandHandler(rep);
-#warning Тест не проходит из-за 1) Ошибок в тестовых данных и 2) В самом коде не достаточно отлова частных случаев.
                     if (influence.Patient != null)
                     {
-                        try
-                        {
-                            await dbContext.Patients.AddAsync(influence.Patient);
-                            await dbContext.SaveChangesAsync();
-                        }
-                        catch (Exception ex)
-                        {
-                            var a = 1;
-                        }
+                        await dbContext.Patients.AddAsync(influence.Patient);
+                        await dbContext.SaveChangesAsync();
                     }
                     await Assert.ThrowsAsync<AddInfluenceRangeException>(
                         () => handler.Handle(new AddInfluenceDataCommand() { Data = new List<Influence> { influence } }, cancellationTokenSource.Token));
@@ -87,29 +81,63 @@ namespace PatientsResolver.API.UnitTests.Command
         }
 
 
+        [Fact]
+        public async Task AddInfluenceWherePatientIdNotEqualIdInPatientMustThrow()
+        {
+            Influence infWithNotEqualPatientIds1 = GetCorrectTestInfluence();
+            Influence infWithNotEqualPatientIds2 = GetCorrectTestInfluence();
+            infWithNotEqualPatientIds1.PatientId = infWithNotEqualPatientIds1.PatientId + 1;
+            infWithNotEqualPatientIds2.Patient.MedicalHistoryNumber = infWithNotEqualPatientIds2.Patient.MedicalHistoryNumber + 1;
+
+            List<Influence> testData = new List<Influence> { infWithNotEqualPatientIds1, infWithNotEqualPatientIds2 };
+
+
+            var options = new DbContextOptionsBuilder<PatientsDataDbContext>()
+               .UseInMemoryDatabase(databaseName: "test")
+               .ConfigureWarnings(x => x.Ignore(InMemoryEventId.TransactionIgnoredWarning))
+               .Options;
+            // set delay time after which the CancellationToken will be canceled
+            var cancellationTokenSource = new CancellationTokenSource(TimeSpan.FromMilliseconds(100));
+            using (PatientsDataDbContext dbContext = new PatientsDataDbContext(options))
+            {
+                InfluenceRepository rep = new InfluenceRepository(dbContext);
+                AddInfluenceDataCommandHandler handler = new AddInfluenceDataCommandHandler(rep);
+                foreach (Influence influence in testData)
+                {
+                    if (influence.Patient != null)
+                    {
+                        await dbContext.Patients.AddAsync(influence.Patient);
+                        await dbContext.SaveChangesAsync();
+                    }
+                    await Assert.ThrowsAsync<AddInfluenceRangeException>(
+                       () => handler.Handle(new AddInfluenceDataCommand() { Data = new List<Influence> { influence } }, cancellationTokenSource.Token));
+                }
+            }
+        }
+
        
 
         private List<Influence> GetTestInfluencesWithEmptyFields()
         {
-            Influence nullPatient = GetCorrectTestInfluence(1);
+            Influence nullPatient = GetCorrectTestInfluence();
             nullPatient.Patient = null;
 
-            Influence emptyPatient = GetCorrectTestInfluence(2);
+            Influence emptyPatient = GetCorrectTestInfluence();
             emptyPatient.PatientId = int.MinValue;
 
-            Influence nullMedicineName = GetCorrectTestInfluence(3);
+            Influence nullMedicineName = GetCorrectTestInfluence();
             nullMedicineName.MedicineName = null;
 
-            Influence emptyMedicineName = GetCorrectTestInfluence(4);
+            Influence emptyMedicineName = GetCorrectTestInfluence();
             emptyMedicineName.MedicineName = "";
 
-            Influence emptyInfluenceType = GetCorrectTestInfluence(5);
+            Influence emptyInfluenceType = GetCorrectTestInfluence();
             emptyInfluenceType.InfluenceType = InfluenceTypes.None;
 
-            Influence emptyStartTimestamp = GetCorrectTestInfluence(6);
+            Influence emptyStartTimestamp = GetCorrectTestInfluence();
             emptyStartTimestamp.StartTimestamp = default(DateTime);
 
-            Influence emptyEndTimestamp = GetCorrectTestInfluence(7);
+            Influence emptyEndTimestamp = GetCorrectTestInfluence();
             emptyEndTimestamp.EndTimestamp = default(DateTime);
 
             return new List<Influence>() { nullPatient, emptyPatient, nullMedicineName, 
@@ -118,19 +146,20 @@ namespace PatientsResolver.API.UnitTests.Command
         }
 
 
-        private Influence GetCorrectTestInfluence(int medHistoryNumber = 100)
-        {           
+        private Influence GetCorrectTestInfluence()
+        {
+            int medHistoryNumber = new Random().Next(1, 10000);
             var inf = new Influence()
             {
                 InfluenceType = Interfaces.InfluenceTypes.Antioxidant,
                 MedicineName = "test",
                 Patient = new Patient() { MedicalHistoryNumber = medHistoryNumber, Gender = Interfaces.GenderEnum.Female, Birthday = DateTime.Now, Name = "test" },
-                StartTimestamp = DateTime.MinValue,
-                EndTimestamp = DateTime.MaxValue,
+                StartTimestamp = DateTime.Today,
+                EndTimestamp = DateTime.Today,
                 PatientId = medHistoryNumber
             };
-            inf.StartParameters[ParameterNames.Age] = new PatientParameter() { ParameterName = ParameterNames.Age, Timestamp = DateTime.MinValue, Value = "40", NameTextDescription = "возраст", IsDynamic = false };
-            inf.DynamicParameters[ParameterNames.Age] = new PatientParameter() { ParameterName = ParameterNames.Age, Timestamp = DateTime.MaxValue, Value = "41", NameTextDescription = "возраст", IsDynamic = true };
+            inf.StartParameters[ParameterNames.Age] = new PatientParameter() { ParameterName = ParameterNames.Age, Timestamp = DateTime.Today, Value = "40", NameTextDescription = "возраст", IsDynamic = false };
+            inf.DynamicParameters[ParameterNames.Age] = new PatientParameter() { ParameterName = ParameterNames.Age, Timestamp = DateTime.Today, Value = "41", NameTextDescription = "возраст", IsDynamic = true };
             return inf;
         }
     }
