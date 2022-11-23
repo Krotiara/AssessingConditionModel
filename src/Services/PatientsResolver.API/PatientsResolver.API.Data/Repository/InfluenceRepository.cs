@@ -66,8 +66,7 @@ namespace PatientsResolver.API.Data.Repository
         }
 
 
-        private bool IsCorrectInfluence(Influence inf) =>
-            inf != null
+        private bool IsCorrectInfluence(Influence inf) => inf != null
            && inf.MedicineName != null
            && inf.MedicineName != ""
            && inf.InfluenceType != InfluenceTypes.None
