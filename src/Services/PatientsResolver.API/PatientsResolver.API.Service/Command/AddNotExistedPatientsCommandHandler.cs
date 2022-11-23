@@ -13,10 +13,12 @@ namespace PatientsResolver.API.Service.Command
     public class AddNotExistedPatientsCommandHandler : IRequestHandler<AddNotExistedPatientsCommand, IList<Patient>>
     {
         private readonly PatientsRepository patientsRepository;
+        private readonly IMediator mediator;
 
-        public AddNotExistedPatientsCommandHandler(PatientsRepository patientsRepository)
+        public AddNotExistedPatientsCommandHandler(PatientsRepository patientsRepository, IMediator mediator)
         {
             this.patientsRepository = patientsRepository;
+            this.mediator = mediator;
         }
 
         public async Task<IList<Patient>> Handle(AddNotExistedPatientsCommand request, CancellationToken cancellationToken)
@@ -41,8 +43,10 @@ namespace PatientsResolver.API.Service.Command
                             patient.Birthday == default(DateTime))
                                 throw new AddPatientException($"Some requied values is empty for patient with history number = {patient.MedicalHistoryNumber}");
 
-                        await patientsRepository.AddAsync(patient);
-                        addedPatients.Add(patient);
+                        bool isAdded = await mediator.Send(new AddPatientCommand() { Patient = patient }); /* patientsRepository.AddAsync(patient);*/
+                        if (isAdded)
+                            addedPatients.Add(patient);
+                        else throw new AddPatientException($"Patient with history number = {patient.MedicalHistoryNumber} was not added");
                     }
                     catch(Exception ex)
                     {
