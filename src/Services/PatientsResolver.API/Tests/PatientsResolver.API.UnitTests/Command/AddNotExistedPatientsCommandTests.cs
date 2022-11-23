@@ -53,8 +53,8 @@ namespace PatientsResolver.API.UnitTests.Command
         [Fact]
         public async void CorrectPatientsMustBeAdded()
         {
-            List<Patient> patients = new List<Patient>() { GetTestCorrectPatient(1),
-                GetTestCorrectPatient(2), GetTestCorrectPatient(3) };
+            List<Patient> patients = new List<Patient>() { GetTestCorrectPatient(),
+                GetTestCorrectPatient(), GetTestCorrectPatient() };
 
             var options = new DbContextOptionsBuilder<PatientsDataDbContext>()
                  .UseInMemoryDatabase(databaseName: "test")
@@ -83,9 +83,9 @@ namespace PatientsResolver.API.UnitTests.Command
         }
 
 
-        private Patient GetTestCorrectPatient(int medHistoryNumber) => new Patient()
+        private Patient GetTestCorrectPatient() => new Patient()
         {
-            MedicalHistoryNumber = medHistoryNumber,
+            MedicalHistoryNumber = new Random().Next(1,1000),
             Name = "Test name",
             Gender = Interfaces.GenderEnum.Female,
             Birthday = DateTime.Today

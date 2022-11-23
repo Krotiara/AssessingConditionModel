@@ -28,7 +28,7 @@ namespace PatientsResolver.API.UnitTests.Command
             using (PatientsDataDbContext dbContext = new PatientsDataDbContext(options))
             {
                 PatientsRepository p = new PatientsRepository(dbContext);
-                int testMedNumber = 1;
+                int testMedNumber = new Random().Next(1,1000);
                 Patient testPatient = new Patient()
                 {
                     MedicalHistoryNumber = testMedNumber,
@@ -58,13 +58,13 @@ namespace PatientsResolver.API.UnitTests.Command
                 PatientsRepository p = new PatientsRepository(dbContext);
                 AddPatientCommandHandler handler = new AddPatientCommandHandler(p);
 
-                Patient emptyHistory = GetTestCorrectPatient(1);
+                Patient emptyHistory = GetTestCorrectPatient();
                 emptyHistory.MedicalHistoryNumber = int.MinValue;
-                Patient emptyGender = GetTestCorrectPatient(2);
+                Patient emptyGender = GetTestCorrectPatient();
                 emptyGender.Gender = Interfaces.GenderEnum.None;
-                Patient emptyBirthday = GetTestCorrectPatient(3);
+                Patient emptyBirthday = GetTestCorrectPatient();
                 emptyBirthday.Birthday = default(DateTime);
-                Patient nullName = GetTestCorrectPatient(4);
+                Patient nullName = GetTestCorrectPatient();
                 nullName.Name = null;
 
                 List<Patient> testPatients = new List<Patient> { emptyHistory, emptyGender, emptyBirthday, nullName};
@@ -86,10 +86,11 @@ namespace PatientsResolver.API.UnitTests.Command
             var cancellationTokenSource = new CancellationTokenSource(TimeSpan.FromMilliseconds(100));
             using (PatientsDataDbContext dbContext = new PatientsDataDbContext(options))
             {
-                int testMedNumber = 10;
+                
                 PatientsRepository p = new PatientsRepository(dbContext);
                 AddPatientCommandHandler handler = new AddPatientCommandHandler(p);
-                Patient emptyName = GetTestCorrectPatient(testMedNumber);
+                Patient emptyName = GetTestCorrectPatient();
+                int testMedNumber = emptyName.MedicalHistoryNumber;
                 emptyName.Name = "";
                 await handler.Handle(
                     new AddPatientCommand() { Patient = emptyName }, cancellationTokenSource.Token);
@@ -109,10 +110,11 @@ namespace PatientsResolver.API.UnitTests.Command
             var cancellationTokenSource = new CancellationTokenSource(TimeSpan.FromMilliseconds(100));
             using (PatientsDataDbContext dbContext = new PatientsDataDbContext(options))
             {
-                int testMedNumber = 11;
+                
                 PatientsRepository p = new PatientsRepository(dbContext);
                 AddPatientCommandHandler handler = new AddPatientCommandHandler(p);
-                Patient testPatient = GetTestCorrectPatient(testMedNumber);
+                Patient testPatient = GetTestCorrectPatient();
+                int testMedNumber = testPatient.MedicalHistoryNumber;
                 await handler.Handle(
                     new AddPatientCommand() { Patient = testPatient }, cancellationTokenSource.Token);
 
@@ -122,9 +124,9 @@ namespace PatientsResolver.API.UnitTests.Command
         }
 
 
-        private Patient GetTestCorrectPatient(int medHistoryNumber) => new Patient()
+        private Patient GetTestCorrectPatient() => new Patient()
         {
-            MedicalHistoryNumber = medHistoryNumber,
+            MedicalHistoryNumber = new Random().Next(1, 1000),
             Name = "Test name",
             Gender = Interfaces.GenderEnum.Female,
             Birthday = DateTime.Today
