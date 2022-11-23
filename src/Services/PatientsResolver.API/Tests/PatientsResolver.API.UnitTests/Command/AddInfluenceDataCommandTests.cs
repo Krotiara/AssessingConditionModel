@@ -59,18 +59,27 @@ namespace PatientsResolver.API.UnitTests.Command
                .ConfigureWarnings(x => x.Ignore(InMemoryEventId.TransactionIgnoredWarning))
                .Options;
             // set delay time after which the CancellationToken will be canceled
-            var cancellationTokenSource = new CancellationTokenSource(TimeSpan.FromMilliseconds(100));
-
-            using (PatientsDataDbContext dbContext = new PatientsDataDbContext(options))
-            {
-                InfluenceRepository rep = new InfluenceRepository(dbContext);
+            var cancellationTokenSource = new CancellationTokenSource(TimeSpan.FromMilliseconds(100));        
                 List<Influence> testData = GetTestInfluencesWithEmptyFields();
-                AddInfluenceDataCommandHandler handler = new AddInfluenceDataCommandHandler(rep);
                 foreach (Influence influence in testData)
                 {
+                using (PatientsDataDbContext dbContext = new PatientsDataDbContext(options))
+                {
+                    InfluenceRepository rep = new InfluenceRepository(dbContext);
+                    AddInfluenceDataCommandHandler handler = new AddInfluenceDataCommandHandler(rep);
 #warning Тест не проходит из-за 1) Ошибок в тестовых данных и 2) В самом коде не достаточно отлова частных случаев.
                     if (influence.Patient != null)
-                        await dbContext.Patients.AddAsync(influence.Patient);
+                    {
+                        try
+                        {
+                            await dbContext.Patients.AddAsync(influence.Patient);
+                            await dbContext.SaveChangesAsync();
+                        }
+                        catch (Exception ex)
+                        {
+                            var a = 1;
+                        }
+                    }
                     await Assert.ThrowsAsync<AddInfluenceRangeException>(
                         () => handler.Handle(new AddInfluenceDataCommand() { Data = new List<Influence> { influence } }, cancellationTokenSource.Token));
                 }
@@ -82,36 +91,35 @@ namespace PatientsResolver.API.UnitTests.Command
 
         private List<Influence> GetTestInfluencesWithEmptyFields()
         {
-            Influence nullPatient = GetCorrectTestInfluence();
+            Influence nullPatient = GetCorrectTestInfluence(1);
             nullPatient.Patient = null;
 
-            Influence emptyPatient = GetCorrectTestInfluence();
+            Influence emptyPatient = GetCorrectTestInfluence(2);
             emptyPatient.PatientId = int.MinValue;
 
-            Influence nullMedicineName = GetCorrectTestInfluence();
+            Influence nullMedicineName = GetCorrectTestInfluence(3);
             nullMedicineName.MedicineName = null;
 
-            Influence emptyMedicineName = GetCorrectTestInfluence();
+            Influence emptyMedicineName = GetCorrectTestInfluence(4);
             emptyMedicineName.MedicineName = "";
 
-            Influence emptyInfluenceType = GetCorrectTestInfluence();
+            Influence emptyInfluenceType = GetCorrectTestInfluence(5);
             emptyInfluenceType.InfluenceType = InfluenceTypes.None;
 
-            Influence emptyStartTimestamp = GetCorrectTestInfluence();
+            Influence emptyStartTimestamp = GetCorrectTestInfluence(6);
             emptyStartTimestamp.StartTimestamp = default(DateTime);
 
-            Influence emptyEndTimestamp = GetCorrectTestInfluence();
+            Influence emptyEndTimestamp = GetCorrectTestInfluence(7);
             emptyEndTimestamp.EndTimestamp = default(DateTime);
 
-            return new List<Influence>() { emptyPatient, nullMedicineName, 
+            return new List<Influence>() { nullPatient, emptyPatient, nullMedicineName, 
                 emptyMedicineName, emptyInfluenceType, emptyStartTimestamp, emptyEndTimestamp };
            
         }
 
 
-        private Influence GetCorrectTestInfluence()
-        {
-            int medHistoryNumber = 100;
+        private Influence GetCorrectTestInfluence(int medHistoryNumber = 100)
+        {           
             var inf = new Influence()
             {
                 InfluenceType = Interfaces.InfluenceTypes.Antioxidant,
