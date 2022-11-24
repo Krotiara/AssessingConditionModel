@@ -67,4 +67,20 @@ namespace PatientsResolver.API.Service.Exceptions
 
         }
     }
+
+
+    public class GetInfluencesException : Exception
+    {
+        public GetInfluencesException(string message) :
+            base(message)
+        {
+
+        }
+
+        public GetInfluencesException(string message, Exception innerException) :
+            base(message, innerException)
+        {
+
+        }
+    }
 }

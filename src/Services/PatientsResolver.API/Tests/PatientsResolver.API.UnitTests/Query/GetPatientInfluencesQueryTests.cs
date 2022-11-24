@@ -8,6 +8,11 @@ using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 using Microsoft.EntityFrameworkCore.Diagnostics;
+using Interfaces;
+using PatientsResolver.API.Entities;
+using PatientsResolver.API.Service.Command;
+using PatientsResolver.API.Service.Query;
+using PatientsResolver.API.Service.Exceptions;
 
 namespace PatientsResolver.API.UnitTests.Query
 {
@@ -31,23 +36,88 @@ namespace PatientsResolver.API.UnitTests.Query
         }
 
         [Fact]
-        public void GetInfluencesMustSetPatientProperty()
+        public async void GetInfluencesMustSetPatientProperty()
         {
-            throw new NotImplementedException();
+            Influence testInf = GetCorrectTestInfluence();
+
+            using (dbContext)
+            {
+                await dbContext.Patients.AddAsync(testInf.Patient);
+                await dbContext.SaveChangesAsync();
+                AddInfluenceDataCommandHandler handler = new AddInfluenceDataCommandHandler(rep);
+                await handler.Handle(new AddInfluenceDataCommand() { Data = new List<Influence> { testInf } }, token);
+
+                GetPatientInfluencesQueryHandler h = new GetPatientInfluencesQueryHandler(rep);
+                var infs = await h.Handle(new GetPatientInfluencesQuery(testInf.PatientId, testInf.StartTimestamp,  testInf.EndTimestamp), token);
+
+                Assert.NotNull(infs.First().Patient);
+            }
         }
 
 
+        //[Fact]
+        //public async void GetInfluencesWhenPatientNotInDbMustThrow()
+        //{
+        //    Influence testInf = GetCorrectTestInfluence();
+        //    using (dbContext)
+        //    {
+        //        await dbContext.Patients.AddAsync(testInf.Patient);
+        //        await dbContext.SaveChangesAsync();
+        //        AddInfluenceDataCommandHandler handler = new AddInfluenceDataCommandHandler(rep);
+        //        await handler.Handle(new AddInfluenceDataCommand() { Data = new List<Influence> { testInf } }, token);
+
+        //        Patient p = await dbContext.Patients.FirstOrDefaultAsync(x => x.MedicalHistoryNumber == testInf.PatientId);
+        //        dbContext.Patients.Remove(p);
+        //        await dbContext.SaveChangesAsync();
+
+
+        //        GetPatientInfluencesQueryHandler h = new GetPatientInfluencesQueryHandler(rep);
+        //        await Assert.ThrowsAsync<GetInfluencesException>(async () => await h.Handle(
+        //            new GetPatientInfluencesQuery(testInf.PatientId, testInf.StartTimestamp, testInf.EndTimestamp), token));
+        //    }
+        //}
+
+
         [Fact]
-        public void GetInfluencesWhenPatientNotInDbMustThrow()
+        public async void GetInfluencesMustSetParameters()
         {
-            throw new NotImplementedException();
+            Influence testInf = GetCorrectTestInfluence();
+            int startParamsCount = testInf.StartParameters.Count;
+            int dynamicParamsCount = testInf.DynamicParameters.Count;
+
+            using (dbContext)
+            {
+                await dbContext.Patients.AddAsync(testInf.Patient);
+                await dbContext.SaveChangesAsync();
+                AddInfluenceDataCommandHandler handler = new AddInfluenceDataCommandHandler(rep);
+                await handler.Handle(new AddInfluenceDataCommand() { Data = new List<Influence> { testInf } }, token);
+
+                GetPatientInfluencesQueryHandler h = new GetPatientInfluencesQueryHandler(rep);
+                var infs = await h.Handle(new GetPatientInfluencesQuery(testInf.PatientId, testInf.StartTimestamp, testInf.EndTimestamp), token);
+
+                Influence addedTestInnf = infs.First();
+                Assert.True(addedTestInnf.StartParameters.Count == startParamsCount);
+                Assert.True(addedTestInnf.DynamicParameters.Count == dynamicParamsCount);
+            }
         }
 
 
-        [Fact]
-        public void GetInfluencesMustSetParameters()
+        private Influence GetCorrectTestInfluence()
         {
-            throw new NotImplementedException();
+            int medHistoryNumber = new Random().Next(1, 10000);
+            var inf = new Influence()
+            {
+                InfluenceType = Interfaces.InfluenceTypes.Antioxidant,
+                MedicineName = "test",
+                Patient = new Patient() { MedicalHistoryNumber = medHistoryNumber, Gender = Interfaces.GenderEnum.Female, Birthday = DateTime.Now, Name = "test" },
+                StartTimestamp = DateTime.Today,
+                EndTimestamp = DateTime.Today,
+                PatientId = medHistoryNumber
+            };
+            inf.StartParameters[ParameterNames.Age] = new PatientParameter() { ParameterName = ParameterNames.Age, Timestamp = DateTime.Today, Value = "40", NameTextDescription = "возраст", IsDynamic = false };
+            inf.StartParameters[ParameterNames.Gender] = new PatientParameter() { ParameterName = ParameterNames.Gender, Timestamp = DateTime.Today, Value = "ж", NameTextDescription = "пол", IsDynamic = false };
+            inf.DynamicParameters[ParameterNames.Age] = new PatientParameter() { ParameterName = ParameterNames.Age, Timestamp = DateTime.Today, Value = "41", NameTextDescription = "возраст", IsDynamic = true };
+            return inf;
         }
     }
 }
