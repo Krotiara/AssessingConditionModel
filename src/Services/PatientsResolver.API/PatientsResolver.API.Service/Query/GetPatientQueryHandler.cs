@@ -18,16 +18,7 @@ namespace PatientsResolver.API.Service.Query
             this.patientDataRepository = patientDataRepository;
         }
 
-        public async Task<Patient> Handle(GetPatientQuery request, CancellationToken cancellationToken)
-        {
-            try
-            {
-                return patientDataRepository.GetAll().FirstOrDefault(x => x.MedicalHistoryNumber == request.PatientId);
-            }
-            catch(Exception ex)
-            {
-                return null; //TODO log
-            }
-        }
+        public async Task<Patient> Handle(GetPatientQuery request, CancellationToken cancellationToken) => 
+            await patientDataRepository.GetPatientBy(request.PatientId);
     }
 }

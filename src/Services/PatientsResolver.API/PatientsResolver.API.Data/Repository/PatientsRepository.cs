@@ -18,7 +18,6 @@ namespace PatientsResolver.API.Data.Repository
 
         public async Task<Patient?> GetPatientBy(int medicalHistoryNumber)
         {
-
             return await PatientsDataDbContext
                 .Patients.FirstOrDefaultAsync(x => x.MedicalHistoryNumber == medicalHistoryNumber);
 
