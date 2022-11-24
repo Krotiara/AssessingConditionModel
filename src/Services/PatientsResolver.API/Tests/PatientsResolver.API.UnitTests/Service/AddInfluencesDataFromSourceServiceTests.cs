@@ -8,6 +8,6 @@ namespace PatientsResolver.API.UnitTests.Service
 {
     public class AddInfluencesDataFromSourceServiceTests
     {
-
+#warning Пока нет тестов.
     }
 }
