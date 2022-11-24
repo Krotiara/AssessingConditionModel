@@ -9,6 +9,7 @@ using PatientsResolver.API.Service.Command;
 using PatientsResolver.API.Service.Exceptions;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -112,6 +113,37 @@ namespace PatientsResolver.API.UnitTests.Command
                     await Assert.ThrowsAsync<AddInfluenceRangeException>(
                        () => handler.Handle(new AddInfluenceDataCommand() { Data = new List<Influence> { influence } }, cancellationTokenSource.Token));
                 }
+            }
+        }
+
+
+        [Fact]
+        public async void AddCorrectInfluenceMustBeSuccess()
+        {
+           
+            var options = new DbContextOptionsBuilder<PatientsDataDbContext>()
+              .UseInMemoryDatabase(databaseName: "test")
+              .ConfigureWarnings(x => x.Ignore(InMemoryEventId.TransactionIgnoredWarning))
+              .Options;
+            var cancellationTokenSource = new CancellationTokenSource(TimeSpan.FromMilliseconds(100));
+            using (PatientsDataDbContext dbContext = new PatientsDataDbContext(options))
+            {
+                InfluenceRepository rep = new InfluenceRepository(dbContext);
+                AddInfluenceDataCommandHandler handler = new AddInfluenceDataCommandHandler(rep);
+
+                Influence inf = GetCorrectTestInfluence();
+                await dbContext.Patients.AddAsync(inf.Patient);
+                await dbContext.SaveChangesAsync();
+
+                List<Influence> addedData = await handler.Handle(new AddInfluenceDataCommand() { Data = new List<Influence> { inf } }, cancellationTokenSource.Token);
+                Influence? added = dbContext.Influences.FirstOrDefault(x => x.InfluenceType == inf.InfluenceType 
+                                                                                   && x.MedicineName == inf.MedicineName 
+                                                                                   && x.PatientId == inf.PatientId 
+                                                                                   && x.StartTimestamp == inf.StartTimestamp 
+                                                                                   && x.EndTimestamp == inf.EndTimestamp);
+
+                Assert.True(addedData.Count == 1);
+                Assert.NotNull(added);
             }
         }
 
