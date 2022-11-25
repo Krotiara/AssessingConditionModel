@@ -64,7 +64,6 @@ namespace Agents.API.UnitTests.Service
                 InitPatientAgentsService service = new InitPatientAgentsService(rep);
                 foreach (Patient testPatient in testPatients)
                 {
-                   
                     await Assert.ThrowsAsync<InitAgentsRangeException>(
                         async () => await service.InitPatientAgentsAsync(new List<IPatient> { testPatient }));
                 }
