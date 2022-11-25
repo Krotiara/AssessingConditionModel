@@ -19,6 +19,8 @@ namespace Agents.API.UnitTests.Service
     {
         AgentsDbContext dbContext;
         CancellationToken token;
+        IDbContextFactory<AgentsDbContext> dbContextFactory;
+        IWebRequester webRequester;
 
         public InitPatientAgentsServiceTests()
         {
@@ -28,20 +30,24 @@ namespace Agents.API.UnitTests.Service
                 .Options;
             var tokenSource = new CancellationTokenSource(TimeSpan.FromMilliseconds(100));
             dbContext = new AgentsDbContext(options);
-            token = tokenSource.Token;    
+            token = tokenSource.Token;
+            var dbFactoryMock = new Mock<IDbContextFactory<AgentsDbContext>>();
+            dbFactoryMock.Setup(x => x.CreateDbContext()).Returns(() => dbContext);
+            var webRequesterMock = new Mock<IWebRequester>();
+
+            dbContextFactory = dbFactoryMock.Object;
+            webRequester = webRequesterMock.Object;
         }
+
 
         [Fact]
         public async void InitAgentForCorrectPatientMustBeReturn()
         {
             using(dbContext)
-            {
-                var dbFactoryMock = new Mock<IDbContextFactory<AgentsDbContext>>();
-                dbFactoryMock.Setup(x => x.CreateDbContext()).Returns(() => dbContext);
-                var webRequesterMock = new Mock<IWebRequester>();
+            {  
                 Patient testPatient = GetTestCorrectPatient();
 
-                AgentPatientsRepository rep = new AgentPatientsRepository(dbFactoryMock.Object, webRequesterMock.Object);
+                AgentPatientsRepository rep = new AgentPatientsRepository(dbContextFactory, webRequester);
                 InitPatientAgentsService service = new InitPatientAgentsService(rep);
 
                 Assert.NotEmpty(await service.InitPatientAgentsAsync(new List<IPatient> { testPatient }));
@@ -54,13 +60,9 @@ namespace Agents.API.UnitTests.Service
         {
             using (dbContext)
             {
-                var dbFactoryMock = new Mock<IDbContextFactory<AgentsDbContext>>();
-                dbFactoryMock.Setup(x => x.CreateDbContext()).Returns(() => dbContext);
-                var webRequesterMock = new Mock<IWebRequester>();
-
                 IList<Patient> testPatients = GetTestIncorrectPatients();
 
-                AgentPatientsRepository rep = new AgentPatientsRepository(dbFactoryMock.Object, webRequesterMock.Object);
+                AgentPatientsRepository rep = new AgentPatientsRepository(dbContextFactory, webRequester);
                 InitPatientAgentsService service = new InitPatientAgentsService(rep);
                 foreach (Patient testPatient in testPatients)
                 {
@@ -75,13 +77,10 @@ namespace Agents.API.UnitTests.Service
         public async void InitAgentMustSetStateDiagram()
         {
             using (dbContext)
-            {
-                var dbFactoryMock = new Mock<IDbContextFactory<AgentsDbContext>>();
-                dbFactoryMock.Setup(x => x.CreateDbContext()).Returns(() => dbContext);
-                var webRequesterMock = new Mock<IWebRequester>();
+            {     
                 Patient testPatient = GetTestCorrectPatient();
 
-                AgentPatientsRepository rep = new AgentPatientsRepository(dbFactoryMock.Object, webRequesterMock.Object);
+                AgentPatientsRepository rep = new AgentPatientsRepository(dbContextFactory, webRequester);
                 InitPatientAgentsService service = new InitPatientAgentsService(rep);
 
                 var agents = await service.InitPatientAgentsAsync(new List<IPatient> { testPatient });
@@ -97,8 +96,13 @@ namespace Agents.API.UnitTests.Service
         private Patient GetTestCorrectPatient()
         {
             int patientId = new Random().Next(1, 10000);
-            return new Patient() { MedicalHistoryNumber = patientId, 
-                Birthday = DateTime.Today, Name = "test", Gender = GenderEnum.Male };
+            return new Patient()
+            {
+                MedicalHistoryNumber = patientId,
+                Birthday = DateTime.Today,
+                Name = "test",
+                Gender = GenderEnum.Male
+            };
         }
 
 
