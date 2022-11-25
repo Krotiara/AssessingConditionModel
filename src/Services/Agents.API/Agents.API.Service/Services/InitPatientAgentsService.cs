@@ -19,21 +19,27 @@ namespace Agents.API.Service.Services
             this.agentPatientsRepository = agentPatientsRepository;
         }
 
-        public async Task InitPatientAgentsAsync(IList<IPatient> patients)
+        public async Task<IList<AgentPatient>> InitPatientAgentsAsync(IList<IPatient> patients)
         {
             //TODO распараллелить
+            List<string> errorMessages = new List<string>();
+            List<AgentPatient> agentPatients = new List<AgentPatient>();
             foreach (IPatient patient in patients)
             {
                 try
                 {
-                    await agentPatientsRepository.InitAgentPatient(patient);
+                    agentPatients.Add(await agentPatientsRepository.InitAgentPatient(patient));
                 }
                 catch(InitAgentException ex)
                 {
+                    errorMessages.Add($"Init agent for Patient id = {patient.MedicalHistoryNumber} - {ex.Message}");
                     continue;
-                    //TODO log
                 }
-            }      
+            }
+            if (errorMessages.Count > 0)
+                throw new InitAgentsRangeException(string.Join("\n", errorMessages));
+            else
+                return agentPatients;
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Interfaces;
+﻿using Agents.API.Entities;
+using Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,6 @@ namespace Agents.API.Service.Services
 {
     public interface IInitPatientAgentsService
     {
-        public Task InitPatientAgentsAsync(IList<IPatient> patients);
+        public Task<IList<AgentPatient>> InitPatientAgentsAsync(IList<IPatient> patients);
     }
 }
