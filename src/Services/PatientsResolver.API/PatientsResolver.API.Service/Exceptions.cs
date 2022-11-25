@@ -21,6 +21,21 @@ namespace PatientsResolver.API.Service.Exceptions
         }
     }
 
+    public class AddPatientsRangeException : Exception
+    {
+        public AddPatientsRangeException(string message) :
+            base(message)
+        {
+
+        }
+
+        public AddPatientsRangeException(string message, Exception innerException) :
+            base(message, innerException)
+        {
+
+        }
+    }
+
 
     public class AddInfluenceException : Exception
     {
@@ -31,6 +46,38 @@ namespace PatientsResolver.API.Service.Exceptions
         }
 
         public AddInfluenceException(string message, Exception innerException): 
+            base(message, innerException)
+        {
+
+        }
+    }
+
+
+    public class AddInfluenceRangeException : Exception
+    {
+        public AddInfluenceRangeException(string message) :
+            base(message)
+        {
+
+        }
+
+        public AddInfluenceRangeException(string message, Exception innerException) :
+            base(message, innerException)
+        {
+
+        }
+    }
+
+
+    public class GetInfluencesException : Exception
+    {
+        public GetInfluencesException(string message) :
+            base(message)
+        {
+
+        }
+
+        public GetInfluencesException(string message, Exception innerException) :
             base(message, innerException)
         {
 

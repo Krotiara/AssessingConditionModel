@@ -22,7 +22,8 @@ namespace PatientsResolver.API.Service.Command
 
         public async Task<bool> Handle(AddPatientCommand request, CancellationToken cancellationToken)
         {
-
+            if (!IsCorrectPatient(request.Patient))
+                throw new AddPatientException("Patient fields is not correct");
             bool isPatientExist = patientsRepository.GetAll().FirstOrDefault(x => x.MedicalHistoryNumber == request.Patient.MedicalHistoryNumber) != null;
             if (isPatientExist)
                 throw new AddPatientException($"Patient with medical history number = {request.Patient.MedicalHistoryNumber} is already exist.");
@@ -35,6 +36,15 @@ namespace PatientsResolver.API.Service.Command
             {
                 throw new AddPatientException($"Add patient with with medical history number = {request.Patient.MedicalHistoryNumber} error", ex);
             }
+        }
+
+
+        private bool IsCorrectPatient(Patient patient)
+        {
+            return patient != null
+                && patient.Birthday != default(DateTime) 
+                && patient.MedicalHistoryNumber > 0 
+                && patient.Gender != Interfaces.GenderEnum.None;
         }
     }
 }

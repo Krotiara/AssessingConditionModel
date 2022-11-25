@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using PatientsResolver.API.Data.Repository;
 using PatientsResolver.API.Entities;
+using PatientsResolver.API.Service.Exceptions;
 
 namespace PatientsResolver.API.Service.Command
 {
@@ -18,6 +19,7 @@ namespace PatientsResolver.API.Service.Command
         public async Task<List<Influence>> Handle(AddInfluenceDataCommand request, CancellationToken cancellationToken)
         {
             List<Influence> addedData = new List<Influence>();
+            List<string> exceptions = new List<string>();
             foreach (Influence p in request.Data)
                 try
                 {
@@ -28,9 +30,13 @@ namespace PatientsResolver.API.Service.Command
                 catch(Exception ex)
                 {
                     //TODO log
+                    exceptions.Add($"Add influence exception: {ex.Message}");
                     continue;
                 }
-            return addedData;
+            if (exceptions.Count > 0)
+                throw new AddInfluenceRangeException(string.Join("\n", exceptions));
+            else
+                return addedData;
         }
     }
 }
