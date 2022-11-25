@@ -32,7 +32,7 @@ namespace Agents.API.Service.Services
                 }
                 catch(InitAgentException ex)
                 {
-                    errorMessages.Add($"Init agent for Patient id = {patient.MedicalHistoryNumber} - {ex.Message}");
+                    errorMessages.Add($"Init agent: {ex.Message}");
                     continue;
                 }
             }

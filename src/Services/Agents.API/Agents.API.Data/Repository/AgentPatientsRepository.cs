@@ -56,6 +56,8 @@ namespace Agents.API.Data.Repository
             {
                 if (patient == null)
                     throw new InitAgentException("patient is null");
+                if (!IsCorrectPatient(patient))
+                    throw new InitAgentException($"Patient is incorrect: id = {patient.MedicalHistoryNumber}, gender = {patient.Gender}.");
                 try
                 {
                     AgentPatient? agentPatient = await AgentsDbContext
@@ -84,6 +86,10 @@ namespace Agents.API.Data.Repository
                 }
             }
         }
+
+
+        private bool IsCorrectPatient(IPatient patient) => 
+            patient.Gender != GenderEnum.None && patient.MedicalHistoryNumber > 0;
 
         public async Task<AgingState> GetStateAsync(int patientId, DateTime timeStamp)
         {
