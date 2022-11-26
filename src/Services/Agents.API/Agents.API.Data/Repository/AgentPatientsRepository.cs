@@ -42,9 +42,13 @@ namespace Agents.API.Data.Repository
                     await agentPatient.StateDiagram.UpdateStateAsync(new AgentDetermineStateProperties());
                     return agentPatient;
                 }
+                catch (DetermineStateException ex)
+                {
+                    throw new GetAgentException("error in update agent state", ex);
+                }
                 catch (Exception ex)
                 {
-                    throw new AgentNotFoundException($"Get patient agent error", ex);
+                    throw new GetAgentException($"Get patient agent error", ex);
                 }
             }
         }

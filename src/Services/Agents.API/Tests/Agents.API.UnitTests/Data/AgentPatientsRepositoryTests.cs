@@ -88,21 +88,31 @@ namespace Agents.API.UnitTests.Data
         [Fact]
         public async void GetNotExistedAgentMustThrow()
         {
-          
-            throw new NotImplementedException();
+            double mockBioAge = 40;
+            double mockAge = 35;
+            AgentBioAgeStates assertRang = AgentBioAgeStates.RangIV;
+            Patient testPatient = GetTestCorrectPatient();
+            var dbFactoryMock = new Mock<IDbContextFactory<AgentsDbContext>>();
+            dbFactoryMock.Setup(x => x.CreateDbContext()).Returns(() => new AgentsDbContext(options));
+            var webRequesterMock = new Mock<IWebRequester>();
+            webRequesterMock.Setup(x => x.GetResponse<double>(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).Returns(
+                () => Task.FromResult<double>(mockBioAge));
+            webRequesterMock.Setup(x => x.GetResponse<IList<PatientParameter>>(It.IsAny<string>(), It.IsAny<string>(),
+                It.IsAny<string>())).Returns(() => GetTestParameters(testPatient.MedicalHistoryNumber, mockAge));
+            AgentPatientsRepository rep = new AgentPatientsRepository(dbFactoryMock.Object, webRequesterMock.Object);
+
+            await Assert.ThrowsAsync<AgentNotFoundException>(async () 
+                => await rep.GetAgentPatient(testPatient.MedicalHistoryNumber));
         }
 
 
         [Fact]
         public async void GetExistedAgentMustUpdateState()
         {
-          
             double mockBioAge = 40;
             double mockAge = 35;
             AgentBioAgeStates assertRang = AgentBioAgeStates.RangIV;
-
             Patient testPatient = GetTestCorrectPatient();
-
             var dbFactoryMock = new Mock<IDbContextFactory<AgentsDbContext>>();
             dbFactoryMock.Setup(x => x.CreateDbContext()).Returns(() => new AgentsDbContext(options));
             var webRequesterMock = new Mock<IWebRequester>();
@@ -120,6 +130,50 @@ namespace Agents.API.UnitTests.Data
             Assert.True(agentPatient.CurrentAge == mockAge);
             Assert.True(agentPatient.CurrentBioAge == mockBioAge);
 
+        }
+
+
+        [Fact]
+        public async void GetAgentPatientWhenThereIsNoSavedAgeParameterMustThrow()
+        {
+            double mockBioAge = 40;
+            AgentBioAgeStates assertRang = AgentBioAgeStates.RangIV;
+            Patient testPatient = GetTestCorrectPatient();
+            var dbFactoryMock = new Mock<IDbContextFactory<AgentsDbContext>>();
+            dbFactoryMock.Setup(x => x.CreateDbContext()).Returns(() => new AgentsDbContext(options));
+            var webRequesterMock = new Mock<IWebRequester>();
+            webRequesterMock.Setup(x => x.GetResponse<double>(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).Returns(
+                () => Task.FromResult<double>(mockBioAge));
+            webRequesterMock.Setup(x => x.GetResponse<IList<PatientParameter>>(It.IsAny<string>(), It.IsAny<string>(),
+                It.IsAny<string>())).Returns(() => GetTestParameters(testPatient.MedicalHistoryNumber));
+            AgentPatientsRepository rep = new AgentPatientsRepository(dbFactoryMock.Object, webRequesterMock.Object);
+
+            await rep.InitAgentPatient(testPatient);
+
+            await Assert.ThrowsAsync<GetAgentException>(
+                async () => await rep.GetAgentPatient(testPatient.MedicalHistoryNumber));
+        }
+
+
+        [Fact]
+        public async void UpdateAgentPatientStateWhenThereIsNoSavedAgeParameterMustThrow()
+        {
+            double mockBioAge = 40;
+            AgentBioAgeStates assertRang = AgentBioAgeStates.RangIV;
+            Patient testPatient = GetTestCorrectPatient();
+            var dbFactoryMock = new Mock<IDbContextFactory<AgentsDbContext>>();
+            dbFactoryMock.Setup(x => x.CreateDbContext()).Returns(() => new AgentsDbContext(options));
+            var webRequesterMock = new Mock<IWebRequester>();
+            webRequesterMock.Setup(x => x.GetResponse<double>(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).Returns(
+                () => Task.FromResult<double>(mockBioAge));
+            webRequesterMock.Setup(x => x.GetResponse<IList<PatientParameter>>(It.IsAny<string>(), It.IsAny<string>(),
+                It.IsAny<string>())).Returns(() => GetTestParameters(testPatient.MedicalHistoryNumber));
+            AgentPatientsRepository rep = new AgentPatientsRepository(dbFactoryMock.Object, webRequesterMock.Object);
+
+            AgentPatient p = await rep.InitAgentPatient(testPatient);
+
+            await Assert.ThrowsAsync<DetermineStateException>(
+                async () => await p.StateDiagram.UpdateStateAsync(new AgentDetermineStateProperties()));
         }
 
 
@@ -152,6 +206,15 @@ namespace Agents.API.UnitTests.Data
             return Task.FromResult<IList<PatientParameter>>( new List<PatientParameter>()
             {
                 new PatientParameter(){InfluenceId = 1, NameTextDescription = "возраст", ParameterName = ParameterNames.Age, PatientId = patientId, IsDynamic = false, Timestamp = DateTime.Now, Value = mockAge.ToString() },
+                new PatientParameter(){InfluenceId = 1, NameTextDescription = "пол", ParameterName = ParameterNames.Gender, PatientId = patientId, IsDynamic = false, Timestamp = DateTime.Now, Value = "ж" }
+            });
+        }
+
+
+        private Task<IList<PatientParameter>> GetTestParameters(int patientId)
+        {
+            return Task.FromResult<IList<PatientParameter>>(new List<PatientParameter>()
+            {
                 new PatientParameter(){InfluenceId = 1, NameTextDescription = "пол", ParameterName = ParameterNames.Gender, PatientId = patientId, IsDynamic = false, Timestamp = DateTime.Now, Value = "ж" }
             });
         }
