@@ -99,7 +99,10 @@ namespace Agents.API.Data.Repository
         {
             using (AgentsDbContext AgentsDbContext = dbContextFactory.CreateDbContext())
             {
-                return await AgentsDbContext.AgingStates.FirstOrDefaultAsync(x => x.PatientId == patientId && x.Timestamp == timeStamp);
+                AgingState? state = await AgentsDbContext.AgingStates.FirstOrDefaultAsync(x => x.PatientId == patientId && x.Timestamp == timeStamp);
+                if (state == null)
+                    throw new GetAgingStateException($"There is no aging state with keys: patient id = {patientId}, date = {timeStamp}.");
+                else return state;
             }
         }
 
@@ -108,8 +111,16 @@ namespace Agents.API.Data.Repository
             using (AgentsDbContext AgentsDbContext = dbContextFactory.CreateDbContext())
             {
                 IExecutionStrategy strategy = AgentsDbContext.Database.CreateExecutionStrategy();
-#warning error  a second operation was started on this context instance before a previous operation completed. this is usually caused by different threads concurrently
-                AgingState? state = await GetStateAsync(agingState.PatientId, agingState.Timestamp);
+
+                AgingState? state;
+                try
+                {
+                    state = await GetStateAsync(agingState.PatientId, agingState.Timestamp);
+                }
+                catch(GetAgingStateException)
+                {
+                    state = null;
+                }
                 return await strategy.ExecuteAsync(async () =>
                 {
                     if (state != null && !isOverride)
