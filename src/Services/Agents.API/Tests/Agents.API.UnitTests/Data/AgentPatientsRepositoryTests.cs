@@ -18,45 +18,40 @@ namespace Agents.API.UnitTests.Data
 {
     public class AgentPatientsRepositoryTests
     {
-        AgentsDbContext dbContext;
+        //AgentsDbContext dbContext;
         CancellationToken token;
+        DbContextOptions<AgentsDbContext> options;
 
         public AgentPatientsRepositoryTests()
         {
-            var options = new DbContextOptionsBuilder<AgentsDbContext>()
+            options = new DbContextOptionsBuilder<AgentsDbContext>()
                .UseInMemoryDatabase(databaseName: "test")
                .ConfigureWarnings(x => x.Ignore(InMemoryEventId.TransactionIgnoredWarning))
                .Options;
             var tokenSource = new CancellationTokenSource(TimeSpan.FromMilliseconds(100));
-            dbContext = new AgentsDbContext(options);
+           // dbContext = new AgentsDbContext(options);
             token = tokenSource.Token;
         }
 
 
         [Fact]
         public async void InitAgentForCorrectPatientMustBeAdded()
-        {         
-            using (dbContext)
-            {
-                var dbFactoryMock = new Mock<IDbContextFactory<AgentsDbContext>>();
-                dbFactoryMock.Setup(x => x.CreateDbContext()).Returns(() => dbContext);
-                var webRequesterMock = new Mock<IWebRequester>();
-                Patient testPatient = GetTestCorrectPatient();
+        {
+            var dbFactoryMock = new Mock<IDbContextFactory<AgentsDbContext>>();
+            dbFactoryMock.Setup(x => x.CreateDbContext()).Returns(() => new AgentsDbContext(options));
+            var webRequesterMock = new Mock<IWebRequester>();
+            Patient testPatient = GetTestCorrectPatient();
 
-                AgentPatientsRepository rep = new AgentPatientsRepository(dbFactoryMock.Object, webRequesterMock.Object);
-                Assert.NotNull(await rep.InitAgentPatient(testPatient));
-
-            }
+            AgentPatientsRepository rep = new AgentPatientsRepository(dbFactoryMock.Object, webRequesterMock.Object);
+            Assert.NotNull(await rep.InitAgentPatient(testPatient));
         }
 
 
         [Fact]
         public async void InitAgentForIncorrectPatientMustThrow()
         {
-            using (dbContext)
-            {
                 var dbFactoryMock = new Mock<IDbContextFactory<AgentsDbContext>>();
-                dbFactoryMock.Setup(x => x.CreateDbContext()).Returns(() => dbContext);
+                dbFactoryMock.Setup(x => x.CreateDbContext()).Returns(() => new AgentsDbContext(options));
                 var webRequesterMock = new Mock<IWebRequester>();
 
                 IList<Patient> testPatients = GetTestIncorrectPatients();
@@ -67,27 +62,26 @@ namespace Agents.API.UnitTests.Data
                     await Assert.ThrowsAsync<InitAgentException>(
                         async () => await rep.InitAgentPatient(testPatient));
                 }
-            }
+            
         }
 
 
         [Fact]
         public async void InitAgentMustSetStateDiagram()
         {
-            using (dbContext)
-            {
-                var dbFactoryMock = new Mock<IDbContextFactory<AgentsDbContext>>();
-                dbFactoryMock.Setup(x => x.CreateDbContext()).Returns(() => dbContext);
-                var webRequesterMock = new Mock<IWebRequester>();
-                Patient testPatient = GetTestCorrectPatient();
 
-                AgentPatientsRepository rep = new AgentPatientsRepository(dbFactoryMock.Object, webRequesterMock.Object);
-                AgentPatient agent = await rep.InitAgentPatient(testPatient);
+            var dbFactoryMock = new Mock<IDbContextFactory<AgentsDbContext>>();
+            dbFactoryMock.Setup(x => x.CreateDbContext()).Returns(() => new AgentsDbContext(options));
+            var webRequesterMock = new Mock<IWebRequester>();
+            Patient testPatient = GetTestCorrectPatient();
 
-                Assert.NotNull(agent.StateDiagram);
-                Assert.NotNull(agent.StateDiagram.States);
-                Assert.True(agent.StateDiagram.States.Any());
-            }
+            AgentPatientsRepository rep = new AgentPatientsRepository(dbFactoryMock.Object, webRequesterMock.Object);
+            AgentPatient agent = await rep.InitAgentPatient(testPatient);
+
+            Assert.NotNull(agent.StateDiagram);
+            Assert.NotNull(agent.StateDiagram.States);
+            Assert.True(agent.StateDiagram.States.Any());
+
         }
 
 
@@ -102,30 +96,30 @@ namespace Agents.API.UnitTests.Data
         [Fact]
         public async void GetExistedAgentMustUpdateState()
         {
-            using (dbContext)
-            {
-                double mockBioAge = 40;
-                double mockAge = 35;
-                AgentBioAgeStates assertRang = AgentBioAgeStates.RangIV;
+          
+            double mockBioAge = 40;
+            double mockAge = 35;
+            AgentBioAgeStates assertRang = AgentBioAgeStates.RangIV;
 
-                Patient testPatient = GetTestCorrectPatient();
+            Patient testPatient = GetTestCorrectPatient();
 
-                var dbFactoryMock = new Mock<IDbContextFactory<AgentsDbContext>>();
-                dbFactoryMock.Setup(x => x.CreateDbContext()).Returns(() => dbContext);
-                var webRequesterMock = new Mock<IWebRequester>();
-                webRequesterMock.Setup(x => x.GetResponse<double>(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).Returns(() => new Task<double>(() => mockBioAge));
-                webRequesterMock.Setup(x => x.GetResponse<IList<PatientParameter>>(It.IsAny<string>(), It.IsAny<string>(), 
-                    It.IsAny<string>())).Returns(() => new Task<IList<PatientParameter>>(() => GetTestParameters(testPatient.MedicalHistoryNumber, mockAge)));
-                AgentPatientsRepository rep = new AgentPatientsRepository(dbFactoryMock.Object, webRequesterMock.Object);
+            var dbFactoryMock = new Mock<IDbContextFactory<AgentsDbContext>>();
+            dbFactoryMock.Setup(x => x.CreateDbContext()).Returns(() => new AgentsDbContext(options));
+            var webRequesterMock = new Mock<IWebRequester>();
+            webRequesterMock.Setup(x => x.GetResponse<double>(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).Returns(
+                () => Task.FromResult<double>(mockBioAge));
+            webRequesterMock.Setup(x => x.GetResponse<IList<PatientParameter>>(It.IsAny<string>(), It.IsAny<string>(),
+                It.IsAny<string>())).Returns(() => GetTestParameters(testPatient.MedicalHistoryNumber, mockAge));
+            AgentPatientsRepository rep = new AgentPatientsRepository(dbFactoryMock.Object, webRequesterMock.Object);
 
-                await rep.InitAgentPatient(testPatient);
+            await rep.InitAgentPatient(testPatient);
 
-                AgentPatient agentPatient = await rep.GetAgentPatient(testPatient.MedicalHistoryNumber);
+            AgentPatient agentPatient = await rep.GetAgentPatient(testPatient.MedicalHistoryNumber);
 
-                Assert.True(agentPatient.CurrentAgeRang == assertRang);
-                Assert.True(agentPatient.CurrentAge == mockAge);
-                Assert.True(agentPatient.CurrentBioAge == mockBioAge);
-            }
+            Assert.True(agentPatient.CurrentAgeRang == assertRang);
+            Assert.True(agentPatient.CurrentAge == mockAge);
+            Assert.True(agentPatient.CurrentBioAge == mockBioAge);
+
         }
 
 
@@ -153,13 +147,13 @@ namespace Agents.API.UnitTests.Data
         }
 
 
-        private IList<PatientParameter> GetTestParameters(int patientId, double mockAge)
+        private Task<IList<PatientParameter>> GetTestParameters(int patientId, double mockAge)
         {
-            return new List<PatientParameter>()
+            return Task.FromResult<IList<PatientParameter>>( new List<PatientParameter>()
             {
                 new PatientParameter(){InfluenceId = 1, NameTextDescription = "возраст", ParameterName = ParameterNames.Age, PatientId = patientId, IsDynamic = false, Timestamp = DateTime.Now, Value = mockAge.ToString() },
                 new PatientParameter(){InfluenceId = 1, NameTextDescription = "пол", ParameterName = ParameterNames.Gender, PatientId = patientId, IsDynamic = false, Timestamp = DateTime.Now, Value = "ж" }
-            };
+            });
         }
 
     }
