@@ -108,6 +108,8 @@ namespace Agents.API.Data.Repository
 
         public async Task<AgingState> AddState(AgingState agingState, bool isOverride)
         {
+            if (!IsAgingStateCorrect(agingState))
+                throw new AddAgingStateException("State is in incorrect format");
             using (AgentsDbContext AgentsDbContext = dbContextFactory.CreateDbContext())
             {
                 IExecutionStrategy strategy = AgentsDbContext.Database.CreateExecutionStrategy();
@@ -148,5 +150,9 @@ namespace Agents.API.Data.Repository
                 });
             }
         }
+
+
+        private bool IsAgingStateCorrect(AgingState s) => 
+            s.Age >= 0 && s.BioAge >= 0 && s.PatientId > 0 && s.Timestamp != default(DateTime);
     }
 }

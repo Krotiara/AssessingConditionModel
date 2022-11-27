@@ -37,16 +37,31 @@ namespace Agents.API.UnitTests.Data
         }
 
         [Fact]
-        public void AddExistedStateMustThrow()
+        public async void AddExistedStateWithoutOverrideMustThrow()
         {
-            throw new NotImplementedException();
+            int patientId = new Random().Next(1, 1000);
+            DateTime timeStamp = DateTime.Today;
+            AgingState testState = new AgingState()
+            {
+                PatientId = patientId,
+                BioAge = 40,
+                Age = 40,
+                Timestamp = timeStamp,
+                BioAgeState = AgentBioAgeStates.RangIII
+            };
+
+            await rep.AddState(testState, false);
+
+            await Assert.ThrowsAsync<AddAgingStateException>(async () => await rep.AddState(testState, false));
         }
 
 
         [Fact]
-        public void AddInCorrectStateMustThrow()
+        public async void AddIncorrectStateMustThrow()
         {
-            throw new NotImplementedException();
+            List<AgingState> incorrectTestStates = GetIncorrectAgingStates();
+            foreach(AgingState state in incorrectTestStates)
+                await Assert.ThrowsAsync<AddAgingStateException>(async () => await rep.AddState(state, false));
         }
 
 
@@ -56,5 +71,30 @@ namespace Agents.API.UnitTests.Data
             await Assert.ThrowsAsync<GetAgingStateException>(
                 async () => await rep.GetStateAsync(int.MaxValue, DateTime.MaxValue));
         }
+
+
+        private List<AgingState> GetIncorrectAgingStates()
+        {
+            AgingState inCorrectId = GetAgingState(-1, DateTime.Today);
+            AgingState inCorrectDate = GetAgingState(new Random().Next(1, 1000), default(DateTime));
+            AgingState incorrectAge = GetAgingState(new Random().Next(1, 1000), DateTime.Today);
+            incorrectAge.Age = -1;
+            AgingState incorrectBioAge = GetAgingState(new Random().Next(1, 1000), DateTime.Today);
+            incorrectBioAge.BioAge = -1;
+            return new List<AgingState> { inCorrectId, inCorrectDate, incorrectAge, incorrectBioAge };
+        }
+
+
+        private AgingState GetAgingState(int patientId, DateTime timeStamp) => new AgingState()
+        {
+            PatientId = patientId,
+            BioAge = 40,
+            Age = 40,
+            Timestamp = timeStamp,
+            BioAgeState = AgentBioAgeStates.RangIII
+        };
+
+
+       
     }
 }
