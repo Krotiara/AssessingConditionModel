@@ -38,7 +38,7 @@ services:
       - 8008:80
       - 8009:443
     volumes:
-      - "C:/TestData:/data"
+      #- "C:/TestData:/data"
       - ~/.aspnet/https:/https:ro
     extra_hosts:
       - host.docker.internal:host-gateway
@@ -49,7 +49,7 @@ services:
       context: .
       dockerfile: src/Services/PatientsResolver.API/PatientsResolver.API/Dockerfile
     volumes:
-      - "C:/TestData:/data"
+      #- "C:/TestData:/data"
       - ~/.aspnet/https:/https:ro
     environment:
       - ASPNETCORE_ENVIRONMENT=Development

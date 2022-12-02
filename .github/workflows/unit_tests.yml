@@ -1,0 +1,63 @@
+name: Unit tests
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+env:
+  dotnetVersion: 6.0
+
+jobs:
+  testing:
+    name: unit testing
+    runs-on: ubuntu-latest 
+
+    strategy:
+      matrix:
+        csprojFile: [ 
+        #"src/Services/Agents.API/Agents.API/Agents.API.csproj", 
+        "src/Services/PatientsResolver.API/PatientsResolver.API/PatientsResolver.API.csproj"]
+        #dllBuildFile: ["src/ApiGateways/TempGateway/TempGateway", "src/Services/Agents.API/Agents.API"]
+
+    steps:
+    - uses: actions/checkout@v3
+    
+   # - id: detect_changes
+   #   name: Detect Changes
+   #   uses: zattoo/recognition@v2
+   #   with:
+   #     Domains: '{"TempGateway": ["src/ApiGateways/TempGateway"], 
+    #    "Agents.API": ["src/Services/Agents.API"], 
+   #     "BioAge.API": ["src/Services/BioAge.API"], 
+    #    "ContainerRegister.API": ["src/Services/ContainerRegister.API"],
+   #     "InfluenceCalculator.API": ["src/Services/InfluenceCalculator.API"],
+   #     "PatientDataHandler.API": ["src/Services/PatientDataHandler.API"],
+   #     "PatientsResolver.API": ["src/Services/PatientsResolver.API"],
+   #     "Web": ["src/Web"]}' # name : path
+   #     token: ${{github.token}}
+
+    - id: reg
+      uses: ashley-taylor/regex-property-action@v1.3
+      with:
+        value: "${{ matrix.csprojFile }}"
+        regex: "/[\\w|\\.]+?/[\\w|\\.]+?\\.csproj"
+        replacement: ""
+
+
+    - name: Setup dotnet 
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: 6.0
+
+    - name: Restore dependencies
+      run: dotnet restore "${{ matrix.csprojFile }}"
+
+    - name: Build
+      run: dotnet build "${{ matrix.csprojFile }}" --no-restore
+
+    - name: Test
+      run: dotnet test "${{ steps.reg.outputs.value }}/Tests/PatientsResolver.API.UnitTests" --no-restore --verbosity normal
+
+
