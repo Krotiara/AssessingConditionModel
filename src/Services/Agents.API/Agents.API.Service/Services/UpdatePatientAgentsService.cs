@@ -45,7 +45,6 @@ namespace Agents.API.Service.Services
                 }
             }
             return successCount;
-            //Темст
         }
     }
 }
