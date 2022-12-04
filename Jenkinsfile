@@ -29,11 +29,9 @@ pipeline {
         }
         stage('Deploy Local') {
             steps {
-                sh '''
-                docker info
-                docker version
-                docker compose version              
-                '''
+                sh 'docker info'
+                sh 'docker version'
+                sh 'docker compose version'
                 sh 'docker compose up -d --no-color --wait'
                 sh 'docker compose ps'
             }
