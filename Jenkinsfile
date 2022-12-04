@@ -7,14 +7,15 @@ pipeline {
                  checkout([$class: 'GitSCM', branches: [[name: '*/main']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'b50741b3-08a2-4e79-8078-584180c33c5e', url: 'git@github.com:Krotiara/AssessingConditionModel.git']]])
             }
         }
-        stage('Restore packages') {
-            steps {
-              bat "dotnet restore AssessingConditionModel.sln"
-            }
-        }
         stage('Clean') {
             steps {
                 bat "\"${tool 'MSBuild'}\" AssessingConditionModel.sln /nologo /nr:false /p:platform=\"Any CPU\" /p:configuration=\"debug\" /t:clean"
+            }
+        }
+        stage('Restore packages') {
+            steps {
+              bat "dotnet nuget locals --clear all"
+              bat "dotnet restore AssessingConditionModel.sln"
             }
         }
         stage('Build') {
