@@ -11,5 +11,7 @@ namespace Interfaces
         public string[] Descriptions { get; set; }
 
         public HashSet<string> DescriptionsSet => new HashSet<string>(Descriptions);
+
+        //N
     }
 }
