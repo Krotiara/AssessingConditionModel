@@ -29,11 +29,11 @@ pipeline {
         }
         stage('Deploy Local') {
             steps {
-                sh 'docker info'
-                sh 'docker version'
-                sh 'docker compose version'
-                sh 'docker compose up -d --no-color --wait'
-                sh 'docker compose ps'
+                bat 'docker info'
+                bat 'docker version'
+                bat 'docker compose version'
+                bat 'docker compose up -d --no-color --wait'
+                bat 'docker compose ps'
             }
         }
         stage('Run Integration Tests') {
