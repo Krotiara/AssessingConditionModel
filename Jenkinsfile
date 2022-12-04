@@ -14,12 +14,12 @@ pipeline {
         }
         stage('Clean') {
             steps {
-                bat "\"${tool 'MSBuild'}\" AssessingConditionModel.sln /nologo /nr:false /p:platform=\"x64\" /p:configuration=\"release\" /t:clean"
+                bat "\"${tool 'MSBuild'}\" AssessingConditionModel.sln /nologo /nr:false /p:platform=\"x64\" /p:configuration=\"debug\" /t:clean"
             }
         }
         stage('Build') {
             steps {
-               bat "\"${tool 'MSBuild'}\" AssessingConditionModel.sln /p:DeployOnBuild=true /p:DeployDefaultTarget=WebPublish /p:WebPublishMethod=FileSystem /p:SkipInvalidConfigurations=true /t:build /p:Configuration=Release /p:Platform=\"Any CPU\" /p:DeleteExistingFiles=True /p:publishUrl=c:\\inetpub\\wwwroot"
+               bat "\"${tool 'MSBuild'}\" AssessingConditionModel.sln /p:DeployOnBuild=true /p:DeployDefaultTarget=WebPublish /p:WebPublishMethod=FileSystem /p:SkipInvalidConfigurations=true /t:build /p:Configuration=Debug /p:Platform=\"Any CPU\" /p:DeleteExistingFiles=True /p:publishUrl=c:\\inetpub\\wwwroot"
             }
         }
         stage('Test') {
