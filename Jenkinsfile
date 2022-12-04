@@ -22,14 +22,29 @@ pipeline {
                bat "\"${tool 'MSBuild'}\" AssessingConditionModel.sln /p:DeployOnBuild=true /p:DeployDefaultTarget=WebPublish /p:WebPublishMethod=FileSystem /p:SkipInvalidConfigurations=true /t:build /p:Configuration=Debug /p:Platform=\"Any CPU\" /p:DeleteExistingFiles=True /p:publishUrl=c:\\inetpub\\wwwroot"
             }
         }
-        stage('Test') {
+        stage('Run Unit Tests') {
             steps {
                 bat "\"C:/Program Files/dotnet/dotnet.exe\" test \"AssessingConditionModel.sln\""
             }
         }
-        stage('Deploy') {
+        stage('Deploy Local') {
             steps {
-                echo 'Deploying....'
+                echo 'Deploy Local....'
+            }
+        }
+        stage('Run Integration Tests') {
+            steps {
+                echo 'Run Integration Tests....'
+            }
+        }
+        stage('Deploy Production') {
+            steps {
+                echo 'Deploy Production....'
+            }
+        }
+        stage('Run Post Deployment Tests') {
+            steps {
+                echo 'Run Post Deployment Tests....'
             }
         }
     }
