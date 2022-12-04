@@ -14,7 +14,7 @@ pipeline {
         }
         stage('Clean') {
             steps {
-                bat "\"${tool 'MSBuild'}\" AssessingConditionModel.sln /nologo /nr:false /p:platform=\"x64\" /p:configuration=\"debug\" /t:clean"
+                bat "\"${tool 'MSBuild'}\" AssessingConditionModel.sln /nologo /nr:false /p:platform=\"Any CPU\" /p:configuration=\"debug\" /t:clean"
             }
         }
         stage('Build') {
