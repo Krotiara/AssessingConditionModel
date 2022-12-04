@@ -9,8 +9,7 @@ pipeline {
         }
         stage('Restore packages') {
             steps {
-              bat "dotnet nuget locals --clear all"
-              bat "dotnet restore AssessingConditionModel.sln"
+              bat "\"${tool 'MSBuild'}\" /t:Restore AssessingConditionModel.sln"  
             }
         }
         stage('Clean') {
