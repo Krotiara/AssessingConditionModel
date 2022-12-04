@@ -29,7 +29,13 @@ pipeline {
         }
         stage('Deploy Local') {
             steps {
-                echo 'Deploy Local....'
+                sh '''
+                docker info
+                docker version
+                docker compose version              
+                '''
+                sh 'docker compose up -d --no-color --wait'
+                sh 'docker compose ps'
             }
         }
         stage('Run Integration Tests') {
@@ -46,6 +52,12 @@ pipeline {
             steps {
                 echo 'Run Post Deployment Tests....'
             }
+        }
+    }
+    post{
+        always{
+            sh 'docker compose down --remove-orphans'
+            sh 'docker compose ps'
         }
     }
 }
