@@ -24,7 +24,7 @@ pipeline {
         }
         stage('Test') {
             steps {
-                echo 'Testing..'
+                bat "\"C:/Program Files/dotnet/dotnet.exe\" test \"AssessingConditionModel.sln\""
             }
         }
         stage('Deploy') {
