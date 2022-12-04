@@ -12,6 +12,5 @@ namespace Interfaces
 
         public HashSet<string> DescriptionsSet => new HashSet<string>(Descriptions);
 
-        //N
     }
 }
