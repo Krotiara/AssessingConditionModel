@@ -4,7 +4,7 @@ pipeline {
     stages {
         stage('Source'){
             steps{
-                 checkout([$class: 'GitSCM', branches: [[name: '*/main']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'b50741b3-08a2-4e79-8078-584180c33c5e', url: 'https://github.com/Krotiara/AssessingConditionModel']]])
+                 checkout([$class: 'GitSCM', branches: [[name: '*/main']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'b50741b3-08a2-4e79-8078-584180c33c5e', url: 'git@github.com:Krotiara/AssessingConditionModel.git']]])
             }
         }
         stage('Build') {
