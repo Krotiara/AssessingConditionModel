@@ -24,7 +24,7 @@ namespace PatientsResolver.API.UnitTests.Command
         public async void AddExistedDataMustNotBeAdded()
         {
             var options = new DbContextOptionsBuilder<PatientsDataDbContext>()
-                .UseInMemoryDatabase(databaseName: "test")
+                .UseInMemoryDatabase(Guid.NewGuid().ToString())
                 .ConfigureWarnings(x => x.Ignore(InMemoryEventId.TransactionIgnoredWarning))
                 .Options;
             // set delay time after which the CancellationToken will be canceled
@@ -58,7 +58,7 @@ namespace PatientsResolver.API.UnitTests.Command
         public async Task AddDataWithEmptyFieldsMustThrow()
         {
             var options = new DbContextOptionsBuilder<PatientsDataDbContext>()
-               .UseInMemoryDatabase(databaseName: "test")
+               .UseInMemoryDatabase(Guid.NewGuid().ToString())
                .ConfigureWarnings(x => x.Ignore(InMemoryEventId.TransactionIgnoredWarning))
                .Options;
             // set delay time after which the CancellationToken will be canceled
@@ -94,7 +94,7 @@ namespace PatientsResolver.API.UnitTests.Command
 
 
             var options = new DbContextOptionsBuilder<PatientsDataDbContext>()
-               .UseInMemoryDatabase(databaseName: "test")
+               .UseInMemoryDatabase(Guid.NewGuid().ToString())
                .ConfigureWarnings(x => x.Ignore(InMemoryEventId.TransactionIgnoredWarning))
                .Options;
             // set delay time after which the CancellationToken will be canceled
@@ -122,7 +122,7 @@ namespace PatientsResolver.API.UnitTests.Command
         {
            
             var options = new DbContextOptionsBuilder<PatientsDataDbContext>()
-              .UseInMemoryDatabase(databaseName: "test")
+              .UseInMemoryDatabase(Guid.NewGuid().ToString())
               .ConfigureWarnings(x => x.Ignore(InMemoryEventId.TransactionIgnoredWarning))
               .Options;
             var cancellationTokenSource = new CancellationTokenSource(TimeSpan.FromMilliseconds(100));
