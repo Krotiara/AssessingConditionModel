@@ -94,6 +94,9 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebMVC", "src\Web\WebMVC\WebMVC.csproj", "{8E79E225-48E6-4ECF-AFA2-9CE5842CAC01}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Agents.API.UnitTests", "src\Services\Agents.API\Tests\Agents.API.UnitTests\Agents.API.UnitTests.csproj", "{65FCB295-220C-4681-B6B7-0F8B31BAC51B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PatientsResolver.API.UnitTests", "src\Services\PatientsResolver.API\Tests\PatientsResolver.API.UnitTests\PatientsResolver.API.UnitTests.csproj", "{2860A486-99D6-4534-98C1-0F91D2567C4E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{8D3E71D4-B419-47AE-8F48-D325F78EB13F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

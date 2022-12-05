@@ -11,7 +11,7 @@ namespace PatientsResolver.API.Entities
 
         public Patient()
         {
-
+            MedicalHistoryNumber = int.MinValue;
         }
 
         [NotNull]

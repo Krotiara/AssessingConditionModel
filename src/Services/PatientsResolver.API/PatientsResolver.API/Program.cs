@@ -52,10 +52,10 @@ builder.Services.AddScoped<IInfluence<Patient, PatientParameter>, Influence>();
 
 
 builder.Services.AddTransient<IAddInfluencesDataFromSourceService, AddInfluencesDataFromSourceService>();
-builder.Services.AddSingleton<IInfluenceRepository, InfluenceRepository>();
 builder.Services.AddSingleton<IPatientFileDataSender, PatientFileDataSender>();
 builder.Services.AddSingleton<IUpdatePatientsSender, UpdatePatientsSender>();
 builder.Services.AddSingleton<IPatientsSender, PatientsSender>();
+builder.Services.AddSingleton<InfluenceRepository>();
 builder.Services.AddSingleton<PatientsRepository>(); //МБ это криво
 builder.Services.AddSingleton<PatientParametersRepository>();
 builder.Services.AddOptions();

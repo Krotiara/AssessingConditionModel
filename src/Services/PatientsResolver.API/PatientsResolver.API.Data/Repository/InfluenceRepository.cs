@@ -21,6 +21,7 @@ namespace PatientsResolver.API.Data.Repository
 
         public async Task<bool> AddPatientInluence(Influence influence, CancellationToken cancellationToken)
         {
+#warning По хорошему это нужно вынести в команду. В ту, в которой сейчас вызывается этот метод.
             IExecutionStrategy strategy = PatientsDataDbContext.Database.CreateExecutionStrategy();
             return await strategy.ExecuteAsync(async () =>
             {
@@ -28,6 +29,9 @@ namespace PatientsResolver.API.Data.Repository
                 {
                     try
                     {
+                        if (!IsCorrectInfluence(influence))
+                            throw new Exception("Influence is not in valid format");
+
                         if (await IsInluenceExistAsync(influence))
                             return false;
 
@@ -35,14 +39,18 @@ namespace PatientsResolver.API.Data.Repository
                             .Patients
                             .FirstOrDefaultAsync(x => x.MedicalHistoryNumber == influence.PatientId);
 
-                        await ProcessPatientAsync(patient, influence, cancellationToken);
+#warning В данной реализации не добавляется пациент, если здесь не был найден. Просто пробрасывается ошибка.
+                        if (patient == null)
+                            throw new NullReferenceException($"Patient was not find with patientId = {influence.PatientId}");
+                        else
+                            await ProcessPatientAsync(patient, influence, cancellationToken);
 
                         await PatientsDataDbContext.Influences.AddAsync(influence, cancellationToken);
                         await PatientsDataDbContext.SaveChangesAsync();
 
                         if (influence.StartParameters != null) //после PatientDatas SaveChangesAsync для установки айдишников
                             await ProcessParametersAsync(influence.Id, influence.StartParameters.Values, cancellationToken);
-                        if(influence.DynamicParameters != null)
+                        if (influence.DynamicParameters != null)
                             await ProcessParametersAsync(influence.Id, influence.DynamicParameters.Values, cancellationToken);
 
                         await t.CommitAsync(cancellationToken);
@@ -58,6 +66,18 @@ namespace PatientsResolver.API.Data.Repository
         }
 
 
+        private bool IsCorrectInfluence(Influence inf) => inf != null
+           && inf.MedicineName != null
+           && inf.MedicineName != ""
+           && inf.InfluenceType != InfluenceTypes.None
+           && inf.PatientId > 0
+           && inf.StartTimestamp != default(DateTime)
+           && inf.EndTimestamp != default(DateTime)
+           && inf.StartParameters != null
+           && inf.DynamicParameters != null
+           && (inf.Patient != null? inf.Patient.MedicalHistoryNumber == inf.PatientId : true);
+
+
         private async Task ProcessParametersAsync(int influenceId, IEnumerable<PatientParameter> parameters, CancellationToken cancellationToken)
         {
             foreach (PatientParameter parameter in parameters)
@@ -69,20 +89,6 @@ namespace PatientsResolver.API.Data.Repository
 
         private async Task ProcessPatientAsync(Patient patient, Influence influence, CancellationToken cancellationToken)
         {
-            if (patient == null)
-            {
-                patient = influence.Patient != null ?
-                    influence.Patient :
-                    new Patient()
-                    {
-                        Name = "",
-                        MedicalHistoryNumber = influence.PatientId,
-                        Birthday = DateTime.MinValue
-                    };
-
-                await PatientsDataDbContext.Patients.AddAsync(patient, cancellationToken);
-                await PatientsDataDbContext.SaveChangesAsync();
-            }
             influence.PatientId = patient.MedicalHistoryNumber;
             influence.Patient = patient;
         }
@@ -91,7 +97,7 @@ namespace PatientsResolver.API.Data.Repository
         private async Task<bool> IsInluenceExistAsync(Influence influence)
         {
             List<Influence> data = await PatientsDataDbContext
-                .Influences.Where(x => x.PatientId == influence.PatientId && 
+                .Influences.Where(x => x.PatientId == influence.PatientId &&
                 x.StartTimestamp == influence.StartTimestamp &&
                 x.EndTimestamp == influence.EndTimestamp)
                 .Include(x => x.Patient)
@@ -104,6 +110,7 @@ namespace PatientsResolver.API.Data.Repository
                     return true;
             return false;
         }
+
 
         public async Task<List<Influence>> GetPatientInfluences(int patientId, DateTime startTimestamp, DateTime endTimestamp)
         {
@@ -128,6 +135,7 @@ namespace PatientsResolver.API.Data.Repository
             });
 
         }
+
 
         public async Task<List<Influence>> GetInfluences(DateTime startTimestamp, DateTime endTimestamp)
         {
@@ -174,5 +182,6 @@ namespace PatientsResolver.API.Data.Repository
                     }
             });
         }
+
     }
 }

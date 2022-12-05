@@ -39,6 +39,7 @@ namespace PatientsResolver.API.Entities
 
         [NotNull]
         [Column("MedicineName")]
+        //[Required(AllowEmptyStrings = false)] не работает, не вызывается dbValidationError
         public string MedicineName { get ; set ; }
 
         [NotNull]

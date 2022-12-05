@@ -2,6 +2,7 @@
 using MediatR;
 using PatientsResolver.API.Entities;
 using PatientsResolver.API.Service.Command;
+using PatientsResolver.API.Service.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -47,7 +48,7 @@ namespace PatientsResolver.API.Service.Services
             catch(Exception ex)
             {
                 //TODO log
-                throw new NotImplementedException();
+                throw new AddInfluenceRangeException("Ошибка добавления воздействий в сервисе", ex);
             }
         }
     }
