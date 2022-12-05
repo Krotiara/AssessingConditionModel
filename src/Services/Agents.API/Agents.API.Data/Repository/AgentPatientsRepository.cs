@@ -42,9 +42,13 @@ namespace Agents.API.Data.Repository
                     await agentPatient.StateDiagram.UpdateStateAsync(new AgentDetermineStateProperties());
                     return agentPatient;
                 }
+                catch (DetermineStateException ex)
+                {
+                    throw new GetAgentException("error in update agent state", ex);
+                }
                 catch (Exception ex)
                 {
-                    throw new AgentNotFoundException($"Get patient agent error", ex);
+                    throw new GetAgentException($"Get patient agent error", ex);
                 }
             }
         }
@@ -56,6 +60,8 @@ namespace Agents.API.Data.Repository
             {
                 if (patient == null)
                     throw new InitAgentException("patient is null");
+                if (!IsCorrectPatient(patient))
+                    throw new InitAgentException($"Patient is incorrect: id = {patient.MedicalHistoryNumber}, gender = {patient.Gender}.");
                 try
                 {
                     AgentPatient? agentPatient = await AgentsDbContext
@@ -85,21 +91,38 @@ namespace Agents.API.Data.Repository
             }
         }
 
+
+        private bool IsCorrectPatient(IPatient patient) => 
+            patient.Gender != GenderEnum.None && patient.MedicalHistoryNumber > 0;
+
         public async Task<AgingState> GetStateAsync(int patientId, DateTime timeStamp)
         {
             using (AgentsDbContext AgentsDbContext = dbContextFactory.CreateDbContext())
             {
-                return await AgentsDbContext.AgingStates.FirstOrDefaultAsync(x => x.PatientId == patientId && x.Timestamp == timeStamp);
+                AgingState? state = await AgentsDbContext.AgingStates.FirstOrDefaultAsync(x => x.PatientId == patientId && x.Timestamp == timeStamp);
+                if (state == null)
+                    throw new GetAgingStateException($"There is no aging state with keys: patient id = {patientId}, date = {timeStamp}.");
+                else return state;
             }
         }
 
         public async Task<AgingState> AddState(AgingState agingState, bool isOverride)
         {
+            if (!IsAgingStateCorrect(agingState))
+                throw new AddAgingStateException("State is in incorrect format");
             using (AgentsDbContext AgentsDbContext = dbContextFactory.CreateDbContext())
             {
                 IExecutionStrategy strategy = AgentsDbContext.Database.CreateExecutionStrategy();
-#warning error  a second operation was started on this context instance before a previous operation completed. this is usually caused by different threads concurrently
-                AgingState? state = await GetStateAsync(agingState.PatientId, agingState.Timestamp);
+
+                AgingState? state;
+                try
+                {
+                    state = await GetStateAsync(agingState.PatientId, agingState.Timestamp);
+                }
+                catch(GetAgingStateException)
+                {
+                    state = null;
+                }
                 return await strategy.ExecuteAsync(async () =>
                 {
                     if (state != null && !isOverride)
@@ -127,5 +150,9 @@ namespace Agents.API.Data.Repository
                 });
             }
         }
+
+
+        private bool IsAgingStateCorrect(AgingState s) => 
+            s.Age >= 0 && s.BioAge >= 0 && s.PatientId > 0 && s.Timestamp != default(DateTime);
     }
 }
