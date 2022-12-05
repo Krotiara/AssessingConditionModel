@@ -19,7 +19,7 @@ namespace PatientsResolver.API.UnitTests.Data
         public async void AddCorrectPatientMustBeSave()
         {
             var options = new DbContextOptionsBuilder<PatientsDataDbContext>()
-               .UseInMemoryDatabase(databaseName: "test")
+               .UseInMemoryDatabase(Guid.NewGuid().ToString())
                 .Options;
             // set delay time after which the CancellationToken will be canceled
             var cancellationTokenSource = new CancellationTokenSource(TimeSpan.FromMilliseconds(100));

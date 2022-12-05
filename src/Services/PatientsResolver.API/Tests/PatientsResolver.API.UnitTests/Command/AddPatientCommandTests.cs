@@ -20,7 +20,7 @@ namespace PatientsResolver.API.UnitTests.Command
         public async void CorrectPatientMustBeSave()
         {
             var options = new DbContextOptionsBuilder<PatientsDataDbContext>()
-                .UseInMemoryDatabase(databaseName: "test")
+                .UseInMemoryDatabase(Guid.NewGuid().ToString())
                 .ConfigureWarnings(x => x.Ignore(InMemoryEventId.TransactionIgnoredWarning))
                 .Options;
             // set delay time after which the CancellationToken will be canceled
@@ -48,7 +48,7 @@ namespace PatientsResolver.API.UnitTests.Command
         public async void AddPatientWithEmptyFieldsMustThrow()
         {
             var options = new DbContextOptionsBuilder<PatientsDataDbContext>()
-                .UseInMemoryDatabase(databaseName: "test")
+                .UseInMemoryDatabase(Guid.NewGuid().ToString())
                 .ConfigureWarnings(x => x.Ignore(InMemoryEventId.TransactionIgnoredWarning))
                 .Options;
             // set delay time after which the CancellationToken will be canceled
@@ -79,7 +79,7 @@ namespace PatientsResolver.API.UnitTests.Command
         public async void PatientWithEmptyNameButWithOtherCorrectDataMustBeAdded()
         {
             var options = new DbContextOptionsBuilder<PatientsDataDbContext>()
-               .UseInMemoryDatabase(databaseName: "test")
+               .UseInMemoryDatabase(Guid.NewGuid().ToString())
                .ConfigureWarnings(x => x.Ignore(InMemoryEventId.TransactionIgnoredWarning))
                .Options;
             // set delay time after which the CancellationToken will be canceled
@@ -103,7 +103,7 @@ namespace PatientsResolver.API.UnitTests.Command
         public async void AddExistedPatientMustThrow()
         {
             var options = new DbContextOptionsBuilder<PatientsDataDbContext>()
-              .UseInMemoryDatabase(databaseName: "test")
+              .UseInMemoryDatabase(Guid.NewGuid().ToString())
               .ConfigureWarnings(x => x.Ignore(InMemoryEventId.TransactionIgnoredWarning))
               .Options;
             // set delay time after which the CancellationToken will be canceled

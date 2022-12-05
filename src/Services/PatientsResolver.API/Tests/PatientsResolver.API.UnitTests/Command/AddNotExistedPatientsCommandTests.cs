@@ -24,7 +24,7 @@ namespace PatientsResolver.API.UnitTests.Command
         public async void AddExistedPatientMustNotBeAdded()
         {   
             var options = new DbContextOptionsBuilder<PatientsDataDbContext>()
-                 .UseInMemoryDatabase(databaseName: "test")
+                 .UseInMemoryDatabase(Guid.NewGuid().ToString())
                  .ConfigureWarnings(x => x.Ignore(InMemoryEventId.TransactionIgnoredWarning))
                  .Options;
             // set delay time after which the CancellationToken will be canceled
@@ -57,7 +57,7 @@ namespace PatientsResolver.API.UnitTests.Command
                 GetTestCorrectPatient(), GetTestCorrectPatient() };
 
             var options = new DbContextOptionsBuilder<PatientsDataDbContext>()
-                 .UseInMemoryDatabase(databaseName: "test")
+                 .UseInMemoryDatabase(Guid.NewGuid().ToString())
                  .ConfigureWarnings(x => x.Ignore(InMemoryEventId.TransactionIgnoredWarning))
                  .Options;
             // set delay time after which the CancellationToken will be canceled
@@ -96,7 +96,7 @@ namespace PatientsResolver.API.UnitTests.Command
         public async void AddPatientWithEmptFieldsMustThrow()
         {
             var options = new DbContextOptionsBuilder<PatientsDataDbContext>()
-                 .UseInMemoryDatabase(databaseName: "test")
+                 .UseInMemoryDatabase(Guid.NewGuid().ToString())
                  .ConfigureWarnings(x => x.Ignore(InMemoryEventId.TransactionIgnoredWarning))
                  .Options;
             // set delay time after which the CancellationToken will be canceled
