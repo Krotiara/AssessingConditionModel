@@ -64,11 +64,11 @@ services:
     extra_hosts:
       - host.docker.internal:host-gateway
 
-  influencecalculator.api:
-    image: ${DOCKER_REGISTRY-}influencecalculatorapi
-    build:
-      context: .
-      dockerfile: src/Services/InfluenceCalculator.API/InfluenceCalculator.API/Dockerfile
+  #influencecalculator.api:
+  #  image: ${DOCKER_REGISTRY-}influencecalculatorapi
+  #  build:
+  #    context: .
+  #    dockerfile: src/Services/InfluenceCalculator.API/InfluenceCalculator.API/Dockerfile
 
   patientdatahandler.api:
     image: ${DOCKER_REGISTRY-}patientdatahandlerapi
@@ -127,16 +127,16 @@ services:
     extra_hosts:
       - host.docker.internal:host-gateway
 
-  containerregister.api:
-    image: ${DOCKER_REGISTRY-}containerregisterapi
-    tty: true
-    build:
-      context: .
-      dockerfile: src/Services/ContainerRegister.API/ContainerRegister.API/Dockerfile
-    ports:
-      - 8001:80
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
+  #containerregister.api:
+  #  image: ${DOCKER_REGISTRY-}containerregisterapi
+  #  tty: true
+  #  build:
+  #    context: .
+  #    dockerfile: src/Services/ContainerRegister.API/ContainerRegister.API/Dockerfile
+  #  ports:
+  #    - 8001:80
+  #  volumes:
+  #    - /var/run/docker.sock:/var/run/docker.sock
 
   rabbitmq:
     container_name: rabbitmq
@@ -166,23 +166,23 @@ services:
     #networks:
     #  - postgres
 
-  pgadmin:
-     container_name: pgadmin_container
-     image: dpage/pgadmin4:5.7
-     environment:
-         PGADMIN_DEFAULT_EMAIL: "70dog@mail.ru"
-         PGADMIN_DEFAULT_PASSWORD: "password"
-         PGADMIN_CONFIG_SERVER_MODE: "False"
-     volumes:
-      - ./pgadmin:/var/lib/pgadmin
-      #- ./sql:/tmp
-     depends_on:
-      - postgres_image
-     #ports:
-      #- "5051:80"
-     restart: unless-stopped
-     #networks:
-     # - postgres
+  #pgadmin:
+  #   container_name: pgadmin_container
+  #   image: dpage/pgadmin4:5.7
+  #   environment:
+  #       PGADMIN_DEFAULT_EMAIL: "70dog@mail.ru"
+  #       PGADMIN_DEFAULT_PASSWORD: "password"
+  #       PGADMIN_CONFIG_SERVER_MODE: "False"
+  #   volumes:
+  #    - ./pgadmin:/var/lib/pgadmin
+  #    #- ./sql:/tmp
+  #   depends_on:
+  #    - postgres_image
+  #   #ports:
+  #    #- "5051:80"
+  #   restart: unless-stopped
+  #   #networks:
+  #   # - postgres
 
   #bioAge.mlServer:
   #   image: ${DOCKER_REGISTRY-}bioagemlserver
