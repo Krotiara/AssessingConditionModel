@@ -24,7 +24,7 @@ namespace Agents.API.Messaging.Receive.Receiver
         private  string exchange;
         private  string routingKey;
 
-        public void InitReceiver(Func<string, Task> receiveAction, IOptions<IRabbitMqConfiguration> rabbitMqOptions)
+        public async void InitReceiver(Func<string, Task> receiveAction, IOptions<IRabbitMqConfiguration> rabbitMqOptions)
         {
             hostname = rabbitMqOptions.Value.Hostname;
             queueName = rabbitMqOptions.Value.QueueName;
@@ -33,12 +33,12 @@ namespace Agents.API.Messaging.Receive.Receiver
             exchange = rabbitMqOptions.Value.Exchange;
             routingKey = rabbitMqOptions.Value.RoutingKey;
             this.receiveAction = receiveAction;
-            InitializeRabbitMqListener();
+            await InitializeRabbitMqListener();
         }
 
         private Func<string, Task> receiveAction;
 
-        private void InitializeRabbitMqListener()
+        private Task InitializeRabbitMqListener()
         {
             try
             {
@@ -52,16 +52,16 @@ namespace Agents.API.Messaging.Receive.Receiver
                 connection = factory.CreateConnection();
                 connection.ConnectionShutdown += RabbitMQ_ConnectionShutdown;
                 channel = connection.CreateModel();
-
-                QueueDeclareOk status = channel
-                        .QueueDeclare(queue: queueName,
-                        durable: false, exclusive: false,
-                        autoDelete: false, arguments: null);
+                if (channel != null)
+                    channel.QueueDeclare(queue: queueName,
+                            durable: false, exclusive: false,
+                            autoDelete: false, arguments: null);
+                return Task.CompletedTask;
             }
             catch (Exception ex)
             {
                 //TODO try catch
-
+                return Task.FromException(ex);
             }
         }
 
@@ -76,10 +76,16 @@ namespace Agents.API.Messaging.Receive.Receiver
         }
 
 
-        protected override Task ExecuteAsync(CancellationToken stoppingToken)
+        protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
             if (channel == null)
-                return Task.FromException(new Exception("Channel is null"));
+            {
+                await Task.Delay(100, stoppingToken);
+                await InitializeRabbitMqListener();
+                if(channel == null)
+                    throw new Exception("Channel is null and cannot reconnect");
+            }
+                
             stoppingToken.ThrowIfCancellationRequested();
 
             EventingBasicConsumer consumer = new EventingBasicConsumer(channel);
@@ -105,8 +111,6 @@ namespace Agents.API.Messaging.Receive.Receiver
             };
 
             channel.BasicConsume(queueName, false, consumer);
-
-            return Task.CompletedTask;
         }
 
     }

@@ -38,7 +38,7 @@ namespace PatientDataHandler.API.Messaging.Receive.Receiver
         }
 
 
-        private void InitializeRabbitMqListener()
+        private Task InitializeRabbitMqListener()
         {
             try
             {
@@ -52,12 +52,15 @@ namespace PatientDataHandler.API.Messaging.Receive.Receiver
                 connection = factory.CreateConnection();
                 connection.ConnectionShutdown += RabbitMQ_ConnectionShutdown;
                 channel = connection.CreateModel();
-                QueueDeclareOk status = channel
-                    .QueueDeclare(queue: queueName, durable: false, exclusive: false, autoDelete: false, arguments: null);
+                if (channel != null)
+                    channel.QueueDeclare(queue: queueName, 
+                        durable: false, exclusive: false, autoDelete: false, arguments: null);
+                return Task.CompletedTask;
             }
             catch(Exception ex)
             {
-                //TODO log
+                //TODO try catch
+                return Task.FromException(ex);
             }
         }
 
@@ -73,10 +76,15 @@ namespace PatientDataHandler.API.Messaging.Receive.Receiver
             base.Dispose();
         }
 
-        protected override Task ExecuteAsync(CancellationToken stoppingToken)
+        protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
             if (channel == null)
-                return Task.FromException(new Exception("PatientDataHandler.API.Messaging.Receive.Receiver channel is null"));
+            {
+                await Task.Delay(100, stoppingToken);
+                await InitializeRabbitMqListener();
+                if (channel == null)
+                    throw new Exception("PatientDataHandler.API.Messaging.Receive.Receiver channel is null and cannot reconnect");
+            }
 
             stoppingToken.ThrowIfCancellationRequested();
             EventingBasicConsumer consumer = new EventingBasicConsumer(channel);
@@ -99,8 +107,6 @@ namespace PatientDataHandler.API.Messaging.Receive.Receiver
             };
 
             channel.BasicConsume(queueName, false, consumer);
-
-            return Task.CompletedTask;
         }
 
 

@@ -55,6 +55,7 @@ builder.Services.AddTransient<IAddInfluencesDataFromSourceService, AddInfluences
 builder.Services.AddSingleton<IPatientFileDataSender, PatientFileDataSender>();
 builder.Services.AddSingleton<IUpdatePatientsSender, UpdatePatientsSender>();
 builder.Services.AddSingleton<IPatientsSender, PatientsSender>();
+builder.Services.AddTransient<IInfluenceRepository, InfluenceRepository>();
 builder.Services.AddSingleton<InfluenceRepository>();
 builder.Services.AddSingleton<PatientsRepository>(); //МБ это криво
 builder.Services.AddSingleton<PatientParametersRepository>();
@@ -70,8 +71,6 @@ builder.Services.Configure<RabbitMqAddInfoConfig>(builder.Configuration.GetSecti
 /*Теперь вы можете выполнять ваши запросы. Для этого вам потребуется получить экземпляр интерфейса IMediator. Он регистрируется в вашем контейнере зависимостей той же командой AddMediatR.*/
 builder.Services.AddMediatR(Assembly.GetExecutingAssembly());
 
-builder.Services.AddTransient<IRequestHandler<GetPatientInfluencesQuery, List<Influence>>,
-    GetPatientInfluencesQueryHandler>();
 builder.Services.AddTransient<IRequestHandler<GetPatientQuery, Patient>,
     GetPatientQueryHandler>();
 builder.Services.AddTransient<IRequestHandler<AddInfluenceDataCommand, List<Influence>>,
