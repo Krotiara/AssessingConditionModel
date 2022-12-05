@@ -33,12 +33,12 @@ namespace Agents.API.Messaging.Receive.Receiver
             exchange = rabbitMqOptions.Value.Exchange;
             routingKey = rabbitMqOptions.Value.RoutingKey;
             this.receiveAction = receiveAction;
-            await InitializeRabbitMqListener();
+            InitializeRabbitMqListener();
         }
 
         private Func<string, Task> receiveAction;
 
-        private Task InitializeRabbitMqListener()
+        private void InitializeRabbitMqListener()
         {
             try
             {
@@ -55,13 +55,11 @@ namespace Agents.API.Messaging.Receive.Receiver
                 if (channel != null)
                     channel.QueueDeclare(queue: queueName,
                             durable: false, exclusive: false,
-                            autoDelete: false, arguments: null);
-                return Task.CompletedTask;
+                            autoDelete: false, arguments: null); 
             }
             catch (Exception ex)
             {
                 //TODO try catch
-                return Task.FromException(ex);
             }
         }
 
@@ -80,8 +78,8 @@ namespace Agents.API.Messaging.Receive.Receiver
         {
             if (channel == null)
             {
-                await Task.Delay(100, stoppingToken);
-                await InitializeRabbitMqListener();
+                await Task.Delay(500, stoppingToken);
+                InitializeRabbitMqListener();
                 if(channel == null)
                     throw new Exception("Channel is null and cannot reconnect");
             }
@@ -101,16 +99,16 @@ namespace Agents.API.Messaging.Receive.Receiver
                 catch (Newtonsoft.Json.JsonSerializationException ex)
                 {
                     //TODO add log
-                    channel.BasicReject(ea.DeliveryTag, true);
+                    channel?.BasicReject(ea.DeliveryTag, true);
                 }
                 catch(Exception ex)
                 {
                     //TODO log
-                    channel.BasicReject(ea.DeliveryTag, true);
+                    channel?.BasicReject(ea.DeliveryTag, true);
                 }
             };
 
-            channel.BasicConsume(queueName, false, consumer);
+            channel?.BasicConsume(queueName, false, consumer);
         }
 
     }

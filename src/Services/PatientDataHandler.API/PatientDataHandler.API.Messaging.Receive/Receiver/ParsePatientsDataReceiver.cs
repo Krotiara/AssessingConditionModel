@@ -38,7 +38,7 @@ namespace PatientDataHandler.API.Messaging.Receive.Receiver
         }
 
 
-        private Task InitializeRabbitMqListener()
+        private void InitializeRabbitMqListener()
         {
             try
             {
@@ -55,12 +55,12 @@ namespace PatientDataHandler.API.Messaging.Receive.Receiver
                 if (channel != null)
                     channel.QueueDeclare(queue: queueName, 
                         durable: false, exclusive: false, autoDelete: false, arguments: null);
-                return Task.CompletedTask;
+                
             }
             catch(Exception ex)
             {
                 //TODO try catch
-                return Task.FromException(ex);
+                
             }
         }
 
@@ -80,8 +80,8 @@ namespace PatientDataHandler.API.Messaging.Receive.Receiver
         {
             if (channel == null)
             {
-                await Task.Delay(100, stoppingToken);
-                await InitializeRabbitMqListener();
+                await Task.Delay(500, stoppingToken);
+                InitializeRabbitMqListener();
                 if (channel == null)
                     throw new Exception("PatientDataHandler.API.Messaging.Receive.Receiver channel is null and cannot reconnect");
             }
@@ -97,16 +97,16 @@ namespace PatientDataHandler.API.Messaging.Receive.Receiver
 #warning Гарантируется ли, что здесь всегда приходит только дата пациентов, а не все сообщения?
                     //Stream s = GenerateStreamFromString(content);
                     parsePatientsDataService.ParsePatients(fileData);
-                    channel.BasicAck(ea.DeliveryTag, false);
+                    channel?.BasicAck(ea.DeliveryTag, false);
                 }
                 catch(JsonSerializationException ex)
                 {
                     //TODO log
-                    channel.BasicReject(ea.DeliveryTag, false);
+                    channel?.BasicReject(ea.DeliveryTag, false);
                 }
             };
 
-            channel.BasicConsume(queueName, false, consumer);
+            channel?.BasicConsume(queueName, false, consumer);
         }
 
 

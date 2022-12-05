@@ -37,7 +37,7 @@ namespace PatientsResolver.API.Messaging.Receive.Receiver
             InitializeRabbitMqListener();
         }
 
-        private Task InitializeRabbitMqListener()
+        private void InitializeRabbitMqListener()
         {
             try
             {
@@ -54,12 +54,12 @@ namespace PatientsResolver.API.Messaging.Receive.Receiver
                 if(channel != null)
                     channel.QueueDeclare(queue: queueName, 
                         durable: false, exclusive: false, autoDelete: false, arguments: null);
-                return Task.CompletedTask;
+
             }
             catch(Exception ex)
             {
                 //TODO try catch
-                return Task.FromException(ex);
+                
             }
 
 
@@ -78,8 +78,8 @@ namespace PatientsResolver.API.Messaging.Receive.Receiver
         {
             if (channel == null)
             {
-                await Task.Delay(100, stoppingToken);
-                await InitializeRabbitMqListener();
+                await Task.Delay(500, stoppingToken);
+                InitializeRabbitMqListener();
                 if (channel == null)
                     throw new Exception("PatientsResolver.API.Messaging.Receive.Receiver channel is null and cannot reconnect");
             }
@@ -94,16 +94,16 @@ namespace PatientsResolver.API.Messaging.Receive.Receiver
                     List<Influence> data = JsonConvert.DeserializeObject<List<Influence>>(content);
 
                     addPatientsDataFromSourceService.AddInfluencesData(data);
-                    channel.BasicAck(ea.DeliveryTag, false);
+                    channel?.BasicAck(ea.DeliveryTag, false);
                 }
                 catch (Newtonsoft.Json.JsonSerializationException ex)
                 {
                     //TODO add log
-                    channel.BasicReject(ea.DeliveryTag, false);
+                    channel?.BasicReject(ea.DeliveryTag, false);
                 }
             };
 
-            channel.BasicConsume(queueName, false, consumer);
+            channel?.BasicConsume(queueName, false, consumer);
         }
 
 
