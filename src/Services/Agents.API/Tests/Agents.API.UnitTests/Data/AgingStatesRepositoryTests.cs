@@ -24,7 +24,7 @@ namespace Agents.API.UnitTests.Data
         public AgingStatesRepositoryTests()
         {
             options = new DbContextOptionsBuilder<AgentsDbContext>()
-              .UseInMemoryDatabase(databaseName: "test")
+              .UseInMemoryDatabase(Guid.NewGuid().ToString())
               .ConfigureWarnings(x => x.Ignore(InMemoryEventId.TransactionIgnoredWarning))
               .Options;
             var tokenSource = new CancellationTokenSource(TimeSpan.FromMilliseconds(100));
