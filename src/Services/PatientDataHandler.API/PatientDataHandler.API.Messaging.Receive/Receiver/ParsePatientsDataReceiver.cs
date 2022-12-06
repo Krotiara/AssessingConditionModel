@@ -38,7 +38,7 @@ namespace PatientDataHandler.API.Messaging.Receive.Receiver
         }
 
 
-        private void InitializeRabbitMqListener()
+        private bool InitializeRabbitMqListener()
         {
             try
             {
@@ -52,12 +52,18 @@ namespace PatientDataHandler.API.Messaging.Receive.Receiver
                 connection = factory.CreateConnection();
                 connection.ConnectionShutdown += RabbitMQ_ConnectionShutdown;
                 channel = connection.CreateModel();
-                QueueDeclareOk status = channel
-                    .QueueDeclare(queue: queueName, durable: false, exclusive: false, autoDelete: false, arguments: null);
+                if (channel != null)
+                {
+                    channel.QueueDeclare(queue: queueName,
+                        durable: false, exclusive: false, autoDelete: false, arguments: null);
+                    return true;
+                }
+                return false;
+
             }
-            catch(Exception ex)
+            catch (RabbitMQ.Client.Exceptions.BrokerUnreachableException ex)
             {
-                //TODO log
+                return false;
             }
         }
 
@@ -73,10 +79,15 @@ namespace PatientDataHandler.API.Messaging.Receive.Receiver
             base.Dispose();
         }
 
-        protected override Task ExecuteAsync(CancellationToken stoppingToken)
+        protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
             if (channel == null)
-                return Task.FromException(new Exception("PatientDataHandler.API.Messaging.Receive.Receiver channel is null"));
+            {
+                await Task.Delay(500, stoppingToken);
+                bool isInit = InitializeRabbitMqListener();
+                if (!isInit || channel == null)
+                    throw new Exception("PatientDataHandler.API.Messaging.Receive.Receiver channel is null and cannot init");
+            }
 
             stoppingToken.ThrowIfCancellationRequested();
             EventingBasicConsumer consumer = new EventingBasicConsumer(channel);
@@ -89,18 +100,16 @@ namespace PatientDataHandler.API.Messaging.Receive.Receiver
 #warning Гарантируется ли, что здесь всегда приходит только дата пациентов, а не все сообщения?
                     //Stream s = GenerateStreamFromString(content);
                     parsePatientsDataService.ParsePatients(fileData);
-                    channel.BasicAck(ea.DeliveryTag, false);
+                    channel?.BasicAck(ea.DeliveryTag, false);
                 }
                 catch(JsonSerializationException ex)
                 {
                     //TODO log
-                    channel.BasicReject(ea.DeliveryTag, false);
+                    channel?.BasicReject(ea.DeliveryTag, false);
                 }
             };
 
-            channel.BasicConsume(queueName, false, consumer);
-
-            return Task.CompletedTask;
+            channel?.BasicConsume(queueName, false, consumer);
         }
 
 

@@ -24,7 +24,7 @@ namespace Agents.API.Messaging.Receive.Receiver
         private  string exchange;
         private  string routingKey;
 
-        public void InitReceiver(Func<string, Task> receiveAction, IOptions<IRabbitMqConfiguration> rabbitMqOptions)
+        public async void InitReceiver(Func<string, Task> receiveAction, IOptions<IRabbitMqConfiguration> rabbitMqOptions)
         {
             hostname = rabbitMqOptions.Value.Hostname;
             queueName = rabbitMqOptions.Value.QueueName;
@@ -38,7 +38,7 @@ namespace Agents.API.Messaging.Receive.Receiver
 
         private Func<string, Task> receiveAction;
 
-        private void InitializeRabbitMqListener()
+        private bool InitializeRabbitMqListener()
         {
             try
             {
@@ -52,16 +52,18 @@ namespace Agents.API.Messaging.Receive.Receiver
                 connection = factory.CreateConnection();
                 connection.ConnectionShutdown += RabbitMQ_ConnectionShutdown;
                 channel = connection.CreateModel();
-
-                QueueDeclareOk status = channel
-                        .QueueDeclare(queue: queueName,
-                        durable: false, exclusive: false,
-                        autoDelete: false, arguments: null);
+                if (channel != null)
+                {
+                    QueueDeclareOk declareOk =  channel.QueueDeclare(queue: queueName,
+                            durable: false, exclusive: false,
+                            autoDelete: false, arguments: null);
+                    return true;
+                }
+                return false;
             }
-            catch (Exception ex)
+            catch (RabbitMQ.Client.Exceptions.BrokerUnreachableException ex)
             {
-                //TODO try catch
-
+                return false;
             }
         }
 
@@ -76,10 +78,16 @@ namespace Agents.API.Messaging.Receive.Receiver
         }
 
 
-        protected override Task ExecuteAsync(CancellationToken stoppingToken)
+        protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
             if (channel == null)
-                return Task.FromException(new Exception("Channel is null"));
+            {
+                await Task.Delay(500, stoppingToken);
+                bool isInit = InitializeRabbitMqListener();
+                if(!isInit || channel == null)
+                    throw new Exception("Channel is null and cannot reconnect");
+            }
+                
             stoppingToken.ThrowIfCancellationRequested();
 
             EventingBasicConsumer consumer = new EventingBasicConsumer(channel);
@@ -95,18 +103,16 @@ namespace Agents.API.Messaging.Receive.Receiver
                 catch (Newtonsoft.Json.JsonSerializationException ex)
                 {
                     //TODO add log
-                    channel.BasicReject(ea.DeliveryTag, true);
+                    channel?.BasicReject(ea.DeliveryTag, true);
                 }
                 catch(Exception ex)
                 {
                     //TODO log
-                    channel.BasicReject(ea.DeliveryTag, true);
+                    channel?.BasicReject(ea.DeliveryTag, true);
                 }
             };
 
-            channel.BasicConsume(queueName, false, consumer);
-
-            return Task.CompletedTask;
+            channel?.BasicConsume(queueName, false, consumer);
         }
 
     }
