@@ -54,7 +54,7 @@ pipeline {
     }
     post{
         always{
-            sh 'docker compose down --remove-orphans'
+            sh 'docker-compose rm -fsv'
             sh 'docker compose ps'
         }
     }
