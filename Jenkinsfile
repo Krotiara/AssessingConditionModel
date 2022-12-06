@@ -54,7 +54,7 @@ pipeline {
     }
     post{
         always{
-            sh 'docker-compose rm -fsv'
+            sh 'docker compose down'
             sh 'docker compose ps'
         }
     }
