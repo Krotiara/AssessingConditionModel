@@ -53,9 +53,14 @@ pipeline {
         }
     }
     post{
-        always{
-            sh 'docker compose down'
-            sh 'docker compose ps'
+        always {
+          sh "docker-compose down || true"
+        }
+        success {
+          bitbucketStatusNotify buildState: "SUCCESSFUL"
+        }
+        failure {
+          bitbucketStatusNotify buildState: "FAILED"
         }
     }
 }
