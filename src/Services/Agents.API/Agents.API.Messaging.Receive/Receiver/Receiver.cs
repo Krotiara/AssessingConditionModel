@@ -24,7 +24,7 @@ namespace Agents.API.Messaging.Receive.Receiver
         private  string exchange;
         private  string routingKey;
 
-        public async void InitReceiver(Func<string, Task> receiveAction, IOptions<IRabbitMqConfiguration> rabbitMqOptions)
+        public void InitReceiver(Func<string, Task> receiveAction, IOptions<IRabbitMqConfiguration> rabbitMqOptions)
         {
             hostname = rabbitMqOptions.Value.Hostname;
             queueName = rabbitMqOptions.Value.QueueName;
@@ -40,28 +40,48 @@ namespace Agents.API.Messaging.Receive.Receiver
 
         private bool InitializeRabbitMqListener()
         {
+            ConnectionFactory factory = null;
             try
             {
-                var factory = new ConnectionFactory
+                factory = new ConnectionFactory
                 {
                     HostName = hostname,
                     UserName = username,
-                    Password = password
+                    Password = password,
+                    AutomaticRecoveryEnabled = true,
+                    NetworkRecoveryInterval = TimeSpan.FromSeconds(10),
+                    RequestedHeartbeat = TimeSpan.FromSeconds(10)
                 };
-
+            }
+            catch (RabbitMQ.Client.Exceptions.BrokerUnreachableException ex)
+            {
+#warning Пытался организовать повторное подключение, но похоже не работает
+                return false;
+                //Thread.Sleep(5000);
+                //factory = new ConnectionFactory
+                //{
+                //    HostName = hostname,
+                //    UserName = username,
+                //    Password = password,
+                //    AutomaticRecoveryEnabled = true,
+                //    RequestedHeartbeat = TimeSpan.FromSeconds(10)
+                //};
+            }
+            try
+            {
                 connection = factory.CreateConnection();
                 connection.ConnectionShutdown += RabbitMQ_ConnectionShutdown;
                 channel = connection.CreateModel();
                 if (channel != null)
                 {
-                    QueueDeclareOk declareOk =  channel.QueueDeclare(queue: queueName,
-                            durable: false, exclusive: false,
+                    QueueDeclareOk declareOk = channel.QueueDeclare(queue: queueName,
+                            durable: true, exclusive: false,
                             autoDelete: false, arguments: null);
                     return true;
                 }
                 return false;
             }
-            catch (RabbitMQ.Client.Exceptions.BrokerUnreachableException ex)
+            catch (Exception ex)
             {
                 return false;
             }
@@ -89,31 +109,31 @@ namespace Agents.API.Messaging.Receive.Receiver
             }
                 
             stoppingToken.ThrowIfCancellationRequested();
-
-            EventingBasicConsumer consumer = new EventingBasicConsumer(channel);
-            consumer.Received += async (ch, ea) =>
+            if (channel != null)
             {
-                try
+                EventingBasicConsumer consumer = new EventingBasicConsumer(channel);
+                consumer.Received += async (ch, ea) =>
                 {
-                    string content = Encoding.UTF8.GetString(ea.Body.ToArray());
-                    await receiveAction(content);
+                    try
+                    {
+                        string content = Encoding.UTF8.GetString(ea.Body.ToArray());
+                        await receiveAction(content);
 
-                    channel.BasicAck(ea.DeliveryTag, false);
-                }
-                catch (Newtonsoft.Json.JsonSerializationException ex)
-                {
+                        channel?.BasicAck(ea.DeliveryTag, false);
+                    }
+                    catch (Newtonsoft.Json.JsonSerializationException ex)
+                    {
                     //TODO add log
-                    channel?.BasicReject(ea.DeliveryTag, true);
-                }
-                catch(Exception ex)
-                {
+                        channel?.BasicReject(ea.DeliveryTag, true);
+                    }
+                    catch (Exception ex)
+                    {
                     //TODO log
-                    channel?.BasicReject(ea.DeliveryTag, true);
-                }
-            };
-
-            channel?.BasicConsume(queueName, false, consumer);
+                        channel?.BasicReject(ea.DeliveryTag, true);
+                    }
+                };
+                channel?.BasicConsume(queueName, false, consumer);
+            }
         }
-
     }
 }
