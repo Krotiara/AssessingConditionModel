@@ -9,11 +9,16 @@
     <DockerServiceName>patientsresolver.api</DockerServiceName>
   </PropertyGroup>
   <ItemGroup>
+    <None Include="certs\aspnetapp1.pfx" />
     <None Include="docker-compose.override.yml">
       <DependentUpon>docker-compose.yml</DependentUpon>
     </None>
     <None Include="docker-compose.yml" />
     <None Include=".dockerignore" />
+    <None Include="https\localhost.conf" />
+    <None Include="https\localhost.crt" />
+    <None Include="https\localhost.key" />
+    <None Include="https\localhost.pfx" />
     <None Include="sql\init.sql" />
   </ItemGroup>
 </Project>

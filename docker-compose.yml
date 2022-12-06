@@ -18,7 +18,7 @@ services:
       - 8011:80
       - 8010:443
     volumes:
-      - ~/.aspnet/https:/https:ro
+      - ./https:/https:ro
     extra_hosts:
       - host.docker.internal:host-gateway
 
@@ -39,7 +39,7 @@ services:
       - 8009:443
     volumes:
       #- "C:/TestData:/data"
-      - ~/.aspnet/https:/https:ro
+      - ./https:/https:ro
     extra_hosts:
       - host.docker.internal:host-gateway
 
@@ -50,7 +50,7 @@ services:
       dockerfile: src/Services/PatientsResolver.API/PatientsResolver.API/Dockerfile
     volumes:
       #- "C:/TestData:/data"
-      - ~/.aspnet/https:/https:ro
+      - ./https:/https:ro
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:80
@@ -84,7 +84,7 @@ services:
     ports:
       - 8005:80
     volumes:
-      - ~/.aspnet/https:/https:ro
+      - ./https:/https:ro
     extra_hosts:
       - host.docker.internal:host-gateway
     restart: on-failure
@@ -105,7 +105,7 @@ services:
       - 8002:80
       - 8012:443
     volumes:
-      - ~/.aspnet/https:/https:ro
+      - ./https:/https:ro
     extra_hosts:
       - host.docker.internal:host-gateway
     restart: on-failure
@@ -126,7 +126,7 @@ services:
       - 8007:80
       - 8006:443
     volumes:
-      - ~/.aspnet/https:/https:ro
+      - ./https:/https:ro
     extra_hosts:
       - host.docker.internal:host-gateway
 
