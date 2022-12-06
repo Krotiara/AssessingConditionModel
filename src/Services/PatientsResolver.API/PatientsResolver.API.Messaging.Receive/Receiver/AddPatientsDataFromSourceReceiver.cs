@@ -37,7 +37,7 @@ namespace PatientsResolver.API.Messaging.Receive.Receiver
             InitializeRabbitMqListener();
         }
 
-        private void InitializeRabbitMqListener()
+        private bool InitializeRabbitMqListener()
         {
             try
             {
@@ -51,18 +51,18 @@ namespace PatientsResolver.API.Messaging.Receive.Receiver
                 connection = factory.CreateConnection();
                 connection.ConnectionShutdown += RabbitMQ_ConnectionShutdown;
                 channel = connection.CreateModel();
-                if(channel != null)
-                    channel.QueueDeclare(queue: queueName, 
+                if (channel != null)
+                {
+                    channel.QueueDeclare(queue: queueName,
                         durable: false, exclusive: false, autoDelete: false, arguments: null);
-
+                    return true;
+                }
+                return false;
             }
-            catch(Exception ex)
+            catch (RabbitMQ.Client.Exceptions.BrokerUnreachableException ex)
             {
-                //TODO try catch
-                
+                return false;
             }
-
-
         }
 
         private void RabbitMQ_ConnectionShutdown(object sender, ShutdownEventArgs e){}
@@ -79,8 +79,8 @@ namespace PatientsResolver.API.Messaging.Receive.Receiver
             if (channel == null)
             {
                 await Task.Delay(500, stoppingToken);
-                InitializeRabbitMqListener();
-                if (channel == null)
+                bool isInit = InitializeRabbitMqListener();
+                if (!isInit || channel == null)
                     throw new Exception("PatientsResolver.API.Messaging.Receive.Receiver channel is null and cannot reconnect");
             }
 

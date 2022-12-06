@@ -38,7 +38,7 @@ namespace Agents.API.Messaging.Receive.Receiver
 
         private Func<string, Task> receiveAction;
 
-        private void InitializeRabbitMqListener()
+        private bool InitializeRabbitMqListener()
         {
             try
             {
@@ -53,13 +53,17 @@ namespace Agents.API.Messaging.Receive.Receiver
                 connection.ConnectionShutdown += RabbitMQ_ConnectionShutdown;
                 channel = connection.CreateModel();
                 if (channel != null)
-                    channel.QueueDeclare(queue: queueName,
+                {
+                    QueueDeclareOk declareOk =  channel.QueueDeclare(queue: queueName,
                             durable: false, exclusive: false,
-                            autoDelete: false, arguments: null); 
+                            autoDelete: false, arguments: null);
+                    return true;
+                }
+                return false;
             }
-            catch (Exception ex)
+            catch (RabbitMQ.Client.Exceptions.BrokerUnreachableException ex)
             {
-                //TODO try catch
+                return false;
             }
         }
 
@@ -79,8 +83,8 @@ namespace Agents.API.Messaging.Receive.Receiver
             if (channel == null)
             {
                 await Task.Delay(500, stoppingToken);
-                InitializeRabbitMqListener();
-                if(channel == null)
+                bool isInit = InitializeRabbitMqListener();
+                if(!isInit || channel == null)
                     throw new Exception("Channel is null and cannot reconnect");
             }
                 

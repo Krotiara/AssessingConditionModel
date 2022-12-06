@@ -38,7 +38,7 @@ namespace PatientDataHandler.API.Messaging.Receive.Receiver
         }
 
 
-        private void InitializeRabbitMqListener()
+        private bool InitializeRabbitMqListener()
         {
             try
             {
@@ -53,14 +53,17 @@ namespace PatientDataHandler.API.Messaging.Receive.Receiver
                 connection.ConnectionShutdown += RabbitMQ_ConnectionShutdown;
                 channel = connection.CreateModel();
                 if (channel != null)
-                    channel.QueueDeclare(queue: queueName, 
+                {
+                    channel.QueueDeclare(queue: queueName,
                         durable: false, exclusive: false, autoDelete: false, arguments: null);
-                
+                    return true;
+                }
+                return false;
+
             }
-            catch(Exception ex)
+            catch (RabbitMQ.Client.Exceptions.BrokerUnreachableException ex)
             {
-                //TODO try catch
-                
+                return false;
             }
         }
 
@@ -81,9 +84,9 @@ namespace PatientDataHandler.API.Messaging.Receive.Receiver
             if (channel == null)
             {
                 await Task.Delay(500, stoppingToken);
-                InitializeRabbitMqListener();
-                if (channel == null)
-                    throw new Exception("PatientDataHandler.API.Messaging.Receive.Receiver channel is null and cannot reconnect");
+                bool isInit = InitializeRabbitMqListener();
+                if (!isInit || channel == null)
+                    throw new Exception("PatientDataHandler.API.Messaging.Receive.Receiver channel is null and cannot init");
             }
 
             stoppingToken.ThrowIfCancellationRequested();
