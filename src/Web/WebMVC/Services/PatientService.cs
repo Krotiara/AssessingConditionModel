@@ -6,7 +6,7 @@ namespace WebMVC.Services
     public class PatientService : IPatientService
     {
         private readonly IWebRequester webRequester;
-        private readonly string gatewayUrl = "http://localhost:10000";
+        private readonly string gatewayUrl = "http://localhost:80";
 
         /*string url = $"https://host.docker.internal:8012/agingDynamics/{patientId}";
             string body = Newtonsoft.Json.JsonConvert.SerializeObject(new DateTime[2] { startTimestamp, endTimestamp });
@@ -19,7 +19,7 @@ namespace WebMVC.Services
         public PatientService(IWebRequester webRequester)
         {
             this.webRequester = webRequester;
-            gatewayUrl = "http://localhost:10000";
+            gatewayUrl = "http://localhost:80";
         }
 
         public async Task<bool> AddPatientsInluenceData(byte[] data)

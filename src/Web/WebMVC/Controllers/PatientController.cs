@@ -46,7 +46,7 @@ namespace WebMVC.Controllers
         }
 
 
-        [HttpGet]
+        [HttpGet("agents/dynamics")]
         public async Task<IActionResult> GetAgingDynamics(DateTime startTimestamp, DateTime endTimestamp)
         {
             //TODO try catch

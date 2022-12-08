@@ -11,6 +11,8 @@ services:
       - "10000:10000"
     volumes:
       - ./src/ApiGateways/Envoy/envoy.yaml:/etc/envoy/envoy.yaml
+    extra_hosts:
+      - host.docker.internal:host-gateway
   
   web:
     image: ${DOCKER_REGISTRY-}web
