@@ -99,6 +99,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PatientsResolver.API.UnitTe
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{8D3E71D4-B419-47AE-8F48-D325F78EB13F}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Envoy", "Envoy", "{F9081BAC-9727-417C-83AE-5937BEB663DF}"
+	ProjectSection(SolutionItems) = preProject
+		src\ApiGateways\Envoy\Dockerfile = src\ApiGateways\Envoy\Dockerfile
+		src\ApiGateways\Envoy\envoy.yaml = src\ApiGateways\Envoy\envoy.yaml
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -285,6 +291,7 @@ Global
 		{8A480F41-A135-4144-BFD5-E2FE2C03E8B6} = {2EEAF549-0BE6-4B9A-B2A2-9C9D405E9F48}
 		{8E79E225-48E6-4ECF-AFA2-9CE5842CAC01} = {8A480F41-A135-4144-BFD5-E2FE2C03E8B6}
 		{65FCB295-220C-4681-B6B7-0F8B31BAC51B} = {E3D2CCD0-674B-425E-9C6B-D8429C421E6A}
+		{F9081BAC-9727-417C-83AE-5937BEB663DF} = {9CE2D4ED-29AC-4114-9906-BE4E7B6169DC}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {6FA4C998-2594-48A2-A283-C474A19E73B5}

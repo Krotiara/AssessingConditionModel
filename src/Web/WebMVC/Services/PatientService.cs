@@ -6,6 +6,7 @@ namespace WebMVC.Services
     public class PatientService : IPatientService
     {
         private readonly IWebRequester webRequester;
+        private readonly string gatewayUrl = "http://localhost:10000";
 
         /*string url = $"https://host.docker.internal:8012/agingDynamics/{patientId}";
             string body = Newtonsoft.Json.JsonConvert.SerializeObject(new DateTime[2] { startTimestamp, endTimestamp });
@@ -18,11 +19,12 @@ namespace WebMVC.Services
         public PatientService(IWebRequester webRequester)
         {
             this.webRequester = webRequester;
+            gatewayUrl = "http://localhost:10000";
         }
 
         public async Task<bool> AddPatientsInluenceData(byte[] data)
         {
-            string url = $"https://host.docker.internal:8009/addInfluenceData/";
+            string url = $"{gatewayUrl}/addInfluenceData/";
             FileData fD = new FileData() { RawData = data };
             string body = Newtonsoft.Json.JsonConvert.SerializeObject(fD);
             return await webRequester.GetResponse<bool>(url, "POST", body);
@@ -34,7 +36,7 @@ namespace WebMVC.Services
         {
             try
             {
-                string url = $"https://host.docker.internal:8009/patients/{id}";
+                string url = $"{gatewayUrl}/patients/{id}";
                 return await webRequester.GetResponse<Patient>(url, "GET");
             }
             catch(GetWebResponceException ex)
@@ -46,7 +48,7 @@ namespace WebMVC.Services
         public async Task<IList<AgingDynamics>> GetPatientAgingDynamics(int patientId, 
             DateTime startTimestamp, DateTime endTimestamp)
         {
-            string url = $"https://host.docker.internal:8009/agingDynamics/{patientId}";
+            string url = $"{gatewayUrl}/agents/agingDynamics/{patientId}";
             string body = Newtonsoft.Json.JsonConvert.SerializeObject(
                 new DateTime[2] { startTimestamp, endTimestamp});
             return await webRequester.GetResponse<IList<AgingDynamics>>(url, "POST", body);
@@ -55,7 +57,7 @@ namespace WebMVC.Services
 
         public async Task<IList<AgingDynamics>> GetAgingDynamics(DateTime startTimestamp, DateTime endTimestamp)
         {
-            string url = $"https://host.docker.internal:8009/agingDynamics/";
+            string url = $"{gatewayUrl}/agents/agingDynamics/";
             string body = Newtonsoft.Json.JsonConvert.SerializeObject(
                 new DateTime[2] { startTimestamp, endTimestamp });
             return await webRequester.GetResponse<IList<AgingDynamics>>(url, "POST", body);
@@ -64,7 +66,7 @@ namespace WebMVC.Services
 
         public async Task<AgingState> GetPatientCurrentAgingState(int patientId)
         {
-            string url = $"https://host.docker.internal:8009/agingState/{patientId}";
+            string url = $"{gatewayUrl}/agents/agingState/{patientId}";
             return await webRequester.GetResponse<AgingState>(url, "GET");
         }
     }

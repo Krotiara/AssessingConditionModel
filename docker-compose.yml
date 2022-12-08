@@ -1,6 +1,16 @@
 version: '3.4'
 
 services:
+
+  envoygateway:
+    build:
+      context: .
+      dockerfile: src/ApiGateways/Envoy/Dockerfile
+    ports:
+      - "9901:9901"
+      - "10000:10000"
+    volumes:
+      - ./src/ApiGateways/Envoy/envoy.yaml:/etc/envoy/envoy.yaml
   
   web:
     image: ${DOCKER_REGISTRY-}web
@@ -22,26 +32,26 @@ services:
     extra_hosts:
       - host.docker.internal:host-gateway
 
-  tempgateway:
-    image: ${DOCKER_REGISTRY-}tempgateway
-    build:
-      context: .
-      dockerfile: src/ApiGateways/TempGateway/TempGateway/Dockerfile
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_URLS=http://+:80
-      - ASPNETCORE_URLS=https://+:443;http://+:80
-      - ASPNETCORE_HTTPS_PORT=8009
-      - ASPNETCORE_Kestrel__Certificates__Default__Password=lisa2021
-      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/localhost.pfx
-    ports:
-      - 8008:80
-      - 8009:443
-    volumes:
-      #- "C:/TestData:/data"
-      - ./https:/https:ro
-    extra_hosts:
-      - host.docker.internal:host-gateway
+  #tempgateway:
+  #  image: ${DOCKER_REGISTRY-}tempgateway
+  #  build:
+  #    context: .
+  #    dockerfile: src/ApiGateways/TempGateway/TempGateway/Dockerfile
+  #  environment:
+  #    - ASPNETCORE_ENVIRONMENT=Development
+  #    - ASPNETCORE_URLS=http://+:80
+  #    - ASPNETCORE_URLS=https://+:443;http://+:80
+  #    - ASPNETCORE_HTTPS_PORT=8009
+  #    - ASPNETCORE_Kestrel__Certificates__Default__Password=lisa2021
+  #    - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/localhost.pfx
+  #  ports:
+  #    - 8008:80
+  #    - 8009:443
+  #  volumes:
+  #    #- "C:/TestData:/data"
+  #    - ./https:/https:ro
+  #  extra_hosts:
+  #    - host.docker.internal:host-gateway
 
   patientsresolver.api:
     image: ${DOCKER_REGISTRY-}patientsresolverapi
@@ -96,7 +106,6 @@ services:
       dockerfile: src/Services/Agents.API/Agents.API/Dockerfile
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_URLS=http://+:80
       - ASPNETCORE_URLS=https://+:443;http://+:80
       - ASPNETCORE_HTTPS_PORT=8012
       - ASPNETCORE_Kestrel__Certificates__Default__Password=lisa2021
