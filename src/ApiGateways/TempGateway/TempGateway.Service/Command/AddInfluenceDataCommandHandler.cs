@@ -23,7 +23,7 @@ namespace TempGateway.Service.Command
             try
             {
                // FileData fileData = GetFileDataFrom(request.FilePath);
-                string url = $"https://host.docker.internal:8004/addInfluenceData/";
+                string url = $"http://host.docker.internal:8033/addInfluenceData/";
                 string body = Newtonsoft.Json.JsonConvert.SerializeObject(request.Data);
                 _ = await webRequester.GetResponse<bool>(url, "POST", body);
                 return await Unit.Task;

@@ -36,7 +36,7 @@ namespace WebMVC.Models
             webRequest.Credentials = CredentialCache.DefaultCredentials; //or account you wish to connect as
             webRequest.PreAuthenticate = true;
             webRequest.ContentType = "application/json"; // or xml if it's your preference
-
+            webRequest.AllowAutoRedirect = true;
             if (jsonBody != null)
             {
                 using (Stream webStream = webRequest.GetRequestStream())
@@ -45,7 +45,6 @@ namespace WebMVC.Models
                     requestWriter.Write(jsonBody);
                 }
             }
-
             return webRequest;
         }
 

@@ -149,7 +149,7 @@ namespace Agents.API.Entities
                 DateTime startTimestamp = DateTime.MinValue;
                 DateTime endTimestamp = (determineStateProperties.Timestamp == null ? DateTime.MaxValue : (DateTime)determineStateProperties.Timestamp);
                 string body = Newtonsoft.Json.JsonConvert.SerializeObject(new DateTime[2] { startTimestamp, endTimestamp });
-                string url = $"https://host.docker.internal:8004/latestPatientParameters/{PatientId}";
+                string url = $"http://host.docker.internal:8033/latestPatientParameters/{PatientId}";
                 return await webRequester
                   .GetResponse<IList<PatientParameter>>(url, "POST", body);
             }
