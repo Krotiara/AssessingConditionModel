@@ -2,19 +2,19 @@ version: '3.4'
 
 services:
 
-  envoygateway:
-    build:
-      context: .
-      dockerfile: src/ApiGateways/Envoy/Dockerfile
-    ports:
-      - "9901:9901"
-      - "10000:10000"
-    volumes:
-      - ./src/ApiGateways/Envoy/envoy.yaml:/etc/envoy/envoy.yaml
-    networks:
-        - aModelNetwork
-    #extra_hosts:
-    #  - host.docker.internal:host-gateway
+  #envoygateway:
+  #  build:
+  #    context: .
+  #    dockerfile: src/ApiGateways/Envoy/Dockerfile
+  #  ports:
+  #    - "9901:9901"
+  #    - "10000:10000"
+  #  volumes:
+  #    - ./src/ApiGateways/Envoy/envoy.yaml:/etc/envoy/envoy.yaml
+  #  networks:
+  #      - aModelNetwork
+  #  #extra_hosts:
+  #  #  - host.docker.internal:host-gateway
   
   web:
     image: ${DOCKER_REGISTRY-}web
@@ -44,14 +44,14 @@ services:
       dockerfile: src/ApiGateways/TempGateway/TempGateway/Dockerfile
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_URLS=http://0.0.0.0:80
-      - ASPNETCORE_URLS=https://+:443;http://+:80
-      - ASPNETCORE_HTTPS_PORT=8009
-      - ASPNETCORE_Kestrel__Certificates__Default__Password=lisa2021
-      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/localhost.pfx
+      - ASPNETCORE_URLS=http://+:80
+      #- ASPNETCORE_URLS=https://+:443;http://+:80
+      #- ASPNETCORE_HTTPS_PORT=8009
+      #- ASPNETCORE_Kestrel__Certificates__Default__Password=lisa2021
+      #- ASPNETCORE_Kestrel__Certificates__Default__Path=/https/localhost.pfx
     ports:
       - 8008:80
-      - 8009:443
+      #- 8009:443
     volumes:
       #- "C:/TestData:/data"
       - ./https:/https:ro
@@ -70,11 +70,11 @@ services:
       - ./https:/https:ro
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_URLS=http://0.0.0.0:80
+      - ASPNETCORE_URLS=http://+:80
       #- ASPNETCORE_URLS=https://+:443;http://+:80
       #- ASPNETCORE_HTTPS_PORT=8004
-      - ASPNETCORE_Kestrel__Certificates__Default__Password=lisa2021
-      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/localhost.pfx
+      #- ASPNETCORE_Kestrel__Certificates__Default__Password=lisa2021
+      #- ASPNETCORE_Kestrel__Certificates__Default__Path=/https/localhost.pfx
     ports:
       - 8033:80
     networks:
@@ -83,6 +83,8 @@ services:
     #extra_hosts:
     #  - host.docker.internal:host-gateway
     restart: on-failure
+    depends_on:
+      - rabbitmq
 
   #influencecalculator.api:
   #  image: ${DOCKER_REGISTRY-}influencecalculatorapi
@@ -97,9 +99,9 @@ services:
       dockerfile: src/Services/PatientDataHandler.API/PatientDataHandler.API/Dockerfile
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_URLS=http://0.0.0.0:80
-      - ASPNETCORE_Kestrel__Certificates__Default__Password=lisa2021
-      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/localhost.pfx
+      - ASPNETCORE_URLS=http://+:80
+      #- ASPNETCORE_Kestrel__Certificates__Default__Password=lisa2021
+      #- ASPNETCORE_Kestrel__Certificates__Default__Path=/https/localhost.pfx
     ports:
       - 8005:80
     volumes:
@@ -109,6 +111,8 @@ services:
     #extra_hosts:
     #  - host.docker.internal:host-gateway
     restart: on-failure
+    depends_on:
+      - rabbitmq
 
   agents.api:
     image: ${DOCKER_REGISTRY-}agentsapi
@@ -117,11 +121,11 @@ services:
       dockerfile: src/Services/Agents.API/Agents.API/Dockerfile
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
       #- ASPNETCORE_URLS=https://+:443;http://+:80
-      - ASPNETCORE_URLS=http://0.0.0.0:80
       #- ASPNETCORE_HTTPS_PORT=8012
-      - ASPNETCORE_Kestrel__Certificates__Default__Password=lisa2021
-      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/localhost.pfx
+      #- ASPNETCORE_Kestrel__Certificates__Default__Password=lisa2021
+      #- ASPNETCORE_Kestrel__Certificates__Default__Path=/https/localhost.pfx
     ports:
       - 8002:80
       #- 8012:443
@@ -143,19 +147,19 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:80
-      - ASPNETCORE_URLS=https://+:443;http://+:80
-      - ASPNETCORE_HTTPS_PORT=8006
-      - ASPNETCORE_Kestrel__Certificates__Default__Password=lisa2021
-      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/localhost.pfx
+      #- ASPNETCORE_URLS=https://+:443;http://+:80
+      #- ASPNETCORE_HTTPS_PORT=8006
+      #- ASPNETCORE_Kestrel__Certificates__Default__Password=lisa2021
+      #- ASPNETCORE_Kestrel__Certificates__Default__Path=/https/localhost.pfx
     ports:
       - 8007:80
-      - 8006:443
+      #- 8006:443
     volumes:
       - ./https:/https:ro
     networks:
         - aModelNetwork
-    extra_hosts:
-      - host.docker.internal:host-gateway
+    #extra_hosts:
+    #  - host.docker.internal:host-gateway
 
   #containerregister.api:
   #  image: ${DOCKER_REGISTRY-}containerregisterapi

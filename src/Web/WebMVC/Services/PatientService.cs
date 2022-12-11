@@ -6,7 +6,7 @@ namespace WebMVC.Services
     public class PatientService : IPatientService
     {
         private readonly IWebRequester webRequester;
-        private readonly string gatewayUrl = "http://localhost:8002";
+        private readonly string gatewayUrl = "http://localhost:8008";
 
         /*string url = $"https://host.docker.internal:8012/agingDynamics/{patientId}";
             string body = Newtonsoft.Json.JsonConvert.SerializeObject(new DateTime[2] { startTimestamp, endTimestamp });
@@ -36,7 +36,7 @@ namespace WebMVC.Services
         {
             try
             {
-                string url = $"https://host.docker.internal:8009/patients/{id}";
+                string url = $"{gatewayUrl}/patients/{id}";
                 return await webRequester.GetResponse<Patient>(url, "GET");
             }
             catch(GetWebResponceException ex)

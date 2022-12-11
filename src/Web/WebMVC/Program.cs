@@ -4,10 +4,6 @@ using WebMVC.Models;
 using WebMVC.Services;
 
 var builder = WebApplication.CreateBuilder(args);
-//builder.WebHost
-//    .UseKestrel()
-//    .UseUrls("http://*:80")
-//    .UseContentRoot(Directory.GetCurrentDirectory());
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
