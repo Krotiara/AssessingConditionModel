@@ -23,7 +23,6 @@ services:
       dockerfile: src/Web/WebMVC/Dockerfile
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_URLS=http://+:80
       - ASPNETCORE_URLS=https://+:443;http://+:80
       - ASPNETCORE_HTTPS_PORT=8010
       - ASPNETCORE_Kestrel__Certificates__Default__Password=lisa2021
