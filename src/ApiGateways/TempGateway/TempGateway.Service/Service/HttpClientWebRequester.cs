@@ -38,16 +38,21 @@ namespace TempGateway.Service.Service
                 if (method == "get")
                 {
                     HttpResponseMessage response = await myClient.GetAsync(requestUriStr);
-                    return await response.Content.ReadAsStreamAsync();
+                    if (response.IsSuccessStatusCode)
+                        return await response.Content.ReadAsStreamAsync();
+                    else throw new GetWebResponceException($"Get request for {requestUriStr} was not success, code = {response.StatusCode}");
                 }
                 else if (method == "post")
                 {
-                    StringContent data = new StringContent(jsonBody, Encoding.UTF8, "application/json");
-                    HttpResponseMessage response = await myClient.PostAsync(requestUriStr, data);
-                    return await response.Content.ReadAsStreamAsync();
+                    if (jsonBody == null)
+                        jsonBody = "";
+                    HttpResponseMessage response = await myClient.PostAsync(requestUriStr, new StringContent(jsonBody, Encoding.UTF8, "application/json"));
+                    if (response.IsSuccessStatusCode)
+                        return await response.Content.ReadAsStreamAsync();
+                    else throw new GetWebResponceException($"Post request for {requestUriStr} was not success, code = {response.StatusCode}");
                 }
                 else
-                    throw new Exception($"Unresolve http method {method}");
+                    throw new GetWebResponceException($"Unresolve http method {method}");
             }
         }
     }
