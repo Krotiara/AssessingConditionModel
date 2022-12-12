@@ -103,8 +103,8 @@ namespace PatientsResolver.API.Controllers
             //TODO Добавить статус отсылки
             try
             { 
-                await mediator.Send(new SendPatientDataFileSourceCommand() { Data = fileData });
-                return Ok(true);
+                bool isSuccessSendRequest = await mediator.Send(new SendPatientDataFileSourceCommand() { Data = fileData });
+                return Ok(isSuccessSendRequest);
             }
             catch(Exception ex)
             {

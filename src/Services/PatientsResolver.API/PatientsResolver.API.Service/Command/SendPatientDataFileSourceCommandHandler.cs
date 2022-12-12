@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace PatientsResolver.API.Service.Command
 {
-    public class SendPatientDataFileSourceCommandHandler : IRequestHandler<SendPatientDataFileSourceCommand, Unit>
+    public class SendPatientDataFileSourceCommandHandler : IRequestHandler<SendPatientDataFileSourceCommand, bool>
     {
         private readonly IPatientFileDataSender patientFileDataSender;
 
@@ -17,10 +17,10 @@ namespace PatientsResolver.API.Service.Command
             this.patientFileDataSender = patientFileDataSender;
         }
 
-        public async Task<Unit> Handle(SendPatientDataFileSourceCommand request, CancellationToken cancellationToken)
+        public async Task<bool> Handle(SendPatientDataFileSourceCommand request, CancellationToken cancellationToken)
         {
-            patientFileDataSender.SendPatientsFileData(request.Data);
-            return await Unit.Task;
+            bool isSuccess = patientFileDataSender.SendPatientsFileData(request.Data);
+            return isSuccess;
         }
     }
 }

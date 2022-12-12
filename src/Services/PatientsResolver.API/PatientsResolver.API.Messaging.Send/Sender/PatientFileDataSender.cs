@@ -32,25 +32,26 @@ namespace PatientsResolver.API.Messaging.Send.Sender
             CreateConnection();
         }
 
-        public void SendPatientsFileData(FileData data)
+        public bool SendPatientsFileData(FileData data)
         {
-            if (connection == null)
-                CreateConnection();
-            using (IModel channel = connection.CreateModel())
+            try
             {
-                //try
-                //{
-                //    channel.QueueBind(queueName, exchange, routingKey);
-                //}
-                //catch (RabbitMQ.Client.Exceptions.OperationInterruptedException ex)
-                //{
-                    QueueDeclareOk status =  channel
+                if (connection == null)
+                    CreateConnection();
+                using (IModel channel = connection.CreateModel())
+                {
+                    QueueDeclareOk status = channel
                         .QueueDeclare(queue: queueName, durable: false, exclusive: false, autoDelete: false, arguments: null);
-                //}
-                
-                string jsonString = JsonConvert.SerializeObject(data);
-                byte[] body = Encoding.UTF8.GetBytes(jsonString);
-                channel.BasicPublish(exchange: "", routingKey: queueName, body: body);
+                    string jsonString = JsonConvert.SerializeObject(data);
+                    byte[] body = Encoding.UTF8.GetBytes(jsonString);
+                    channel.BasicPublish(exchange: "", routingKey: queueName, body: body);
+                    return true;
+                }
+            }
+            catch(Exception ex)
+            {
+                //TODO log
+                return false;
             }
         }
 

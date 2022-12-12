@@ -56,9 +56,9 @@ services:
     ports:
       - 8008:80
       #- 8009:443
-    volumes:
-      #- "C:/TestData:/data"
-      - ./https:/https:ro
+    #volumes:
+    #  #- "C:/TestData:/data"
+    #  - ./https:/https:ro
     networks:
         - aModelNetwork
     #extra_hosts:
@@ -70,9 +70,9 @@ services:
     build:
       context: .
       dockerfile: src/Services/PatientsResolver.API/PatientsResolver.API/Dockerfile
-    volumes:
-      #- "C:/TestData:/data"
-      - ./https:/https:ro
+    #volumes:
+    #  #- "C:/TestData:/data"
+    #  - ./https:/https:ro
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:80
@@ -111,8 +111,8 @@ services:
       #- ASPNETCORE_Kestrel__Certificates__Default__Path=/https/localhost.pfx
     ports:
       - 8005:80
-    volumes:
-      - ./https:/https:ro
+    #volumes:
+    #  - ./https:/https:ro
     networks:
         - aModelNetwork
     #extra_hosts:
@@ -139,8 +139,8 @@ services:
     ports:
       - 8002:80
       #- 8012:443
-    volumes:
-      - ./https:/https:ro
+    #volumes:
+    #  - ./https:/https:ro
     networks:
         - aModelNetwork
     #extra_hosts:
@@ -165,8 +165,8 @@ services:
     ports:
       - 8007:80
       #- 8006:443
-    volumes:
-      - ./https:/https:ro
+    #volumes:
+    #  - ./https:/https:ro
     networks:
         - aModelNetwork
     #extra_hosts:

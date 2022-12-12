@@ -75,7 +75,7 @@ builder.Services.AddTransient<IRequestHandler<GetPatientQuery, Patient>,
     GetPatientQueryHandler>();
 builder.Services.AddTransient<IRequestHandler<AddInfluenceDataCommand, List<Influence>>,
     AddInfluenceDataCommandHandler>();
-builder.Services.AddTransient<IRequestHandler<SendPatientDataFileSourceCommand, Unit>,
+builder.Services.AddTransient<IRequestHandler<SendPatientDataFileSourceCommand, bool>,
     SendPatientDataFileSourceCommandHandler>();
 builder.Services.AddTransient<IRequestHandler<SendPatientsCommand, Unit>, 
     SendPatientsCommandHandler>();
