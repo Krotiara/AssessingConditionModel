@@ -20,7 +20,7 @@ namespace Agents.API.Service.Query
 
         public async Task<List<Influence>> Handle(GetPatientInfluencesQuery request, CancellationToken cancellationToken)
         {
-            string url = $"http://host.docker.internal:8033/influence/{request.PatientId}";
+            string url = $"{Environment.GetEnvironmentVariable("PATIENTRESOLVER_API_URL")}/influence/{request.PatientId}";
             string body = Newtonsoft.Json.JsonConvert.SerializeObject(new DateTime[2] { request.StartTimestamp, request.EndTimestamp });
             return await webRequester.GetResponse<List<Influence>>(url, "POST", body);
         }

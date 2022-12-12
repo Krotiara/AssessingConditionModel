@@ -8,14 +8,6 @@ namespace WebMVC.Services
         private readonly IWebRequester webRequester;
         private readonly string gatewayUrl;
 
-        /*string url = $"https://host.docker.internal:8012/agingDynamics/{patientId}";
-            string body = Newtonsoft.Json.JsonConvert.SerializeObject(new DateTime[2] { startTimestamp, endTimestamp });
-            return await webRequester
-                  .GetResponse<IList<AgingDynamics>>(url, "POST", body);
-        int patientId = int.Parse(id); //TODO check valid in view
-        string url = $"https://host.docker.internal:8009/patients/{patientId}";
-        Patient p;*/
-
         public PatientService(IWebRequester webRequester)
         {
             this.webRequester = webRequester;
