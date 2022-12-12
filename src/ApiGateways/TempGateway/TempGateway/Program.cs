@@ -36,7 +36,7 @@ builder.Services.AddMediatR(Assembly.GetExecutingAssembly());
 builder.Services.AddTransient<IFileData, FileData>();
 builder.Services.AddTransient<IAgingDynamics<AgingState>, AgingDynamics>();
 builder.Services.AddScoped<IPatientService, PatientService>();
-builder.Services.AddScoped<IWebRequester, RestWebRequester>();
+builder.Services.AddScoped<IWebRequester, HttpClientWebRequester>();
 
 builder.Services.AddTransient<IRequestHandler<AddInfluenceDataCommand, Unit>, AddInfluenceDataCommandHandler>();
 

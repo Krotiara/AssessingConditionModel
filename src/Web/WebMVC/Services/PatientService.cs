@@ -6,7 +6,7 @@ namespace WebMVC.Services
     public class PatientService : IPatientService
     {
         private readonly IWebRequester webRequester;
-        private readonly string gatewayUrl = "http://localhost:8008";
+        private readonly string gatewayUrl;
 
         /*string url = $"https://host.docker.internal:8012/agingDynamics/{patientId}";
             string body = Newtonsoft.Json.JsonConvert.SerializeObject(new DateTime[2] { startTimestamp, endTimestamp });

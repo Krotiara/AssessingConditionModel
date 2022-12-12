@@ -76,6 +76,7 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:80
+      - DATA_HANDLER_URL=http://patientdatahandler.api:80
       #- ASPNETCORE_URLS=https://+:443;http://+:80
       #- ASPNETCORE_HTTPS_PORT=8004
       #- ASPNETCORE_Kestrel__Certificates__Default__Password=lisa2021
@@ -99,6 +100,7 @@ services:
 
   patientdatahandler.api:
     image: ${DOCKER_REGISTRY-}patientdatahandlerapi
+    container_name: patientdatahandler.api
     build:
       context: .
       dockerfile: src/Services/PatientDataHandler.API/PatientDataHandler.API/Dockerfile
