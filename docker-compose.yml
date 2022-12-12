@@ -27,6 +27,7 @@ services:
       - ASPNETCORE_HTTPS_PORT=8010
       - ASPNETCORE_Kestrel__Certificates__Default__Password=lisa2021
       - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/localhost.pfx
+      - API_URl=http://Gate:80
     ports:
       - 8011:80
       - 8010:443
@@ -39,12 +40,15 @@ services:
 
   tempgateway:
     image: ${DOCKER_REGISTRY-}tempgateway
+    container_name: Gate
     build:
       context: .
       dockerfile: src/ApiGateways/TempGateway/TempGateway/Dockerfile
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:80
+      - PATIENTRESOLVER_API_URL=http://patientsresolver.api:80
+      - AGENTS_API_URL=http://agents.api:80
       #- ASPNETCORE_URLS=https://+:443;http://+:80
       #- ASPNETCORE_HTTPS_PORT=8009
       #- ASPNETCORE_Kestrel__Certificates__Default__Password=lisa2021
@@ -62,6 +66,7 @@ services:
 
   patientsresolver.api:
     image: ${DOCKER_REGISTRY-}patientsresolverapi
+    container_name: patientsresolver.api
     build:
       context: .
       dockerfile: src/Services/PatientsResolver.API/PatientsResolver.API/Dockerfile
@@ -116,12 +121,15 @@ services:
 
   agents.api:
     image: ${DOCKER_REGISTRY-}agentsapi
+    container_name: agents.api
     build:
       context: .
       dockerfile: src/Services/Agents.API/Agents.API/Dockerfile
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:80
+      - PATIENTRESOLVER_API_URL=http://patientsresolver.api:80
+      - BIO_AGE_API_URL=http://bioAge.api:80
       #- ASPNETCORE_URLS=https://+:443;http://+:80
       #- ASPNETCORE_HTTPS_PORT=8012
       #- ASPNETCORE_Kestrel__Certificates__Default__Password=lisa2021
@@ -141,6 +149,7 @@ services:
 
   bioAge.api:
     image: ${DOCKER_REGISTRY-}bioageapi
+    container_name: bioAge.api
     build:
       context: .
       dockerfile: src/Services/BioAge.API/BioAge.API/Dockerfile

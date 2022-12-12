@@ -19,7 +19,7 @@ namespace WebMVC.Services
         public PatientService(IWebRequester webRequester)
         {
             this.webRequester = webRequester;
-            gatewayUrl = "http://localhost:8002";
+            gatewayUrl = Environment.GetEnvironmentVariable("API_URl");
         }
 
         public async Task<bool> AddPatientsInluenceData(byte[] data)
