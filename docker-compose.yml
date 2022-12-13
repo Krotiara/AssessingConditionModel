@@ -157,6 +157,7 @@ services:
     #  - ./https:/https:ro
     networks:
         - aModelNetwork
+    restart: on-failure
     #extra_hosts:
     #  - host.docker.internal:host-gateway
 
