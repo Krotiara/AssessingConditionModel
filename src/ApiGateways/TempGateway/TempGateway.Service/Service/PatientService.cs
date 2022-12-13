@@ -41,7 +41,7 @@ namespace TempGateway.Service.Service
 
         public async Task<IPatient> GetPatientById(int id)
         {
-            string url = $"{Environment.GetEnvironmentVariable("PATIENTRESOLVER_API_URL")}/patients/{id}";
+            string url = $"{Environment.GetEnvironmentVariable("PATIENTRESOLVER_API_URL")}/patientsApi/patients/{id}";
             return await webRequester.GetResponse<Patient>(url, "GET");
         }
     }

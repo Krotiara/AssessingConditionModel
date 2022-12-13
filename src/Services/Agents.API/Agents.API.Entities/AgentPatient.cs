@@ -153,7 +153,7 @@ namespace Agents.API.Entities
                 DateTime startTimestamp = DateTime.MinValue;
                 DateTime endTimestamp = (determineStateProperties.Timestamp == null ? DateTime.MaxValue : (DateTime)determineStateProperties.Timestamp);
                 string body = Newtonsoft.Json.JsonConvert.SerializeObject(new DateTime[2] { startTimestamp, endTimestamp });
-                string url = $"{patientsResolverApiUrl}/latestPatientParameters/{PatientId}";
+                string url = $"{patientsResolverApiUrl}/patientsApi/latestPatientParameters/{PatientId}";
                 return await webRequester
                   .GetResponse<IList<PatientParameter>>(url, "POST", body);
             }

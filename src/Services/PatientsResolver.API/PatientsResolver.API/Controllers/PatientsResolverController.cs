@@ -24,7 +24,7 @@ namespace PatientsResolver.API.Controllers
         }
 
 
-        [HttpPost("latestPatientParameters/{patientId}")]
+        [HttpPost("patientsApi/latestPatientParameters/{patientId}")]
         public async Task<ActionResult<List<IPatientParameter>>> GetLatestPatientParameters(int patientId, [FromBody]DateTime[] timeSpan)
         {
             try
@@ -40,7 +40,7 @@ namespace PatientsResolver.API.Controllers
         }
 
 
-        [HttpPost("influence/{patientId}")]
+        [HttpPost("patientsApi/influence/{patientId}")]
         public async Task<ActionResult<List<Influence>>> GetPatientInfluences(int patientId, [FromBody]DateTime[] timeSpan)
         {
             try
@@ -62,7 +62,7 @@ namespace PatientsResolver.API.Controllers
         }
 
 
-        [HttpPost("influences/")]
+        [HttpPost("patientsApi/influences/")]
         public async Task<ActionResult<List<Influence>>> GetInfluences([FromBody] DateTime[] timeSpan)
         {
             try
@@ -83,7 +83,7 @@ namespace PatientsResolver.API.Controllers
         }
 
 
-        [HttpGet("patients/{patientId}")]
+        [HttpGet("patientsApi/patients/{patientId}")]
         public async Task<ActionResult<Patient>> GetPatient(int patientId)
         {
             try
@@ -97,7 +97,7 @@ namespace PatientsResolver.API.Controllers
         }
 
 
-        [HttpPost("addInfluenceData/")]
+        [HttpPost("patientsApi/addInfluenceData/")]
         public async Task<ActionResult<bool>> AddData([FromBody] FileData fileData)
         {
             //TODO Добавить статус отсылки
@@ -147,7 +147,7 @@ namespace PatientsResolver.API.Controllers
         //}
 
 
-        [HttpPost("addPatient")]
+        [HttpPost("patientsApi/addPatient")]
         public async Task<ActionResult<bool>> AddPatient(Patient patient)
         {
             try
