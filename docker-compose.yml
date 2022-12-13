@@ -13,8 +13,6 @@ services:
       - ./src/ApiGateways/Envoy/envoy.yaml:/etc/envoy/envoy.yaml
     networks:
         - aModelNetwork
-    #extra_hosts:
-    #  - host.docker.internal:host-gateway
   
   web:
     image: ${DOCKER_REGISTRY-}web
@@ -35,8 +33,6 @@ services:
       - ./https:/https:ro
     networks:
         - aModelNetwork
-    #extra_hosts:
-    #  - host.docker.internal:host-gateway
 
   #tempgateway:
   #  image: ${DOCKER_REGISTRY-}tempgateway
@@ -61,8 +57,6 @@ services:
   #  #  - ./https:/https:ro
   #  networks:
   #      - aModelNetwork
-  #  #extra_hosts:
-  #  #  - host.docker.internal:host-gateway
 
   patientsresolver.api:
     image: ${DOCKER_REGISTRY-}patientsresolverapi
@@ -86,8 +80,6 @@ services:
     networks:
         - aModelNetwork
       #- 8004:443
-    #extra_hosts:
-    #  - host.docker.internal:host-gateway
     restart: on-failure
     depends_on:
       - rabbitmq
@@ -115,8 +107,6 @@ services:
     #  - ./https:/https:ro
     networks:
         - aModelNetwork
-    #extra_hosts:
-    #  - host.docker.internal:host-gateway
     restart: on-failure
     depends_on:
       - rabbitmq
@@ -143,8 +133,6 @@ services:
     #  - ./https:/https:ro
     networks:
         - aModelNetwork
-    #extra_hosts:
-    #  - host.docker.internal:host-gateway
     restart: on-failure
     depends_on:
       - rabbitmq
@@ -213,8 +201,6 @@ services:
       POSTGRES_DB: "PatientData_db"
     networks:
         - aModelNetwork
-    #networks:
-    #  - postgres
 
   #pgadmin:
   #   container_name: pgadmin_container
