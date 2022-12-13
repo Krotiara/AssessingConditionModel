@@ -16,8 +16,9 @@
         "rabbitmq": "StartWithoutDebugging",
         "agents.api": "StartDebugging",
         "bioAge.api": "StartDebugging",
-        "tempgateway": "StartDebugging",
-        "web": "StartDebugging"
+        //"tempgateway": "StartDebugging",
+        "web": "StartDebugging",
+        "envoygateway": "StartDebugging"
       }
     }
   }

@@ -21,17 +21,28 @@ namespace WebMVC.Controllers
         [HttpGet]
         public async Task<IActionResult> GetPatientInfo(string id)
         {
-            //TODO try catch    
-            int patientId = int.Parse(id);
-            Patient patient = await patientsService.GetPatient(patientId);
-            AgingState state = await patientsService.GetPatientCurrentAgingState(patientId);
-            PatientInfo patientInfo = new PatientInfo()
+            try
             {
-                Patient = patient,
-                AgingPatientState = state
-            };
+                //TODO try catch    
+                int patientId = int.Parse(id);
+                Patient patient = await patientsService.GetPatient(patientId);
+                if (patient == null)
+                    throw new Exception("Get patient return null");
+                AgingState state = await patientsService.GetPatientCurrentAgingState(patientId);
+                if (state == null)
+                    throw new Exception("Get patient aging state return null");
+                PatientInfo patientInfo = new PatientInfo()
+                {
+                    Patient = patient,
+                    AgingPatientState = state
+                };
 
-            return PartialView("PatientInfoView", patientInfo);         
+                return PartialView("PatientInfoView", patientInfo);
+            }
+            catch(Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
 
@@ -46,7 +57,7 @@ namespace WebMVC.Controllers
         }
 
 
-        [HttpGet]
+        [HttpGet("agents/dynamics")]
         public async Task<IActionResult> GetAgingDynamics(DateTime startTimestamp, DateTime endTimestamp)
         {
             //TODO try catch

@@ -18,10 +18,10 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
-builder.Services.AddHttpsRedirection(options =>
-{
-    options.HttpsPort = 443;
-});
+//builder.Services.AddHttpsRedirection(options =>
+//{
+//    options.HttpsPort = 443;
+//});
 
 builder.Services.AddSwaggerGen(c =>
 {
@@ -72,7 +72,7 @@ builder.Services.AddDbContextFactory<AgentsDbContext>(options => options.UseNpgs
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
 builder.Services.AddScoped<IUpdatePatientsDataInfo, UpdatePatientsInfo>();
-builder.Services.AddTransient<IWebRequester, RestWebRequester>();
+builder.Services.AddTransient<IWebRequester, HttpClientWebRequester>();
 builder.Services.AddTransient<IInitPatientAgentsService, InitPatientAgentsService>();
 builder.Services.AddTransient<IUpdatePatientAgentsService, UpdatePatientAgentsService>();
 builder.Services.AddScoped<IAgentPatientsRepository, AgentPatientsRepository>();
@@ -105,7 +105,7 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 
 
 

@@ -33,10 +33,10 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
-builder.Services.AddHttpsRedirection(options =>
-{
-    options.HttpsPort = 443;
-});
+//builder.Services.AddHttpsRedirection(options =>
+//{
+//    options.HttpsPort = 443;
+//});
 
 string connectionString = builder.Configuration.GetConnectionString("PostgresConnection");
 builder.Services.AddDbContext<PatientsDataDbContext>(options => options.UseNpgsql(connectionString, builder =>
@@ -75,7 +75,7 @@ builder.Services.AddTransient<IRequestHandler<GetPatientQuery, Patient>,
     GetPatientQueryHandler>();
 builder.Services.AddTransient<IRequestHandler<AddInfluenceDataCommand, List<Influence>>,
     AddInfluenceDataCommandHandler>();
-builder.Services.AddTransient<IRequestHandler<SendPatientDataFileSourceCommand, Unit>,
+builder.Services.AddTransient<IRequestHandler<SendPatientDataFileSourceCommand, bool>,
     SendPatientDataFileSourceCommandHandler>();
 builder.Services.AddTransient<IRequestHandler<SendPatientsCommand, Unit>, 
     SendPatientsCommandHandler>();
@@ -116,7 +116,7 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();

@@ -1,0 +1,111 @@
+admin:
+  access_log_path: "/dev/null"
+  address:
+    socket_address:
+      address: 0.0.0.0
+      port_value: 9901
+static_resources:
+  listeners:
+  - address:
+      socket_address:
+        address: 0.0.0.0
+        port_value: 10000
+    filter_chains:
+    - filters:
+      - name: envoy.http_connection_manager
+        config:
+          codec_type: auto
+          stat_prefix: ingress_http
+          route_config:
+            name: assessingConditionModel_backend_route
+            virtual_hosts:
+            - name:  assessingConditionModel_backend
+              domains:
+              - "*"
+              routes:
+              - name: "agents-long"
+                match:
+                  prefix: "/agents/"
+                route:
+                  auto_host_rewrite: true
+                  prefix_rewrite: "/agents/"
+                  cluster: agents_service
+              - name: "patients-long"
+                match:
+                  prefix: "/patientsApi/"
+                route:
+                  auto_host_rewrite: true
+                  prefix_rewrite: "/patientsApi/"
+                  cluster: patients_service
+              - name: "testGoogle"
+                match:
+                  prefix: "/goo/"
+                route:
+                  host_rewrite: www.google.com
+                  cluster: google_service
+          http_filters:
+          - name: envoy.router
+  clusters:
+  - name: patients_service
+    connect_timeout: 0.25s
+    type: strict_dns
+    lb_policy: round_robin
+    hosts:
+    - socket_address:
+        address: patientsresolver.api
+        port_value: 80
+  - name: agents_service
+    connect_timeout: 0.25s
+    type: strict_dns
+    lb_policy: round_robin
+    hosts:
+    - socket_address:
+        address: agents.api
+        port_value: 80
+  - name: google_service
+    connect_timeout: 0.25s
+    type: LOGICAL_DNS
+    # Comment out the following line to test on v6 networks 
+    dns_lookup_family: V4_ONLY
+    lb_policy: ROUND_ROBIN
+    load_assignment:
+      cluster_name: google_service
+      endpoints:
+      - lb_endpoints:
+        - endpoint:
+            address:
+              socket_address:
+                address: www.google.com
+                port_value: 443
+  #- name: catalog
+  #  connect_timeout: 0.25s
+  #  type: strict_dns
+  #  lb_policy: round_robin
+  #  hosts:
+  #  - socket_address:
+  #      address: catalog-api
+  #      port_value: 80
+  #- name: basket
+  #  connect_timeout: 0.25s
+  #  type: strict_dns
+  #  lb_policy: round_robin
+  #  hosts:
+  #  - socket_address:
+  #      address: basket-api
+  #      port_value: 80
+  #- name: ordering
+  #  connect_timeout: 0.25s
+  #  type: strict_dns
+  #  lb_policy: round_robin
+  #  hosts:
+  #  - socket_address:
+  #      address: ordering-api
+  #      port_value: 80
+  #- name: signalr-hub
+  #  connect_timeout: 0.25s
+  #  type: strict_dns
+  #  lb_policy: round_robin
+  #  hosts:
+  #  - socket_address:
+  #      address: ordering-signalrhub
+  #      port_value: 80

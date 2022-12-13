@@ -19,9 +19,13 @@ namespace Agents.API.Entities
 
         private Func<int, DateTime, Task<AgingState>> GetAgingStateDb;
         private Func<AgingState, bool, Task<AgingState>> AddAgingStateDb;
+        private readonly string patientsResolverApiUrl;
+        private readonly string bioAgeApiUrl;
 
         public AgentPatient() 
         {
+            patientsResolverApiUrl = Environment.GetEnvironmentVariable("PATIENTRESOLVER_API_URL");
+            bioAgeApiUrl = Environment.GetEnvironmentVariable("BIO_AGE_API_URL");
             InitStateDiagram();
         }
 
@@ -149,7 +153,7 @@ namespace Agents.API.Entities
                 DateTime startTimestamp = DateTime.MinValue;
                 DateTime endTimestamp = (determineStateProperties.Timestamp == null ? DateTime.MaxValue : (DateTime)determineStateProperties.Timestamp);
                 string body = Newtonsoft.Json.JsonConvert.SerializeObject(new DateTime[2] { startTimestamp, endTimestamp });
-                string url = $"https://host.docker.internal:8004/latestPatientParameters/{PatientId}";
+                string url = $"{patientsResolverApiUrl}/patientsApi/latestPatientParameters/{PatientId}";
                 return await webRequester
                   .GetResponse<IList<PatientParameter>>(url, "POST", body);
             }
@@ -176,7 +180,7 @@ namespace Agents.API.Entities
                 };
 
                 string requestBody = Newtonsoft.Json.JsonConvert.SerializeObject(calculationParameters);
-                string url = $"https://host.docker.internal:8006/bioAge/";
+                string url = $"{bioAgeApiUrl}/bioAge/";
                 return await webRequester.GetResponse<double>(url, "PUT", requestBody);
             }
             catch (GetWebResponceException ex)

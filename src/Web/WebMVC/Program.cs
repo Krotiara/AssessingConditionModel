@@ -1,4 +1,5 @@
 using Interfaces;
+using Microsoft.AspNetCore.Hosting;
 using WebMVC.Models;
 using WebMVC.Services;
 
@@ -11,9 +12,11 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddTransient<IAgingState, AgingState>();
 builder.Services.AddTransient<IAgingDynamics<AgingState>, AgingDynamics>();
 builder.Services.AddTransient<IPatient, Patient>();
-builder.Services.AddTransient<IWebRequester, RestWebRequester>();
+builder.Services.AddTransient<IWebRequester, HttpClientWebRequester>();
 builder.Services.AddTransient<IAgingDynamicsSaveService, AgingDynamicsSaveService>();
 builder.Services.AddScoped<IPatientService, PatientService>();
+
+//builder.Services.AddHttpClientServices();
 
 var app = builder.Build();
 

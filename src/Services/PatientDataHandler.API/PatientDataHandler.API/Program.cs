@@ -27,10 +27,10 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
-builder.Services.AddHttpsRedirection(options =>
-{
-    options.HttpsPort = 443;
-});
+//builder.Services.AddHttpsRedirection(options =>
+//{
+//    options.HttpsPort = 443;
+//});
 
 builder.Services.AddScoped<IPatientParameter, PatientParameter>();
 builder.Services.AddScoped<IInfluence<Patient, PatientParameter>, Influence>();
@@ -77,7 +77,7 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();

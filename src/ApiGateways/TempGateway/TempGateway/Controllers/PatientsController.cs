@@ -29,7 +29,7 @@ namespace TempGateway.Controllers
         }
 
 
-        [HttpGet("agingState/{patientId}")]
+        [HttpGet("agents/agingState/{patientId}")]
         public async Task<ActionResult<IAgingState>> GetPatientAgingState(int patientId)
         {
             IAgingState agingState = await patientService.GetAgingPatientStateByPatientId(patientId);
@@ -39,7 +39,7 @@ namespace TempGateway.Controllers
         }
 
 
-        [HttpPost("agingDynamics/{patientId}")]
+        [HttpPost("agents/agingDynamics/{patientId}")]
         public async Task<ActionResult<IList<IAgingDynamics<AgingState>>>> GetPatientAgingDynamics(int patientId, [FromBody] DateTime[] timeSpan)
         {
             DateTime startTime = DateTime.MinValue;
@@ -57,7 +57,7 @@ namespace TempGateway.Controllers
         }
 
 
-        [HttpPost("agingDynamics/")]
+        [HttpPost("agents/agingDynamics/")]
         public async Task<ActionResult<IList<IAgingDynamics<AgingState>>>> GetPatientAgingDynamics([FromBody] DateTime[] timeSpan)
         {
             DateTime startTime = DateTime.MinValue;

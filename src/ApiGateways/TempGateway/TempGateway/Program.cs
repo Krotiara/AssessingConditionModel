@@ -10,10 +10,10 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
-builder.Services.AddHttpsRedirection(options =>
-{
-    options.HttpsPort = 443;
-});
+//builder.Services.AddHttpsRedirection(options =>
+//{
+//    options.HttpsPort = 443;
+//});
 
 builder.Services.AddSwaggerGen(c =>
 {
@@ -36,7 +36,7 @@ builder.Services.AddMediatR(Assembly.GetExecutingAssembly());
 builder.Services.AddTransient<IFileData, FileData>();
 builder.Services.AddTransient<IAgingDynamics<AgingState>, AgingDynamics>();
 builder.Services.AddScoped<IPatientService, PatientService>();
-builder.Services.AddScoped<IWebRequester, RestWebRequester>();
+builder.Services.AddScoped<IWebRequester, HttpClientWebRequester>();
 
 builder.Services.AddTransient<IRequestHandler<AddInfluenceDataCommand, Unit>, AddInfluenceDataCommandHandler>();
 
@@ -50,7 +50,7 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
