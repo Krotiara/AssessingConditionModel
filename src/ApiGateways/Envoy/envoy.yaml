@@ -30,6 +30,13 @@ static_resources:
                   auto_host_rewrite: true
                   prefix_rewrite: "/agents/"
                   cluster: agents_service
+              - name: "patients-long"
+                match:
+                  prefix: "/patientsApi/"
+                route:
+                  auto_host_rewrite: true
+                  prefix_rewrite: "/patientsApi/"
+                  cluster: patients_service
               - name: "testGoogle"
                 match:
                   prefix: "/goo/"
@@ -39,6 +46,14 @@ static_resources:
           http_filters:
           - name: envoy.router
   clusters:
+  - name: patients_service
+    connect_timeout: 0.25s
+    type: strict_dns
+    lb_policy: round_robin
+    hosts:
+    - socket_address:
+        address: patientsresolver.api
+        port_value: 80
   - name: agents_service
     connect_timeout: 0.25s
     type: strict_dns
@@ -50,7 +65,7 @@ static_resources:
   - name: google_service
     connect_timeout: 0.25s
     type: LOGICAL_DNS
-    # Comment out the following line to test on v6 networks
+    # Comment out the following line to test on v6 networks 
     dns_lookup_family: V4_ONLY
     lb_policy: ROUND_ROBIN
     load_assignment:

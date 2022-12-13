@@ -16,7 +16,7 @@ namespace WebMVC.Services
 
         public async Task<bool> AddPatientsInluenceData(byte[] data)
         {
-            string url = $"{gatewayUrl}/addInfluenceData/";
+            string url = $"{gatewayUrl}/patientsApi/addInfluenceData/";
             FileData fD = new FileData() { RawData = data };
             string body = Newtonsoft.Json.JsonConvert.SerializeObject(fD);
             return await webRequester.GetResponse<bool>(url, "POST", body);
@@ -28,7 +28,7 @@ namespace WebMVC.Services
         {
             try
             {
-                string url = $"{gatewayUrl}/patients/{id}";
+                string url = $"{gatewayUrl}/patientsApi/patients/{id}";
                 return await webRequester.GetResponse<Patient>(url, "GET");
             }
             catch(GetWebResponceException ex)
