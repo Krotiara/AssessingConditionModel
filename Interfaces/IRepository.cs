@@ -17,5 +17,7 @@ namespace Interfaces
         Task<TEntity> UpdateAsync(TEntity entity);
 
         Task UpdateRangeAsync(List<TEntity> entities);
+
+        Task DeleteAsync(TEntity entity);
     }
 }

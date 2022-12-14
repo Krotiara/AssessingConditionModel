@@ -98,4 +98,20 @@ namespace PatientsResolver.API.Service.Exceptions
 
         }
     }
+
+
+    public class DeletePatientException : Exception
+    {
+        public DeletePatientException(string message) :
+            base(message)
+        {
+
+        }
+
+        public DeletePatientException(string message, Exception innerException) :
+            base(message, innerException)
+        {
+
+        }
+    }
 }

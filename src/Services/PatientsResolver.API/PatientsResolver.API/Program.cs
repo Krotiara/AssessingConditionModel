@@ -95,6 +95,8 @@ builder.Services.AddTransient<IRequestHandler<GetInfluencesQuery, List<Influence
     GetInfluencesQueryHandler>();
 builder.Services.AddTransient<IRequestHandler<UpdatePatientCommand, Patient>,
     UpdatePatientCommandHandler> ();
+builder.Services.AddTransient<IRequestHandler<DeletePatientCommand, bool>, 
+    DeletePatientCommandHandler>();
 
 var serviceClientSettings = serviceClientSettingsConfigData.Get<PatientsResolver.API.Messaging.Send.Configurations.RabbitMqConfiguration>();
 if (serviceClientSettings.Enabled)

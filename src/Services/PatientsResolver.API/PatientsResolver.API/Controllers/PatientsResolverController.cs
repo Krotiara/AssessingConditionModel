@@ -152,6 +152,20 @@ namespace PatientsResolver.API.Controllers
             }
         }
 
+
+        [HttpDelete("patientsApi/deletePatient")]
+        public async Task<ActionResult<bool>> DeletePatient(int patientId)
+        {
+            try
+            {
+                return await mediator.Send(new DeletePatientCommand(patientId));
+            }
+            catch(DeletePatientException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
         #endregion
     }
 }
