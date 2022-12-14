@@ -27,6 +27,8 @@ namespace PatientsResolver.API.Data
         {      
             modelBuilder.Entity<Influence>()
                 .HasOne<Patient>(x=>x.Patient);
+            modelBuilder.Entity<Patient>()
+                .Property(x => x.Id).Metadata.SetAfterSaveBehavior(Microsoft.EntityFrameworkCore.Metadata.PropertySaveBehavior.Ignore);
             base.OnModelCreating(modelBuilder);
         }
     }

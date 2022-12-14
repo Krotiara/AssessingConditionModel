@@ -83,4 +83,19 @@ namespace PatientsResolver.API.Service.Exceptions
 
         }
     }
+
+    public class UpdatePatientException : Exception
+    {
+        public UpdatePatientException(string message) :
+            base(message)
+        {
+
+        }
+
+        public UpdatePatientException(string message, Exception innerException) :
+            base(message, innerException)
+        {
+
+        }
+    }
 }

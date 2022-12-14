@@ -93,6 +93,8 @@ builder.Services.AddTransient<IRequestHandler<GetLatesPatientParametersQuery, Li
     GetLatesPatientParametersQueryHandler>();
 builder.Services.AddTransient<IRequestHandler<GetInfluencesQuery, List<Influence>>, 
     GetInfluencesQueryHandler>();
+builder.Services.AddTransient<IRequestHandler<UpdatePatientCommand, Patient>,
+    UpdatePatientCommandHandler> ();
 
 var serviceClientSettings = serviceClientSettingsConfigData.Get<PatientsResolver.API.Messaging.Send.Configurations.RabbitMqConfiguration>();
 if (serviceClientSettings.Enabled)

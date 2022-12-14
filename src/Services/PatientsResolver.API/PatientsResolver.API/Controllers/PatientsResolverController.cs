@@ -83,18 +83,7 @@ namespace PatientsResolver.API.Controllers
         }
 
 
-        [HttpGet("patientsApi/patients/{patientId}")]
-        public async Task<ActionResult<Patient>> GetPatient(int patientId)
-        {
-            try
-            {
-                return Ok(await mediator.Send(new GetPatientQuery() { PatientId = patientId }));
-            }
-            catch(Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
+        
 
 
         [HttpPost("patientsApi/addInfluenceData/")]
@@ -115,36 +104,19 @@ namespace PatientsResolver.API.Controllers
         }
 
 
-        //[HttpPost("addData/{pathToDataFile}")]
-        //public async Task<ActionResult> AddData(string pathToDataFile)
-        //{
-        //    try
-        //    {
-        //        pathToDataFile = pathToDataFile.Replace("%2F", "/"); //TODO вынести в отдельный метод
-        //        using (Stream stream = System.IO.File.Open(pathToDataFile, FileMode.Open, FileAccess.Read))
-        //        {
-        //            Func<Stream, byte[]> getStreamData = (stream) =>
-        //            {
-        //                stream.Position = 0;
-        //                //StreamReader streamReader = new StreamReader(stream, encoding: Encoding.UTF8);
-        //                //return streamReader.ReadToEnd();
-        //                using(MemoryStream ms = new MemoryStream())
-        //                {
-        //                    stream.CopyTo(ms);
-        //                    return ms.ToArray();
-        //                }
-        //            };
-        //            byte[] data = getStreamData(stream);
-        //            FileData fileData = new FileData() { RawData = data };
-        //            await mediator.Send(new SendPatientDataFileSourceCommand() { Data = fileData });
-        //        }
-        //        return Ok();
-        //    }
-        //    catch(Exception ex)
-        //    {
-        //        return BadRequest(ex.Message);
-        //    }
-        //}
+        #region patients routes
+        [HttpGet("patientsApi/patients/{patientId}")]
+        public async Task<ActionResult<Patient>> GetPatient(int patientId)
+        {
+            try
+            {
+                return Ok(await mediator.Send(new GetPatientQuery() { PatientId = patientId }));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
 
 
         [HttpPost("patientsApi/addPatient")]
@@ -163,5 +135,23 @@ namespace PatientsResolver.API.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+       
+        [HttpPut("patientsApi/updatePatient")]
+        public async Task<ActionResult<bool>> UpdatePatient(Patient patient)
+        {
+            try
+            {
+                Patient upd = await mediator.Send(new UpdatePatientCommand(patient));
+                //await mediator.Send(new SendPatientsCommand() { Patients = new List<Patient>() { upd } });
+                return true; //Криво
+            }
+            catch(UpdatePatientException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        #endregion
     }
 }
