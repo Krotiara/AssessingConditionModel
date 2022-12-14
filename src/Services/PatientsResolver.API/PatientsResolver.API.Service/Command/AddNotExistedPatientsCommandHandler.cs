@@ -39,8 +39,8 @@ namespace PatientsResolver.API.Service.Command
                     {
 #warning По идее лучше сделать правилами при заполнении, а то выглядит костыльно.
                         if (patient.MedicalHistoryNumber <= 0 || 
-                            patient.Gender == Interfaces.GenderEnum.None || 
-                            patient.Birthday == default(DateTime))
+                            patient.Gender == Interfaces.GenderEnum.None
+                            /*patient.Birthday == default(DateTime)*/) //Пока убрал, так как в входных данных нет. 14.12.2022
                                 throw new AddPatientException($"Some requied values is empty for patient with history number = {patient.MedicalHistoryNumber}");
 
                         bool isAdded = await mediator.Send(new AddPatientCommand() { Patient = patient }); /* patientsRepository.AddAsync(patient);*/
