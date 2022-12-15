@@ -15,11 +15,9 @@ namespace PatientsResolver.API.Controllers
     public class PatientsResolverController : Controller
     {
         private readonly IMediator mediator;
-        //private readonly IMapper mapper;
 
         public PatientsResolverController(IMediator mediator)
         {
-            //this.mapper = mapper;
             this.mediator = mediator;
         }
 

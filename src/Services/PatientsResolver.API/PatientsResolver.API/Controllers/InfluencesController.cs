@@ -16,8 +16,64 @@ namespace PatientsResolver.API.Controllers
         }
 
 
+        [HttpGet("patientsApi/influence/{influenceId}")]
+        public async Task<ActionResult<Influence>> GetPatientInfluence(int influenceId)
+        {
+            try
+            {
+                return await mediator.Send(new GetPatientInfluenceByIdQueue(influenceId));
+            }
+            catch(Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+
+        [HttpPost]
+        public async Task<ActionResult<Influence>> AddPatientInfluence([FromBody] Influence influence)
+        {
+            try
+            {
+                return await mediator.Send(new AddPatientInfluenceCommand(influence));
+            }
+            catch(Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+
+        [HttpPut("patientsApi/influence/update")]
+        public async Task<ActionResult<Influence>> UpdatePatientInfluence([FromBody] Influence influence)
+        {
+            try
+            {
+                return await mediator.Send(new UpdateInfluenceCommand(influence));
+            }
+            catch(Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+
+        [HttpDelete("patientsApi/influence/delete/{influenceId}")]
+        public async Task<ActionResult<bool>> DeletePatientInfluence(int influenceId)
+        {
+            try
+            {
+                return await mediator.Send(new DeleteInfluenceCommand(influenceId));
+            }
+            catch(Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+
         #region influences routes
-        [HttpPost("patientsApi/influence/{patientId}")]
+        [HttpPost("patientsApi/influences/{patientId}")]
         public async Task<ActionResult<List<Influence>>> GetPatientInfluences(int patientId, [FromBody] DateTime[] timeSpan)
         {
             try
