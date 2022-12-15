@@ -31,6 +31,7 @@ namespace WebMVC.Models
 
         private async Task<Stream> GetResponce(string requestUriStr, string method, string? jsonBody = null)
         {
+            //TODO рефакториннг
             method = method.ToLower();
             using (HttpClient myClient = new HttpClient(new HttpClientHandler() { UseDefaultCredentials = true }))
             {
