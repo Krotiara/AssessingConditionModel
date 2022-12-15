@@ -30,8 +30,8 @@ namespace PatientsResolver.API.Controllers
         }
 
 
-        [HttpPost]
-        public async Task<ActionResult<Influence>> AddPatientInfluence([FromBody] Influence influence)
+        [HttpPost("patientsApi/influence/add")]
+        public async Task<ActionResult<bool>> AddPatientInfluence([FromBody] Influence influence)
         {
             try
             {
@@ -49,7 +49,8 @@ namespace PatientsResolver.API.Controllers
         {
             try
             {
-                return await mediator.Send(new UpdateInfluenceCommand(influence));
+                throw new NotImplementedException();
+                //return await mediator.Send(new UpdateInfluenceCommand(influence));
             }
             catch(Exception ex)
             {
@@ -63,7 +64,8 @@ namespace PatientsResolver.API.Controllers
         {
             try
             {
-                return await mediator.Send(new DeleteInfluenceCommand(influenceId));
+                throw new NotImplementedException();
+               // return await mediator.Send(new DeleteInfluenceCommand(influenceId));
             }
             catch(Exception ex)
             {

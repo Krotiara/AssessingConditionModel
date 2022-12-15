@@ -108,6 +108,8 @@ builder.Services.AddTransient<IRequestHandler<DeletePatientCommand, bool>,
     DeletePatientCommandHandler>();
 builder.Services.AddTransient<IRequestHandler<GetPatientInfluenceByIdQueue, Influence>,
     GetPatientInfluenceByIdQueueHandler>();
+builder.Services.AddTransient<IRequestHandler<AddPatientInfluenceCommand, bool>,
+    AddPatientInfluenceCommandHandler>();
 
 var app = builder.Build();
 
