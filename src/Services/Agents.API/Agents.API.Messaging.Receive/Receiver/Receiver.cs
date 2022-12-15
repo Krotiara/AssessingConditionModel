@@ -75,7 +75,7 @@ namespace Agents.API.Messaging.Receive.Receiver
                 if (channel != null)
                 {
                     QueueDeclareOk declareOk = channel.QueueDeclare(queue: queueName,
-                            durable: true, exclusive: false,
+                            durable: false, exclusive: false,
                             autoDelete: false, arguments: null);
                     return true;
                 }

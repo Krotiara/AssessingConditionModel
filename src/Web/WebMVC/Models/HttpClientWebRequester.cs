@@ -50,6 +50,22 @@ namespace WebMVC.Models
                         return await response.Content.ReadAsStreamAsync();
                     else throw new GetWebResponceException($"Post request for {requestUriStr} was not success, code = {response.StatusCode}");
                 }
+                else if (method == "put")
+                {
+                    if (jsonBody == null)
+                        jsonBody = "";
+                    HttpResponseMessage response = await myClient.PutAsync(requestUriStr, new StringContent(jsonBody, Encoding.UTF8, "application/json"));
+                    if (response.IsSuccessStatusCode)
+                        return await response.Content.ReadAsStreamAsync();
+                    else throw new GetWebResponceException($"Put request for {requestUriStr} was not success, code = {response.StatusCode}");
+                }
+                else if (method == "delete")
+                {
+                    HttpResponseMessage response = await myClient.DeleteAsync(requestUriStr);
+                    if (response.IsSuccessStatusCode)
+                        return await response.Content.ReadAsStreamAsync();
+                    else throw new GetWebResponceException($"Delete request for {requestUriStr} was not success, code = {response.StatusCode}");
+                }
                 else
                     throw new GetWebResponceException($"Unresolve http method {method}");
             }
