@@ -49,8 +49,7 @@ namespace PatientsResolver.API.Controllers
         {
             try
             {
-                throw new NotImplementedException();
-                //return await mediator.Send(new UpdateInfluenceCommand(influence));
+                return await mediator.Send(new UpdateInfluenceCommand(influence));
             }
             catch(Exception ex)
             {
@@ -60,12 +59,11 @@ namespace PatientsResolver.API.Controllers
 
 
         [HttpDelete("patientsApi/influence/delete/{influenceId}")]
-        public async Task<ActionResult<bool>> DeletePatientInfluence(int influenceId)
+        public async Task<ActionResult<bool>> DeletePatientInfluence(int influenceId) 
         {
             try
-            {
-                throw new NotImplementedException();
-               // return await mediator.Send(new DeleteInfluenceCommand(influenceId));
+            {   
+                return await mediator.Send(new DeleteInfluenceCommand(influenceId));
             }
             catch(Exception ex)
             {
