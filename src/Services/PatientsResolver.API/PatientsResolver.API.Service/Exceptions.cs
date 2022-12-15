@@ -52,6 +52,21 @@ namespace PatientsResolver.API.Service.Exceptions
         }
     }
 
+    public class InfluenceNotFoundException : Exception
+    {
+        public InfluenceNotFoundException(string message) :
+            base(message)
+        {
+
+        }
+
+        public InfluenceNotFoundException(string message, Exception innerException) :
+            base(message, innerException)
+        {
+
+        }
+    }
+
 
     public class AddInfluenceRangeException : Exception
     {

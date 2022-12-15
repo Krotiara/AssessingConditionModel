@@ -161,27 +161,43 @@ namespace PatientsResolver.API.Data.Repository
 
         private void InitParameters(List<Influence> datas)
         {
-            datas.ForEach(x =>
-            {
-                IQueryable<PatientParameter> parameters = PatientsDataDbContext
-                .PatientsParameters
-                .Where(y => y.InfluenceId == x.Id);
-                foreach (PatientParameter p in parameters)
-                    try
-                    {
-                        p.ParameterName = p.NameTextDescription.GetParameterByDescription(); //TODO Может есть выход лучше?
-                        if (p.IsDynamic)
-                            x.DynamicParameters[p.ParameterName] = p;
-                        else
-                            x.StartParameters[p.ParameterName] = p;
-                    }
-                    catch (Exception ex)
-                    {
-                        //TODO log
-                        continue;
-                    }
-            });
+            datas.ForEach(x => { InitParametersFor(x);});
         }
 
+
+        private void InitParametersFor(Influence influence)
+        {
+            IQueryable<PatientParameter> parameters = PatientsDataDbContext
+                .PatientsParameters
+                .Where(y => y.InfluenceId == influence.Id);
+            foreach (PatientParameter p in parameters)
+                try
+                {
+                    p.ParameterName = p.NameTextDescription.GetParameterByDescription(); //TODO Может есть выход лучше?
+                    if (p.IsDynamic)
+                        influence.DynamicParameters[p.ParameterName] = p;
+                    else
+                        influence.StartParameters[p.ParameterName] = p;
+                }
+                catch (Exception ex)
+                {
+                    //TODO log
+                    continue;
+                }
+        }
+
+
+        public async Task<Influence?> GetPatientInfluence(int inluenceId)
+        {
+            IExecutionStrategy strategy = PatientsDataDbContext.Database.CreateExecutionStrategy();
+            return await strategy.ExecuteAsync(async () =>
+            {
+                Influence? inf = await PatientsDataDbContext.Influences.FirstOrDefaultAsync(x=>x.Id == inluenceId);
+                if (inf != null)
+                    InitParametersFor(inf);
+                return inf;
+                    
+            });
+        }
     }
 }
