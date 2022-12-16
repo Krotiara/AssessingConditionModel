@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using PatientsResolver.API.Data.Repository;
 using PatientsResolver.API.Entities;
+using PatientsResolver.API.Service.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,7 +21,14 @@ namespace PatientsResolver.API.Service.Command
 
         public async Task<Influence> Handle(UpdateInfluenceCommand request, CancellationToken cancellationToken)
         {
-            return await influenceRepository.UpdateInfluence(request.Influence, cancellationToken);
+            try
+            {
+                return await influenceRepository.UpdateInfluence(request.Influence, cancellationToken);
+            }
+            catch(Exception ex)
+            {
+                throw new UpdateInfluenceException("", ex);
+            }
         }
     }
 }
