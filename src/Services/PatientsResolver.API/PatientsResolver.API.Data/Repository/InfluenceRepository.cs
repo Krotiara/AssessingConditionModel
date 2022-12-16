@@ -261,7 +261,7 @@ namespace PatientsResolver.API.Data.Repository
             foreach(PatientParameter p in startParamsToUpdate)
                 CopyFieldsToDbParameter(p, dbInfluence.StartParameters[p.ParameterName]);
             foreach (PatientParameter p in dynamicParamsToUpdate)
-                CopyFieldsToDbParameter(p, dbInfluence.StartParameters[p.ParameterName]);
+                CopyFieldsToDbParameter(p, dbInfluence.DynamicParameters[p.ParameterName]);
 
             foreach (PatientParameter p in paramsToDelete)
                 PatientsDataDbContext.Entry(p).State = EntityState.Deleted;
