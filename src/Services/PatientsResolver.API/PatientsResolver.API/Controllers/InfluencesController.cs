@@ -47,6 +47,7 @@ namespace PatientsResolver.API.Controllers
         [HttpPut("patientsApi/influence/update")]
         public async Task<ActionResult<Influence>> UpdatePatientInfluence([FromBody] Influence influence)
         {
+            //TODO тесты
             try
             {
                 return await mediator.Send(new UpdateInfluenceCommand(influence));
@@ -62,8 +63,9 @@ namespace PatientsResolver.API.Controllers
         public async Task<ActionResult<bool>> DeletePatientInfluence(int influenceId) 
         {
             try
-            {   
-                return await mediator.Send(new DeleteInfluenceCommand(influenceId));
+            {
+                throw new NotImplementedException();
+                //return await mediator.Send(new DeleteInfluenceCommand(influenceId));
             }
             catch(Exception ex)
             {

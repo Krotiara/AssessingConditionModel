@@ -110,6 +110,8 @@ builder.Services.AddTransient<IRequestHandler<GetPatientInfluenceByIdQueue, Infl
     GetPatientInfluenceByIdQueueHandler>();
 builder.Services.AddTransient<IRequestHandler<AddPatientInfluenceCommand, bool>,
     AddPatientInfluenceCommandHandler>();
+builder.Services.AddTransient<IRequestHandler<UpdateInfluenceCommand, Influence>, 
+    UpdateInfluenceCommandHandler>();
 
 var app = builder.Build();
 

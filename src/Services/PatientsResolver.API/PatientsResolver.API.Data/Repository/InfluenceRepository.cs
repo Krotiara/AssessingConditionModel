@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore.Storage;
 using PatientsResolver.API.Entities;
 using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -198,6 +199,85 @@ namespace PatientsResolver.API.Data.Repository
                 return inf;
                     
             });
+        }
+
+        public async Task<Influence> UpdateInfluence(Influence influence, CancellationToken cancellationToken)
+        {
+            IExecutionStrategy strategy = PatientsDataDbContext.Database.CreateExecutionStrategy();
+            if (influence.Id == default(int))
+                throw new KeyNotFoundException("Id переданного воздействия не установлен");
+            if (!IsCorrectInfluence(influence))
+                throw new Exception("Обновление воздействия отменено, передано некорректное воздействие");
+            return await strategy.ExecuteAsync(async () =>
+            {
+                using (var t = await PatientsDataDbContext.Database.BeginTransactionAsync())
+                {
+                    try
+                    {
+                        Influence dbInfluence = await GetPatientInfluence(influence.Id);
+                        await CopyFieldsToDbInfuence(influence, dbInfluence, cancellationToken);
+                        return dbInfluence;
+                    }
+                    catch (Exception ex)
+                    {
+                        await t.RollbackAsync(cancellationToken);
+                        throw; //TODO
+                    }
+                }
+            });
+        }
+
+
+        private async Task CopyFieldsToDbInfuence(Influence from, Influence dbInfluence, CancellationToken cancellationToken)
+        {
+            //TODO заменить на .Copy Без пересоздания элемента
+            dbInfluence.InfluenceType = from.InfluenceType;
+            dbInfluence.PatientId = from.PatientId;
+            dbInfluence.Patient = from.Patient;
+            dbInfluence.StartTimestamp = from.StartTimestamp;
+            dbInfluence.EndTimestamp = from.EndTimestamp;
+            dbInfluence.MedicineName = from.MedicineName;
+            PatientsDataDbContext.Entry(dbInfluence).State = EntityState.Modified;
+
+            //TODO рефакторинг
+            IEnumerable<PatientParameter> startParamsToAdd = 
+                from.StartParameters.Where(x => !dbInfluence.StartParameters.ContainsKey(x.Key)).Select(x=>x.Value);
+            IEnumerable<PatientParameter> startParamsToUpdate = 
+                from.StartParameters.Where(x=> dbInfluence.StartParameters.ContainsKey(x.Key)).Select(x => x.Value);
+            IEnumerable<PatientParameter> startParamsToDelete = 
+                dbInfluence.StartParameters.Where(x => !from.StartParameters.ContainsKey(x.Key)).Select(x => x.Value);
+            IEnumerable<PatientParameter> dynamicParamsToAdd = 
+                from.DynamicParameters.Where(x => !dbInfluence.DynamicParameters.ContainsKey(x.Key)).Select(x => x.Value);
+            IEnumerable<PatientParameter> dynamicParamsToUpdate = 
+                from.DynamicParameters.Where(x => dbInfluence.DynamicParameters.ContainsKey(x.Key)).Select(x => x.Value);
+            IEnumerable<PatientParameter> paramsToDelete = (dbInfluence
+                .StartParameters.Where(x => !from.StartParameters.ContainsKey(x.Key)).Select(x => x.Value))
+                .Concat(dbInfluence.DynamicParameters.Where(x => !from.DynamicParameters.ContainsKey(x.Key)).Select(x => x.Value));
+
+            IEnumerable<PatientParameter> paramsToAdd = startParamsToAdd.Concat(dynamicParamsToAdd);
+            if (paramsToAdd.Any())
+                await ProcessParametersAsync(dbInfluence.Id, startParamsToAdd.Concat(dynamicParamsToAdd), cancellationToken);
+
+            foreach(PatientParameter p in startParamsToUpdate)
+                CopyFieldsToDbParameter(p, dbInfluence.StartParameters[p.ParameterName]);
+            foreach (PatientParameter p in dynamicParamsToUpdate)
+                CopyFieldsToDbParameter(p, dbInfluence.StartParameters[p.ParameterName]);
+
+            foreach (PatientParameter p in paramsToDelete)
+                PatientsDataDbContext.Entry(p).State = EntityState.Deleted;
+
+            await PatientsDataDbContext.SaveChangesAsync();
+        }
+
+
+        private void CopyFieldsToDbParameter(PatientParameter from, PatientParameter dbParameter)
+        {
+            dbParameter.Value = from.Value;
+            dbParameter.IsDynamic = from.IsDynamic;
+            dbParameter.IsDynamic = from.IsDynamic;
+            dbParameter.NameTextDescription = from.NameTextDescription;
+            dbParameter.PositiveDynamicCoef = from.PositiveDynamicCoef;
+            PatientsDataDbContext.Entry(dbParameter).State = EntityState.Modified;
         }
     }
 }

@@ -52,6 +52,21 @@ namespace PatientsResolver.API.Service.Exceptions
         }
     }
 
+    public class UpdateInfluenceException : Exception
+    {
+        public UpdateInfluenceException(string message) :
+            base(message)
+        {
+
+        }
+
+        public UpdateInfluenceException(string message, Exception innerException) :
+            base(message, innerException)
+        {
+
+        }
+    }
+
     public class InfluenceNotFoundException : Exception
     {
         public InfluenceNotFoundException(string message) :
