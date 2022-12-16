@@ -67,6 +67,21 @@ namespace PatientsResolver.API.Service.Exceptions
         }
     }
 
+    public class DeleteInfluenceException : Exception
+    {
+        public DeleteInfluenceException(string message) :
+            base(message)
+        {
+
+        }
+
+        public DeleteInfluenceException(string message, Exception innerException) :
+            base(message, innerException)
+        {
+
+        }
+    }
+
     public class InfluenceNotFoundException : Exception
     {
         public InfluenceNotFoundException(string message) :

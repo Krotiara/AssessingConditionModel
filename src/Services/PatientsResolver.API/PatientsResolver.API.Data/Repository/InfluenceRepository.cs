@@ -282,5 +282,36 @@ namespace PatientsResolver.API.Data.Repository
             dbParameter.PositiveDynamicCoef = from.PositiveDynamicCoef;
             PatientsDataDbContext.Entry(dbParameter).State = EntityState.Modified;
         }
+
+        public async Task<bool> DeleteInfluence(int influenceId, CancellationToken cancellationToken)
+        {
+            IExecutionStrategy strategy = PatientsDataDbContext.Database.CreateExecutionStrategy();
+            Influence inf = await GetPatientInfluence(influenceId);
+            if (inf == null)
+                throw new KeyNotFoundException($"Не найдено воздействие с id = {influenceId}");
+            return await strategy.ExecuteAsync(async () =>
+            {
+                using (var t = await PatientsDataDbContext.Database.BeginTransactionAsync())
+                {
+                    try
+                    {
+                        PatientsDataDbContext.Entry(inf).State = EntityState.Deleted;
+                        foreach (PatientParameter p in inf.StartParameters.Values)
+                            PatientsDataDbContext.Entry(p).State = EntityState.Detached;
+                        foreach(PatientParameter p in inf.DynamicParameters.Values)
+                            PatientsDataDbContext.Entry(p).State = EntityState.Detached;
+                        await PatientsDataDbContext.SaveChangesAsync();
+                        await t.CommitAsync(cancellationToken);
+                        return true;
+                    }
+                    catch (Exception ex)
+                    {
+                        await t.RollbackAsync(cancellationToken);
+                        throw; //TODO
+                    }
+                }
+            });
+
+        }
     }
 }

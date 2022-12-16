@@ -64,8 +64,7 @@ namespace PatientsResolver.API.Controllers
         {
             try
             {
-                throw new NotImplementedException();
-                //return await mediator.Send(new DeleteInfluenceCommand(influenceId));
+                return await mediator.Send(new DeleteInfluenceCommand(influenceId));
             }
             catch(Exception ex)
             {
