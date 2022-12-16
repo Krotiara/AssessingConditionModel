@@ -9,6 +9,11 @@ using System.Threading.Tasks;
 
 namespace PatientsResolver.API.Service.Query
 {
+    public class GetPatientQuery : IRequest<Patient>
+    {
+        public int PatientId { get; set; }
+    }
+
     public class GetPatientQueryHandler: IRequestHandler<GetPatientQuery, Patient>
     {
         private readonly PatientsRepository patientDataRepository;

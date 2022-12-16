@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using PatientsResolver.API.Entities;
 using PatientsResolver.API.Messaging.Send.Sender;
 using System;
 using System.Collections.Generic;
@@ -8,6 +9,12 @@ using System.Threading.Tasks;
 
 namespace PatientsResolver.API.Service.Command
 {
+
+    public class SendPatientsCommand : IRequest
+    {
+        public List<Patient> Patients { get; set; }
+    }
+
     public class SendPatientsCommandHandler : IRequestHandler<SendPatientsCommand, Unit>
     {
         private readonly IPatientsSender patientsSender;

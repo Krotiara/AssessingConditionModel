@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using Interfaces;
+using MediatR;
 using PatientsResolver.API.Messaging.Send.Sender;
 using System;
 using System.Collections.Generic;
@@ -8,6 +9,11 @@ using System.Threading.Tasks;
 
 namespace PatientsResolver.API.Service.Command
 {
+    public class SendUpdatePatientsInfoCommand : IRequest
+    {
+        public IUpdatePatientsDataInfo UpdatePatientsInfo { get; set; }
+    }
+
     public class SendUpdatePatientsInfoCommandHandler :
         IRequestHandler<SendUpdatePatientsInfoCommand, Unit>
     {

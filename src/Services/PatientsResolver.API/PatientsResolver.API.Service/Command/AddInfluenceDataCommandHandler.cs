@@ -5,6 +5,12 @@ using PatientsResolver.API.Service.Exceptions;
 
 namespace PatientsResolver.API.Service.Command
 {
+
+    public class AddInfluenceDataCommand : IRequest<List<Influence>>
+    {
+        public List<Influence> Data { get; set; }
+    }
+
     public class AddInfluenceDataCommandHandler : IRequestHandler<AddInfluenceDataCommand, List<Influence>>
     {
 

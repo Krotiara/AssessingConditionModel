@@ -10,6 +10,18 @@ using System.Threading.Tasks;
 
 namespace PatientsResolver.API.Service.Command
 {
+
+    public class UpdateInfluenceCommand : IRequest<Influence>
+    {
+        public Influence Influence { get; }
+
+        public UpdateInfluenceCommand(Influence influence)
+        {
+            Influence = influence;
+        }
+
+    }
+
     public class UpdateInfluenceCommandHandler : IRequestHandler<UpdateInfluenceCommand, Influence>
     {
         private IInfluenceRepository influenceRepository;

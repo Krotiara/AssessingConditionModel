@@ -10,6 +10,12 @@ using System.Threading.Tasks;
 
 namespace PatientsResolver.API.Service.Command
 {
+
+    public class AddPatientCommand : IRequest<bool>
+    {
+        public Patient Patient { get; set; }
+    }
+
     public class AddPatientCommandHandler : IRequestHandler<AddPatientCommand, bool>
     {
 

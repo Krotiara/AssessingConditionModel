@@ -10,6 +10,17 @@ using System.Threading.Tasks;
 
 namespace PatientsResolver.API.Service.Command
 {
+
+    public class DeletePatientCommand : IRequest<bool>
+    {
+        public int PatientId { get; set; }
+
+        public DeletePatientCommand(int patientId)
+        {
+            PatientId = patientId;
+        }
+    }
+
     public class DeletePatientCommandHandler : IRequestHandler<DeletePatientCommand, bool>
     {
 

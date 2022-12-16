@@ -10,6 +10,12 @@ using System.Threading.Tasks;
 
 namespace PatientsResolver.API.Service.Command
 {
+    public class AddNotExistedPatientsCommand : IRequest<IList<Patient>>
+    {
+        public IList<Patient> Patients { get; set; }
+    }
+
+
     public class AddNotExistedPatientsCommandHandler : IRequestHandler<AddNotExistedPatientsCommand, IList<Patient>>
     {
         private readonly PatientsRepository patientsRepository;

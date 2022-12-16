@@ -10,6 +10,16 @@ using System.Threading.Tasks;
 
 namespace PatientsResolver.API.Service.Query
 {
+
+    public class GetPatientInfluenceByIdQueue : IRequest<Influence>
+    {
+        public int InfluenceId { get; }
+        public GetPatientInfluenceByIdQueue(int influenceId)
+        {
+            InfluenceId = influenceId;
+        }
+    }
+
     public class GetPatientInfluenceByIdQueueHandler : IRequestHandler<GetPatientInfluenceByIdQueue, Influence>
     {
         private readonly IInfluenceRepository influenceRepository;

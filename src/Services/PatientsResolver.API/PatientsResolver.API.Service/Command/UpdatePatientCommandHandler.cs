@@ -10,6 +10,17 @@ using System.Threading.Tasks;
 
 namespace PatientsResolver.API.Service.Command
 {
+
+    public class UpdatePatientCommand : IRequest<Patient>
+    {
+        public UpdatePatientCommand(Patient patient)
+        {
+            Patient = patient;
+        }
+
+        public Patient Patient { get; }
+    }
+
     public class UpdatePatientCommandHandler : IRequestHandler<UpdatePatientCommand, Patient>
     {
         private readonly PatientsRepository patientsRepository;
