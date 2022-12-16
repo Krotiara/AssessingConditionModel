@@ -16,6 +16,7 @@ namespace PatientsResolver.API.Entities
         [NotNull]
         [Column("Id")]
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
 

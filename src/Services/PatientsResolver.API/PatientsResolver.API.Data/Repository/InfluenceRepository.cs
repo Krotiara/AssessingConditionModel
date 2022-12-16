@@ -216,6 +216,7 @@ namespace PatientsResolver.API.Data.Repository
                     {
                         Influence dbInfluence = await GetPatientInfluence(influence.Id);
                         await CopyFieldsToDbInfuence(influence, dbInfluence, cancellationToken);
+                        await t.CommitAsync(cancellationToken);
                         return dbInfluence;
                     }
                     catch (Exception ex)
@@ -237,7 +238,7 @@ namespace PatientsResolver.API.Data.Repository
             dbInfluence.StartTimestamp = from.StartTimestamp;
             dbInfluence.EndTimestamp = from.EndTimestamp;
             dbInfluence.MedicineName = from.MedicineName;
-            PatientsDataDbContext.Entry(dbInfluence).State = EntityState.Modified;
+            
 
             //TODO рефакторинг
             IEnumerable<PatientParameter> startParamsToAdd = 
@@ -265,6 +266,8 @@ namespace PatientsResolver.API.Data.Repository
 
             foreach (PatientParameter p in paramsToDelete)
                 PatientsDataDbContext.Entry(p).State = EntityState.Deleted;
+
+            PatientsDataDbContext.Entry(dbInfluence).State = EntityState.Modified;
 
             await PatientsDataDbContext.SaveChangesAsync();
         }
