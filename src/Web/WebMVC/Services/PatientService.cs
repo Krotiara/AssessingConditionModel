@@ -22,7 +22,12 @@ namespace WebMVC.Services
             return await webRequester.GetResponse<bool>(url, "POST", body);
         }
 
-        
+        public async Task<bool> AddPatient(Patient p)
+        {
+            string url = $"{gatewayUrl}/patientsApi/addPatient";
+            string body = Newtonsoft.Json.JsonConvert.SerializeObject(p);
+            return await webRequester.GetResponse<bool>(url, "POST", body);
+        }
 
         public async Task<Patient> GetPatient(int id)
         {

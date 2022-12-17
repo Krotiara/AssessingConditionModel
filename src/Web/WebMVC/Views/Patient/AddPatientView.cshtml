@@ -11,7 +11,7 @@
     </head>
     <body>
         <div class="panel-body">
-            @using (Html.BeginForm())
+        @using (Html.BeginForm("AddPatient","Patient", FormMethod.Post))
             {
                 <div class="form-group">
                     <label>ФИО</label>
@@ -27,7 +27,7 @@
                 </div>
                 <div class="form-group">
                     <label>Пол</label>
-                    @Html.EnumDropDownListFor(x=>x.Gender)
+                    @Html.DropDownListFor(x=>x.Gender, Html.GetEnumSelectList(typeof(GenderEnum)))
                 </div>
                 <div class="text-center">
                     <input type="submit" value="Принять" class="btn btn-success" />

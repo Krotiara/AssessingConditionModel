@@ -47,6 +47,22 @@ namespace WebMVC.Controllers
 
 
         [HttpGet]
+        public IActionResult AddPatient()
+        {
+            return View("AddPatientView", new Patient());
+        }
+
+
+        [HttpPost]
+        public async Task<IActionResult> AddPatient(Patient p)
+        {
+            //TODO 1-может есть более элегантный способ вызвать добавление пациента
+            bool isAdd = await patientsService.AddPatient(p); 
+            return RedirectToAction("Index");
+        }
+
+
+        [HttpGet]
         public async Task<IActionResult> GetPatientAgingDynamics(int patientId, DateTime startTimestamp, DateTime endTimestamp)
         {
             //TODO try catch
