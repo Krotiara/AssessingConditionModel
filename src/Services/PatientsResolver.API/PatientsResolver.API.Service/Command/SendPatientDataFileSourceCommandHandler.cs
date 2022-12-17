@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using PatientsResolver.API.Entities;
 using PatientsResolver.API.Messaging.Send.Sender;
 using System;
 using System.Collections.Generic;
@@ -8,6 +9,12 @@ using System.Threading.Tasks;
 
 namespace PatientsResolver.API.Service.Command
 {
+
+    public class SendPatientDataFileSourceCommand : IRequest<bool>
+    {
+        public FileData Data { get; set; }
+    }
+
     public class SendPatientDataFileSourceCommandHandler : IRequestHandler<SendPatientDataFileSourceCommand, bool>
     {
         private readonly IPatientFileDataSender patientFileDataSender;

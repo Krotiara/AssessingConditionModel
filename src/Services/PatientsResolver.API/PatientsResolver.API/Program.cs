@@ -68,6 +68,15 @@ builder.Services.Configure<RabbitMqConfiguration>(builder.Configuration.GetSecti
 builder.Services.Configure<PatientsResolver.API.Messaging.Receive.RabbitMqConfiguration>(serviceClientSettingsConfigData);
 builder.Services.Configure<RabbitMqUpdateInfoConfig>(builder.Configuration.GetSection("RabbitMqSendUpdateInfo"));
 builder.Services.Configure<RabbitMqAddInfoConfig>(builder.Configuration.GetSection("RabbitMqSendAddInfo"));
+
+
+var serviceClientSettings = serviceClientSettingsConfigData.Get<PatientsResolver.API.Messaging.Send.Configurations.RabbitMqConfiguration>();
+if (serviceClientSettings.Enabled)
+{
+    builder.Services.AddHostedService<AddPatientsDataFromSourceReceiver>();
+}
+#endregion
+
 /*Теперь вы можете выполнять ваши запросы. Для этого вам потребуется получить экземпляр интерфейса IMediator. Он регистрируется в вашем контейнере зависимостей той же командой AddMediatR.*/
 builder.Services.AddMediatR(Assembly.GetExecutingAssembly());
 
@@ -77,7 +86,7 @@ builder.Services.AddTransient<IRequestHandler<AddInfluenceDataCommand, List<Infl
     AddInfluenceDataCommandHandler>();
 builder.Services.AddTransient<IRequestHandler<SendPatientDataFileSourceCommand, bool>,
     SendPatientDataFileSourceCommandHandler>();
-builder.Services.AddTransient<IRequestHandler<SendPatientsCommand, Unit>, 
+builder.Services.AddTransient<IRequestHandler<SendPatientsCommand, Unit>,
     SendPatientsCommandHandler>();
 builder.Services.AddTransient<IRequestHandler<AddNotExistedPatientsCommand, IList<Patient>>,
     AddNotExistedPatientsCommandHandler>();
@@ -85,23 +94,26 @@ builder.Services.AddTransient<IRequestHandler<AddPatientCommand, bool>,
     AddPatientCommandHandler>();
 builder.Services.AddTransient<IRequestHandler<AddInfluenceDataCommand, List<Influence>>,
     AddInfluenceDataCommandHandler>();
-builder.Services.AddTransient<IRequestHandler<GetPatientInfluencesQuery, List<Influence>>, 
+builder.Services.AddTransient<IRequestHandler<GetPatientInfluencesQuery, List<Influence>>,
     GetPatientInfluencesQueryHandler>();
-builder.Services.AddTransient<IRequestHandler<SendUpdatePatientsInfoCommand, Unit>, 
+builder.Services.AddTransient<IRequestHandler<SendUpdatePatientsInfoCommand, Unit>,
     SendUpdatePatientsInfoCommandHandler>();
-builder.Services.AddTransient<IRequestHandler<GetLatesPatientParametersQuery, List<PatientParameter>>, 
+builder.Services.AddTransient<IRequestHandler<GetLatesPatientParametersQuery, List<PatientParameter>>,
     GetLatesPatientParametersQueryHandler>();
-builder.Services.AddTransient<IRequestHandler<GetInfluencesQuery, List<Influence>>, 
+builder.Services.AddTransient<IRequestHandler<GetInfluencesQuery, List<Influence>>,
     GetInfluencesQueryHandler>();
-
-var serviceClientSettings = serviceClientSettingsConfigData.Get<PatientsResolver.API.Messaging.Send.Configurations.RabbitMqConfiguration>();
-if (serviceClientSettings.Enabled)
-{
-    builder.Services.AddHostedService<AddPatientsDataFromSourceReceiver>();
-}
-
-
-#endregion
+builder.Services.AddTransient<IRequestHandler<UpdatePatientCommand, Patient>,
+    UpdatePatientCommandHandler>();
+builder.Services.AddTransient<IRequestHandler<DeletePatientCommand, bool>,
+    DeletePatientCommandHandler>();
+builder.Services.AddTransient<IRequestHandler<GetPatientInfluenceByIdQueue, Influence>,
+    GetPatientInfluenceByIdQueueHandler>();
+builder.Services.AddTransient<IRequestHandler<AddPatientInfluenceCommand, bool>,
+    AddPatientInfluenceCommandHandler>();
+builder.Services.AddTransient<IRequestHandler<UpdateInfluenceCommand, Influence>, 
+    UpdateInfluenceCommandHandler>();
+builder.Services.AddTransient<IRequestHandler<DeleteInfluenceCommand, bool>, 
+    DeleteInfluenceCommandHandler>();
 
 var app = builder.Build();
 

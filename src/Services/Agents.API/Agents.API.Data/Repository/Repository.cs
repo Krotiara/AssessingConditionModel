@@ -65,6 +65,17 @@ namespace Agents.API.Data.Repository
             return entities;
         }
 
+
+        public async Task DeleteAsync(TEntity entity)
+        {
+            using (AgentsDbContext AgentsDbContext = dbContextFactory.CreateDbContext())
+            {
+                AgentsDbContext.Remove(entity);
+                await AgentsDbContext.SaveChangesAsync();
+            }
+        }
+
+
         public IEnumerable<TEntity> GetAll()
         {
             using (AgentsDbContext AgentsDbContext = dbContextFactory.CreateDbContext())

@@ -10,6 +10,12 @@ using System.Threading.Tasks;
 
 namespace PatientsResolver.API.Service.Command
 {
+
+    public class AddPatientCommand : IRequest<bool>
+    {
+        public Patient Patient { get; set; }
+    }
+
     public class AddPatientCommandHandler : IRequestHandler<AddPatientCommand, bool>
     {
 
@@ -42,7 +48,7 @@ namespace PatientsResolver.API.Service.Command
         private bool IsCorrectPatient(Patient patient)
         {
             return patient != null
-                && patient.Birthday != default(DateTime) 
+                //&& patient.Birthday != default(DateTime)  пока убрал, а то в входных данных нет.
                 && patient.MedicalHistoryNumber > 0 
                 && patient.Gender != Interfaces.GenderEnum.None;
         }

@@ -60,6 +60,12 @@ namespace PatientsResolver.API.Data.Repository
             return entities;
         }
 
+        public async Task DeleteAsync(TEntity entity)
+        {
+            PatientsDataDbContext.Remove(entity);
+            await PatientsDataDbContext.SaveChangesAsync();
+        }
+
         public IEnumerable<TEntity> GetAll()
         {
             try

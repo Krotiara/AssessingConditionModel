@@ -52,6 +52,51 @@ namespace PatientsResolver.API.Service.Exceptions
         }
     }
 
+    public class UpdateInfluenceException : Exception
+    {
+        public UpdateInfluenceException(string message) :
+            base(message)
+        {
+
+        }
+
+        public UpdateInfluenceException(string message, Exception innerException) :
+            base(message, innerException)
+        {
+
+        }
+    }
+
+    public class DeleteInfluenceException : Exception
+    {
+        public DeleteInfluenceException(string message) :
+            base(message)
+        {
+
+        }
+
+        public DeleteInfluenceException(string message, Exception innerException) :
+            base(message, innerException)
+        {
+
+        }
+    }
+
+    public class InfluenceNotFoundException : Exception
+    {
+        public InfluenceNotFoundException(string message) :
+            base(message)
+        {
+
+        }
+
+        public InfluenceNotFoundException(string message, Exception innerException) :
+            base(message, innerException)
+        {
+
+        }
+    }
+
 
     public class AddInfluenceRangeException : Exception
     {
@@ -78,6 +123,37 @@ namespace PatientsResolver.API.Service.Exceptions
         }
 
         public GetInfluencesException(string message, Exception innerException) :
+            base(message, innerException)
+        {
+
+        }
+    }
+
+    public class UpdatePatientException : Exception
+    {
+        public UpdatePatientException(string message) :
+            base(message)
+        {
+
+        }
+
+        public UpdatePatientException(string message, Exception innerException) :
+            base(message, innerException)
+        {
+
+        }
+    }
+
+
+    public class DeletePatientException : Exception
+    {
+        public DeletePatientException(string message) :
+            base(message)
+        {
+
+        }
+
+        public DeletePatientException(string message, Exception innerException) :
             base(message, innerException)
         {
 
