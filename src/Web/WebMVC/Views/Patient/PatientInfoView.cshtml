@@ -1,9 +1,8 @@
 ﻿@using Interfaces
 @model PatientInfo
 @*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+    
 *@
-
 <html>
     <head>
         <title>Информация о пациенте</title>
@@ -14,6 +13,13 @@
     <body>
         <div>
             <div><p style="font-size:20px; font-weight:bold;" align="left">Общая информация</p></div>
+        <div>
+            @using (Html.BeginForm("EditPatient", "Patient", FormMethod.Post, new {p  = @Model.Patient}))
+            { 
+                <input type="submit" value="Изменить" class="btn btn-success" />}
+           @* <input type="button" 
+            value="Изменить" 
+            onclick="location.href='@Url.Action("EditPatient", "Patient", Model.Patient)'"/>*@</div>
             <table class="table table-bordered table-sm">
                 <thead>
                     <tr>

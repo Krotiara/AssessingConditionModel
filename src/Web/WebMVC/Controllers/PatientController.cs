@@ -58,7 +58,16 @@ namespace WebMVC.Controllers
         {
             //TODO 1-может есть более элегантный способ вызвать добавление пациента
             bool isAdd = await patientsService.AddPatient(p); 
-            return RedirectToAction("Index");
+            return View("Index");
+        }
+
+
+        [HttpPost]
+        public async Task<IActionResult> EditPatient(Patient p)
+        {
+#warning p все время null (пустой)
+            bool isEdit = await patientsService.EditPatient(p);
+            return View("Index");
         }
 
 

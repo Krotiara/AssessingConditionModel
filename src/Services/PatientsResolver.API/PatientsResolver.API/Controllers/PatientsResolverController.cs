@@ -56,7 +56,7 @@ namespace PatientsResolver.API.Controllers
 
        
         [HttpPut("patientsApi/updatePatient")]
-        public async Task<ActionResult<bool>> UpdatePatient(Patient patient)
+        public async Task<ActionResult<bool>> UpdatePatient([FromBody]Patient patient)
         {
             try
             {

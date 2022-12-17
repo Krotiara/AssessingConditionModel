@@ -17,5 +17,7 @@ namespace WebMVC.Services
         public Task<bool> AddPatientsInluenceData(byte[] data);
 
         public Task<bool> AddPatient(Patient p);
+
+        public Task<bool> EditPatient(Patient p);
     }
 }

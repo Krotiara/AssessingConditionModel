@@ -29,6 +29,9 @@ namespace WebMVC.Services
             return await webRequester.GetResponse<bool>(url, "POST", body);
         }
 
+
+
+
         public async Task<Patient> GetPatient(int id)
         {
             try
@@ -65,6 +68,13 @@ namespace WebMVC.Services
         {
             string url = $"{gatewayUrl}/agents/agingState/{patientId}";
             return await webRequester.GetResponse<AgingState>(url, "GET");
+        }
+
+        public async Task<bool> EditPatient(Patient p)
+        {
+            string url = $"{gatewayUrl}/patientsApi/updatePatient";
+            string body = Newtonsoft.Json.JsonConvert.SerializeObject(p);
+            return await webRequester.GetResponse<bool>(url, "POST", body);
         }
     }
 }
