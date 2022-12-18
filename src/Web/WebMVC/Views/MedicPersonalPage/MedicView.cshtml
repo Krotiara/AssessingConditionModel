@@ -1,0 +1,20 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+<html>
+    <head><title>Главная страница</title></head>
+    <body>
+    <div class="form-group">
+        <input type="button" 
+            value="Пациенты и воздействия"
+            class="form-control"
+            onclick="location.href='@Url.Action("GetPatientsDataView", "Medic")'" />
+        <input type="button" 
+            value="Внести данные"
+            class="form-control"
+               onclick="location.href='@Url.Action("GetDataInputView", "Medic")'" />
+    </div>
+    </body>
+</html>
