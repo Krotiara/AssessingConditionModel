@@ -37,7 +37,7 @@ namespace WebMVC.Controllers
                     AgingPatientState = state
                 };
 
-                return PartialView("PatientInfoView", patientInfo);
+                return PartialView("_PatientInfoView", patientInfo);
             }
             catch(Exception ex)
             {
@@ -49,7 +49,7 @@ namespace WebMVC.Controllers
         [HttpGet]
         public IActionResult AddPatient()
         {
-            return View("AddPatientView", new Patient());
+            return PartialView("_AddPatientView", new Patient());
         }
 
 

@@ -4,17 +4,41 @@
 @{
 }
 <html>
-    <head><title>Главная страница</title></head>
+    <head>
+        <style>
+            .sidenav {
+                  height: 100%;
+                  width: 100%;
+                  position: fixed;
+                  z-index: 1;
+                  top: 0;
+                  left: 0;
+                  background-color: #0288d1;
+                  overflow-x: hidden;
+                  transition: 0.5s;
+                  padding-top: 60px;
+                  text-align:center;
+            }
+            .sidenav a {
+                text-decoration: none;
+                font-size: 25px;
+                color: #f1f1f1;
+                display: block;
+                transition: 0.3s;
+                padding: 30px;
+            }
+            .sidenav a:hover {
+                color: #f1f1f1;
+            }
+        </style>
+    </head>
     <body>
-    <div class="form-group">
-        <input type="button" 
-            value="Пациенты и воздействия"
-            class="form-control"
-            onclick="location.href='@Url.Action("GetPatientsDataView", "Medic")'" />
-        <input type="button" 
-            value="Внести данные"
-            class="form-control"
-               onclick="location.href='@Url.Action("GetDataInputView", "Medic")'" />
-    </div>
+        <form>
+            <div id="mySidenav" class="sidenav"> 
+              <a href="@Url.Action("GetPatientsDataView", "Medic")">Пациенты</a>
+              <a href="#">Общая динамика биовозраста</a>
+              <a href="@Url.Action("GetDataInputView", "Medic")">Внести данные</a>
+            </div>
+        </form>
     </body>
 </html>
