@@ -70,4 +70,11 @@ namespace Agents.API.Entities
         public UpdateAgentsGroupException(string message, Exception innerException) : base(message, innerException) { }
     }
 
+    public class GetAgingDynamicsException : Exception
+    {
+        public GetAgingDynamicsException(string message) : base(message) { }
+
+        public GetAgingDynamicsException(string message, Exception innerException) : base(message, innerException) { }
+    }
+
 }

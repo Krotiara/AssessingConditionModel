@@ -54,11 +54,15 @@ namespace Agents.API.Service.Query
             }
             catch(AgentNotFoundException ex)
             {
-                throw new NotImplementedException(); //TODO
+                throw new GetAgingDynamicsException($"Агент для пациента с id = {request.PatientId} не был найден", ex);
+            }
+            catch(GetAgentException ex)
+            {
+                throw new GetAgingDynamicsException($"Не удалось обновить состояние агента для пациента с id = {request.PatientId}", ex);
             }
             catch(Exception ex)
             {
-                throw new NotImplementedException(); //TODO
+                throw new GetAgingDynamicsException($"Unexpected error", ex);
             }
         }
 

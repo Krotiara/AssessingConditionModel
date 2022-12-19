@@ -103,11 +103,11 @@ namespace Agents.API.Entities
                 }
                 catch(AddAgingStateException ex)
                 {
-                    throw new NotImplementedException(); //TODO
+                    throw new DetermineStateException("Не удалось сохранить состояние AgingState в бд", ex);
                 }
                 catch(Exception ex)
                 {
-                    throw new NotImplementedException(); //TODO
+                    throw new DetermineStateException("Unexpected error", ex);
                 }
             }
 

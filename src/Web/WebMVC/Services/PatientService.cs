@@ -48,10 +48,18 @@ namespace WebMVC.Services
         public async Task<IList<AgingDynamics>> GetPatientAgingDynamics(int patientId, 
             DateTime startTimestamp, DateTime endTimestamp)
         {
-            string url = $"{gatewayUrl}/agents/agingDynamics/{patientId}";
-            string body = Newtonsoft.Json.JsonConvert.SerializeObject(
-                new DateTime[2] { startTimestamp, endTimestamp});
-            return await webRequester.GetResponse<IList<AgingDynamics>>(url, "POST", body);
+            try
+            {
+                string url = $"{gatewayUrl}/agents/agingDynamics/{patientId}";
+                string body = Newtonsoft.Json.JsonConvert.SerializeObject(
+                    new DateTime[2] { startTimestamp, endTimestamp });
+                return await webRequester.GetResponse<IList<AgingDynamics>>(url, "POST", body);
+            }
+            catch(GetWebResponceException ex)
+            {
+                //TODO
+               // ScriptManager.RegisterStartupScript(this, GetType(), "showalert", "alert('Only alert Message');", true);
+            }
         }
 
 
