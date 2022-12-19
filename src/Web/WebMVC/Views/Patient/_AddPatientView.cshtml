@@ -5,30 +5,63 @@
 <html>
     <head>
         <title>Добавление пациента</title>
+        <style>
+        th {
+            text-align: left;
+        }
+        </style>
+        @*<style>
+        .InputBoxStyle {
+            width: 30%;
+            box-sizing: border-box;
+        }
+        </style>*@
     </head>
     <body>
+    <div class="panel panel-default">
+        <div class="panel-heading">Добавление пациента</div>
         <div class="panel-body">
-        @using (Html.BeginForm("AddPatient","Patient", FormMethod.Post))
+            @using (Html.BeginForm("AddPatient", "Patient", FormMethod.Post))
             {
-                <div class="form-group">
-                    <label>ФИО</label>
-                    @Html.TextBoxFor(x=>x.Name)
-                </div>
-                <div class="form-group">
-                    <label>Номер истории болезни</label>
-                    @Html.TextBoxFor(x=>x.MedicalHistoryNumber)
-                </div>
-                <div class="form-group">
-                    <label>Дата рождения</label>
-                    @Html.EditorFor(x=>x.Birthday)
-                </div>
-                <div class="form-group">
-                    <label>Пол</label>
-                    @Html.DropDownListFor(x=>x.Gender, Html.GetEnumSelectList(typeof(GenderEnum)))
-                </div>
-                <div class="text-center"><input type="submit" value="Принять" class="btn btn-success" />
+                <table>
+                    <tr>
+                        <th>@Html.LabelFor(m => m.Name)</th>
+                        <th>@Html.TextBoxFor(x=>x.Name)</th>
+                    </tr>
+                    <tr>
+                        <th>@Html.LabelFor(m => m.MedicalHistoryNumber)</th>
+                        <th>@Html.TextBoxFor(x=>x.MedicalHistoryNumber)</th>
+                    </tr>
+                    <tr>
+                        <th>@Html.LabelFor(m => m.Birthday)</th>
+                        <th>@Html.EditorFor(x=>x.Birthday)</th>
+                    </tr>
+                    <tr>
+                        <th>@Html.LabelFor(m => m.Gender)</th>
+                        <th>@Html.DropDownListFor(x=>x.Gender, Html.GetEnumSelectList(typeof(GenderEnum)))</th>
+                    </tr>
+                </table>
+                @* <div class="form-group" style="width:100%">
+            @Html.LabelFor(m => m.Name)
+            @Html.TextBoxFor(x=>x.Name, new {Class="InputBoxStyle" })
+            </div>
+            <div class="form-group">
+            @Html.LabelFor(m => m.MedicalHistoryNumber)
+            @Html.TextBoxFor(x=>x.MedicalHistoryNumber, new {Class="InputBoxStyle" })
+            </div>
+            <div class="form-group">
+            @Html.LabelFor(m => m.Birthday)
+            @Html.EditorFor(x=>x.Birthday,  new {Class="InputBoxStyle" })
+            </div>
+            <div class="form-group">
+            @Html.LabelFor(m => m.Gender)
+            @Html.DropDownListFor(x=>x.Gender, Html.GetEnumSelectList(typeof(GenderEnum)), new {Class="InputBoxStyle" })
+            </div>*@
+                <div>
+                    <input type="submit" value="Добавить" class="btn btn-success" />
                 </div>
             }
         </div>
+    </div>       
     </body>
 </html>
