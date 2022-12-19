@@ -28,9 +28,7 @@ namespace WebMVC.Controllers
                 Patient patient = await patientsService.GetPatient(patientId);
                 if (patient == null)
                     throw new Exception("Get patient return null");
-                AgingState state = await patientsService.GetPatientCurrentAgingState(patientId);
-                if (state == null)
-                    throw new Exception("Get patient aging state return null");
+                AgingState state = await patientsService.GetPatientCurrentAgingState(patientId);                
                 PatientInfo patientInfo = new PatientInfo()
                 {
                     Patient = patient,
@@ -58,7 +56,7 @@ namespace WebMVC.Controllers
         {
             //TODO 1-может есть более элегантный способ вызвать добавление пациента
             bool isAdd = await patientsService.AddPatient(p); 
-            return View("Index");
+            return RedirectToAction("GetPatientsDataView","Medic");
         }
 
 

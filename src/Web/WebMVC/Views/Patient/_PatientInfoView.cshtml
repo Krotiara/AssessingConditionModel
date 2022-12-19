@@ -13,13 +13,11 @@
     <body>
         <div>
             <div><p style="font-size:20px; font-weight:bold;" align="left">Общая информация</p></div>
-        <div>
-            @using (Html.BeginForm("EditPatient", "Patient", FormMethod.Post, new {p  = @Model.Patient}))
-            { 
-                <input type="submit" value="Изменить" class="btn btn-success" />}
-           @* <input type="button" 
-            value="Изменить" 
-            onclick="location.href='@Url.Action("EditPatient", "Patient", Model.Patient)'"/>*@</div>
+            <div>
+                @using (Html.BeginForm("EditPatient", "Patient", FormMethod.Post, new {p  = @Model.Patient}))
+                { 
+                    <input type="submit" value="Изменить" class="btn btn-success" />}
+            </div>
             <table class="table table-bordered table-sm">
                 <thead>
                     <tr>
@@ -33,9 +31,9 @@
                 <tr>   
                     <th>@Model.Patient.MedicalHistoryNumber</th>
                     <th>@Model.Patient.Gender.GetDisplayAttributeValue()</th>
-                    <th>@Model.AgingPatientState.Age</th>
-                    <th>@Model.AgingPatientState.BioAge</th>
-                    <th>@Model.AgingPatientState.BioAgeState.GetDisplayAttributeValue()</th>
+                    <th>@(Model.AgingPatientState != null ? Model.AgingPatientState.Age.ToString() : "Нет данных")</th>
+                    <th>@(Model.AgingPatientState != null ? @Model.AgingPatientState.BioAge.ToString() : "Не рассчитано")</th>
+                    <th>@(Model.AgingPatientState != null ? @Model.AgingPatientState.BioAgeState.GetDisplayAttributeValue() : "Не рассчитано")</th>
                 </tr>
             </table>
         </div>

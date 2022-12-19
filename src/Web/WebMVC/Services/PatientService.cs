@@ -66,8 +66,15 @@ namespace WebMVC.Services
 
         public async Task<AgingState> GetPatientCurrentAgingState(int patientId)
         {
-            string url = $"{gatewayUrl}/agents/agingState/{patientId}";
-            return await webRequester.GetResponse<AgingState>(url, "GET");
+            try
+            {
+                string url = $"{gatewayUrl}/agents/agingState/{patientId}";
+                return await webRequester.GetResponse<AgingState>(url, "GET");
+            }
+            catch(GetWebResponceException)
+            {
+                return null;
+            }
         }
 
         public async Task<bool> EditPatient(Patient p)
