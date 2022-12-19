@@ -4,7 +4,7 @@ namespace WebMVC.Controllers
 {
     public class MedicController : Controller
     {
-        [HttpGet]
+        [HttpGet("data")]
         public async Task<IActionResult> GetPatientsDataView()
         {
 #warning Почему-то загружает второй раз при GetPartialViewByTag, поэтому теряются данные
@@ -12,7 +12,7 @@ namespace WebMVC.Controllers
         }
 
 
-        [HttpGet]
+        [HttpGet("dataInput")]
         public async Task<IActionResult> GetDataInputView()
         {
             return View("~/Views/MedicPersonalPage/DataInputView.cshtml");

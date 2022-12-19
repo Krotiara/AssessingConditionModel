@@ -60,20 +60,12 @@
         </style>
     </head>
     <body>
-    <form>
         <div id="mySidenav" class="sidenav">
           <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
           <button onclick="GetPanel('search')">Пациенты</button>
           <button onclick="GetPanel('add')">Добавить пациента</button>
-          @*<a href="#">Пациенты</a>
-          <a href="#">Добавить пациента</a>*@
         </div>
         <span style="font-size:30px;cursor:pointer" onclick="openNav()">&#9776; меню</span>
-    </form>
-    @*<div id="ContentAPI">
-        <div id="search" style="display: none;">@Html.PartialAsync("~/Views/Patient/_SearchPatientView.cshtml")</div>
-        <div id="add" style="display: none;">@Html.PartialAsync("~/Views/Patient/_AddPatientView.cshtml")</div>
-    </div>*@
     <div id="Content"></div>
     </body>
 </html>
