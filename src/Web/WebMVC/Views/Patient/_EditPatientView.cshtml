@@ -3,19 +3,19 @@
 
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>Добавление пациента</title>
-        <style>
+<head>
+    <title>Изменение пациента</title>
+     <style>
         th {
             text-align: left;
         }
         </style>
-    </head>
-    <body>
+</head>
+<body>
     <div class="panel panel-default">
-        <div class="panel-heading">Добавление пациента</div>
+        <div class="panel-heading">Изменение пациента</div>
         <div class="panel-body">
-            @using (Html.BeginForm("AddPatient", "Patient", FormMethod.Post))
+            @using (Html.BeginForm("EditPatient", "Patient", FormMethod.Post))
             {
                 <table>
                     <tr>
@@ -34,12 +34,12 @@
                         <th>@Html.LabelFor(m => m.Gender)</th>
                         <th>@Html.DropDownListFor(x=>x.Gender, Html.GetEnumSelectList(typeof(GenderEnum)))</th>
                     </tr>
-                </table>    
-                <div>
-                    <input type="submit" value="Добавить" class="btn btn-success" />
+                </table>
+                <div class="text-center">
+                    <input type="submit" value="Принять" class="btn btn-success" />
                 </div>
             }
         </div>
-    </div>       
-    </body>
+    </div>
+</body>
 </html>

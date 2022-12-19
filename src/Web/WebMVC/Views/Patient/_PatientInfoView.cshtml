@@ -21,11 +21,17 @@
                             <th>@Html.LabelFor(m => m.Patient.Birthday)</th>
                             <th>@Html.LabelFor(m => m.Patient.Gender)</th>
                             <th>
-                                <div>
-                                    @using (Html.BeginForm("EditPatient", "Patient", FormMethod.Post, new {p  = @Model.Patient}))
+                                
+                                <div> @Html.ActionLink("Изменить","GetEditPatientView", "Patient", new {p  = Model.Patient}, null)</div>
+                                    @*@using (Html.BeginForm("EditPatient", "Patient", FormMethod.Post, new {p  = @Model.Patient}))
                                     { 
+                                        @Html.HiddenFor(x => Model.Patient.Id)
+                                        @Html.HiddenFor(x => Model.Patient.Birthday)
+                                        @Html.HiddenFor(x => Model.Patient.Gender)
+                                        @Html.HiddenFor(x => Model.Patient.MedicalHistoryNumber)
+                                        @Html.HiddenFor(x => Model.Patient.Name)
                                         <input type="submit" value="Изменить" class="btn btn-success" />}
-                                </div>
+                                </div>*@
                             </th>
                         </tr>
                     </thead>
