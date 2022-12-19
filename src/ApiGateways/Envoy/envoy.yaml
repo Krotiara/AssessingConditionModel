@@ -30,6 +30,7 @@ static_resources:
                   auto_host_rewrite: true
                   prefix_rewrite: "/agents/"
                   cluster: agents_service
+                  timeout: 60s
               - name: "patients-long"
                 match:
                   prefix: "/patientsApi/"
