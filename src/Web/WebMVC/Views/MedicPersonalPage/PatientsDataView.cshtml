@@ -10,13 +10,6 @@
                 text-align: center;
                 font-weight: normal;
             }
-        </style>
-        <style>
-            /* Page content */
-             /* Same as the width of the sidenav */
-            /*.main {
-              margin-left: 200px;
-            }*/
             .sidenav {
                   height: 100%;
                   width: 0;
@@ -24,29 +17,21 @@
                   z-index: 1;
                   top: 0;
                   left: 0;
-                  background-color: #111;
+                  background-color: #0288d1;
                   overflow-x: hidden;
                   transition: 0.5s;
                   padding-top: 60px;
-            }
-            .sidenav a {
-                padding: 8px 8px 8px 32px;
-                text-decoration: none;
-                font-size: 25px;
-                color: #818181;
-                display: block;
-                transition: 0.3s;
             }
             .sidenav button{
                 background-color: transparent;
                 border: none;
                 font-size: 25px;
-                color: #818181;
+                color: #f1f1f1;
                 display: block;
                 transition: 0.3s;
                 text-decoration: none;
             }
-            .sidenav a:hover {
+            .sidenav button:hover {
                 color: #f1f1f1;
             }
 
@@ -82,61 +67,11 @@
                 $('#Content').html(result);
             }
         });
-        //closeNav();
+        closeNav();
     }
 </script>
 
-<script>
-function ShowPanel(divName) {
-    alert(divName);
-    document.getElementById("Content").innerHTML = "";
-    document.getElementById("search").style.display = "none";
-    document.getElementById("add").style.display = "none";
-    document.getElementById(divName).style.display = "block";  
-    closeNav();
-}
-</script>
 
-<script>
-    function LoadInfluences() {
-        var reader = new FileReader();
-        var selectedFile = document.getElementById("fileLoader").files[0];
-        reader.onload = function () {
-            var comma = this.result.indexOf(',');
-            var base64 = this.result.substr(comma + 1);   
-            $.ajax({
-                url: '@Url.Action("AddInfluencesFromFile", "Patient")',
-                contentType: "application/json; charset=uft-8",
-                data: JSON.stringify(base64),
-                type: 'POST',
-                async: true,
-                dataType: "json",
-                success: function (data) {
-                    console.log('success');
-                },
-                error: function (xhr, status, error) {
-                    console.log(error);
-                }
-            });
-        };
-        reader.readAsDataURL(selectedFile);
-    }
-
-    function GetAgingDynamics() {
-        var startTime = document.getElementById("dtCommon1").value;
-        var endTime = document.getElementById("dtCommon2").value;
-        $.ajax({
-            url: '@Url.Action("GetAgingDynamics", "Patient")',
-            data: { startTimestamp: startTime, endTimestamp: endTime },
-            type: 'get',
-            cache: false,
-            async: true,
-            success: function (result) {
-                $('#Content').html(result);
-            }
-        });
-    }
-</script>
 <script>
 function openNav() {
   document.getElementById("mySidenav").style.width = "250px";

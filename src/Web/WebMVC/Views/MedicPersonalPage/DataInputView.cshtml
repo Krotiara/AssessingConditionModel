@@ -23,3 +23,29 @@
         </table>
     </body>
 </html>
+
+<script>
+    function LoadInfluences() {
+        var reader = new FileReader();
+        var selectedFile = document.getElementById("fileLoader").files[0];
+        reader.onload = function () {
+            var comma = this.result.indexOf(',');
+            var base64 = this.result.substr(comma + 1);
+            $.ajax({
+                url: '@Url.Action("AddInfluencesFromFile", "Patient")',
+                contentType: "application/json; charset=uft-8",
+                data: JSON.stringify(base64),
+                type: 'POST',
+                async: true,
+                dataType: "json",
+                success: function (data) {
+                    console.log('success');
+                },
+                error: function (xhr, status, error) {
+                    console.log(error);
+                }
+            });
+        };
+        reader.readAsDataURL(selectedFile);
+    }
+</script>
