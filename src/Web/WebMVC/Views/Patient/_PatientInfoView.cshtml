@@ -12,71 +12,75 @@
     </head>
     <body>
         <div>
-            <div><p style="font-size:20px; font-weight:bold;" align="left">Общая информация</p></div>
-            <div>
-                @using (Html.BeginForm("EditPatient", "Patient", FormMethod.Post, new {p  = @Model.Patient}))
-                { 
-                    <input type="submit" value="Изменить" class="btn btn-success" />}
+            <div id="commonInfo">
+                <p style="font-size:20px; font-weight:bold;" align="left">Общая информация</p>
+                <table class="table table-bordered table-sm">
+                    <thead>
+                        <tr>
+                            <th>@Html.LabelFor(m => m.Patient.MedicalHistoryNumber)</th>
+                            <th>@Html.LabelFor(m => m.Patient.Birthday)</th>
+                            <th>@Html.LabelFor(m => m.Patient.Gender)</th>
+                            <th>
+                                <div>
+                                    @using (Html.BeginForm("EditPatient", "Patient", FormMethod.Post, new {p  = @Model.Patient}))
+                                    { 
+                                        <input type="submit" value="Изменить" class="btn btn-success" />}
+                                </div>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                             <th>@Model.Patient.MedicalHistoryNumber</th>
+                             <th>@Model.Patient.Birthday</th>
+                             <th>@Model.Patient.Gender</th>
+                        </tr>
+                    </tbody>
+                </table>
+
             </div>
-            <table class="table table-bordered table-sm">
-                <thead>
+            <div id="agingInfo">
+                <p style="font-size:20px; font-weight:bold;" align="left">Темп старения</p>
+                @if(Model.AgingPatientState == null)
+            {
+                <div class="alert alert-danger alert-dismissible fade show text-center">Нет данных по темпу старения</div>
+            }
+            else
+            {
+                <table class="table table-bordered table-sm">
+                    <thead>
+                        <tr>
+                            <th>@Html.LabelFor(m => m.AgingPatientState.Timestamp)</th>
+                            <th>@Html.LabelFor(m => m.AgingPatientState.Age)</th>
+                            <th>@Html.LabelFor(m => m.AgingPatientState.BioAge)</th>
+                            <th>@Html.LabelFor(m => m.AgingPatientState.BioAgeState)</th>
+                        </tr> 
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th>@Model.AgingPatientState.Timestamp</th>
+                            <th>@Model.AgingPatientState.Age</th>
+                            <th>@Model.AgingPatientState.BioAge</th>
+                            <th>@Model.AgingPatientState.BioAgeState.GetDisplayAttributeValue()</th>
+                        </tr>
+                    </tbody>
+                </table>
+            }
+            </div>
+            <div id="agingDynamicInfo">
+                <div><p style="font-size:20px;font-weight:bold;">Динамика биовозраста пациента</p></div>
+                <table style="table-layout: fixed;" class="table table-sm">
                     <tr>
-                        <th>Номер карты</th>
-                        <th>Пол</th>
-                        <th>Возраст</th>
-                        <th>Текущий биовозраст</th>
-                        <th>Состояние</th>
+                        <th colspan="2">Начало периода:</th>
+                        <th colspan="2"><input style = "width:100%" type="date" id="dt1"/></th>
+                        <th colspan="2">Окончание периода:</th>
+                        <th colspan="2"><input style = "width:100%" type="date" id="dt2"/></th>
+                        <th colspan="2"><button style = "width:100%" onclick="GetAgingDynamics()">Показать</button></th>
                     </tr>
-                </thead>
-                <tr>   
-                    <th>@Model.Patient.MedicalHistoryNumber</th>
-                    <th>@Model.Patient.Gender.GetDisplayAttributeValue()</th>
-                    <th>
-                        @if(Model.AgingPatientState != null)
-                        {
-                            <p>@Model.AgingPatientState.Age</p>
-                        }
-                        else
-                        {
-                        <div class="alert alert-danger alert-dismissible fade show text-center">Нет данных</div>
-                        }
-                    </th>
-                    <th>
-                        @if (Model.AgingPatientState != null)
-                        {
-                            <p>@Model.AgingPatientState.BioAge</p>
-                        }
-                        else
-                        {
-                            <div class="alert alert-danger alert-dismissible fade show text-center">Не рассчитано</div>
-                        }
-                    </th>
-                    <th>
-                        @if (Model.AgingPatientState != null)
-                        {
-                            <p>@Model.AgingPatientState.BioAgeState.GetDisplayAttributeValue()</p>
-                        }
-                        else
-                        {
-                            <div class="alert alert-danger alert-dismissible fade show text-center">Не рассчитано</div>
-                        }
-                    </th>
-                </tr>
-            </table>
+                </table>   
+                <div id="DynamicsInfo"></div>
+            </div>
         </div>
-        <div>
-            <div><p style="font-size:20px;font-weight:bold;">Динамика биовозраста пациента</p></div>
-            <table style="table-layout: fixed;" class="table table-sm">
-                <tr>
-                    <th colspan="2">Начало периода:</th>
-                    <th colspan="2"><input style = "width:100%" type="date" id="dt1"/></th>
-                    <th colspan="2">Окончание периода:</th>
-                    <th colspan="2"><input style = "width:100%" type="date" id="dt2"/></th>
-                    <th colspan="2"><button style = "width:100%" onclick="GetAgingDynamics()">Показать</button></th>
-                </tr>
-            </table>   
-            <div id="DynamicsInfo"></div>
-        </div>      
     </body>
 </html>
 
