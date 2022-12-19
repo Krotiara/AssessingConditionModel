@@ -26,8 +26,6 @@ namespace WebMVC.Controllers
                 //TODO try catch    
                 int patientId = int.Parse(id);
                 Patient patient = await patientsService.GetPatient(patientId);
-                if (patient == null)
-                    throw new Exception("Get patient return null");
                 AgingState state = await patientsService.GetPatientCurrentAgingState(patientId);                
                 PatientInfo patientInfo = new PatientInfo()
                 {
@@ -36,6 +34,10 @@ namespace WebMVC.Controllers
                 };
 
                 return PartialView("_PatientInfoView", patientInfo);
+            }
+            catch(GetWebResponceException ex)
+            {
+                return PartialView("_ErrorPartialView", $"Ошибка получения информации о пациенте с id={id}: {ex.Message}.");
             }
             catch(Exception ex)
             {
@@ -72,22 +74,43 @@ namespace WebMVC.Controllers
         [HttpGet]
         public async Task<IActionResult> GetPatientAgingDynamics(int patientId, DateTime startTimestamp, DateTime endTimestamp)
         {
-            //TODO try catch
-            IList<AgingDynamics> agingDynamics = await 
-                patientsService.GetPatientAgingDynamics(patientId, startTimestamp, endTimestamp);
+            try
+            {
+                //TODO try catch
+                IList<AgingDynamics> agingDynamics = await
+                    patientsService.GetPatientAgingDynamics(patientId, startTimestamp, endTimestamp);
 
-            return PartialView("PatientAgingDynamicsView", agingDynamics);
+                return PartialView("PatientAgingDynamicsView", agingDynamics);
+            }
+            catch(GetWebResponceException ex)
+            {
+                return PartialView("_ErrorPartialView", $"Ошибка получения динамики биовозраста пациента с id={patientId}: {ex.Message}.");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Unexpected error: {ex.Message}");
+            }
         }
 
 
         [HttpGet("agents/dynamics")]
         public async Task<IActionResult> GetAgingDynamics(DateTime startTimestamp, DateTime endTimestamp)
         {
-            //TODO try catch
-            List<AgingDynamics> agingDynamics = (await
-               patientsService.GetAgingDynamics(startTimestamp, endTimestamp)).ToList();
-            CommonAgingDynamics dynamics = new CommonAgingDynamics(agingDynamics, startTimestamp, endTimestamp);
-            return PartialView("CommonAgingDynamicsView", dynamics);
+            try
+            {
+                List<AgingDynamics> agingDynamics = (await
+                   patientsService.GetAgingDynamics(startTimestamp, endTimestamp)).ToList();
+                CommonAgingDynamics dynamics = new CommonAgingDynamics(agingDynamics, startTimestamp, endTimestamp);
+                return PartialView("CommonAgingDynamicsView", dynamics);
+            }
+            catch(GetWebResponceException ex)
+            {
+                return PartialView("_ErrorPartialView", $"Ошибка получения динамики биовозраста пациентов: {ex.Message}.");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Unexpected error: {ex.Message}");
+            }
         }
 
 

@@ -159,4 +159,21 @@ namespace PatientsResolver.API.Service.Exceptions
 
         }
     }
+
+    public class PatientNotFoundException : Exception
+    {
+        public PatientNotFoundException(string message) :
+            base(message)
+        {
+
+        }
+
+        public PatientNotFoundException(string message, Exception innerException) :
+            base(message, innerException)
+        {
+
+        }
+    }
+
+    
 }

@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using PatientsResolver.API.Data.Repository;
 using PatientsResolver.API.Entities;
+using PatientsResolver.API.Service.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,7 +24,13 @@ namespace PatientsResolver.API.Service.Query
             this.patientDataRepository = patientDataRepository;
         }
 
-        public async Task<Patient> Handle(GetPatientQuery request, CancellationToken cancellationToken) => 
-            await patientDataRepository.GetPatientBy(request.PatientId);
+        public async Task<Patient> Handle(GetPatientQuery request, CancellationToken cancellationToken)
+        {
+           Patient? p =  await patientDataRepository.GetPatientBy(request.PatientId);
+            if (p == null)
+                throw new PatientNotFoundException($"Не найден пациент с id = {request.PatientId}");
+            else return p;
+        }
+           
     }
 }

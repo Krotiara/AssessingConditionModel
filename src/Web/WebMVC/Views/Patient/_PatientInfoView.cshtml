@@ -31,9 +31,36 @@
                 <tr>   
                     <th>@Model.Patient.MedicalHistoryNumber</th>
                     <th>@Model.Patient.Gender.GetDisplayAttributeValue()</th>
-                    <th>@(Model.AgingPatientState != null ? Model.AgingPatientState.Age.ToString() : "Нет данных")</th>
-                    <th>@(Model.AgingPatientState != null ? @Model.AgingPatientState.BioAge.ToString() : "Не рассчитано")</th>
-                    <th>@(Model.AgingPatientState != null ? @Model.AgingPatientState.BioAgeState.GetDisplayAttributeValue() : "Не рассчитано")</th>
+                    <th>
+                        @if(Model.AgingPatientState != null)
+                        {
+                            <p>@Model.AgingPatientState.Age</p>
+                        }
+                        else
+                        {
+                        <div class="alert alert-danger alert-dismissible fade show text-center">Нет данных</div>
+                        }
+                    </th>
+                    <th>
+                        @if (Model.AgingPatientState != null)
+                        {
+                            <p>@Model.AgingPatientState.BioAge</p>
+                        }
+                        else
+                        {
+                            <div class="alert alert-danger alert-dismissible fade show text-center">Не рассчитано</div>
+                        }
+                    </th>
+                    <th>
+                        @if (Model.AgingPatientState != null)
+                        {
+                            <p>@Model.AgingPatientState.BioAgeState.GetDisplayAttributeValue()</p>
+                        }
+                        else
+                        {
+                            <div class="alert alert-danger alert-dismissible fade show text-center">Не рассчитано</div>
+                        }
+                    </th>
                 </tr>
             </table>
         </div>

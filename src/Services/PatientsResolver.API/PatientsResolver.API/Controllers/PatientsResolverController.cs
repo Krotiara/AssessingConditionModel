@@ -30,9 +30,13 @@ namespace PatientsResolver.API.Controllers
             {
                 return Ok(await mediator.Send(new GetPatientQuery() { PatientId = patientId }));
             }
-            catch (Exception ex)
+            catch(PatientNotFoundException ex)
             {
                 return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Unexpected error: {ex.Message}");
             }
         }
 
