@@ -4,6 +4,8 @@ namespace WebMVC.Models
 {
     public class PatientParameter : IPatientParameter
     {
+        public PatientParameter() { }
+
         public int Id { get; set; }
         public int InfluenceId { get; set; }
         public int PatientId { get; set; }

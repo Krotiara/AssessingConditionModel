@@ -40,14 +40,55 @@
                         <th>@Html.LabelFor(x => x.MedicineName)</th>
                         <th>@Html.EditorFor(x=>x.MedicineName)</th>
                    </tr>
-                   @*+ параметры*@
+                   <tr>
+                       <th>
+                           <table id="parameters">
+                               <thead>
+                                   <tr>
+                                       <th>@Html.LabelFor(x => x.Parameters)</th>
+                                   </tr>
+                               </thead>
+                               <tbody id="parametersBody">
+
+                               </tbody>
+                               <tfoot>
+                                   <tr><td><button id="addParamButton">Добавить параметр</button></td></tr>
+                               </tfoot>
+                           </table>
+                       </th>
+                   </tr>
                 </table>    
                 <div><input type="submit" value="Добавить" class="btn btn-success" /></div>
                 }
         </div>
          </div>
-        <table>
-
-        </table>
     </body>
 </html>
+
+<script type="text/javascript">
+$('#addParamButton').click(function(e) {
+    //https://stackoverflow.com/questions/40843105/asp-net-button-click-call-javascript-function-in-beginform-and-stop-form-submit
+    e.preventDefault();
+    $.ajax({
+            url: '@Url.Action("GetPatientParameterTableTemplate", "Medic")',
+            type: 'get',
+            cache: false,
+            async: true,
+            success: function (result) {
+                $('#parametersBody').append(result);
+            }
+        });
+});
+    //function AddParameter() {
+    //    $.ajax({
+    //        url: '@Url.Action("GetPatientParameterTableTemplate", "Medic")',
+    //        type: 'get',
+    //        cache: false,
+    //        async: true,
+    //        success: function (result) {
+    //            $('#parametersBody').append(result);
+    //        }
+    //    });
+    //}
+    </script>
+    

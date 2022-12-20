@@ -1,0 +1,14 @@
+﻿@using Interfaces
+@model PatientParameter
+
+<tr>
+     @Html.HiddenFor(x=>x.Id)
+     @Html.HiddenFor(x=>x.InfluenceId)
+     @Html.HiddenFor(x=>x.IsDynamic)
+     @Html.HiddenFor(x=>x.NameTextDescription)
+     @Html.HiddenFor(x=>x.PatientId)
+     @Html.HiddenFor(x=>x.PositiveDynamicCoef)
+     <th>@Html.DropDownListFor(x=>x.ParameterName, Html.GetEnumSelectList(typeof(ParameterNames)))</th>
+     <th>@Html.TextBoxFor(x=>x.Value)</th>
+     <th>@Html.EditorFor(x=>x.Timestamp)</th>
+</tr>

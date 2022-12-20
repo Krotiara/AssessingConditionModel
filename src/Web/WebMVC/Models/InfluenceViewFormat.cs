@@ -25,6 +25,7 @@ namespace WebMVC.Models
         [Display(Name = "Наименование")]
         public string MedicineName { get; set; }
 
+        [Display(Name = "Параметры")]
         public List<PatientParameter> Parameters { get; set; }
     }
 }

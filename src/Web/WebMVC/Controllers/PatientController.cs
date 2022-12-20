@@ -135,5 +135,12 @@ namespace WebMVC.Controllers
 #warning Проблема получения savePath с серверной части.
             agingDynamicsSaveService.SaveToExcelFile(dynamics);
         }
+
+
+        [HttpPost]
+        public async Task AddInluence(InfluenceViewFormat influenceViewFormat)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

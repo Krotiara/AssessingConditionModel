@@ -42,6 +42,11 @@ namespace WebMVC.Controllers
         }
 
 
+        [HttpGet]
+        public async Task<IActionResult> GetPatientParameterTableTemplate() 
+            => PartialView("~/Views/Shared/_PatientParameterPartialTableView.cshtml");
+
+
 
 
     }
