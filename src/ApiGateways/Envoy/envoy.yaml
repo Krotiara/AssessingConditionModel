@@ -38,6 +38,7 @@ static_resources:
                   auto_host_rewrite: true
                   prefix_rewrite: "/patientsApi/"
                   cluster: patients_service
+                  timeout: 30s
               - name: "testGoogle"
                 match:
                   prefix: "/goo/"

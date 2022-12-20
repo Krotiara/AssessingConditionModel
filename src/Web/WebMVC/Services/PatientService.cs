@@ -95,7 +95,7 @@ namespace WebMVC.Services
         {
             string url = $"{gatewayUrl}/patientsApi/updatePatient";
             string body = Newtonsoft.Json.JsonConvert.SerializeObject(p);
-            return await webRequester.GetResponse<bool>(url, "POST", body);
+            return await webRequester.GetResponse<bool>(url, "PUT", body);
         }
     }
 }

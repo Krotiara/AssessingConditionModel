@@ -22,7 +22,7 @@
                             <th>@Html.LabelFor(m => m.Patient.Gender)</th>
                             <th>
                                 
-                                <div> @Html.ActionLink("Изменить","GetEditPatientView", "Patient", new {p  = Model.Patient}, null)</div>
+                                <div> @Html.ActionLink("Изменить","GetEditPatientView", "Patient", Model.Patient, null)</div>
                                     @*@using (Html.BeginForm("EditPatient", "Patient", FormMethod.Post, new {p  = @Model.Patient}))
                                     { 
                                         @Html.HiddenFor(x => Model.Patient.Id)
