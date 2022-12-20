@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using WebMVC.Models;
 
 namespace WebMVC.Controllers
 {
@@ -21,11 +22,27 @@ namespace WebMVC.Controllers
         {
             if (tag == "search")
                 return PartialView("~/Views/Patient/_SearchPatientView.cshtml");
-            else if (tag == "add")
-                return PartialView("~/Views/Patient/_AddPatientView.cshtml", new Models.Patient());
             else if (tag == "commonBioAgeDynamic")
                 return PartialView("~/Views/Patient/_CommonAgingDynamicsStartView.cshtml");
             else throw new NotImplementedException();
         }
+
+
+        [HttpGet]
+        public async Task<IActionResult> GetDataInputPartialViewByTag(string tag)
+        {
+            if(tag == "addPatient")
+                return PartialView("~/Views/DataInputPartialViews/_AddPatientView.cshtml", new Patient());
+            else if (tag == "addInfluence")
+                return PartialView("~/Views/DataInputPartialViews/_AddInfluenceView.cshtml", new InfluenceViewFormat());
+            else if (tag == "addFile")
+                return PartialView("~/Views/DataInputPartialViews/_AddDataFileView.cshtml");
+            else throw new NotImplementedException();
+
+        }
+
+
+
+
     }
 }
