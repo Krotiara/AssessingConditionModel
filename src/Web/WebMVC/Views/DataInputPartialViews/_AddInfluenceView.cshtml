@@ -40,7 +40,7 @@
                         <th>@Html.LabelFor(x => x.MedicineName)</th>
                         <th>@Html.EditorFor(x=>x.MedicineName)</th>
                    </tr>
-                   <tr>
+                   @*<tr>
                        <th>
                            <table id="parameters">
                                <thead>
@@ -56,8 +56,12 @@
                                </tfoot>
                            </table>
                        </th>
-                   </tr>
-                </table>    
+                   </tr>*@
+                </table>
+                <button id="addParamButton">Добавить параметр</button>
+                <div id="parametersList">
+
+                </div>
                 <div><input type="submit" value="Добавить" class="btn btn-success" /></div>
                 }
         </div>
@@ -75,7 +79,7 @@ $('#addParamButton').click(function(e) {
             cache: false,
             async: true,
             success: function (result) {
-                $('#parametersBody').append(result);
+                $('#parametersList').append(result);
             }
         });
 });
