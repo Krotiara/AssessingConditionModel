@@ -1,22 +1,29 @@
 ﻿@using Interfaces
 @model PatientParameter
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-sm-3">
         <div class="form-group">
-            <label asp-for="ParameterName" class="control-label"></label>
-            @Html.DropDownListFor(x=>x.ParameterName, Html.GetEnumSelectList(typeof(ParameterNames)))
+            @Html.LabelFor(x=>x.ParameterName)
+            @Html.DropDownListFor(
+                x=>x.ParameterName, Html.GetEnumSelectList(typeof(ParameterNames)))
         </div>
     </div>
-    <div class="col-md-4">
+    <div class="col-sm-3">
         <div class="form-group">
-            <label asp-for="Value" class="control-label"></label>
+            @Html.LabelFor(x=>x.Value)
             @Html.TextBoxFor(x=>x.Value)
         </div>
     </div>
-    <div class="col-md-4">
+    <div class="col-sm-3">
         <div class="form-group">
-            <label asp-for="Timestamp" class="control-label"></label>
+            @Html.LabelFor(x=>x.Timestamp)
             @Html.EditorFor(x=>x.Timestamp)
+        </div>
+    </div>
+    <div class="col-sm-3">
+        <div class="form-group">
+            @Html.LabelFor(x=>x.IsDynamic)
+            @Html.EditorFor(x=>x.IsDynamic)
         </div>
     </div>
 </div>
