@@ -17,8 +17,9 @@
         <div class="panel panel-default">
             <div class="panel-heading">Добавление воздействия</div>
             <div class="panel-body">
-                @using (Html.BeginForm("AddInluence", "Patient", FormMethod.Post))
-                {
+                <form asp-action="AddInluence" asp-controller="Patient" id="form">
+                @*@using (Html.BeginForm("AddInluence", "Patient", FormMethod.Post))*@
+                @*{*@
                     <table>
                     <tr>
                         <th>@Html.LabelFor(x => x.PatientId)</th>
@@ -40,30 +41,15 @@
                         <th>@Html.LabelFor(x => x.MedicineName)</th>
                         <th>@Html.EditorFor(x=>x.MedicineName)</th>
                    </tr>
-                   @*<tr>
-                       <th>
-                           <table id="parameters">
-                               <thead>
-                                   <tr>
-                                       <th>@Html.LabelFor(x => x.Parameters)</th>
-                                   </tr>
-                               </thead>
-                               <tbody id="parametersBody">
-
-                               </tbody>
-                               <tfoot>
-                                   <tr><td><button id="addParamButton">Добавить параметр</button></td></tr>
-                               </tfoot>
-                           </table>
-                       </th>
-                   </tr>*@
+                   
                 </table>
                 <button id="addParamButton">Добавить параметр</button>
-                <div id="parametersList">
-
+                <div id="parametersContainter">
+                    @Html.EditorFor(x=>x.Parameters)
                 </div>
                 <div><input type="submit" value="Добавить" class="btn btn-success" /></div>
-                }
+               @* }*@
+                </form>
         </div>
          </div>
     </body>
@@ -74,12 +60,13 @@ $('#addParamButton').click(function(e) {
     //https://stackoverflow.com/questions/40843105/asp-net-button-click-call-javascript-function-in-beginform-and-stop-form-submit
     e.preventDefault();
     $.ajax({
-            url: '@Url.Action("GetPatientParameterTableTemplate", "Medic")',
-            type: 'get',
+            url: '@Url.Action("AddPatientParameter", "Medic")',
+            data: $('#form').serialize(),
+            type: 'POST',
             cache: false,
             async: true,
             success: function (result) {
-                $('#parametersList').append(result);
+                $('#parametersContainter').html(result);
             }
         });
 });

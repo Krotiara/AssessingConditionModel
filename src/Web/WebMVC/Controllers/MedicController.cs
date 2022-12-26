@@ -29,12 +29,11 @@ namespace WebMVC.Controllers
         }
 
 
-        [HttpGet]
-        public async Task<IActionResult> GetPatientParameterTableTemplate() 
-            => PartialView("~/Views/Shared/_PatientParameterPartialTableView.cshtml");
-
-
-
-
+        [HttpPost]
+        public async Task<IActionResult> AddPatientParameter([Bind("Parameters")] InfluenceViewFormat influence)
+        {
+            influence.Parameters.Add(new PatientParameter());
+            return PartialView("~/Views/Patient/PatientParameterItems.cshtml", influence);
+        }
     }
 }
