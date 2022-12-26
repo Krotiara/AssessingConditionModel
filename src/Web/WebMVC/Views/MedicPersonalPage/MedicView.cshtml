@@ -21,6 +21,10 @@
             cursor: pointer;
             margin: auto;
         }
+        .dropdown-menu {
+            text-align: center;
+            min-width:200px;
+        }
         </style>
 
         <title>Персональная страница врача</title>
@@ -31,7 +35,7 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav mr-auto">
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#"
+                        <a class="nav-link active dropdown-toggle" href="#"
                            id="navbarDropdown" role="button" data-toggle="dropdown"
                            aria-haspopup="true" aria-expanded="false">Данные</a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
@@ -39,21 +43,21 @@
                         </div>
                     </li>
                     <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" 
-                            id="navbarDropdown" role="button" data-toggle="dropdown" 
-                            aria-haspopup="true" aria-expanded="false">Статистика</a>
-                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="nav-link active dropdown-toggle" href="#" 
+                        id="navbarDropdown" role="button" data-toggle="dropdown" 
+                        aria-haspopup="true" aria-expanded="false">Статистика</a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                             <button class="b1" onclick="GetPanel('commonBioAgeDynamic')">Общая динамика биовозраста</button>
                         </div>
                     </li>
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#"
+                        <a class="nav-link active dropdown-toggle" href="#"
                            id="navbarDropdown" role="button" data-toggle="dropdown"
                            aria-haspopup="true" aria-expanded="false">Внести данные</a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <button class="b1" onclick="GetPanel('addFile')">Загрузить из файла</button>
-                        <button class="b1" onclick="GetPanel('addPatient')">Добавить пациента</button>
-                        <button class="b1" onclick="GetPanel('addInfluence')">Добавить воздействие</button>
+                            <button class="b1" onclick="GetPanel('addFile')">Загрузить из файла</button>
+                            <button class="b1" onclick="GetPanel('addPatient')">Добавить пациента</button>
+                            <button class="b1" onclick="GetPanel('addInfluence')">Добавить воздействие</button>
                         </div>
                     </li>
                 </ul>
