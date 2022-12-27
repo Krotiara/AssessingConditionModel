@@ -1,35 +1,46 @@
 ﻿@using Interfaces
 @model InfluenceViewFormat
 <div class="panel panel-default">
-    <div class="panel-heading"><h4 class="panel-title">Добавление воздействия</h4></div>
     <div class="panel-body">
         <form asp-action="AddInluence" asp-controller="Patient" id="form">
+            <h4>Добавление воздействия</h4>
+            <hr />
             <div class="container-fluid">
+                <div class="row"> 
+                    @Html.LabelFor(m => m.PatientId, new { @class = "col-sm-2 control-label" })
+                    <div class="col-sm-2">@Html.TextBoxFor(x=>x.PatientId)</div>
+                </div>
                  <div class="row">
-                     <div class="col-sm-1">@Html.LabelFor(m => m.PatientId)</div>
-                     <div class="col-sm-2">@Html.TextBoxFor(x=>x.PatientId)</div>
+                     @Html.LabelFor(x => x.StartTimestamp, new { @class = "col-sm-2 control-label" })
+                     <div class="col-sm-2">@Html.EditorFor(x => x.StartTimestamp)</div>
                  </div>
                  <div class="row">
-                     <div class="col-sm-1">@Html.LabelFor(x => x.StartTimestamp)</div>
-                     <div class="col-sm-2">@Html.EditorFor(x => x.StartTimestamp)</div>
-                     <div class="col-sm-1">@Html.LabelFor(x => x.EndTimestamp)</div>
+                     @Html.LabelFor(x => x.EndTimestamp, new { @class = "col-sm-2 control-label" })
                      <div class="col-sm-2">@Html.EditorFor(x=>x.EndTimestamp)</div>
                  </div>
                  <div class="row">
-                     <div class="col-sm-1">@Html.LabelFor(x => x.InfluenceType)</div>
-                     <div class="col-sm-2">
-                         @Html.DropDownListFor(x=>x.InfluenceType, Html.GetEnumSelectList(typeof(InfluenceTypes)))</div>
-                     <div class="col-sm-1">@Html.LabelFor(x => x.MedicineName)</div>
+                     @Html.LabelFor(x => x.InfluenceType, new { @class = "col-sm-2 control-label" })
+                     <div class="col-sm-2">@Html.DropDownListFor(x=>x.InfluenceType, Html.GetEnumSelectList(typeof(InfluenceTypes)))</div>
+                 </div>
+                 <div class="row">
+                     @Html.LabelFor(x => x.MedicineName, new { @class = "col-sm-2 control-label" })
                      <div class="col-sm-2">@Html.EditorFor(x=>x.MedicineName)</div>
-                     <div class="col-sm-1"><input type="submit" value="Добавить" class="btn btn-success" /></div>
+                 </div>
+                 <br/>
+                 <div class="row">
+                      <div class="col-sm-2"><h4>Показатели</h4></div>
+                      <div class="col-sm-2"><button id="addParamButton">Добавить</button></div>
                  </div>
                  <div class="row">
-                      <div class="col-sm-1"><h4>Показатели</h4></div>
-                      <div class="col-sm-1"><button id="addParamButton">Добавить</button></div>
+                     <div id="parametersContainter"
+                         class="col-sm-12"
+                         style="height:300px;overflow:scroll;overflow-x: hidden;border-style: ridge;">@Html.EditorFor(x=>x.Parameters)</div> 
                  </div>
+                 <br/>
                  <div class="row">
-                     <div id="parametersContainter">@Html.EditorFor(x=>x.Parameters)</div> 
+                     <div class="col-sm-2 col-sm-offset-2"><input type="submit" value="Добавить воздействие" class="btn btn-success" /></div>
                  </div>
+                 
             </div>
         </form>
     </div>

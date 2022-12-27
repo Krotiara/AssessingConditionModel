@@ -1,29 +1,22 @@
 ﻿@using Interfaces
 @model PatientParameter
-<div class="row">
-    <div class="col-sm-3">
-        <div class="form-group">
-            @Html.LabelFor(x=>x.ParameterName)
-            @Html.DropDownListFor(
-                x=>x.ParameterName, Html.GetEnumSelectList(typeof(ParameterNames)))
-        </div>
-    </div>
-    <div class="col-sm-3">
-        <div class="form-group">
-            @Html.LabelFor(x=>x.Value)
-            @Html.TextBoxFor(x=>x.Value)
-        </div>
-    </div>
-    <div class="col-sm-3">
-        <div class="form-group">
-            @Html.LabelFor(x=>x.Timestamp)
-            @Html.EditorFor(x=>x.Timestamp)
-        </div>
-    </div>
-    <div class="col-sm-3">
-        <div class="form-group">
-            @Html.LabelFor(x=>x.IsDynamic)
-            @Html.EditorFor(x=>x.IsDynamic)
-        </div>
-    </div>
+<div class="row rowPatient" draggable="true">
+    @Html.LabelFor(x=>x.ParameterName,new { @class = "col-sm-1 control-label" })
+    <div class="col-sm-2">@Html.DropDownListFor(
+        x=>x.ParameterName, Html.GetEnumSelectList(typeof(ParameterNames)))</div>
+    @Html.LabelFor(x=>x.Value, new { @class = "col-sm-1 control-label" })
+    <div class="col-sm-2">@Html.TextBoxFor(x=>x.Value)</div>
+    @Html.LabelFor(x=>x.Timestamp, new { @class = "col-sm-1 control-label" })
+    <div class="col-sm-2">@Html.EditorFor(x=>x.Timestamp)</div>
+    @Html.LabelFor(x=>x.IsDynamic, new { @class = "col-sm-1 control-label" })
+    <div class="col-sm-2"> @Html.EditorFor(x=>x.IsDynamic)</div>
 </div>
+<style>
+    .rowPatient
+    {
+        margin-bottom: 5px;
+        border-left:none;
+        border-right:none;
+        border-bottom:1px solid black;
+    }
+</style>
