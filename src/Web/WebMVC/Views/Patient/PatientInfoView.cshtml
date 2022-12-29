@@ -115,15 +115,16 @@
 <script>
     function GetPanel(panelName) {
         var d=@Html.Raw(val);
-        var jsonD = JSON.stringify(d);
         $.ajax({
             url: '@Url.Action("GetPatientInfoPartialView", "Medic")',
-            data: { tag: panelName, patientInfo: jsonD },
-            contentType: 'application/json',
-            type: 'get',
+            data: JSON.stringify({Tag: panelName, PatientInfo: d }),
+            contentType: 'application/json; charset=utf-8',
+            dataType: 'html',
+            type: 'post',
             cache: false,
             async: true,
             success: function (result) {
+                alert(result);
                 $('#patientInfoContent').html(result);
             }
         });

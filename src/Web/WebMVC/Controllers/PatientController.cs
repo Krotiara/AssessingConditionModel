@@ -102,6 +102,7 @@ namespace WebMVC.Controllers
         [HttpGet]
         public async Task<IActionResult> GetPatientInfluences(int patientId, DateTime startTimestamp, DateTime endTimestamp)
         {
+#warning Заменить на DisplayTemplate
             IList<Influence> influences = await patientsService.GetPatientInfluences(patientId, startTimestamp, endTimestamp);
             //IEnumerable<InfluenceViewFormat> viewFormatInfluences = influences.Select(x => new InfluenceViewFormat(x));
             return PartialView("_PatientInfluences", influences);
