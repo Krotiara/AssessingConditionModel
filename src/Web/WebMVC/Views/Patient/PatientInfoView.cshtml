@@ -1,5 +1,9 @@
 ﻿@using Interfaces
+@using Newtonsoft.Json
 @model PatientInfo
+@{
+    string val = JsonConvert.SerializeObject(Model);
+}
 @*
     
 *@
@@ -17,35 +21,29 @@
                 @Html.DisplayFor(x=>x.Patient)
                 @Html.ActionLink("Изменить","GetEditPatientView", "Patient", Model.Patient, null)       
             </div>
-            <div id="agingInfo">
+            <div id="patientInfoMenu">
+                <div class="form-group">
+                    <button onclick="GetPanel('agingInfo')">Темп старения</button>
+                    <button onclick="GetPanel('influences')">Воздействия</button>
+                    <button onclick="GetPanel('agingDynamicInfo')">Динамика темпа старения</button>
+                </div>
+            </div>
+            <div id="patientInfoContent">
+
+            </div>
+            
+            @*<div id="agingInfo" style="visibility: none">
                 <p style="font-size:20px; font-weight:bold;" align="left">Темп старения</p>
                 @if(Model.AgingPatientState == null)
             {
                 <div class="alert alert-danger alert-dismissible fade show text-center">Нет данных по темпу старения</div>
             }
             else
-            {
-                <table class="table table-bordered table-sm">
-                    <thead>
-                        <tr>
-                            <th>@Html.LabelFor(m => m.AgingPatientState.Timestamp)</th>
-                            <th>@Html.LabelFor(m => m.AgingPatientState.Age)</th>
-                            <th>@Html.LabelFor(m => m.AgingPatientState.BioAge)</th>
-                            <th>@Html.LabelFor(m => m.AgingPatientState.BioAgeState)</th>
-                        </tr> 
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <th>@Model.AgingPatientState.Timestamp</th>
-                            <th>@Model.AgingPatientState.Age</th>
-                            <th>@Model.AgingPatientState.BioAge</th>
-                            <th>@Model.AgingPatientState.BioAgeState.GetDisplayAttributeValue()</th>
-                        </tr>
-                    </tbody>
-                </table>
-            }
-            </div>
-            <div id="influences">
+                @Html.DisplayFor(x=>x.AgingPatientState)
+            
+            </div>*@
+
+            @*<div id="influences" style="visibility: none">
                 <div><p style="font-size:20px;font-weight:bold;">Воздействия</p></div>
                 <table style="table-layout: fixed;" class="table table-sm">
                     <tr>
@@ -57,8 +55,9 @@
                     </tr>
                 </table>
                 <div id="influencesInfo"></div>
-            </div>
-            <div id="agingDynamicInfo">
+            </div>*@
+
+            @*<div id="agingDynamicInfo" style="visibility: none">
                 <div><p style="font-size:20px;font-weight:bold;">Динамика биовозраста пациента</p></div>
                 <table style="table-layout: fixed;" class="table table-sm">
                     <tr>
@@ -70,13 +69,13 @@
                     </tr>
                 </table>   
                 <div id="DynamicsInfo"></div>
-            </div>
+            </div>*@
         </div>
     </body>
 </html>
 
 
-<script>
+@*<script>
     function GetAgingDynamics() {
         var pId = @Model.Patient.MedicalHistoryNumber;
         var startTime = document.getElementById("dt1").value;
@@ -93,9 +92,9 @@
         });
     }
 </script>
+*@
 
-
-<script>
+@*<script>
     function GetPatientInfluences() {
         var pId = @Model.Patient.MedicalHistoryNumber;
         var startTime = document.getElementById("patientInfluencesDt1").value;
@@ -111,4 +110,23 @@
             }
         });
     }
+</script>*@
+
+<script>
+    function GetPanel(panelName) {
+        var d=@Html.Raw(val);
+        var jsonD = JSON.stringify(d);
+        $.ajax({
+            url: '@Url.Action("GetPatientInfoPartialView", "Medic")',
+            data: { tag: panelName, patientInfo: jsonD },
+            contentType: 'application/json',
+            type: 'get',
+            cache: false,
+            async: true,
+            success: function (result) {
+                $('#patientInfoContent').html(result);
+            }
+        });
+    }
 </script>
+

@@ -33,7 +33,7 @@ namespace WebMVC.Controllers
                     AgingPatientState = state
                 };
 
-                return PartialView("_PatientInfoView", patientInfo);
+                return PartialView("PatientInfoView", patientInfo);
             }
             catch(GetWebResponceException ex)
             {
@@ -83,11 +83,10 @@ namespace WebMVC.Controllers
         {
             try
             {
-                //TODO try catch
-                IList<AgingDynamics> agingDynamics = await
+                IEnumerable<AgingDynamics> agingDynamics = await
                     patientsService.GetPatientAgingDynamics(patientId, startTimestamp, endTimestamp);
 
-                return PartialView("PatientAgingDynamicsView", agingDynamics);
+                return PartialView("DisplayTemplates/AgingDynamicsCollection", agingDynamics);
             }
             catch(GetWebResponceException ex)
             {

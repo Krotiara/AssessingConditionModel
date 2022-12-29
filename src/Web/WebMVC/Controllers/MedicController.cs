@@ -29,6 +29,14 @@ namespace WebMVC.Controllers
         }
 
 
+        [HttpGet]
+        public async Task<IActionResult> GetPatientInfoPartialView(string tag, PatientInfo patientInfo)
+        {
+#warning patientInfo из ajax возвращается пустой
+            throw new NotImplementedException();
+        }
+
+
         [HttpPost]
         public async Task<IActionResult> AddPatientParameter([Bind("Parameters")] InfluenceViewFormat influence)
         {

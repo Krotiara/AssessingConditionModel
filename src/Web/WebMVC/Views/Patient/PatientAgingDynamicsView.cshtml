@@ -1,72 +1,32 @@
-﻿@using Interfaces
-@model IList<AgingDynamics>
-@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-}
-
-
-
-<html>
-    <head>
-        <title>Информация о динамике биовозраста пациента</title>
-        <style >
-            .centerCell
-            {
-                text-align: left;
-            }
-            th{font-weight: normal;}    
-        </style>
-    </head>
-    
-    <body>      
-        <table style="table-layout: fixed;width:100%;" class="table-bordered table-hover  table-sm">                  
-                @foreach(AgingDynamics agingDynamics in Model)
-                {
+﻿<div id="agingDynamicInfo">
+                <div><p style="font-size:20px;font-weight:bold;">Динамика биовозраста пациента</p></div>
+                <table style="table-layout: fixed;" class="table table-sm">
                     <tr>
-                        <th>
-                             <table  style="table-layout: fixed;" class="table-sm">
-                                 <tr>
-                                     <th colspan="5"><p align="left">Тип воздействия:</p></th>
-                                     <th colspan="5"><p align="left">@agingDynamics.InfluenceType.GetDisplayAttributeValue()</p></th>   
-                                  </tr>
-                                 <tr>
-                                     <th colspan="5"><p align="left">Наименование препарата:</p></th>
-                                     <th colspan="5"><p align="left">@agingDynamics.MedicineName</p></th>
-                                 </tr>
-                                 <tr>
-                                     <th colspan="5"> <p align="left">Начало воздействия:</p></th>
-                                     <th colspan="5"> <p align="left">@Html.Label(agingDynamics.StartTimestamp.ToShortDateString())</p></th>   
-                                 </tr>
-                                 <tr>
-                                     <th colspan="5"> <p align="left">Окончание воздействия:</p></th>
-                                     <th colspan="5"> <p align="left">@Html.Label(agingDynamics.EndTimestamp.ToShortDateString())</p></th> 
-                                 </tr>
-                             </table>
-                             <table style="table-layout: fixed;width:100%;" class="table-bordered table-sm"> 
-                                <thead>
-                                    <tr class="centerCell">
-                                        <th colspan="2"><p>Возраст</p></th>
-                                        <th colspan="2"><p>Биовозраст</p></th>
-                                        <th colspan="6"><p>Состояние</p></th>    
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr class="centerCell">
-                                        <th colspan="2">
-                                            <p>@agingDynamics.AgentStateInInfluenceStart.Age -> @agingDynamics.AgentStateInInfluenceEnd.Age</p></th>
-                                        <th colspan="2">
-                                            <p>@agingDynamics.AgentStateInInfluenceStart.BioAge -> @agingDynamics.AgentStateInInfluenceEnd.BioAge</p></th>
-                                        <th colspan="6">
-                                            <p>@agingDynamics.AgentStateInInfluenceStart.BioAgeState.GetDisplayAttributeValue() 
-                                                -> @agingDynamics.AgentStateInInfluenceEnd.BioAgeState.GetDisplayAttributeValue()</p></th>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </th>     
+                        <th colspan="2">Начало периода:</th>
+                        <th colspan="2"><input style = "width:100%" type="date" id="dt1"/></th>
+                        <th colspan="2">Окончание периода:</th>
+                        <th colspan="2"><input style = "width:100%" type="date" id="dt2"/></th>
+                        <th colspan="2"><button style = "width:100%" onclick="GetAgingDynamics()">Показать</button></th>
                     </tr>
-                }
-        </table>  
-    </body>
-</html>
+                </table>   
+                <div id="DynamicsInfo"></div>
+
+</div>
+
+<script>
+    function GetAgingDynamics() {
+        var pId = @Model.Patient.MedicalHistoryNumber;
+        var startTime = document.getElementById("dt1").value;
+        var endTime = document.getElementById("dt2").value;
+         $.ajax({
+            url: '@Url.Action("GetPatientAgingDynamics", "Patient")',
+            data: {patientId: pId, startTimestamp:startTime, endTimestamp:endTime},
+            type: 'get',
+            cache: false,
+            async: true,
+            success: function (result) {
+                $('#DynamicsInfo').html(result);
+            }
+        });
+    }
+</script>

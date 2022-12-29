@@ -1,0 +1,45 @@
+﻿@using Interfaces
+@model AgingDynamics
+
+<tr>
+    <th>
+            <table  style="table-layout: fixed;" class="table-sm">
+                <tr>
+                    <th colspan="5"><p align="left">Тип воздействия:</p></th>
+                    <th colspan="5"><p align="left">@Model.InfluenceType.GetDisplayAttributeValue()</p></th>   
+                </tr>
+                <tr>
+                    <th colspan="5"><p align="left">Наименование препарата:</p></th>
+                    <th colspan="5"><p align="left">@Model.MedicineName</p></th>
+                </tr>
+                <tr>
+                    <th colspan="5"> <p align="left">Начало воздействия:</p></th>
+                    <th colspan="5"> <p align="left">@Html.Label(Model.StartTimestamp.ToShortDateString())</p></th>   
+                </tr>
+                <tr>
+                    <th colspan="5"> <p align="left">Окончание воздействия:</p></th>
+                    <th colspan="5"> <p align="left">@Html.Label(Model.EndTimestamp.ToShortDateString())</p></th> 
+                </tr>
+            </table>
+            <table style="table-layout: fixed;width:100%;" class="table-bordered table-sm"> 
+            <thead>
+                <tr class="centerCell">
+                    <th colspan="2"><p>Возраст</p></th>
+                    <th colspan="2"><p>Биовозраст</p></th>
+                    <th colspan="6"><p>Состояние</p></th>    
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="centerCell">
+                    <th colspan="2">
+                        <p>@Model.AgentStateInInfluenceStart.Age -> @Model.AgentStateInInfluenceEnd.Age</p></th>
+                    <th colspan="2">
+                        <p>@Model.AgentStateInInfluenceStart.BioAge -> @Model.AgentStateInInfluenceEnd.BioAge</p></th>
+                    <th colspan="6">
+                        <p>@Model.AgentStateInInfluenceStart.BioAgeState.GetDisplayAttributeValue() 
+                            -> @Model.AgentStateInInfluenceEnd.BioAgeState.GetDisplayAttributeValue()</p></th>
+                </tr>
+            </tbody>
+        </table>
+    </th>     
+</tr>
