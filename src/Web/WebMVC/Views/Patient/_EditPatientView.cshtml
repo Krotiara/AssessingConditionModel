@@ -17,24 +17,7 @@
         <div class="panel-body">
             @using (Html.BeginForm("EditPatient", "Patient", FormMethod.Post))
             {
-                <table>
-                    <tr>
-                        <th>@Html.LabelFor(m => m.Name)</th>
-                        <th>@Html.TextBoxFor(x=>x.Name)</th>
-                    </tr>
-                    <tr>
-                        <th>@Html.LabelFor(m => m.MedicalHistoryNumber)</th>
-                        <th>@Html.TextBoxFor(x=>x.MedicalHistoryNumber)</th>
-                    </tr>
-                    <tr>
-                        <th>@Html.LabelFor(m => m.Birthday)</th>
-                        <th>@Html.EditorFor(x=>x.Birthday)</th>
-                    </tr>
-                    <tr>
-                        <th>@Html.LabelFor(m => m.Gender)</th>
-                        <th>@Html.DropDownListFor(x=>x.Gender, Html.GetEnumSelectList(typeof(GenderEnum)))</th>
-                    </tr>
-                </table>
+                @Html.EditorFor(x=>x)
                 <div class="text-center">
                     <input type="submit" value="Принять" class="btn btn-success" />
                 </div>
