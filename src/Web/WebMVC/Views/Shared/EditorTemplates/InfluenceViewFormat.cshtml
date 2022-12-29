@@ -28,7 +28,8 @@
                  <br/>
                  <div class="row">
                       <div class="col-sm-2"><h4>Показатели</h4></div>
-                      <div class="col-sm-2"><button id="addParamButton">Добавить</button></div>
+                      <div class="col-sm-1"><button id="addParamButton">Добавить</button></div>
+                      <div class="col-sm-1"><button id="deleteAllParamButton">Удалить все</button></div>
                  </div>
                  <div class="row">
                      <div id="parametersContainter"
@@ -55,4 +56,19 @@ $('#addParamButton').click(function(e) {
             }
         });
 });
+</script>
+<script type="text/javascript">
+    $('#deleteAllParamButton').click(function (e) {
+        e.preventDefault();
+        $.ajax({
+            url: '@Url.Action("DeleteAllPatientParameters", "Medic")',
+            data: $('#form').serialize(),
+            type: 'POST',
+            cache: false,
+            async: true,
+            success: function (result) {
+                $('#parametersContainter').html(result);
+            }
+        });
+    });
 </script>

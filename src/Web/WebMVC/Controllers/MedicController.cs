@@ -35,5 +35,13 @@ namespace WebMVC.Controllers
             influence.Parameters.Add(new PatientParameter());
             return PartialView("~/Views/Patient/PatientParameterItems.cshtml", influence);
         }
+
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteAllPatientParameters([Bind("Parameters")] InfluenceViewFormat influence)
+        {
+            influence.Parameters.Clear();
+            return PartialView("~/Views/Patient/PatientParameterItems.cshtml", influence);
+        }
     }
 }
