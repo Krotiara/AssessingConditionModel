@@ -14,26 +14,8 @@
         <div>
             <div id="commonInfo">
                 <p style="font-size:20px; font-weight:bold;" align="left">Общая информация</p>
-                <table class="table table-bordered table-sm">
-                    <thead>
-                        <tr>
-                            <th>@Html.LabelFor(m => m.Patient.MedicalHistoryNumber)</th>
-                            <th>@Html.LabelFor(m => m.Patient.Birthday)</th>
-                            <th>@Html.LabelFor(m => m.Patient.Gender)</th>
-                            <th>   
-                                <div> @Html.ActionLink("Изменить","GetEditPatientView", "Patient", Model.Patient, null)</div> 
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                             <th>@Model.Patient.MedicalHistoryNumber</th>
-                             <th>@Model.Patient.Birthday</th>
-                             <th>@Model.Patient.Gender.GetDisplayAttributeValue()</th>
-                        </tr>
-                    </tbody>
-                </table>
-
+                @Html.DisplayFor(x=>x.Patient)
+                @Html.ActionLink("Изменить","GetEditPatientView", "Patient", Model.Patient, null)       
             </div>
             <div id="agingInfo">
                 <p style="font-size:20px; font-weight:bold;" align="left">Темп старения</p>
@@ -62,6 +44,19 @@
                     </tbody>
                 </table>
             }
+            </div>
+            <div id="influences">
+                <div><p style="font-size:20px;font-weight:bold;">Воздействия</p></div>
+                <table style="table-layout: fixed;" class="table table-sm">
+                    <tr>
+                        <th colspan="2">Начало периода:</th>
+                        <th colspan="2"><input style="width:100%" type="date" id="patientInfluencesDt1" /></th>
+                        <th colspan="2">Окончание периода:</th>
+                        <th colspan="2"><input style="width:100%" type="date" id="patientInfluencesDt2" /></th>
+                    <th colspan="2"><button style="width:100%" onclick="GetPatientInfluences()">Показать</button></th>
+                    </tr>
+                </table>
+                <div id="influencesInfo"></div>
             </div>
             <div id="agingDynamicInfo">
                 <div><p style="font-size:20px;font-weight:bold;">Динамика биовозраста пациента</p></div>
@@ -94,6 +89,25 @@
             async: true,
             success: function (result) {
                 $('#DynamicsInfo').html(result);
+            }
+        });
+    }
+</script>
+
+
+<script>
+    function GetPatientInfluences() {
+        var pId = @Model.Patient.MedicalHistoryNumber;
+        var startTime = document.getElementById("patientInfluencesDt1").value;
+        var endTime = document.getElementById("patientInfluencesDt2").value;
+        $.ajax({
+            url: '@Url.Action("GetPatientInfluences", "Patient")',
+            data: { patientId: pId, startTimestamp: startTime, endTimestamp: endTime },
+            type: 'get',
+            cache: false,
+            async: true,
+            success: function (result) {
+                $('#influencesInfo').html(result);
             }
         });
     }

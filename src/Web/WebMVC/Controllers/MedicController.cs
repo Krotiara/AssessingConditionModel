@@ -15,7 +15,7 @@ namespace WebMVC.Controllers
         [HttpGet]
         public async Task<IActionResult> GetPartialViewByTag(string tag)
         {
-            if (tag == "search")
+            if (tag == "search") 
                 return PartialView("~/Views/Patient/_SearchPatientView.cshtml");
             else if (tag == "commonBioAgeDynamic")
                 return PartialView("~/Views/Patient/_CommonAgingDynamicsStartView.cshtml");

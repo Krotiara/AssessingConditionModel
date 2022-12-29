@@ -65,6 +65,7 @@ namespace WebMVC.Controllers
         [HttpGet("editPatient")]
         public async Task<IActionResult> GetEditPatientView(Patient p)
         {
+#warning Нужна корректирока по Html.DisplayFor
             return View("_EditPatientView", p);
         }
 
@@ -96,6 +97,15 @@ namespace WebMVC.Controllers
             {
                 return BadRequest($"Unexpected error: {ex.Message}");
             }
+        }
+
+
+        [HttpGet]
+        public async Task<IActionResult> GetPatientInfluences(int patientId, DateTime startTimestamp, DateTime endTimestamp)
+        {
+            IList<Influence> influences = await patientsService.GetPatientInfluences(patientId, startTimestamp, endTimestamp);
+            //IEnumerable<InfluenceViewFormat> viewFormatInfluences = influences.Select(x => new InfluenceViewFormat(x));
+            return PartialView("_PatientInfluences", influences);
         }
 
 

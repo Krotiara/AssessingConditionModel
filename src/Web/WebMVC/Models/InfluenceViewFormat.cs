@@ -10,6 +10,18 @@ namespace WebMVC.Models
             Parameters = new List<PatientParameter>();
         }
 
+        //public InfluenceViewFormat(Influence influence)
+        //{
+        //    PatientId = influence.PatientId;
+        //    StartTimestamp = influence.StartTimestamp;
+        //    EndTimestamp = influence.EndTimestamp;
+        //    InfluenceType = influence.InfluenceType;
+        //    MedicineName = influence.MedicineName;
+        //    Parameters = new List<PatientParameter>();
+        //    Parameters.AddRange(influence.StartParameters.Values);
+        //    Parameters.AddRange(influence.DynamicParameters.Values);
+        //}
+
         [Display(Name="Идентификатор пациента")]
         public int PatientId { get; set; }
 

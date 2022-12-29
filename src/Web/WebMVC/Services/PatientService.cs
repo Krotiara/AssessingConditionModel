@@ -97,5 +97,13 @@ namespace WebMVC.Services
             string body = Newtonsoft.Json.JsonConvert.SerializeObject(p);
             return await webRequester.GetResponse<bool>(url, "PUT", body);
         }
+
+        public async Task<IList<Influence>> GetPatientInfluences(int patientId, DateTime startTimestamp, DateTime endTimestamp)
+        {
+            string url = $"{gatewayUrl}/patientsApi/influences/{patientId}";
+            string body = Newtonsoft.Json.JsonConvert.SerializeObject(
+                    new DateTime[2] { startTimestamp, endTimestamp });
+            return await webRequester.GetResponse<IList<Influence>>(url, "POST", body);
+        }
     }
 }
