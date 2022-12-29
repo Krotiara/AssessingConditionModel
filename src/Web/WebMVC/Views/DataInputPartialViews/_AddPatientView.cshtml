@@ -1,2 +1,11 @@
 ﻿@model Patient
-@Html.EditorFor(x=>x)
+@using (Html.BeginForm("AddPatient", "Patient", FormMethod.Post))
+{
+    @Html.EditorFor(x=>x)
+    <div class="row">
+        <div class="col-sm-1 offset-sm-2">
+            <input type="submit" value="Добавить" class="btn btn-success" />
+        </div>
+    </div>
+}
+

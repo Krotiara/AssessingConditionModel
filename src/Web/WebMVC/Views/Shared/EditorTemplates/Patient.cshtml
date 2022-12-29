@@ -3,31 +3,24 @@
 
 <div class="panel panel-default">
         <div class="panel-heading"><h4 class="panel-title">Добавление пациента</h4></div>
-        <div class="panel-body">
-            @using (Html.BeginForm("AddPatient", "Patient", FormMethod.Post))
-            {
-                <div class="container-fluid">
-                    <div class="row">
-                        <div class="col-sm-2">@Html.LabelFor(m => m.Name)</div>
-                        <div class="col-sm-1">@Html.TextBoxFor(x=>x.Name)</div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-2">@Html.LabelFor(m => m.MedicalHistoryNumber)</div>
-                        <div class="col-sm-1">@Html.TextBoxFor(x=>x.MedicalHistoryNumber)</div>                  
-                    </div>
-                     <div class="row">
-                        <div class="col-sm-2">@Html.LabelFor(m => m.Gender)</div>
-                        <div class="col-sm-1">@Html.DropDownListFor(x=>x.Gender, Html.GetEnumSelectList(typeof(GenderEnum)))</div>               
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-2">@Html.LabelFor(m => m.Birthday)</div>
-                        <div class="col-sm-1">@Html.EditorFor(x=>x.Birthday)</div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-1 offset-sm-2">
-                            <input type="submit" value="Добавить" class="btn btn-success"/></div>
-                    </div>
+        <div class="panel-body">           
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-sm-2">@Html.LabelFor(m => m.Name)</div>
+                    <div class="col-sm-1">@Html.TextBoxFor(x=>x.Name)</div>
                 </div>
-            }
+                <div class="row">
+                    <div class="col-sm-2">@Html.LabelFor(m => m.MedicalHistoryNumber)</div>
+                    <div class="col-sm-1">@Html.TextBoxFor(x=>x.MedicalHistoryNumber)</div>                  
+                </div>
+                    <div class="row">
+                    <div class="col-sm-2">@Html.LabelFor(m => m.Gender)</div>
+                    <div class="col-sm-1">@Html.DropDownListFor(x=>x.Gender, Html.GetEnumSelectList(typeof(GenderEnum)))</div>               
+                </div>
+                <div class="row">
+                    <div class="col-sm-2">@Html.LabelFor(m => m.Birthday)</div>
+                    <div class="col-sm-1">@Html.EditorFor(x=>x.Birthday)</div>
+                </div>
+            </div>          
         </div>
 </div>

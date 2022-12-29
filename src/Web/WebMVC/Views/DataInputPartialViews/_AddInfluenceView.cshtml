@@ -1,3 +1,8 @@
 ﻿@using Interfaces;
 @model InfluenceViewFormat
-@Html.EditorFor(x=>x)
+<form asp-action="AddInluence" asp-controller="Patient" id="form">
+    @Html.EditorFor(x=>x)
+    <div class="row">
+        <div class="col-sm-2 col-sm-offset-2"><input type="submit" value="Добавить воздействие" class="btn btn-success" /></div>
+    </div>
+</form>
