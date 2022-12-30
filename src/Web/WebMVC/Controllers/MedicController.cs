@@ -30,21 +30,6 @@ namespace WebMVC.Controllers
 
 
         [HttpPost]
-        public async Task<IActionResult> GetPatientInfoPartialView([FromBody]PatientInfoViewSettings InfoViewSettings)
-        {
-#warning Баг с _PatientInfluencesView - не возвращается. Может из-за скрипта в виде.
-            //TODO Вынести GetPartialViewByTag и GetPatientInfoPartialView в отдельный контроллер
-            if (InfoViewSettings.Tag == "agingInfo")
-                return PartialView("DisplayTemplates/AgingState", InfoViewSettings.PatientInfo.AgingPatientState);
-            else if (InfoViewSettings.Tag == "influences")
-                return PartialView("~/Views/Patient/_PatientInfluencesView.cshtml");
-            else if (InfoViewSettings.Tag == "agingDynamicInfo")
-                return PartialView("~/Views/Patient/PatientAgingDynamicsView.cshtml");
-            else throw new NotImplementedException();
-        }
-
-
-        [HttpPost]
         public async Task<IActionResult> AddPatientParameter([Bind("Parameters")] InfluenceViewFormat influence)
         {
             influence.Parameters.Add(new PatientParameter());
