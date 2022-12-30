@@ -70,7 +70,7 @@
 <script>
     function GetPanel(panelName) {
         $.ajax({
-            url: '@Url.Action("GetPartialViewByTag", "Medic")',
+            url: '@Url.Action("GetPartialViewByTag", "ViewGetter")',
             data: { tag: panelName },
             type: 'get',
             cache: false,
