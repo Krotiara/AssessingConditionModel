@@ -162,7 +162,18 @@ namespace PatientsResolver.API.Data.Repository
 
         private void InitParameters(List<Influence> datas)
         {
-            datas.ForEach(x => { InitParametersFor(x);});
+            datas.ForEach(x =>
+            {
+                try
+                {
+                    InitParametersFor(x);
+                }
+                catch (Exception ex)
+                {
+#warning Ошибка контекста - две операции одновременно (примерно так звучит). Пока оставлен костыль на пропуск.
+                    return;
+                }
+            });
         }
 
 

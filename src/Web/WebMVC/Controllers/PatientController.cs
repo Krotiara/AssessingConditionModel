@@ -66,7 +66,7 @@ namespace WebMVC.Controllers
         public async Task<IActionResult> GetEditPatientView(Patient p)
         {
 #warning Нужна корректирока по Html.DisplayFor
-            return View("_EditPatientView", p);
+            return View("EditPatientView", p);
         }
 
 
@@ -105,7 +105,7 @@ namespace WebMVC.Controllers
 #warning Заменить на DisplayTemplate
             IList<Influence> influences = await patientsService.GetPatientInfluences(patientId, startTimestamp, endTimestamp);
             //IEnumerable<InfluenceViewFormat> viewFormatInfluences = influences.Select(x => new InfluenceViewFormat(x));
-            return PartialView("_PatientInfluences", influences);
+            return PartialView("DisplayTemplates/PatientInfluences", influences);
         }
 
 
@@ -117,7 +117,7 @@ namespace WebMVC.Controllers
                 List<AgingDynamics> agingDynamics = (await
                    patientsService.GetAgingDynamics(startTimestamp, endTimestamp)).ToList();
                 CommonAgingDynamics dynamics = new CommonAgingDynamics(agingDynamics, startTimestamp, endTimestamp);
-                return PartialView("CommonAgingDynamicsView", dynamics);
+                return PartialView("DisplayTemplates/CommonAgingDynamics", dynamics);
             }
             catch(GetWebResponceException ex)
             {
