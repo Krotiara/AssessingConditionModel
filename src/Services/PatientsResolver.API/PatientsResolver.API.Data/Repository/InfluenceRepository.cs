@@ -5,7 +5,6 @@ using PatientsResolver.API.Entities;
 using System;
 using System.Collections.Generic;
 using System.Data.Common;
-using System.Data.Entity;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -23,51 +22,48 @@ namespace PatientsResolver.API.Data.Repository
 
         public async Task<bool> AddPatientInluence(Influence influence, CancellationToken cancellationToken)
         {
-#warning По хорошему это нужно вынести в команду. В ту, в которой сейчас вызывается этот метод.
-            using (PatientsDataDbContext dbContext = dbContextFactory.CreateDbContext())
+#warning По хорошему это нужно вынести в команду. В ту, в которой сейчас вызывается этот метод.          
+            IExecutionStrategy strategy = dbContext.Database.CreateExecutionStrategy();
+            return await strategy.ExecuteAsync(async () =>
             {
-                IExecutionStrategy strategy = dbContext.Database.CreateExecutionStrategy();
-                return await strategy.ExecuteAsync(async () =>
+                using (var t = await dbContext.Database.BeginTransactionAsync())
                 {
-                    using (var t = await dbContext.Database.BeginTransactionAsync())
+                    try
                     {
-                        try
-                        {
-                            if (!IsCorrectInfluence(influence))
-                                throw new Exception("Influence is not in valid format");
+                        if (!IsCorrectInfluence(influence))
+                            throw new Exception("Influence is not in valid format");
 
-                            if (await IsInluenceExistAsync(influence))
-                                return false;
+                        if (await IsInluenceExistAsync(dbContext, influence))
+                            return false;
 
-                            Patient patient = await dbContext
-                                .Patients
-                                .FirstOrDefaultAsync(x => x.MedicalHistoryNumber == influence.PatientId);
+                        Patient patient = await dbContext
+                            .Patients
+                            .FirstOrDefaultAsync(x => x.MedicalHistoryNumber == influence.PatientId);
 
 #warning В данной реализации не добавляется пациент, если здесь не был найден. Просто пробрасывается ошибка.
-                            if (patient == null)
-                                throw new NullReferenceException($"Patient was not find with patientId = {influence.PatientId}");
-                            else
-                                await ProcessPatientAsync(patient, influence, cancellationToken);
+                        if (patient == null)
+                            throw new NullReferenceException($"Patient was not find with patientId = {influence.PatientId}");
+                        else
+                            await ProcessPatientAsync(patient, influence, cancellationToken);
 
-                            await dbContext.Influences.AddAsync(influence, cancellationToken);
-                            await dbContext.SaveChangesAsync();
+                        await dbContext.Influences.AddAsync(influence, cancellationToken);
+                        await dbContext.SaveChangesAsync();
 
-                            if (influence.StartParameters != null) //после PatientDatas SaveChangesAsync для установки айдишников
-                                await ProcessParametersAsync(dbContext, influence.Id, influence.StartParameters.Values, cancellationToken);
-                            if (influence.DynamicParameters != null)
-                                await ProcessParametersAsync(dbContext, influence.Id, influence.DynamicParameters.Values, cancellationToken);
+                        if (influence.StartParameters != null) //после PatientDatas SaveChangesAsync для установки айдишников
+                            await ProcessParametersAsync(dbContext, influence.Id, influence.StartParameters.Values, cancellationToken);
+                        if (influence.DynamicParameters != null)
+                            await ProcessParametersAsync(dbContext, influence.Id, influence.DynamicParameters.Values, cancellationToken);
 
-                            await t.CommitAsync(cancellationToken);
-                            return true;
-                        }
-                        catch (Exception ex)
-                        {
-                            await t.RollbackAsync(cancellationToken);
-                            throw; //TODO
-                        }
+                        await t.CommitAsync(cancellationToken);
+                        return true;
                     }
-                });
-            }
+                    catch (Exception ex)
+                    {
+                        await t.RollbackAsync(cancellationToken);
+                        throw; //TODO
+                    }
+                }
+            });     
         }
 
 
@@ -119,64 +115,60 @@ namespace PatientsResolver.API.Data.Repository
 
         public async Task<List<Influence>> GetPatientInfluences(int patientId, DateTime startTimestamp, DateTime endTimestamp)
         {
-            using (PatientsDataDbContext dbContext = dbContextFactory.CreateDbContext())
+            
+            IExecutionStrategy strategy = dbContext.Database.CreateExecutionStrategy();
+            return await strategy.ExecuteAsync(async () =>
             {
-                IExecutionStrategy strategy = dbContext.Database.CreateExecutionStrategy();
-                return await strategy.ExecuteAsync(async () =>
-                {
-                    IQueryable<Influence> patientDatas = dbContext
-                            .Influences
-                            .Where(x => x.PatientId == patientId)
-                            .Where(x => x.StartTimestamp >= startTimestamp && x.EndTimestamp <= endTimestamp);
+                IQueryable<Influence> patientDatas = dbContext
+                        .Influences
+                        .Where(x => x.PatientId == patientId)
+                        .Where(x => x.StartTimestamp >= startTimestamp && x.EndTimestamp <= endTimestamp);
 
-                    if (patientDatas.Count() == 0)
-                        return new List<Influence>();
+                if (patientDatas.Count() == 0)
+                    return new List<Influence>();
 
-                    List<Influence> datas = await patientDatas
-                        .Include(x => x.Patient)
-                        .ToListAsync();
+                List<Influence> datas = await patientDatas
+                    .Include(x => x.Patient)
+                    .ToListAsync();
 
-                    InitParameters(datas);
+                InitParameters(dbContext, datas);
 
-                    return datas;
-                });
-            }
-
+                return datas;
+            });
         }
 
 
         public async Task<List<Influence>> GetInfluences(DateTime startTimestamp, DateTime endTimestamp)
         {
-            using (PatientsDataDbContext dbContext = dbContextFactory.CreateDbContext())
+            
+            IExecutionStrategy strategy = dbContext.Database.CreateExecutionStrategy();
+            return await strategy.ExecuteAsync(async () =>
             {
-                IExecutionStrategy strategy = dbContext.Database.CreateExecutionStrategy();
-                return await strategy.ExecuteAsync(async () =>
-                {
-                    IQueryable<Influence> influences = dbContext
-                            .Influences
-                            .Where(x => x.StartTimestamp >= startTimestamp && x.EndTimestamp <= endTimestamp);
-                    if (influences.Count() == 0)
-                        return new List<Influence>();
+                IQueryable<Influence> influences = dbContext
+                        .Influences
+                        .Where(x => x.StartTimestamp >= startTimestamp && x.EndTimestamp <= endTimestamp);
+                if (influences.Count() == 0)
+                    return new List<Influence>();
 
-                    List<Influence> datas = await influences
-                       .Include(x => x.Patient)
-                       .ToListAsync();
+                List<Influence> datas = await influences
+                    .Include(x => x.Patient)
+                    .ToListAsync();
 
-                    InitParameters(datas);
+                InitParameters(dbContext, datas);
 
-                    return datas;
-                });
-            }
+                return datas;
+            });
+            
         }
 
 
-        private void InitParameters(List<Influence> datas)
+        private void InitParameters(PatientsDataDbContext dbContext, List<Influence> datas)
         {
             datas.ForEach(x =>
             {
                 try
                 {
-                    InitParametersFor(x);
+                    InitParametersFor(dbContext, x);
                 }
                 catch (Exception ex)
                 {
@@ -211,48 +203,46 @@ namespace PatientsResolver.API.Data.Repository
 
         public async Task<Influence?> GetPatientInfluence(int inluenceId)
         {
-            using (PatientsDataDbContext dbContext = dbContextFactory.CreateDbContext())
+            
+            IExecutionStrategy strategy = dbContext.Database.CreateExecutionStrategy();
+            return await strategy.ExecuteAsync(async () =>
             {
-                IExecutionStrategy strategy = dbContext.Database.CreateExecutionStrategy();
-                return await strategy.ExecuteAsync(async () =>
-                {
-                    Influence? inf = await dbContext.Influences.FirstOrDefaultAsync(x => x.Id == inluenceId);
-                    if (inf != null)
-                        InitParametersFor(dbContext, inf);
-                    return inf;
+                Influence? inf = await dbContext.Influences.FirstOrDefaultAsync(x => x.Id == inluenceId);
+                if (inf != null)
+                    InitParametersFor(dbContext, inf);
+                return inf;
 
-                });
-            }
+            });
+            
         }
 
         public async Task<Influence> UpdateInfluence(Influence influence, CancellationToken cancellationToken)
         {
-            using (PatientsDataDbContext dbContext = dbContextFactory.CreateDbContext())
+            
+            IExecutionStrategy strategy = dbContext.Database.CreateExecutionStrategy();
+            if (influence.Id == default(int))
+                throw new KeyNotFoundException("Id переданного воздействия не установлен");
+            if (!IsCorrectInfluence(influence))
+                throw new Exception("Обновление воздействия отменено, передано некорректное воздействие");
+            return await strategy.ExecuteAsync(async () =>
             {
-                IExecutionStrategy strategy = dbContext.Database.CreateExecutionStrategy();
-                if (influence.Id == default(int))
-                    throw new KeyNotFoundException("Id переданного воздействия не установлен");
-                if (!IsCorrectInfluence(influence))
-                    throw new Exception("Обновление воздействия отменено, передано некорректное воздействие");
-                return await strategy.ExecuteAsync(async () =>
+                using (var t = await dbContext.Database.BeginTransactionAsync())
                 {
-                    using (var t = await dbContext.Database.BeginTransactionAsync())
+                    try
                     {
-                        try
-                        {
-                            Influence dbInfluence = await GetPatientInfluence(influence.Id);
-                            await CopyFieldsToDbInfuence(influence, dbInfluence, cancellationToken);
-                            await t.CommitAsync(cancellationToken);
-                            return dbInfluence;
-                        }
-                        catch (Exception ex)
-                        {
-                            await t.RollbackAsync(cancellationToken);
-                            throw; //TODO
-                        }
+                        Influence dbInfluence = await GetPatientInfluence(influence.Id);
+                        await CopyFieldsToDbInfuence(influence, dbInfluence, cancellationToken);
+                        await t.CommitAsync(cancellationToken);
+                        return dbInfluence;
                     }
-                });
-            }
+                    catch (Exception ex)
+                    {
+                        await t.RollbackAsync(cancellationToken);
+                        throw; //TODO
+                    }
+                }
+            });
+            
         }
 
 
@@ -284,23 +274,22 @@ namespace PatientsResolver.API.Data.Repository
 
             IEnumerable<PatientParameter> paramsToAdd = startParamsToAdd.Concat(dynamicParamsToAdd);
 
-            using (PatientsDataDbContext dbContext = dbContextFactory.CreateDbContext())
-            {
-                if (paramsToAdd.Any())
-                    await ProcessParametersAsync(dbContext, dbInfluence.Id, startParamsToAdd.Concat(dynamicParamsToAdd), cancellationToken);
+            
+            if (paramsToAdd.Any())
+                await ProcessParametersAsync(dbContext, dbInfluence.Id, startParamsToAdd.Concat(dynamicParamsToAdd), cancellationToken);
 
-                foreach (PatientParameter p in startParamsToUpdate)
-                    CopyFieldsToDbParameter(dbContext, p, dbInfluence.StartParameters[p.ParameterName]);
-                foreach (PatientParameter p in dynamicParamsToUpdate)
-                    CopyFieldsToDbParameter(dbContext, p, dbInfluence.DynamicParameters[p.ParameterName]);
+            foreach (PatientParameter p in startParamsToUpdate)
+                CopyFieldsToDbParameter(dbContext, p, dbInfluence.StartParameters[p.ParameterName]);
+            foreach (PatientParameter p in dynamicParamsToUpdate)
+                CopyFieldsToDbParameter(dbContext, p, dbInfluence.DynamicParameters[p.ParameterName]);
 
-                foreach (PatientParameter p in paramsToDelete)
-                    dbContext.Entry(p).State = EntityState.Deleted;
+            foreach (PatientParameter p in paramsToDelete)
+                dbContext.Entry(p).State = EntityState.Deleted;
 
-                dbContext.Entry(dbInfluence).State = EntityState.Modified;
+            dbContext.Entry(dbInfluence).State = EntityState.Modified;
 
-                await dbContext.SaveChangesAsync();
-            }
+            await dbContext.SaveChangesAsync();
+            
         }
 
 
@@ -316,36 +305,33 @@ namespace PatientsResolver.API.Data.Repository
 
         public async Task<bool> DeleteInfluence(int influenceId, CancellationToken cancellationToken)
         {
-            using (PatientsDataDbContext dbContext = dbContextFactory.CreateDbContext())
+            
+            IExecutionStrategy strategy = dbContext.Database.CreateExecutionStrategy();
+            Influence inf = await GetPatientInfluence(influenceId);
+            if (inf == null)
+                throw new KeyNotFoundException($"Не найдено воздействие с id = {influenceId}");
+            return await strategy.ExecuteAsync(async () =>
             {
-                IExecutionStrategy strategy = dbContext.Database.CreateExecutionStrategy();
-                Influence inf = await GetPatientInfluence(influenceId);
-                if (inf == null)
-                    throw new KeyNotFoundException($"Не найдено воздействие с id = {influenceId}");
-                return await strategy.ExecuteAsync(async () =>
+                using (var t = await dbContext.Database.BeginTransactionAsync())
                 {
-                    using (var t = await dbContext.Database.BeginTransactionAsync())
+                    try
                     {
-                        try
-                        {
-                            dbContext.Entry(inf).State = EntityState.Deleted;
-                            foreach (PatientParameter p in inf.StartParameters.Values)
-                                dbContext.Entry(p).State = EntityState.Detached;
-                            foreach (PatientParameter p in inf.DynamicParameters.Values)
-                                dbContext.Entry(p).State = EntityState.Detached;
-                            await dbContext.SaveChangesAsync();
-                            await t.CommitAsync(cancellationToken);
-                            return true;
-                        }
-                        catch (Exception ex)
-                        {
-                            await t.RollbackAsync(cancellationToken);
-                            throw; //TODO
-                        }
+                        dbContext.Entry(inf).State = EntityState.Deleted;
+                        foreach (PatientParameter p in inf.StartParameters.Values)
+                            dbContext.Entry(p).State = EntityState.Detached;
+                        foreach (PatientParameter p in inf.DynamicParameters.Values)
+                            dbContext.Entry(p).State = EntityState.Detached;
+                        await dbContext.SaveChangesAsync();
+                        await t.CommitAsync(cancellationToken);
+                        return true;
                     }
-                });
-            }
-
+                    catch (Exception ex)
+                    {
+                        await t.RollbackAsync(cancellationToken);
+                        throw; //TODO
+                    }
+                }
+            });     
         }
     }
 }

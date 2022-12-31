@@ -10,17 +10,16 @@ namespace PatientsResolver.API.Data.Repository
 {
     public class PatientsRepository: Repository<Patient>
     {
-        public PatientsRepository(PatientsDataDbContext patientsDataDbContext)
-           : base(patientsDataDbContext)
+        public PatientsRepository(IDbContextFactory<PatientsDataDbContext> dbContextFactory)
+           : base(dbContextFactory)
         {
 
         }
 
         public async Task<Patient?> GetPatientBy(int medicalHistoryNumber)
         {
-            return await PatientsDataDbContext
+            return await dbContext
                 .Patients.FirstOrDefaultAsync(x => x.MedicalHistoryNumber == medicalHistoryNumber);
-
         }
     }
 }

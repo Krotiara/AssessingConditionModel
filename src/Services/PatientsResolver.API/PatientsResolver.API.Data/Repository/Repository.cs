@@ -13,38 +13,37 @@ namespace PatientsResolver.API.Data.Repository
     {
 
         //protected PatientsDataDbContext PatientsDataDbContext => dbContextFactory.CreateDbContext();
-        protected readonly IDbContextFactory<PatientsDataDbContext> dbContextFactory;
+        private readonly IDbContextFactory<PatientsDataDbContext> dbContextFactory;
+        protected readonly PatientsDataDbContext dbContext;
 
         public Repository(IDbContextFactory<PatientsDataDbContext> dbContextFactory)
         {
             this.dbContextFactory = dbContextFactory;
+            this.dbContext = dbContextFactory.CreateDbContext();
         }
 
         public async Task<TEntity> AddAsync(TEntity entity)
         {
-            using (PatientsDataDbContext dbContext = dbContextFactory.CreateDbContext())
+            IExecutionStrategy strategy = dbContext.Database.CreateExecutionStrategy();
+            return await strategy.ExecuteAsync(async () =>
             {
-                IExecutionStrategy strategy = dbContext.Database.CreateExecutionStrategy();
-                return await strategy.ExecuteAsync(async () =>
+                if (entity == null)
                 {
-                    if (entity == null)
-                    {
-                        throw new ArgumentNullException($"{nameof(AddAsync)} entity must not be null");
-                    }
+                    throw new ArgumentNullException($"{nameof(AddAsync)} entity must not be null");
+                }
 
-                    try
-                    {
-                        await dbContext.AddAsync(entity);
-                        await dbContext.SaveChangesAsync();
+                try
+                {
+                    await dbContext.AddAsync(entity);
+                    await dbContext.SaveChangesAsync();
 
-                        return entity;
-                    }
-                    catch (Exception ex)
-                    {
-                        throw new Exception($"{nameof(entity)} could not be saved {ex.Message}", ex);
-                    }
-                });
-            }
+                    return entity;
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception($"{nameof(entity)} could not be saved {ex.Message}", ex);
+                }
+            });         
         }
 
         public async Task<List<TEntity>> AddRangeAsync(List<TEntity> entities)
@@ -65,22 +64,16 @@ namespace PatientsResolver.API.Data.Repository
         }
 
         public async Task DeleteAsync(TEntity entity)
-        {
-            using (PatientsDataDbContext dbContext = dbContextFactory.CreateDbContext())
-            {
-                dbContext.Remove(entity);
-                await dbContext.SaveChangesAsync();
-            }
+        {      
+            dbContext.Remove(entity);
+            await dbContext.SaveChangesAsync();          
         }
 
         public IEnumerable<TEntity> GetAll()
         {
             try
-            {
-                using (PatientsDataDbContext dbContext = dbContextFactory.CreateDbContext())
-                {
-                    return dbContext.Set<TEntity>();
-                }
+            { 
+                return dbContext.Set<TEntity>();        
             }
             catch (Exception ex)
             {
@@ -96,12 +89,9 @@ namespace PatientsResolver.API.Data.Repository
             }
 
             try
-            {
-                using (PatientsDataDbContext dbContext = dbContextFactory.CreateDbContext())
-                {
-                    dbContext.Update(entity);
-                    await dbContext.SaveChangesAsync();
-                }
+            {    
+                dbContext.Update(entity);
+                await dbContext.SaveChangesAsync();            
 
                 return entity;
             }
@@ -119,12 +109,9 @@ namespace PatientsResolver.API.Data.Repository
             }
 
             try
-            {
-                using (PatientsDataDbContext dbContext = dbContextFactory.CreateDbContext())
-                {
-                    dbContext.UpdateRange(entities);
-                    await dbContext.SaveChangesAsync();
-                }
+            {              
+                dbContext.UpdateRange(entities);
+                await dbContext.SaveChangesAsync();               
             }
             catch (Exception ex)
             {
