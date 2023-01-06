@@ -7,7 +7,7 @@ using WebMVC.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add ToastNotification
+
 builder.Services.AddRazorPages().AddNToastNotifyNoty(new NotyOptions
 {
     ProgressBar = true,
