@@ -1,10 +1,15 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AspNetCoreHero.ToastNotification.Abstractions;
+using Microsoft.AspNetCore.Mvc;
 using WebMVC.Models;
 
 namespace WebMVC.Controllers
 {
     public class MedicController : Controller
-    {
+    { 
+        public MedicController()
+        {
+            
+        }
         
          public IActionResult Index()
         {

@@ -2,8 +2,18 @@ using Interfaces;
 using Microsoft.AspNetCore.Hosting;
 using WebMVC.Models;
 using WebMVC.Services;
+using AspNetCoreHero.ToastNotification;
+using AspNetCoreHero.ToastNotification.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Add ToastNotification
+builder.Services.AddNotyf(config =>
+{
+    config.DurationInSeconds = 5;
+    config.IsDismissable = true;
+    config.Position = NotyfPosition.TopRight;
+});
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
@@ -30,7 +40,7 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-
+app.UseNotyf();
 app.UseRouting();
 
 app.UseAuthorization();

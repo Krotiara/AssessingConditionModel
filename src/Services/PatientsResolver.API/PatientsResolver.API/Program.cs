@@ -46,11 +46,10 @@ builder.Services.AddDbContextFactory<PatientsDataDbContext>(options => options.U
 }), ServiceLifetime.Scoped);
 
 
-//builder.Services.AddDbContext<PatientsDataDbContext>(options => options.UseNpgsql(connectionString, builder =>
-//{
-//    builder.EnableRetryOnFailure(5, TimeSpan.FromSeconds(2), null);
-//}), ServiceLifetime.Singleton); // Registration dbContext as service.
-
+//https://stackoverflow.com/questions/50774060/asp-net-core-mediatr-error-register-your-handlers-with-the-container
+//Для scoped requesthandler-ов
+builder.Host.ConfigureDefaults(args)
+    .UseDefaultServiceProvider(options =>options.ValidateScopes = false); // needed for mediatr DI
 
 builder.Services.AddScoped<IPatientParameter, PatientParameter>();
 builder.Services.AddScoped<IPatient, Patient>();
@@ -87,39 +86,39 @@ if (serviceClientSettings.Enabled)
 /*Теперь вы можете выполнять ваши запросы. Для этого вам потребуется получить экземпляр интерфейса IMediator. Он регистрируется в вашем контейнере зависимостей той же командой AddMediatR.*/
 builder.Services.AddMediatR(Assembly.GetExecutingAssembly());
 
-builder.Services.AddTransient<IRequestHandler<GetPatientQuery, Patient>,
+builder.Services.AddScoped<IRequestHandler<GetPatientQuery, Patient>,
     GetPatientQueryHandler>();
-builder.Services.AddTransient<IRequestHandler<AddInfluenceDataCommand, List<Influence>>,
+builder.Services.AddScoped<IRequestHandler<AddInfluenceDataCommand, List<Influence>>,
     AddInfluenceDataCommandHandler>();
-builder.Services.AddTransient<IRequestHandler<SendPatientDataFileSourceCommand, bool>,
+builder.Services.AddScoped<IRequestHandler<SendPatientDataFileSourceCommand, bool>,
     SendPatientDataFileSourceCommandHandler>();
-builder.Services.AddTransient<IRequestHandler<SendPatientsCommand, Unit>,
+builder.Services.AddScoped<IRequestHandler<SendPatientsCommand, Unit>,
     SendPatientsCommandHandler>();
-builder.Services.AddTransient<IRequestHandler<AddNotExistedPatientsCommand, IList<Patient>>,
+builder.Services.AddScoped<IRequestHandler<AddNotExistedPatientsCommand, IList<Patient>>,
     AddNotExistedPatientsCommandHandler>();
-builder.Services.AddTransient<IRequestHandler<AddPatientCommand, bool>,
+builder.Services.AddScoped<IRequestHandler<AddPatientCommand, bool>,
     AddPatientCommandHandler>();
-builder.Services.AddTransient<IRequestHandler<AddInfluenceDataCommand, List<Influence>>,
+builder.Services.AddScoped<IRequestHandler<AddInfluenceDataCommand, List<Influence>>,
     AddInfluenceDataCommandHandler>();
-builder.Services.AddTransient<IRequestHandler<GetPatientInfluencesQuery, List<Influence>>,
+builder.Services.AddScoped<IRequestHandler<GetPatientInfluencesQuery, List<Influence>>,
     GetPatientInfluencesQueryHandler>();
-builder.Services.AddTransient<IRequestHandler<SendUpdatePatientsInfoCommand, Unit>,
+builder.Services.AddScoped<IRequestHandler<SendUpdatePatientsInfoCommand, Unit>,
     SendUpdatePatientsInfoCommandHandler>();
-builder.Services.AddTransient<IRequestHandler<GetLatesPatientParametersQuery, List<PatientParameter>>,
+builder.Services.AddScoped<IRequestHandler<GetLatesPatientParametersQuery, List<PatientParameter>>,
     GetLatesPatientParametersQueryHandler>();
-builder.Services.AddTransient<IRequestHandler<GetInfluencesQuery, List<Influence>>,
+builder.Services.AddScoped<IRequestHandler<GetInfluencesQuery, List<Influence>>,
     GetInfluencesQueryHandler>();
-builder.Services.AddTransient<IRequestHandler<UpdatePatientCommand, Patient>,
+builder.Services.AddScoped<IRequestHandler<UpdatePatientCommand, Patient>,
     UpdatePatientCommandHandler>();
-builder.Services.AddTransient<IRequestHandler<DeletePatientCommand, bool>,
+builder.Services.AddScoped<IRequestHandler<DeletePatientCommand, bool>,
     DeletePatientCommandHandler>();
-builder.Services.AddTransient<IRequestHandler<GetPatientInfluenceByIdQueue, Influence>,
+builder.Services.AddScoped<IRequestHandler<GetPatientInfluenceByIdQueue, Influence>,
     GetPatientInfluenceByIdQueueHandler>();
-builder.Services.AddTransient<IRequestHandler<AddPatientInfluenceCommand, bool>,
+builder.Services.AddScoped<IRequestHandler<AddPatientInfluenceCommand, bool>,
     AddPatientInfluenceCommandHandler>();
-builder.Services.AddTransient<IRequestHandler<UpdateInfluenceCommand, Influence>, 
+builder.Services.AddScoped<IRequestHandler<UpdateInfluenceCommand, Influence>, 
     UpdateInfluenceCommandHandler>();
-builder.Services.AddTransient<IRequestHandler<DeleteInfluenceCommand, bool>, 
+builder.Services.AddScoped<IRequestHandler<DeleteInfluenceCommand, bool>, 
     DeleteInfluenceCommandHandler>();
 
 var app = builder.Build();
