@@ -62,10 +62,10 @@ builder.Services.AddTransient<IAddInfluencesDataFromSourceService, AddInfluences
 builder.Services.AddSingleton<IPatientFileDataSender, PatientFileDataSender>();
 builder.Services.AddSingleton<IUpdatePatientsSender, UpdatePatientsSender>();
 builder.Services.AddSingleton<IPatientsSender, PatientsSender>();
-builder.Services.AddTransient<IInfluenceRepository, InfluenceRepository>();
-builder.Services.AddSingleton<InfluenceRepository>();
-builder.Services.AddSingleton<PatientsRepository>(); //МБ это криво
-builder.Services.AddSingleton<PatientParametersRepository>();
+builder.Services.AddScoped<IInfluenceRepository, InfluenceRepository>();
+builder.Services.AddScoped<InfluenceRepository>();
+builder.Services.AddScoped<PatientsRepository>(); //МБ это криво
+builder.Services.AddScoped<PatientParametersRepository>();
 builder.Services.AddOptions();
 
 #region rabbitMQ
