@@ -1,6 +1,7 @@
-﻿using AspNetCoreHero.ToastNotification.Abstractions;
+﻿
 using Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using NToastNotify;
 using WebMVC.Models;
 using WebMVC.Services;
 
@@ -10,11 +11,11 @@ namespace WebMVC.Controllers
     {
         private readonly IPatientService patientsService;
         private readonly IAgingDynamicsSaveService agingDynamicsSaveService;
-        private readonly INotyfService toastNotification;
+        private readonly IToastNotification toastNotification;
 
         public PatientController(IPatientService patientsService, 
             IAgingDynamicsSaveService agingDynamicsSaveService,
-            INotyfService toastNotification)
+            IToastNotification toastNotification)
         {
             this.patientsService = patientsService;
             this.agingDynamicsSaveService = agingDynamicsSaveService;
@@ -59,9 +60,9 @@ namespace WebMVC.Controllers
             //TODO 1-может есть более элегантный способ вызвать добавление пациента
             bool isAdd = await patientsService.AddPatient(p);
             if (isAdd)
-                toastNotification.Success("Пациент добавлен", 3);
+                toastNotification.AddSuccessToastMessage("Пациент добавлен");
             else
-                toastNotification.Error("Не удалось добавить пациента",3);
+                toastNotification.AddErrorToastMessage("Не удалось добавить пациента");
 
             return RedirectToAction("Index","Medic");
         }
@@ -81,9 +82,9 @@ namespace WebMVC.Controllers
             bool isEdit = await patientsService.EditPatient(p);
 
             if (isEdit)
-                toastNotification.Success("Данные пациента успешно изменены", 3);
+                toastNotification.AddSuccessToastMessage("Данные пациента успешно изменены");
             else
-                toastNotification.Error("Не удалось изменить данные пациента", 3);
+                toastNotification.AddErrorToastMessage("Не удалось изменить данные пациента");
 
             return RedirectToAction("Index", "Medic");
         }
@@ -102,10 +103,6 @@ namespace WebMVC.Controllers
             catch(GetWebResponceException ex)
             {
                 return PartialView("_ErrorPartialView", $"Ошибка получения динамики биовозраста пациента с id={patientId}: {ex.Message}.");
-            }
-            catch (Exception ex)
-            {
-                return BadRequest($"Unexpected error: {ex.Message}");
             }
         }
 
@@ -133,24 +130,19 @@ namespace WebMVC.Controllers
             {
                 return PartialView("_ErrorPartialView", $"Ошибка получения динамики биовозраста пациентов: {ex.Message}.");
             }
-            catch (Exception ex)
-            {
-                return BadRequest($"Unexpected error: {ex.Message}");
-            }
         }
 
 
         [HttpPost]
         public async Task AddInfluencesFromFile([FromBody]string data)
         {
-            //TODO try catch
             byte[] bytes = Convert.FromBase64String(data);
             bool isAdd = await patientsService.AddPatientsInluenceData(bytes);
 
             if (isAdd)
-                toastNotification.Success("Занесение данных пациентов начато успешно", 3);
+                toastNotification.AddSuccessToastMessage("Занесение данных пациентов начато успешно.");
             else
-                toastNotification.Error("Не удалось занести данные пациентов", 3);
+                toastNotification.AddErrorToastMessage("Не удалось занести данные пациентов.");
         }
 
 
