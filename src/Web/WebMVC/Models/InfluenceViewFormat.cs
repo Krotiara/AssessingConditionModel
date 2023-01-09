@@ -9,35 +9,31 @@ namespace WebMVC.Models
         {
             Parameters = new List<PatientParameter>();
         }
-
-        //public InfluenceViewFormat(Influence influence)
-        //{
-        //    PatientId = influence.PatientId;
-        //    StartTimestamp = influence.StartTimestamp;
-        //    EndTimestamp = influence.EndTimestamp;
-        //    InfluenceType = influence.InfluenceType;
-        //    MedicineName = influence.MedicineName;
-        //    Parameters = new List<PatientParameter>();
-        //    Parameters.AddRange(influence.StartParameters.Values);
-        //    Parameters.AddRange(influence.DynamicParameters.Values);
-        //}
+ 
 
         [Display(Name="Идентификатор пациента")]
+        [Range(1, int.MaxValue, ErrorMessage = "Значение должно быть положительным числом")]
+        [Required(ErrorMessage = "Не указан идентификатор пациента")]
         public int PatientId { get; set; }
 
         [Display(Name = "Начало воздействия")]
+#warning Нужна валидация
         public DateTime StartTimestamp { get; set; }
 
         [Display(Name = "Окончание воздействия")]
+#warning Нужна валидация
         public DateTime EndTimestamp { get; set; }
 
-        [Display(Name = "Тип")]
+        [Display(Name = "Тип воздействия")]
+        [InfluenceTypeSet(ErrorMessage = "Не указан тип воздействия")]
         public InfluenceTypes InfluenceType { get; set; }
 
         [Display(Name = "Наименование")]
+        [Required(ErrorMessage = "Не указано наименование")]
         public string MedicineName { get; set; }
 
         [Display(Name = "Параметры")]
+        [InfluenceParamsSet(ErrorMessage = "Не введены показатели пациента")]
         public List<PatientParameter> Parameters { get; set; }
     }
 }

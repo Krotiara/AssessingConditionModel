@@ -1,45 +1,67 @@
 ﻿@using Interfaces
 @model InfluenceViewFormat
-<div class="panel panel-default">
-    <div class="panel-body">
-            <h4>Добавление воздействия</h4>
-            <hr />
-            <div class="container-fluid" id="form">
-                <div class="row"> 
-                    @Html.LabelFor(m => m.PatientId, new { @class = "col-sm-2 control-label" })
-                    <div class="col-sm-2">@Html.TextBoxFor(x=>x.PatientId)</div>
-                </div>
-                 <div class="row">
-                     @Html.LabelFor(x => x.StartTimestamp, new { @class = "col-sm-2 control-label" })
-                     <div class="col-sm-2">@Html.EditorFor(x => x.StartTimestamp)</div>
-                 </div>
-                 <div class="row">
-                     @Html.LabelFor(x => x.EndTimestamp, new { @class = "col-sm-2 control-label" })
-                     <div class="col-sm-2">@Html.EditorFor(x=>x.EndTimestamp)</div>
-                 </div>
-                 <div class="row">
-                     @Html.LabelFor(x => x.InfluenceType, new { @class = "col-sm-2 control-label" })
-                     <div class="col-sm-2">@Html.DropDownListFor(x=>x.InfluenceType, Html.GetEnumSelectList(typeof(InfluenceTypes)))</div>
-                 </div>
-                 <div class="row">
-                     @Html.LabelFor(x => x.MedicineName, new { @class = "col-sm-2 control-label" })
-                     <div class="col-sm-2">@Html.EditorFor(x=>x.MedicineName)</div>
-                 </div>
-                 <br/>
-                 <div class="row">
-                      <div class="col-sm-2"><h4>Показатели</h4></div>
-                      <div class="col-sm-1"><button id="addParamButton">Добавить</button></div>
-                      <div class="col-sm-1"><button id="deleteAllParamButton">Удалить все</button></div>
-                 </div>
-                 <div class="row">
-                     <div id="parametersContainter"
+
+<html>
+    <head>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+        <style>
+            .input-validation-error{
+                border-color: red;
+            }
+        </style>
+    </head>
+    <body class="card-body">
+        <h4>Добавление воздействия</h4>
+        <hr/>
+        <div class="form-group">
+            <div>@Html.LabelFor(m => m.PatientId, new { @class = "control-label" })</div>
+            <div>
+                @Html.TextBoxFor(x=>x.PatientId)
+                <span asp-validation-for="PatientId" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <div>@Html.LabelFor(x => x.StartTimestamp, new { @class = "control-label" })</div>
+            <div>
+                @Html.EditorFor(x => x.StartTimestamp)
+                <span asp-validation-for="StartTimestamp" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <div>@Html.LabelFor(x => x.EndTimestamp, new { @class = "control-label" })</div>
+            <div>
+                @Html.EditorFor(x => x.EndTimestamp)
+                <span asp-validation-for="EndTimestamp" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <div>@Html.LabelFor(x => x.InfluenceType, new { @class = "control-label" })</div>
+            <div>
+                @Html.DropDownListFor(x=>x.InfluenceType, Html.GetEnumSelectList(typeof(InfluenceTypes)))
+                <span asp-validation-for="InfluenceType" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <div>@Html.LabelFor(x => x.MedicineName, new { @class = "control-label" })</div>
+            <div>
+                @Html.EditorFor(x=>x.MedicineName)
+                <span asp-validation-for="MedicineName" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <div><h4>Показатели</h4>
+            <button id="addParamButton">Добавить</button>
+            <button id="deleteAllParamButton">Удалить все</button></div>
+            <div><span asp-validation-for="Parameters" class="text-danger"></span></div>
+            <div id="parametersContainter"
                          class="col-sm-12 container-fluid"
                          style="height:300px;overflow:scroll;overflow-x: hidden;border-style: ridge;">@Html.EditorFor(x=>x.Parameters)</div> 
-                 </div>
-                 <br/>               
-            </div>
-    </div>
-</div>
+        </div>  
+    </body>
+</html>
+
 
 <script type="text/javascript">
 $('#addParamButton').click(function(e) {

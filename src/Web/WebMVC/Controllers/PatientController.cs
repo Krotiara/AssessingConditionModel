@@ -163,9 +163,14 @@ namespace WebMVC.Controllers
 
 
         [HttpPost]
-        public async Task AddInluence(InfluenceViewFormat influenceViewFormat)
+        public async Task<IActionResult> AddInluence(InfluenceViewFormat influenceViewFormat)
         {
-            throw new NotImplementedException();
+            if (ModelState.IsValid)
+            {
+                throw new NotImplementedException();
+            }
+            else
+                return View("~/Views/DataInputPartialViews/AddInfluenceView.cshtml", influenceViewFormat);
         }
     }
 }
