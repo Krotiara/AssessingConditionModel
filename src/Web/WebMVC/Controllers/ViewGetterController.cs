@@ -9,15 +9,15 @@ namespace WebMVC.Controllers
         public async Task<IActionResult> GetPartialViewByTag(string tag)
         {
             if (tag == "search")
-                return PartialView("~/Views/Patient/_SearchPatientView.cshtml");
+                return PartialView("~/Views/Patient/SearchPatientView.cshtml");
             else if (tag == "commonBioAgeDynamic")
-                return PartialView("~/Views/Patient/_CommonAgingDynamicsStartView.cshtml");
+                return PartialView("~/Views/Patient/CommonAgingDynamicsStartView.cshtml");
             else if (tag == "addPatient")
-                return PartialView("~/Views/DataInputPartialViews/_AddPatientView.cshtml", new Patient());
+                return PartialView("~/Views/DataInputPartialViews/AddPatientView.cshtml", new Patient());
             else if (tag == "addInfluence")
-                return PartialView("~/Views/DataInputPartialViews/_AddInfluenceView.cshtml", new InfluenceViewFormat());
+                return PartialView("~/Views/DataInputPartialViews/AddInfluenceView.cshtml", new InfluenceViewFormat());
             else if (tag == "addFile")
-                return PartialView("~/Views/DataInputPartialViews/_AddDataFileView.cshtml");
+                return PartialView("~/Views/DataInputPartialViews/AddDataFileView.cshtml");
             else throw new NotImplementedException();
         }
     }

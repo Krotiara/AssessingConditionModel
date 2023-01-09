@@ -42,7 +42,7 @@ namespace WebMVC.Controllers
             }
             catch(GetWebResponceException ex)
             {
-                return PartialView("_ErrorPartialView", $"Ошибка получения информации о пациенте с id={id}: {ex.Message}.");
+                return PartialView("ErrorPartialView", $"Ошибка получения информации о пациенте с id={id}: {ex.Message}.");
             }  
         }
 
@@ -102,7 +102,8 @@ namespace WebMVC.Controllers
             }
             catch(GetWebResponceException ex)
             {
-                return PartialView("_ErrorPartialView", $"Ошибка получения динамики биовозраста пациента с id={patientId}: {ex.Message}.");
+                return PartialView("ErrorPartialView",
+                    $"Ошибка получения динамики биовозраста пациента с id={patientId}: {ex.Message}.");
             }
         }
 
@@ -128,7 +129,7 @@ namespace WebMVC.Controllers
             }
             catch(GetWebResponceException ex)
             {
-                return PartialView("_ErrorPartialView", $"Ошибка получения динамики биовозраста пациентов: {ex.Message}.");
+                return PartialView("ErrorPartialView", $"Ошибка получения динамики биовозраста пациентов: {ex.Message}.");
             }
         }
 
