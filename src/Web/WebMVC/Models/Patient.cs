@@ -20,14 +20,17 @@ namespace WebMVC.Models
         public string Name { get ; set ; }
 
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:yyyy-MM-dd}")]
-        [Required(ErrorMessage = "Не указана дата рождения")]
+        [DateSet(ErrorMessage = "Не указана дата рождения")]
         [Display(Name = "Дата рождения")]
         public DateTime Birthday { get ; set ; }
+
         [Display(Name = "Номер истории болезни")]
+        [Range(1, int.MaxValue, ErrorMessage = "Значение должно быть положительным числом")]
         [Required(ErrorMessage = "Не указан идентификатор пациента")]
         public int MedicalHistoryNumber { get ; set ; }
+
         [Display(Name = "Пол")]
-        [Required(ErrorMessage = "Не указан пол")]
+        [GenderSet(ErrorMessage = "Не указан пол")]
         public GenderEnum Gender { get; set; }
     }
 }

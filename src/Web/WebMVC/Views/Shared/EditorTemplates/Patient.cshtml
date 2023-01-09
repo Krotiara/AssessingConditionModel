@@ -17,26 +17,25 @@
     <hr/>
     
     <div class="form-group">
-        @Html.LabelFor(m => m.Name)
-        @Html.TextBoxFor(x=>x.Name)
-        <span asp-validation-for="Name" class="text-danger"></span>
+        <div>@Html.LabelFor(m => m.Name)</div>
+        <div>@Html.TextBoxFor(x=>x.Name)
+        <span asp-validation-for="Name" class="text-danger"></span></div>
     </div>
     <div class="form-group">
-        @Html.LabelFor(m => m.MedicalHistoryNumber)
-        @Html.TextBoxFor(x=>x.MedicalHistoryNumber)
-        <span asp-validation-for="MedicalHistoryNumber" class="text-danger"></span>
+        <div>@Html.LabelFor(m => m.MedicalHistoryNumber)</div>
+        <div>@Html.TextBoxFor(x=>x.MedicalHistoryNumber)
+        <span asp-validation-for="MedicalHistoryNumber" class="text-danger"></span></div>
     </div>
     <div class="form-group">
-        @Html.LabelFor(m => m.Gender)
-        @Html.DropDownListFor(x=>x.Gender, Html.GetEnumSelectList(typeof(GenderEnum)))
-        <span asp-validation-for="Gender" class="text-danger"></span>
+        <div>@Html.LabelFor(m => m.Gender)</div>
+        <div>@Html.DropDownListFor(x=>x.Gender, Html.GetEnumSelectList(typeof(GenderEnum)))
+        <span asp-validation-for="Gender" class="text-danger"></span></div>
     </div>
     <div class="form-group">
-        @Html.LabelFor(m => m.Birthday)
-        @Html.EditorFor(x=>x.Birthday)
-        <span asp-validation-for="Birthday" class="text-danger"></span>
+        <div>@Html.LabelFor(m => m.Birthday)</div>
+        <div>@Html.EditorFor(x=>x.Birthday)
+        <span asp-validation-for="Birthday" class="text-danger"></span></div>
     </div>
-    
 </body>
 </html>
 
