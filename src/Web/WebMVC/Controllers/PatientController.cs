@@ -57,15 +57,21 @@ namespace WebMVC.Controllers
         [HttpPost]
         public async Task<IActionResult> AddPatient(Patient p)
         {
+            if (ModelState.IsValid)
+            {
+                //TODO 1-может есть более элегантный способ вызвать добавление пациента
+                bool isAdd = await patientsService.AddPatient(p);
+                if (isAdd)
+                    toastNotification.AddSuccessToastMessage("Пациент добавлен");
+                else
+                    toastNotification.AddErrorToastMessage("Не удалось добавить пациента");
 
-            //TODO 1-может есть более элегантный способ вызвать добавление пациента
-            bool isAdd = await patientsService.AddPatient(p);
-            if (isAdd)
-                toastNotification.AddSuccessToastMessage("Пациент добавлен");
+                return RedirectToAction("Index", "Medic");
+            }
             else
-                toastNotification.AddErrorToastMessage("Не удалось добавить пациента");
-
-            return RedirectToAction("Index","Medic");
+            {
+                return View("~/Views/DataInputPartialViews/AddPatientView.cshtml", p);
+            }
         }
 
 

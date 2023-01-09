@@ -1,26 +1,39 @@
 ﻿@using Interfaces
 @model Patient
 
+
 <div class="panel panel-default">
         <div class="panel-heading"><h4 class="panel-title">Добавление пациента</h4></div>
         <div class="panel-body">           
+            <div class="validation" asp-validation-summary="All"></div>
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-sm-2">@Html.LabelFor(m => m.Name)</div>
                     <div class="col-sm-1">@Html.TextBoxFor(x=>x.Name)</div>
+                    <div class="col-sm-1"><span asp-validation-for="Name"></span></div>
                 </div>
                 <div class="row">
                     <div class="col-sm-2">@Html.LabelFor(m => m.MedicalHistoryNumber)</div>
-                    <div class="col-sm-1">@Html.TextBoxFor(x=>x.MedicalHistoryNumber)</div>                  
+                    <div class="col-sm-1">@Html.TextBoxFor(x=>x.MedicalHistoryNumber)</div>
+                    <div class="col-sm-1"><span asp-validation-for="MedicalHistoryNumber"></span></div>
                 </div>
                     <div class="row">
                     <div class="col-sm-2">@Html.LabelFor(m => m.Gender)</div>
-                    <div class="col-sm-1">@Html.DropDownListFor(x=>x.Gender, Html.GetEnumSelectList(typeof(GenderEnum)))</div>               
+                    <div class="col-sm-1">@Html.DropDownListFor(x=>x.Gender, Html.GetEnumSelectList(typeof(GenderEnum)))</div>
+                    <div class="col-sm-1"><span asp-validation-for="Gender"></span></div>
                 </div>
                 <div class="row">
                     <div class="col-sm-2">@Html.LabelFor(m => m.Birthday)</div>
                     <div class="col-sm-1">@Html.EditorFor(x=>x.Birthday)</div>
+                    <div class="col-sm-1"><span asp-validation-for="Birthday"></span></div>
                 </div>
             </div>          
         </div>
+        @section scripts{
+ 
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+}
 </div>
+
+
