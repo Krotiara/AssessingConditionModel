@@ -50,13 +50,14 @@ namespace WebMVC.Controllers
         [HttpGet]
         public IActionResult AddPatient()
         {
-            return PartialView("_AddPatientView", new Patient());
+            return PartialView("AddPatientView", new Patient());
         }
 
 
         [HttpPost]
         public async Task<IActionResult> AddPatient(Patient p)
         {
+
             //TODO 1-может есть более элегантный способ вызвать добавление пациента
             bool isAdd = await patientsService.AddPatient(p);
             if (isAdd)
