@@ -1,4 +1,7 @@
 ﻿@model Patient
+@{
+    Layout = "~/Views/Shared/_MedicLayout.cshtml";
+}
 @using (Html.BeginForm("AddPatient", "Patient", FormMethod.Post))
 {
     @Html.EditorFor(x=>x)
