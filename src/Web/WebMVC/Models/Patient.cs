@@ -16,14 +16,18 @@ namespace WebMVC.Models
         public int Id { get ; set ; }
 
         [Display(Name="ФИО")]
+        [Required(ErrorMessage = "Не указано ФИО")]
         public string Name { get ; set ; }
 
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:yyyy-MM-dd}")]
+        [Required(ErrorMessage = "Не указана дата рождения")]
         [Display(Name = "Дата рождения")]
         public DateTime Birthday { get ; set ; }
         [Display(Name = "Номер истории болезни")]
+        [Required(ErrorMessage = "Не указан идентификатор пациента")]
         public int MedicalHistoryNumber { get ; set ; }
         [Display(Name = "Пол")]
+        [Required(ErrorMessage = "Не указан пол")]
         public GenderEnum Gender { get; set; }
     }
 }
