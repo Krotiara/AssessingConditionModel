@@ -36,6 +36,8 @@ namespace PatientsResolver.API.Data.Repository
                         if (await IsInluenceExistAsync(dbContext, influence))
                             return false;
 
+                        CheckParametersValues(influence);
+
                         Patient patient = await dbContext
                             .Patients
                             .FirstOrDefaultAsync(x => x.MedicalHistoryNumber == influence.PatientId);
@@ -64,6 +66,18 @@ namespace PatientsResolver.API.Data.Repository
                     }
                 }
             });     
+        }
+
+
+        private void CheckParametersValues(Influence influence)
+        {
+#warning Выглядит костыльно
+            foreach (PatientParameter p in influence.StartParameters.Values)
+                if (p.NameTextDescription == null || p.NameTextDescription == string.Empty)
+                    p.NameTextDescription = p.ParameterName.GetDisplayAttributeValue();
+            foreach(PatientParameter p in influence.DynamicParameters.Values)
+                if (p.NameTextDescription == null || p.NameTextDescription == string.Empty)
+                    p.NameTextDescription = p.ParameterName.GetDisplayAttributeValue();
         }
 
 

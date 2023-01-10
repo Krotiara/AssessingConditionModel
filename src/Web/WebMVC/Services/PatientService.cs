@@ -105,5 +105,13 @@ namespace WebMVC.Services
                     new DateTime[2] { startTimestamp, endTimestamp });
             return await webRequester.GetResponse<IList<Influence>>(url, "POST", body);
         }
+
+        public async Task<bool> AddInfluence(Influence influence)
+        {
+            string url = $"{gatewayUrl}/patientsApi/influence/add";
+            string body = Newtonsoft.Json.JsonConvert.SerializeObject(influence);
+            return await webRequester.GetResponse<bool>(url, "POST", body);
+
+        }
     }
 }

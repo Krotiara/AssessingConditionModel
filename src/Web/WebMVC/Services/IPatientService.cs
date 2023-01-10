@@ -17,7 +17,8 @@ namespace WebMVC.Services
         public Task<IList<AgingDynamics>> GetAgingDynamics(DateTime startTimestamp, 
             DateTime endTimestamp);
 
-       
+
+        public Task<bool> AddInfluence(Influence influence);
 
         public Task<bool> AddPatientsInluenceData(byte[] data);
 
