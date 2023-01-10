@@ -1,5 +1,7 @@
 ﻿@using Interfaces
 @model PatientParameter
+
+@*Старая версия*@
 <div class="row rowPatient" draggable="true">
     @Html.LabelFor(x=>x.ParameterName,new { @class = "col-sm-1 control-label" })
     <div class="col-sm-2">@Html.DropDownListFor(

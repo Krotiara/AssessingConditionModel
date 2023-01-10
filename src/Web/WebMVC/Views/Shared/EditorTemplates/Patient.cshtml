@@ -33,7 +33,7 @@
     </div>
     <div class="form-group">
         <div>@Html.LabelFor(m => m.Birthday)</div>
-        <div>@Html.EditorFor(x=>x.Birthday)
+        <div>@Html.EditorFor(x=>x.Birthday,"{0:yyyy-MM-dd}", new {htmlAttributes = new {@type = "date"}})
         <span asp-validation-for="Birthday" class="text-danger"></span></div>
     </div>
     <div class="form-group">

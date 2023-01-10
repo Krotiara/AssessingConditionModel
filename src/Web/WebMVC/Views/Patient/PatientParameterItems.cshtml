@@ -1,2 +1,24 @@
-﻿@model InfluenceViewFormat
-@Html.EditorFor(x=>x.Parameters)
+﻿@using Interfaces
+@model InfluenceViewFormat
+<table>
+    <thead>
+        <tr>
+            <th><p>Наименование</p></th>
+            <th><p>Значение</p></th>
+            <th><p>Временная отметка</p></th>
+            <th><p>Вторичный</p></th>
+        </tr>
+    </thead>
+    <tbody>
+        @for(int i=0; i < Model.Parameters.Count;i++)
+        {
+            <tr>
+                <th>@Html.DropDownListFor(
+                    x=>x.Parameters[i].ParameterName, Html.GetEnumSelectList(typeof(ParameterNames)))</th>
+                <th>@Html.TextBoxFor(x=>x.Parameters[i].Value)</th>
+                <th>@Html.EditorFor(x=>x.Parameters[i].Timestamp, "{0:yyyy-MM-dd}", new {htmlAttributes = new {@type = "date"}})</th>
+                <th>@Html.EditorFor(x=>x.Parameters[i].IsDynamic)</th>
+            </tr>
+        }
+    </tbody>
+</table>
