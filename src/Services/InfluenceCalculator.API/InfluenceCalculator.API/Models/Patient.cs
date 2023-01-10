@@ -9,5 +9,6 @@ namespace InfluenceCalculator.API.Models
         public DateTime Birthday { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
         public int MedicalHistoryNumber { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
         public GenderEnum Gender { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public TreatmentType TreatmentType { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
     }
 }

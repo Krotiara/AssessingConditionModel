@@ -15,5 +15,6 @@ namespace TempGateway.Entities
         public int MedicalHistoryNumber { get ; set ; }
 
         public GenderEnum Gender { get; set; }
+        public TreatmentType TreatmentType { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
     }
 }
