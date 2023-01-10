@@ -167,7 +167,28 @@ namespace WebMVC.Controllers
         {
             if (ModelState.IsValid)
             {
-                throw new NotImplementedException();
+                Influence influence = new Influence()
+                {
+                    PatientId = influenceViewFormat.PatientId,
+                    InfluenceType = influenceViewFormat.InfluenceType,
+                    MedicineName = influenceViewFormat.MedicineName,
+                    StartTimestamp = influenceViewFormat.StartTimestamp,
+                    EndTimestamp = influenceViewFormat.EndTimestamp
+                };
+                influenceViewFormat.Parameters.ForEach(x =>
+                {
+                    if (x.IsDynamic)
+                        influence.DynamicParameters[x.ParameterName] = x;
+                    else
+                        influence.StartParameters[x.ParameterName] = x;
+                });
+                bool isAdd = await patientsService.AddInfluence(influence);
+                if (isAdd)
+                    toastNotification.AddSuccessToastMessage("Воздействие добавлено.");
+                else
+                    toastNotification.AddErrorToastMessage("Воздействие не добавлено.");
+
+                return RedirectToAction("Index", "Medic");
             }
             else
                 return View("~/Views/DataInputPartialViews/AddInfluenceView.cshtml", influenceViewFormat);

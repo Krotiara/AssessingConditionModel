@@ -21,8 +21,8 @@ namespace WebMVC.Models
         [Display(Name = "Имя показателя")]
         [ParamNameSet(ErrorMessage = "Не указано наименование параметра")]
         public ParameterNames ParameterName { get; set; }
-       
-        public string NameTextDescription { get; set; }
+
+        public string NameTextDescription { get; set; } = "";
         
         [Display(Name = "Значение")]
         [Required(ErrorMessage = "Не указано значение параметра")]

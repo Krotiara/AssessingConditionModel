@@ -14,10 +14,18 @@
         {
             <tr>
                 <th>@Html.DropDownListFor(
-                    x=>x.Parameters[i].ParameterName, Html.GetEnumSelectList(typeof(ParameterNames)))</th>
-                <th>@Html.TextBoxFor(x=>x.Parameters[i].Value)</th>
-                <th>@Html.EditorFor(x=>x.Parameters[i].Timestamp, "{0:yyyy-MM-dd}", new {htmlAttributes = new {@type = "date"}})</th>
-                <th>@Html.EditorFor(x=>x.Parameters[i].IsDynamic)</th>
+                    x=>x.Parameters[i].ParameterName, Html.GetEnumSelectList(typeof(ParameterNames)))
+                    <div><span asp-validation-for="Parameters[i].ParameterName" class="text-danger"></span></div>
+                </th>
+                <th>@Html.TextBoxFor(x=>x.Parameters[i].Value)
+                     <div><span asp-validation-for="Parameters[i].Value" class="text-danger"></span></div>
+                </th>
+                <th>@Html.EditorFor(x=>x.Parameters[i].Timestamp, "{0:yyyy-MM-dd}", new {htmlAttributes = new {@type = "date"}})
+                     <div><span asp-validation-for="Parameters[i].Timestamp" class="text-danger"></span></div>
+                </th>
+                <th>@Html.EditorFor(x=>x.Parameters[i].IsDynamic)
+                     <div><span asp-validation-for="Parameters[i].IsDynamic" class="text-danger"></span></div>
+                </th>
             </tr>
         }
     </tbody>
