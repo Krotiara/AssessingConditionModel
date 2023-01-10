@@ -12,16 +12,19 @@ namespace PatientsResolver.API.Data.Repository
     public class Repository<TEntity> : IRepository<TEntity> where TEntity : class, new()
     {
 
-        protected readonly PatientsDataDbContext PatientsDataDbContext;
+        //protected PatientsDataDbContext PatientsDataDbContext => dbContextFactory.CreateDbContext();
+        private readonly IDbContextFactory<PatientsDataDbContext> dbContextFactory;
+        protected readonly PatientsDataDbContext dbContext;
 
-        public Repository(PatientsDataDbContext patientsDataDbContext)
+        public Repository(IDbContextFactory<PatientsDataDbContext> dbContextFactory)
         {
-            this.PatientsDataDbContext = patientsDataDbContext;
+            this.dbContextFactory = dbContextFactory;
+            this.dbContext = dbContextFactory.CreateDbContext();
         }
 
         public async Task<TEntity> AddAsync(TEntity entity)
         {
-            IExecutionStrategy strategy = PatientsDataDbContext.Database.CreateExecutionStrategy();
+            IExecutionStrategy strategy = dbContext.Database.CreateExecutionStrategy();
             return await strategy.ExecuteAsync(async () =>
             {
                 if (entity == null)
@@ -31,8 +34,8 @@ namespace PatientsResolver.API.Data.Repository
 
                 try
                 {
-                    await PatientsDataDbContext.AddAsync(entity);
-                    await PatientsDataDbContext.SaveChangesAsync();
+                    await dbContext.AddAsync(entity);
+                    await dbContext.SaveChangesAsync();
 
                     return entity;
                 }
@@ -40,7 +43,7 @@ namespace PatientsResolver.API.Data.Repository
                 {
                     throw new Exception($"{nameof(entity)} could not be saved {ex.Message}", ex);
                 }
-            });  
+            });         
         }
 
         public async Task<List<TEntity>> AddRangeAsync(List<TEntity> entities)
@@ -61,16 +64,16 @@ namespace PatientsResolver.API.Data.Repository
         }
 
         public async Task DeleteAsync(TEntity entity)
-        {
-            PatientsDataDbContext.Remove(entity);
-            await PatientsDataDbContext.SaveChangesAsync();
+        {      
+            dbContext.Remove(entity);
+            await dbContext.SaveChangesAsync();          
         }
 
         public IEnumerable<TEntity> GetAll()
         {
             try
-            {
-                return PatientsDataDbContext.Set<TEntity>();
+            { 
+                return dbContext.Set<TEntity>();        
             }
             catch (Exception ex)
             {
@@ -86,9 +89,9 @@ namespace PatientsResolver.API.Data.Repository
             }
 
             try
-            {
-                PatientsDataDbContext.Update(entity);
-                await PatientsDataDbContext.SaveChangesAsync();
+            {    
+                dbContext.Update(entity);
+                await dbContext.SaveChangesAsync();            
 
                 return entity;
             }
@@ -106,9 +109,9 @@ namespace PatientsResolver.API.Data.Repository
             }
 
             try
-            {
-                PatientsDataDbContext.UpdateRange(entities);
-                await PatientsDataDbContext.SaveChangesAsync();
+            {              
+                dbContext.UpdateRange(entities);
+                await dbContext.SaveChangesAsync();               
             }
             catch (Exception ex)
             {

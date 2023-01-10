@@ -1,8 +1,7 @@
 ﻿@using Interfaces
+@using Newtonsoft.Json
 @model PatientInfo
-@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+
 
 <html>
     <head>
@@ -13,51 +12,72 @@
     </head>
     <body>
         <div>
-            <div><p style="font-size:20px; font-weight:bold;" align="left">Общая информация</p></div>
-            <table class="table table-bordered table-sm">
-                <thead>
-                    <tr>
-                        <th>Номер карты</th>
-                        <th>Пол</th>
-                        <th>Возраст</th>
-                        <th>Текущий биовозраст</th>
-                        <th>Состояние</th>
-                    </tr>
-                </thead>
-                <tr>   
-                    <th>@Model.Patient.MedicalHistoryNumber</th>
-                    <th>@Model.Patient.Gender.GetDisplayAttributeValue()</th>
-                    <th>@Model.AgingPatientState.Age</th>
-                    <th>@Model.AgingPatientState.BioAge</th>
-                    <th>@Model.AgingPatientState.BioAgeState.GetDisplayAttributeValue()</th>
-                </tr>
-            </table>
+            <div id="commonInfo">
+                <p style="font-size:20px; font-weight:bold;" align="left">Общая информация</p>
+                @Html.DisplayFor(x=>x.Patient)
+                @Html.ActionLink("Изменить","GetEditPatientView", "Patient", Model.Patient, null)       
+            </div>
+            <div id="patientInfoMenu">
+                <div class="form-group">
+                    <button onclick="ShowPanel('agingInfo')">Темп старения</button>
+                    <button onclick="ShowPanel('influences')">Воздействия</button>
+                    <button onclick="ShowPanel('agingDynamicInfo')">Динамика темпа старения</button>
+                </div>
+            </div>
+            <div id="patientInfoContent">
+                <div id="agingInfo" style="display: none">
+                    @Html.DisplayFor(x=>x.AgingPatientState)
+                </div>
+                <div id="agingDynamicInfo" style="display: none">
+                        <div><p style="font-size:20px;font-weight:bold;">Динамика биовозраста пациента</p></div>
+                            <table style="table-layout: fixed;" class="table table-sm">
+                                <tr>
+                                    <th colspan="2">Начало периода:</th>
+                                    <th colspan="2"><input style = "width:100%" type="date" id="dt1"/></th>
+                                    <th colspan="2">Окончание периода:</th>
+                                    <th colspan="2"><input style = "width:100%" type="date" id="dt2"/></th>
+                                    <th colspan="2"><button style = "width:100%" onclick="GetAgingDynamics()">Показать</button></th>
+                                </tr>
+                            </table>   
+                            <div id="DynamicsInfo"></div>
+
+                </div>
+                <div id="influences" style="display: none">
+                        <div><p style="font-size:20px;font-weight:bold;">Воздействия</p></div>
+                        <table style="table-layout: fixed;" class="table table-sm">
+                            <tr>
+                                <th colspan="2">Начало периода:</th>
+                                <th colspan="2"><input style="width:100%" type="date" id="patientInfluencesDt1" /></th>
+                                <th colspan="2">Окончание периода:</th>
+                                <th colspan="2"><input style="width:100%" type="date" id="patientInfluencesDt2" /></th>
+                                <th colspan="2"><button style="width:100%" onclick="GetPatientInfluences()">Показать</button></th>
+                            </tr>
+                        </table>
+                        <div id="influencesInfo"></div>
+                </div>
+            </div>
         </div>
-        <div>
-            <div><p style="font-size:20px;font-weight:bold;">Динамика биовозраста пациента</p></div>
-            <table style="table-layout: fixed;" class="table table-sm">
-                <tr>
-                    <th colspan="2">Начало периода:</th>
-                    <th colspan="2"><input style = "width:100%" type="date" id="dt1"/></th>
-                    <th colspan="2">Окончание периода:</th>
-                    <th colspan="2"><input style = "width:100%" type="date" id="dt2"/></th>
-                    <th colspan="2"><button style = "width:100%" onclick="GetAgingDynamics()">Показать</button></th>
-                </tr>
-            </table>   
-            <div id="DynamicsInfo"></div>
-        </div>      
     </body>
 </html>
 
+
+<script>
+    function ShowPanel(panelId) {
+        document.getElementById('agingInfo').style.display = "none";
+        document.getElementById('agingDynamicInfo').style.display = "none";
+        document.getElementById('influences').style.display = "none";
+        document.getElementById(panelId).style.display = "block";     
+    }
+</script>
 
 <script>
     function GetAgingDynamics() {
         var pId = @Model.Patient.MedicalHistoryNumber;
         var startTime = document.getElementById("dt1").value;
         var endTime = document.getElementById("dt2").value;
-         $.ajax({
+        $.ajax({
             url: '@Url.Action("GetPatientAgingDynamics", "Patient")',
-            data: {patientId: pId, startTimestamp:startTime, endTimestamp:endTime},
+            data: { patientId: pId, startTimestamp: startTime, endTimestamp: endTime },
             type: 'get',
             cache: false,
             async: true,
@@ -67,3 +87,23 @@
         });
     }
 </script>
+
+<script>
+    function GetPatientInfluences() {
+        var pId = @Model.Patient.MedicalHistoryNumber;
+        var startTime = document.getElementById("patientInfluencesDt1").value;
+        var endTime = document.getElementById("patientInfluencesDt2").value;
+        $.ajax({
+            url: '@Url.Action("GetPatientInfluences", "Patient")',
+            data: { patientId: pId, startTimestamp: startTime, endTimestamp: endTime },
+            type: 'get',
+            cache: false,
+            async: true,
+            success: function (result) {
+                $('#influencesInfo').html(result);
+            }
+        });
+    }
+</script>
+
+

@@ -1,0 +1,11 @@
+﻿@using Interfaces;
+@{
+    Layout = "~/Views/Shared/_MedicLayout.cshtml";
+}
+@model InfluenceViewFormat
+<form asp-action="AddInluence" asp-controller="Patient" id="form">
+    @Html.EditorFor(x=>x)
+    <div class="form-group">
+        <input type="submit" value="Добавить воздействие" class="btn btn-success" />
+    </div>
+</form>

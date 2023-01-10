@@ -1,9 +1,18 @@
 using Interfaces;
 using Microsoft.AspNetCore.Hosting;
+using NToastNotify;
 using WebMVC.Models;
 using WebMVC.Services;
 
+
 var builder = WebApplication.CreateBuilder(args);
+
+
+builder.Services.AddRazorPages().AddNToastNotifyNoty(new NotyOptions
+{
+    ProgressBar = true,
+    Timeout = 5000
+});
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
@@ -30,13 +39,13 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-
+app.UseNToastNotify();
 app.UseRouting();
 
 app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{controller=Medic}/{action=Index}/{id?}");
 
 app.Run();

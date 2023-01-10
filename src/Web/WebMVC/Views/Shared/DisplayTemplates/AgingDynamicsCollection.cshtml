@@ -1,0 +1,23 @@
+﻿@model IEnumerable<AgingDynamics>
+
+<html>
+    <head>
+        <title>Информация о динамике биовозраста пациента</title>
+        <style >
+            .centerCell
+            {
+                text-align: left;
+            }
+            th{font-weight: normal;}    
+        </style>
+    </head>
+    
+    <body>      
+        <table style="table-layout: fixed;width:100%;" class="table-bordered table-hover  table-sm">                  
+                @foreach(AgingDynamics agingDynamics in Model)
+                {
+                    @Html.DisplayFor(x=>agingDynamics)
+                }
+        </table>  
+    </body>
+</html>

@@ -20,11 +20,12 @@ namespace WebMVC.Models
             }
             catch (ApplicationException ex)
             {
-                throw new GetWebResponceException("unexpected response code", ex);
+                throw new GetWebResponceException($"unexpected response code:{ex.Message}");
             }
             catch (Exception ex)
             {
-                throw new GetWebResponceException("get responce error", ex);
+#warning Нужно отовить отсылаемые сообщения об ошибках.
+                throw new GetWebResponceException($"get responce error: {ex.Message}");
             }
         }
 

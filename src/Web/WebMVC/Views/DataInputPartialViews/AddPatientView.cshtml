@@ -1,0 +1,12 @@
+﻿@model Patient
+@{
+    Layout = "~/Views/Shared/_MedicLayout.cshtml";
+}
+@using (Html.BeginForm("AddPatient", "Patient", FormMethod.Post))
+{
+    @Html.EditorFor(x=>x)
+    <div class="form-group">
+        <input type="submit" value="Добавить" class="btn btn-success" />
+    </div>
+}
+

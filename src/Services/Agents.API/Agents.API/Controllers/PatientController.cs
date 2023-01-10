@@ -50,9 +50,13 @@ namespace Agents.API.Controllers
                 }
                 return await mediator.Send(new GetAgingDynamicsQuery() { PatientId = patientId, StartTimestamp = start, EndTimestamp = end });
             }
+            catch(GetAgingDynamicsException ex)
+            {
+                return BadRequest(ex.Message);
+            }
             catch(Exception ex)
             {
-                throw new NotImplementedException(); //TODO
+                return BadRequest($"Unexpected error: {ex}");
             }
         }
 

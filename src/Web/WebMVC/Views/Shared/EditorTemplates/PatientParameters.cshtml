@@ -1,0 +1,24 @@
+﻿@using Interfaces
+@model List<PatientParameter>
+<table>
+    <thead>
+        <tr>
+            <th><p>Наименование</p></th>
+            <th><p>Значение</p></th>
+            <th><p>Временная отметка</p></th>
+            <th><p>Вторичный</p></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(PatientParameter p in Model)
+        {
+            <tr>
+                <th>@Html.DropDownListFor(x=>p.ParameterName, Html.GetEnumSelectList(typeof(ParameterNames)))</th>
+                <th>@Html.TextBoxFor(x=>p.Value)</th>
+                <th>@Html.EditorFor(x=>p.Timestamp)</th>
+                <th>@Html.EditorFor(x=>p.IsDynamic)</th>
+                <th><a>Удалить</a></th>
+            </tr>
+        }
+    </tbody>
+</table>

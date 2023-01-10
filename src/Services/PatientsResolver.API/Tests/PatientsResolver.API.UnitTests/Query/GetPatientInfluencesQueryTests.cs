@@ -13,45 +13,49 @@ using PatientsResolver.API.Entities;
 using PatientsResolver.API.Service.Command;
 using PatientsResolver.API.Service.Query;
 using PatientsResolver.API.Service.Exceptions;
+using Moq;
 
 namespace PatientsResolver.API.UnitTests.Query
 {
     public class GetPatientInfluencesQueryTests
     {
-        PatientsDataDbContext dbContext;
+        Mock<IDbContextFactory<PatientsDataDbContext>> dbContextFactory;
+        private readonly PatientsDataDbContext dbContext;
         CancellationToken token;
-        InfluenceRepository rep;
 
         public GetPatientInfluencesQueryTests()
         {
             var options = new DbContextOptionsBuilder<PatientsDataDbContext>()
-               .UseInMemoryDatabase(Guid.NewGuid().ToString())
-               .ConfigureWarnings(x => x.Ignore(InMemoryEventId.TransactionIgnoredWarning))
-               .Options;
-            // set delay time after which the CancellationToken will be canceled
-            var cancellationTokenSource = new CancellationTokenSource(TimeSpan.FromMilliseconds(100));
+                 .UseInMemoryDatabase(Guid.NewGuid().ToString())
+                 .ConfigureWarnings(x => x.Ignore(InMemoryEventId.TransactionIgnoredWarning))
+                 .Options;
+            dbContextFactory = new Mock<IDbContextFactory<PatientsDataDbContext>>();
             dbContext = new PatientsDataDbContext(options);
+            dbContextFactory.Setup(x => x.CreateDbContext())
+                .Returns(dbContext);
+            // set delay time after which the CancellationToken will be canceled
+            var cancellationTokenSource = new CancellationTokenSource(TimeSpan.FromMilliseconds(100));        
             token = cancellationTokenSource.Token;
-            rep = new InfluenceRepository(dbContext);
         }
 
         [Fact]
         public async void GetInfluencesMustSetPatientProperty()
         {
             Influence testInf = GetCorrectTestInfluence();
+            
+            await dbContext.Patients.AddAsync(testInf.Patient);
+            await dbContext.SaveChangesAsync();
+            
 
-            using (dbContext)
-            {
-                await dbContext.Patients.AddAsync(testInf.Patient);
-                await dbContext.SaveChangesAsync();
-                AddInfluenceDataCommandHandler handler = new AddInfluenceDataCommandHandler(rep);
-                await handler.Handle(new AddInfluenceDataCommand() { Data = new List<Influence> { testInf } }, token);
+            InfluenceRepository rep = new InfluenceRepository(dbContextFactory.Object);
+            AddInfluenceDataCommandHandler handler = new AddInfluenceDataCommandHandler(rep);
+            await handler.Handle(new AddInfluenceDataCommand() { Data = new List<Influence> { testInf } }, token);
 
-                GetPatientInfluencesQueryHandler h = new GetPatientInfluencesQueryHandler(rep);
-                var infs = await h.Handle(new GetPatientInfluencesQuery(testInf.PatientId, testInf.StartTimestamp,  testInf.EndTimestamp), token);
+            GetPatientInfluencesQueryHandler h = new GetPatientInfluencesQueryHandler(rep);
+            var infs = await h.Handle(new GetPatientInfluencesQuery(testInf.PatientId, testInf.StartTimestamp,  testInf.EndTimestamp), token);
 
-                Assert.NotNull(infs.First().Patient);
-            }
+            Assert.NotNull(infs.First().Patient);
+            
         }
 
 
@@ -84,21 +88,22 @@ namespace PatientsResolver.API.UnitTests.Query
             Influence testInf = GetCorrectTestInfluence();
             int startParamsCount = testInf.StartParameters.Count;
             int dynamicParamsCount = testInf.DynamicParameters.Count;
+            
+            await dbContext.Patients.AddAsync(testInf.Patient);
+            await dbContext.SaveChangesAsync();
+            
+            InfluenceRepository rep = new InfluenceRepository(dbContextFactory.Object);
 
-            using (dbContext)
-            {
-                await dbContext.Patients.AddAsync(testInf.Patient);
-                await dbContext.SaveChangesAsync();
-                AddInfluenceDataCommandHandler handler = new AddInfluenceDataCommandHandler(rep);
-                await handler.Handle(new AddInfluenceDataCommand() { Data = new List<Influence> { testInf } }, token);
+            AddInfluenceDataCommandHandler handler = new AddInfluenceDataCommandHandler(rep);
+            await handler.Handle(new AddInfluenceDataCommand() { Data = new List<Influence> { testInf } }, token);
 
-                GetPatientInfluencesQueryHandler h = new GetPatientInfluencesQueryHandler(rep);
-                var infs = await h.Handle(new GetPatientInfluencesQuery(testInf.PatientId, testInf.StartTimestamp, testInf.EndTimestamp), token);
+            GetPatientInfluencesQueryHandler h = new GetPatientInfluencesQueryHandler(rep);
+            var infs = await h.Handle(new GetPatientInfluencesQuery(testInf.PatientId, testInf.StartTimestamp, testInf.EndTimestamp), token);
 
-                Influence addedTestInnf = infs.First();
-                Assert.True(addedTestInnf.StartParameters.Count == startParamsCount);
-                Assert.True(addedTestInnf.DynamicParameters.Count == dynamicParamsCount);
-            }
+            Influence addedTestInnf = infs.First();
+            Assert.True(addedTestInnf.StartParameters.Count == startParamsCount);
+            Assert.True(addedTestInnf.DynamicParameters.Count == dynamicParamsCount);
+            
         }
 
 

@@ -1,0 +1,43 @@
+﻿@using Interfaces
+@{
+    Layout = "~/Views/Shared/_MedicLayout.cshtml";
+}
+<html>
+    <head>
+        <style>
+            th {
+                text-align: center;
+                font-weight: normal;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="search">
+            <table style="width:30%; table-layout: fixed;" class="table table-sm">
+                <tr>
+                    @*Временное решение с шириной https://github.com/dompdf/dompdf/issues/1432*@
+                    <th colspan="2"><p>Поиск пациента:</p></th>
+                    <th colspan="4"><input type="text" id="patientId" placeholder="Номер медицинской карты" style="width:100%" /></th>
+                    <th colspan="2"><button onclick="SearchPatient()" style="width:100%">Поиск</button></th>
+                </tr>
+            </table>
+        </div>
+        <div id="searchResult"></div>
+    </body>
+</html>
+
+<script>
+    function SearchPatient() {
+        var patientId = $('#patientId').val();
+        $.ajax({
+            url: '@Url.Action("GetPatientInfo", "Patient")',
+            data: { id: patientId },
+            type: 'get',
+            cache: false,
+            async: true,
+            success: function (result) {
+                $('#searchResult').html(result);
+            }
+        });
+    }
+</script>

@@ -30,6 +30,7 @@ static_resources:
                   auto_host_rewrite: true
                   prefix_rewrite: "/agents/"
                   cluster: agents_service
+                  timeout: 60s
               - name: "patients-long"
                 match:
                   prefix: "/patientsApi/"
@@ -37,12 +38,16 @@ static_resources:
                   auto_host_rewrite: true
                   prefix_rewrite: "/patientsApi/"
                   cluster: patients_service
-              - name: "testGoogle"
+                  timeout: 30s
+              - name: "influences-long"
                 match:
-                  prefix: "/goo/"
+                  prefix: "/influences/"
                 route:
-                  host_rewrite: www.google.com
-                  cluster: google_service
+                  auto_host_rewrite: true
+                  prefix_rewrite: "/influences/"
+                  cluster: patients_service
+                  timeout: 30s
+
           http_filters:
           - name: envoy.router
   clusters:
@@ -62,21 +67,6 @@ static_resources:
     - socket_address:
         address: agents.api
         port_value: 80
-  - name: google_service
-    connect_timeout: 0.25s
-    type: LOGICAL_DNS
-    # Comment out the following line to test on v6 networks 
-    dns_lookup_family: V4_ONLY
-    lb_policy: ROUND_ROBIN
-    load_assignment:
-      cluster_name: google_service
-      endpoints:
-      - lb_endpoints:
-        - endpoint:
-            address:
-              socket_address:
-                address: www.google.com
-                port_value: 443
   #- name: catalog
   #  connect_timeout: 0.25s
   #  type: strict_dns

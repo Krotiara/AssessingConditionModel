@@ -22,7 +22,15 @@ namespace WebMVC.Services
             return await webRequester.GetResponse<bool>(url, "POST", body);
         }
 
-        
+        public async Task<bool> AddPatient(Patient p)
+        {
+            string url = $"{gatewayUrl}/patientsApi/addPatient";
+            string body = Newtonsoft.Json.JsonConvert.SerializeObject(p);
+            return await webRequester.GetResponse<bool>(url, "POST", body);
+        }
+
+
+
 
         public async Task<Patient> GetPatient(int id)
         {
@@ -33,33 +41,69 @@ namespace WebMVC.Services
             }
             catch(GetWebResponceException ex)
             {
-                return null; //TODO log
+                throw;
             }
         }
 
         public async Task<IList<AgingDynamics>> GetPatientAgingDynamics(int patientId, 
             DateTime startTimestamp, DateTime endTimestamp)
         {
-            string url = $"{gatewayUrl}/agents/agingDynamics/{patientId}";
-            string body = Newtonsoft.Json.JsonConvert.SerializeObject(
-                new DateTime[2] { startTimestamp, endTimestamp});
-            return await webRequester.GetResponse<IList<AgingDynamics>>(url, "POST", body);
+            try
+            {
+                string url = $"{gatewayUrl}/agents/agingDynamics/{patientId}";
+                string body = Newtonsoft.Json.JsonConvert.SerializeObject(
+                    new DateTime[2] { startTimestamp, endTimestamp });
+                return await webRequester.GetResponse<IList<AgingDynamics>>(url, "POST", body);
+            }
+            catch(GetWebResponceException ex)
+            {
+                throw;
+            }
         }
 
 
         public async Task<IList<AgingDynamics>> GetAgingDynamics(DateTime startTimestamp, DateTime endTimestamp)
         {
-            string url = $"{gatewayUrl}/agents/agingDynamics/";
-            string body = Newtonsoft.Json.JsonConvert.SerializeObject(
-                new DateTime[2] { startTimestamp, endTimestamp });
-            return await webRequester.GetResponse<IList<AgingDynamics>>(url, "POST", body);
+            try
+            {
+                string url = $"{gatewayUrl}/agents/agingDynamics/";
+                string body = Newtonsoft.Json.JsonConvert.SerializeObject(
+                    new DateTime[2] { startTimestamp, endTimestamp });
+                return await webRequester.GetResponse<IList<AgingDynamics>>(url, "POST", body);
+            }
+            catch(GetWebResponceException ex)
+            {
+                throw;
+            }
         }
 
 
         public async Task<AgingState> GetPatientCurrentAgingState(int patientId)
         {
-            string url = $"{gatewayUrl}/agents/agingState/{patientId}";
-            return await webRequester.GetResponse<AgingState>(url, "GET");
+            try
+            {
+                string url = $"{gatewayUrl}/agents/agingState/{patientId}";
+                return await webRequester.GetResponse<AgingState>(url, "GET");
+            }
+            catch(GetWebResponceException)
+            {
+                return null;
+            }
+        }
+
+        public async Task<bool> EditPatient(Patient p)
+        {
+            string url = $"{gatewayUrl}/patientsApi/updatePatient";
+            string body = Newtonsoft.Json.JsonConvert.SerializeObject(p);
+            return await webRequester.GetResponse<bool>(url, "PUT", body);
+        }
+
+        public async Task<IList<Influence>> GetPatientInfluences(int patientId, DateTime startTimestamp, DateTime endTimestamp)
+        {
+            string url = $"{gatewayUrl}/patientsApi/influences/{patientId}";
+            string body = Newtonsoft.Json.JsonConvert.SerializeObject(
+                    new DateTime[2] { startTimestamp, endTimestamp });
+            return await webRequester.GetResponse<IList<Influence>>(url, "POST", body);
         }
     }
 }

@@ -30,15 +30,19 @@ namespace PatientsResolver.API.Controllers
             {
                 return Ok(await mediator.Send(new GetPatientQuery() { PatientId = patientId }));
             }
-            catch (Exception ex)
+            catch(PatientNotFoundException ex)
             {
                 return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Unexpected error: {ex.Message}");
             }
         }
 
 
         [HttpPost("patientsApi/addPatient")]
-        public async Task<ActionResult<bool>> AddPatient(Patient patient)
+        public async Task<ActionResult<bool>> AddPatient([FromBody]Patient patient)
         {
             try
             {
@@ -56,7 +60,7 @@ namespace PatientsResolver.API.Controllers
 
        
         [HttpPut("patientsApi/updatePatient")]
-        public async Task<ActionResult<bool>> UpdatePatient(Patient patient)
+        public async Task<ActionResult<bool>> UpdatePatient([FromBody]Patient patient)
         {
             try
             {

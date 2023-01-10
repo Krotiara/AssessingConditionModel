@@ -1,0 +1,45 @@
+﻿@using Interfaces
+@model Patient
+
+<html>
+<head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <style>
+        .input-validation-error{
+            border-color: red;
+        }
+    </style>
+</head>
+<body class="card-body">
+    <h4 class="panel-title">Добавление пациента</h4>     
+    <hr/>
+    
+    <div class="form-group">
+        <div>@Html.LabelFor(m => m.Name)</div>
+        <div>@Html.TextBoxFor(x=>x.Name)
+        <span asp-validation-for="Name" class="text-danger"></span></div>
+    </div>
+    <div class="form-group">
+        <div>@Html.LabelFor(m => m.MedicalHistoryNumber)</div>
+        <div>@Html.TextBoxFor(x=>x.MedicalHistoryNumber)
+        <span asp-validation-for="MedicalHistoryNumber" class="text-danger"></span></div>
+    </div>
+    <div class="form-group">
+        <div>@Html.LabelFor(m => m.Gender)</div>
+        <div>@Html.DropDownListFor(x=>x.Gender, Html.GetEnumSelectList(typeof(GenderEnum)))
+        <span asp-validation-for="Gender" class="text-danger"></span></div>
+    </div>
+    <div class="form-group">
+        <div>@Html.LabelFor(m => m.Birthday)</div>
+        <div>@Html.EditorFor(x=>x.Birthday)
+        <span asp-validation-for="Birthday" class="text-danger"></span></div>
+    </div>
+</body>
+</html>
+
+
+
+
+

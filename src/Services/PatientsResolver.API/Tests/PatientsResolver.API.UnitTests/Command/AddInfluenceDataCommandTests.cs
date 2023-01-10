@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Options;
+using Moq;
 using PatientsResolver.API.Data;
 using PatientsResolver.API.Data.Repository;
 using PatientsResolver.API.Entities;
@@ -20,6 +21,22 @@ namespace PatientsResolver.API.UnitTests.Command
     public class AddInfluenceDataCommandTests
     {
 
+        Mock<IDbContextFactory<PatientsDataDbContext>> dbContextFactory;
+        private PatientsDataDbContext dbContext;
+
+        public AddInfluenceDataCommandTests()
+        {
+            var options = new DbContextOptionsBuilder<PatientsDataDbContext>()
+                 .UseInMemoryDatabase(Guid.NewGuid().ToString())
+                 .ConfigureWarnings(x => x.Ignore(InMemoryEventId.TransactionIgnoredWarning))
+                 .Options;
+            dbContextFactory = new Mock<IDbContextFactory<PatientsDataDbContext>>();
+            dbContext = new PatientsDataDbContext(options);
+            dbContextFactory.Setup(x => x.CreateDbContext())
+                .Returns(dbContext);
+        }
+
+
         [Fact]
         public async void AddExistedDataMustNotBeAdded()
         {
@@ -29,28 +46,26 @@ namespace PatientsResolver.API.UnitTests.Command
                 .Options;
             // set delay time after which the CancellationToken will be canceled
             var cancellationTokenSource = new CancellationTokenSource(TimeSpan.FromMilliseconds(100));
-
-            using (PatientsDataDbContext dbContext = new PatientsDataDbContext(options))
+ 
+            InfluenceRepository rep = new InfluenceRepository(dbContextFactory.Object);
+            int patientId = new Random().Next(1, 1000);
+            Influence influence = new Influence()
             {
-                InfluenceRepository rep = new InfluenceRepository(dbContext);
-                int patientId = new Random().Next(1, 1000);
-                Influence influence = new Influence()
-                {
-                    InfluenceType = Interfaces.InfluenceTypes.AntiInflammatory,
-                    MedicineName = "test",
-                    PatientId = patientId,
-                    Patient = new Patient() { MedicalHistoryNumber = patientId, 
-                        Gender = Interfaces.GenderEnum.Female, Birthday = DateTime.Now, Name = "" },
-                    StartTimestamp = DateTime.Today,
-                    EndTimestamp = DateTime.Today,     
-                };
+                InfluenceType = Interfaces.InfluenceTypes.AntiInflammatory,
+                MedicineName = "test",
+                PatientId = patientId,
+                Patient = new Patient() { MedicalHistoryNumber = patientId, 
+                    Gender = Interfaces.GenderEnum.Female, Birthday = DateTime.Now, Name = "" },
+                StartTimestamp = DateTime.Today,
+                EndTimestamp = DateTime.Today,     
+            };
 
-                await rep.AddAsync(influence);
+            await rep.AddAsync(influence);
                 
-                AddInfluenceDataCommandHandler handler = new AddInfluenceDataCommandHandler(rep);
-                List<Influence> res = await handler.Handle(new AddInfluenceDataCommand() { Data = new List<Influence>() { influence } }, cancellationTokenSource.Token);
-                Assert.Empty(res);
-            }
+            AddInfluenceDataCommandHandler handler = new AddInfluenceDataCommandHandler(rep);
+            List<Influence> res = await handler.Handle(new AddInfluenceDataCommand() { Data = new List<Influence>() { influence } }, cancellationTokenSource.Token);
+            Assert.Empty(res);
+            
         }
 
 
@@ -66,18 +81,16 @@ namespace PatientsResolver.API.UnitTests.Command
                 List<Influence> testData = GetTestInfluencesWithEmptyFields();
                 foreach (Influence influence in testData)
                 {
-                using (PatientsDataDbContext dbContext = new PatientsDataDbContext(options))
-                {
-                    InfluenceRepository rep = new InfluenceRepository(dbContext);
-                    AddInfluenceDataCommandHandler handler = new AddInfluenceDataCommandHandler(rep);
                     if (influence.Patient != null)
                     {
                         await dbContext.Patients.AddAsync(influence.Patient);
                         await dbContext.SaveChangesAsync();
                     }
+                    InfluenceRepository rep = new InfluenceRepository(dbContextFactory.Object);
+                    AddInfluenceDataCommandHandler handler = new AddInfluenceDataCommandHandler(rep);
                     await Assert.ThrowsAsync<AddInfluenceRangeException>(
                         () => handler.Handle(new AddInfluenceDataCommand() { Data = new List<Influence> { influence } }, cancellationTokenSource.Token));
-                }
+                
             }
         }
 
@@ -91,28 +104,23 @@ namespace PatientsResolver.API.UnitTests.Command
             infWithNotEqualPatientIds2.Patient.MedicalHistoryNumber = infWithNotEqualPatientIds2.Patient.MedicalHistoryNumber + 1;
 
             List<Influence> testData = new List<Influence> { infWithNotEqualPatientIds1, infWithNotEqualPatientIds2 };
-
-
-            var options = new DbContextOptionsBuilder<PatientsDataDbContext>()
-               .UseInMemoryDatabase(Guid.NewGuid().ToString())
-               .ConfigureWarnings(x => x.Ignore(InMemoryEventId.TransactionIgnoredWarning))
-               .Options;
             // set delay time after which the CancellationToken will be canceled
             var cancellationTokenSource = new CancellationTokenSource(TimeSpan.FromMilliseconds(100));
-            using (PatientsDataDbContext dbContext = new PatientsDataDbContext(options))
+            
+            InfluenceRepository rep = new InfluenceRepository(dbContextFactory.Object);
+            AddInfluenceDataCommandHandler handler = new AddInfluenceDataCommandHandler(rep);
+            foreach (Influence influence in testData)
             {
-                InfluenceRepository rep = new InfluenceRepository(dbContext);
-                AddInfluenceDataCommandHandler handler = new AddInfluenceDataCommandHandler(rep);
-                foreach (Influence influence in testData)
+                if (influence.Patient != null)
                 {
-                    if (influence.Patient != null)
-                    {
-                        await dbContext.Patients.AddAsync(influence.Patient);
-                        await dbContext.SaveChangesAsync();
-                    }
-                    await Assert.ThrowsAsync<AddInfluenceRangeException>(
-                       () => handler.Handle(new AddInfluenceDataCommand() { Data = new List<Influence> { influence } }, cancellationTokenSource.Token));
+                    
+                    await dbContext.Patients.AddAsync(influence.Patient);
+                    await dbContext.SaveChangesAsync();
+                    
                 }
+
+                await Assert.ThrowsAsync<AddInfluenceRangeException>(
+                    () => handler.Handle(new AddInfluenceDataCommand() { Data = new List<Influence> { influence } }, cancellationTokenSource.Token));
             }
         }
 
@@ -126,28 +134,29 @@ namespace PatientsResolver.API.UnitTests.Command
               .ConfigureWarnings(x => x.Ignore(InMemoryEventId.TransactionIgnoredWarning))
               .Options;
             var cancellationTokenSource = new CancellationTokenSource(TimeSpan.FromMilliseconds(100));
-            using (PatientsDataDbContext dbContext = new PatientsDataDbContext(options))
-            {
-                InfluenceRepository rep = new InfluenceRepository(dbContext);
-                AddInfluenceDataCommandHandler handler = new AddInfluenceDataCommandHandler(rep);
+            
+            InfluenceRepository rep = new InfluenceRepository(dbContextFactory.Object);
+            AddInfluenceDataCommandHandler handler = new AddInfluenceDataCommandHandler(rep);
+            Influence inf = GetCorrectTestInfluence();
+            PatientsDataDbContext dbContext = dbContextFactory.Object.CreateDbContext();
+            
+            await dbContext.Patients.AddAsync(inf.Patient);
+            await dbContext.SaveChangesAsync();
+            
 
-                Influence inf = GetCorrectTestInfluence();
-                await dbContext.Patients.AddAsync(inf.Patient);
-                await dbContext.SaveChangesAsync();
+            List<Influence> addedData = await handler.Handle(new AddInfluenceDataCommand() { Data = new List<Influence> { inf } }, cancellationTokenSource.Token);
 
-                List<Influence> addedData = await handler.Handle(new AddInfluenceDataCommand() { Data = new List<Influence> { inf } }, cancellationTokenSource.Token);
-                Influence? added = dbContext.Influences.FirstOrDefault(x => x.InfluenceType == inf.InfluenceType 
-                                                                                   && x.MedicineName == inf.MedicineName 
-                                                                                   && x.PatientId == inf.PatientId 
-                                                                                   && x.StartTimestamp == inf.StartTimestamp 
-                                                                                   && x.EndTimestamp == inf.EndTimestamp);
-
-                Assert.True(addedData.Count == 1);
-                Assert.NotNull(added);
-            }
+            
+            Influence? added = dbContext.Influences.FirstOrDefault(x => x.InfluenceType == inf.InfluenceType
+                                                                                && x.MedicineName == inf.MedicineName
+                                                                                && x.PatientId == inf.PatientId
+                                                                                && x.StartTimestamp == inf.StartTimestamp
+                                                                                && x.EndTimestamp == inf.EndTimestamp);
+            Assert.True(addedData.Count == 1);
+            Assert.NotNull(added);
+            
         }
-
-       
+     
 
         private List<Influence> GetTestInfluencesWithEmptyFields()
         {

@@ -1,0 +1,8 @@
+﻿@model PatientParameter
+
+<div class="row">
+@*    @Html.DisplayFor(x=>x.ParameterName,new { @class = "col-sm-1 control-label" })*@
+    <div class="col-sm-2">@Html.DisplayFor(x=>x.ParameterName)</div>
+    <div class="col-sm-2">@Html.DisplayFor(x=>x.Value)</div>   
+    <div class="col-sm-2">@Html.DisplayFor(x=>x.Timestamp)</div>
+</div>
