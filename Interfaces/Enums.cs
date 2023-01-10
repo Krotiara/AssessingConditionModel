@@ -31,6 +31,17 @@ namespace Interfaces
         Female
     }
 
+
+    public enum TreatmentType
+    {
+        [Display(Name = "-")]
+        None,
+        [Display(Name = "Амбулаторно")]
+        Outpatient,
+        [Display(Name = "Стационар")]
+        Inpatient
+    }
+
     public enum AgentBioAgeStates
     {
         [Display(Name = "Резко замедленный темп старения")]

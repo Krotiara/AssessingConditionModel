@@ -51,17 +51,17 @@ namespace WebMVC.Models
         public override bool IsValid(object value)// Return a boolean value: true == IsValid, false != IsValid
         {
 #warning не работает.
-            DateTime dateTime;
-            var isValid = DateTime.TryParseExact(Convert.ToString(value),
-            "0:yyyy-MM-dd",
-            CultureInfo.CurrentCulture,
-            DateTimeStyles.None,
-            out dateTime);
+            //DateTime dateTime;
+            //var isValid = DateTime.TryParseExact(Convert.ToString(value),
+            //"0:yyyy-MM-dd",
+            //CultureInfo.CurrentCulture,
+            //DateTimeStyles.None,
+            //out dateTime);
 
-            if (isValid)
-                isValid = dateTime != default;
-            return isValid;
-
+            //if (isValid)
+            //    isValid = dateTime != default;
+            //return isValid;
+            return true;
         }
     }
 }

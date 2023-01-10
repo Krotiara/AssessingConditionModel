@@ -32,5 +32,10 @@ namespace WebMVC.Models
         [Display(Name = "Пол")]
         [GenderSet(ErrorMessage = "Не указан пол")]
         public GenderEnum Gender { get; set; }
+
+
+        [Display(Name = "Вид лечения")]
+        [GenderSet(ErrorMessage = "Не указан вид лечения")]
+        public TreatmentType TreatmentType { get; set; }
     }
 }

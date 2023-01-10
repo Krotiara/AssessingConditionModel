@@ -36,6 +36,11 @@
         <div>@Html.EditorFor(x=>x.Birthday)
         <span asp-validation-for="Birthday" class="text-danger"></span></div>
     </div>
+    <div class="form-group">
+        <div>@Html.LabelFor(m => m.TreatmentType)</div>
+        <div>@Html.DropDownListFor(x=>x.TreatmentType, Html.GetEnumSelectList(typeof(TreatmentType)))
+        <span asp-validation-for="TreatmentType" class="text-danger"></span></div>
+    </div>
 </body>
 </html>
 

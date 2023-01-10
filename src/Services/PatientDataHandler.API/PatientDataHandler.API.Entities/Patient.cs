@@ -15,5 +15,7 @@ namespace PatientDataHandler.API.Entities
         public int MedicalHistoryNumber { get ; set ; }
 
         public GenderEnum Gender { get; set; }
+
+        public TreatmentType TreatmentType { get; set; }
     }
 }
