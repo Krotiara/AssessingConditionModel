@@ -5,7 +5,7 @@
 <div class="row rowPatient" draggable="true">
     @Html.LabelFor(x=>x.ParameterName,new { @class = "col-sm-1 control-label" })
     <div class="col-sm-2">@Html.DropDownListFor(
-        x=>x.ParameterName, Html.GetEnumSelectList(typeof(ParameterNames)))</div>
+        x=>x.ParameterName, Html.GetEnumSelectList(typeof(ParameterNames)).OrderBy(x=>x.Text))</div>
     @Html.LabelFor(x=>x.Value, new { @class = "col-sm-1 control-label" })
     <div class="col-sm-2">@Html.TextBoxFor(x=>x.Value)</div>
     @Html.LabelFor(x=>x.Timestamp, new { @class = "col-sm-1 control-label" })

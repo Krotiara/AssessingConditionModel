@@ -66,12 +66,14 @@ namespace Interfaces
         None = 0,
         [Display(Name = "Id")]
         [ParamDescription(Descriptions = new string[] { "id", "номер", "номер истории болезни" })]
+        [NoAllowToSelect]
         Id,
         [Display(Name = "возраст")]
         [ParamDescription(Descriptions = new string[] { "возраст" })]
         Age,
         [Display(Name = "пол")]
         [ParamDescription(Descriptions = new string[] { "пол" })]
+        [NoAllowToSelect]
         Gender,
         [Display(Name = "дата вступления")]
         [ParamDescription(Descriptions = new string[] { "дата вступления" })]

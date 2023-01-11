@@ -28,7 +28,7 @@
     </div>
     <div class="form-group">
         <div>@Html.LabelFor(m => m.Gender)</div>
-        <div>@Html.DropDownListFor(x=>x.Gender, Html.GetEnumSelectList(typeof(GenderEnum)))
+        <div>@Html.DropDownListFor(x=>x.Gender, Html.GetEnumSelectList(typeof(GenderEnum)).OrderBy(x=>x.Text))
         <span asp-validation-for="Gender" class="text-danger"></span></div>
     </div>
     <div class="form-group">
@@ -38,7 +38,7 @@
     </div>
     <div class="form-group">
         <div>@Html.LabelFor(m => m.TreatmentType)</div>
-        <div>@Html.DropDownListFor(x=>x.TreatmentType, Html.GetEnumSelectList(typeof(TreatmentType)))
+        <div>@Html.DropDownListFor(x=>x.TreatmentType, Html.GetEnumSelectList(typeof(TreatmentType)).OrderBy(x=>x.Text))
         <span asp-validation-for="TreatmentType" class="text-danger"></span></div>
     </div>
 </body>

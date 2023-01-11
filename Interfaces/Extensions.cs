@@ -27,7 +27,8 @@ namespace Interfaces
 
         public static string GetDisplayAttributeValue(this Enum enumValue)
         {
-            return enumValue.GetAttribute<DisplayAttribute>().Name;
+            DisplayAttribute displayAttribute = enumValue.GetAttribute<DisplayAttribute>();
+            return displayAttribute != null? displayAttribute.Name : "";
         }
 
 
