@@ -6,11 +6,23 @@ using System.Threading.Tasks;
 
 namespace Interfaces
 {
-    public class ParamDescriptionAttribute: Attribute
+    [AttributeUsage(AttributeTargets.Field)]
+    public class NoAllowToSelectAttribute : Attribute
+    {
+    }
+
+
+    public class ParamDescriptionAttribute : Attribute
     {
         public string[] Descriptions { get; set; }
 
         public HashSet<string> DescriptionsSet => new HashSet<string>(Descriptions);
 
+    }
+
+
+    public class ParamValueTypeAttribute: Attribute
+    {
+        public Type ValueType { get; set; }
     }
 }
