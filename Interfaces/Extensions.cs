@@ -98,6 +98,7 @@ namespace Interfaces
 
         public static ParameterNames GetParameterByDescription(this string description)
         {
+            description = description.ToLower();
             ParameterNames p = Enum.GetValues(typeof(ParameterNames))
                 .Cast<ParameterNames>()
                 .FirstOrDefault(x =>

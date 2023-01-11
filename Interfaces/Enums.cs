@@ -68,140 +68,140 @@ namespace Interfaces
         [ParamDescription(Descriptions = new string[] { "id", "номер", "номер истории болезни" })]
         [NoAllowToSelect]
         Id,
-        [Display(Name = "возраст")]
+        [Display(Name = "Возраст")]
         [ParamDescription(Descriptions = new string[] { "возраст" })]
         Age,
-        [Display(Name = "пол")]
+        [Display(Name = "Пол")]
         [ParamDescription(Descriptions = new string[] { "пол" })]
         [NoAllowToSelect]
         Gender,
-        [Display(Name = "дата вступления")]
+        [Display(Name = "Дата вступления")]
         [ParamDescription(Descriptions = new string[] { "дата вступления" })]
         HospitalizationDate,
-        [Display(Name = "дата внесения")]
+        [Display(Name = "Дата внесения")]
         [ParamDescription(Descriptions = new string[] { "дата внесения" })]
         ParameterTimestamp,
-        [Display(Name = "анамнез")]
+        [Display(Name = "Анамнез")]
         [ParamDescription(Descriptions = new string[] { "анамнез" })]
         Anamnesis,
-        [Display(Name = "артериальная гипертензия")]
+        [Display(Name = "Артериальная гипертензия")]
         [ParamDescription(Descriptions = new string[] { "артериальная гипертензия", "аг" })]
         ArterialHypertension,
-        [Display(Name = "фп пароксизмальная")]
+        [Display(Name = "Фп пароксизмальная")]
         [ParamDescription(Descriptions = new string[] { "фп пароксизмальная" })]
         ParoxysmalAtrialFibrillation,
-        [Display(Name = "желудочковые нр")]
+        [Display(Name = "Желудочковые нр")]
         [ParamDescription(Descriptions = new string[] { "желудочковые нр" })]
         VentricularArrhythmias,
-        [Display(Name = "жэс")]
+        [Display(Name = "Жэс")]
         [ParamDescription(Descriptions = new string[] { "жэс" })]
         VentricularExtrasystole,
-        [Display(Name = "пробежки/пароксизмы жт")]
+        [Display(Name = "Пробежки/пароксизмы жт")]
         [ParamDescription(Descriptions = new string[] { "пробежки/пароксизмы жт", "жт" })]
         VentricularTachycardia,
-        [Display(Name = "инфаркт миокарда")]
+        [Display(Name = "Инфаркт миокарда")]
         [ParamDescription(Descriptions = new string[] { "инфаркт миокарда" })]
         MyocardialInfarction,
-        [Display(Name = "стенокардия")]
+        [Display(Name = "Стенокардия")]
         [ParamDescription(Descriptions = new string[] { "стенокардия" })]
         Stenocardia,
-        [Display(Name = "фк стенокардии")]
+        [Display(Name = "Фк стенокардии")]
         [ParamDescription(Descriptions = new string[] { "фк стенокардии" })]
         AnginaPectorisFunctionalClass,
-        [Display(Name = "cахарный диабет")]
+        [Display(Name = "Сахарный диабет")]
         [ParamDescription(Descriptions = new string[] { "cахарный диабет 2", "cахарный диабет" })]
         DiabetesMellitus,
-        [Display(Name = "курение")]
+        [Display(Name = "Курение")]
         [ParamDescription(Descriptions = new string[] { "курение" })]
         Smoking,
-        [Display(Name = "привержен к лечению")]
+        [Display(Name = "Привержен к лечению")]
         [ParamDescription(Descriptions = new string[] { "привержен к лечению" })]
         TreatmentAdherence,
-        [Display(Name = "баллы по мориски")]
+        [Display(Name = "Баллы по мориски")]
         [ParamDescription(Descriptions = new string[] { "баллы по мориски" })]
         Moriski,
-        [Display(Name = "баллы по шокс")]
+        [Display(Name = "Баллы по шокс")]
         [ParamDescription(Descriptions = new string[] { "баллы по шокс" })]
         Shock,
-        [Display(Name = "сад")]
+        [Display(Name = "Сад")]
         [ParamDescription(Descriptions = new string[] { "сад","адс" })]
         SystolicPressure,
-        [Display(Name = "дад")]
+        [Display(Name = "Дад")]
         [ParamDescription(Descriptions = new string[] { "дад","адд" })]
         DiastolicPressure,
-        [Display(Name = "чсс")]
+        [Display(Name = "Чсс")]
         [ParamDescription(Descriptions = new string[] { "чсс" })]
         HeartRate,
-        [Display(Name = "гемоглобин")]
+        [Display(Name = "Гемоглобин")]
         [ParamDescription(Descriptions = new string[] { "гемоглобин", "hb", "hgb" })]
         Hemoglobin,
-        [Display(Name = "мочевина")]
+        [Display(Name = "Мочевина")]
         [ParamDescription(Descriptions = new string[] { "мочевина" })]
         Urea,
-        [Display(Name = "креатинин")]
+        [Display(Name = "Креатинин")]
         [ParamDescription(Descriptions = new string[] { "креатинин" })]
         Creatinine,
-        [Display(Name = "калий")]
+        [Display(Name = "Калий")]
         [ParamDescription(Descriptions = new string[] { "калий" })]
         Potassium,
-        [Display(Name = "глюкоза")]
+        [Display(Name = "Глюкоза")]
         [ParamDescription(Descriptions = new string[] { "глюкоза" })]
         Glucose,
-        [Display(Name = "общий билирубин")]
+        [Display(Name = "Общий билирубин")]
         [ParamDescription(Descriptions = new string[] { "общий билирубин" })]
         TotalBilirubin,
-        [Display(Name = "охс")]
+        [Display(Name = "Охс")]
         [ParamDescription(Descriptions = new string[] { "охс" })]
         TotalCholesterol,
-        [Display(Name = "хбп")]
+        [Display(Name = "Хбп")]
         [ParamDescription(Descriptions = new string[] { "хбп" })]
         StageOfChronicKidneyDisease,
-        [Display(Name = "вес")]
+        [Display(Name = "Вес")]
         [ParamDescription(Descriptions = new string[] { "вес", "масса тела" })]
         Weight,
-        [Display(Name = "рост")]
+        [Display(Name = "Рост")]
         [ParamDescription(Descriptions = new string[] { "рост" })]
         Height,
-        [Display(Name = "имт")]
+        [Display(Name = "Имт")]
         [ParamDescription(Descriptions = new string[] { "имт" })]
         BodyMassIndex,
-        [Display(Name = "bnp")]
+        [Display(Name = "Bnp")]
         [ParamDescription(Descriptions = new string[] { "bnp" })]
         BNP,
-        [Display(Name = "качество жизни")]
+        [Display(Name = "Качество жизни")]
         [ParamDescription(Descriptions = new string[] { "качество жизни" })]
         LifeQuality,
-        [Display(Name = "кср")]
+        [Display(Name = "Кср")]
         [ParamDescription(Descriptions = new string[] { "кср" })]
         CSR,
-        [Display(Name = "кдр")]
+        [Display(Name = "Кдр")]
         [ParamDescription(Descriptions = new string[] { "кдр" })]
         EchocardiographicAssessment,
-        [Display(Name = "ксо")]
+        [Display(Name = "Ксо")]
         [ParamDescription(Descriptions = new string[] { "ксо" })]
         FinalSystolicVolume,
-        [Display(Name = "кдо")]
+        [Display(Name = "Кдо")]
         [ParamDescription(Descriptions = new string[] { "кдо" })]
         FinalDiastolicVolume,
-        [Display(Name = "фв")]
+        [Display(Name = "Фв")]
         [ParamDescription(Descriptions = new string[] { "фв" })]
         EjectionFraction,
-        [Display(Name = "здвдох")]
+        [Display(Name = "Здвдох")]
         [ParamDescription(Descriptions = new string[] { "здвдох" })]
         InhaleBreathHolding,
-        [Display(Name = "здвыдох")]
+        [Display(Name = "Здвыдох")]
         [ParamDescription(Descriptions = new string[] { "здвыдох" })]
         OuthaleBreathHolding,
-        [Display(Name = "жел")]
+        [Display(Name = "Жел")]
         [ParamDescription(Descriptions = new string[] { "жел" })]
         LungCapacity,
-        [Display(Name = "аккомодация")]
+        [Display(Name = "Аккомодация")]
         [ParamDescription(Descriptions = new string[] { "аккомодация" })]
         Accommodation,
-        [Display(Name = "острота слуха")]
+        [Display(Name = "Острота слуха")]
         [ParamDescription(Descriptions = new string[] { "острота слуха" })]
         HearingAcuity,
-        [Display(Name = "стат.балансировка")]
+        [Display(Name = "Стат.балансировка")]
         [ParamDescription(Descriptions = new string[] { "стат.балансировка" })]
         StaticBalancing
     }
