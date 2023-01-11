@@ -21,6 +21,7 @@ namespace Interfaces
     }
 
 
+    [AttributeUsage(AttributeTargets.Field)]
     public class ParamValueTypeAttribute: Attribute
     {
         public Type ValueType { get; set; }

@@ -37,8 +37,19 @@ namespace Interfaces
             TypeConverter converter =
                 TypeDescriptor.GetConverter(typeof(T));
 
+            if (!converter.IsValid(inValue))
+                throw new ArgumentException();
+
             return (T)converter.ConvertFromString(null,
                 CultureInfo.InvariantCulture, inValue);
+        }
+
+
+        public static bool IsValidToParse(this string inValue, Type parseType)
+        {
+            TypeConverter converter =
+                TypeDescriptor.GetConverter(parseType);
+            return converter.IsValid(inValue);
         }
 
 
