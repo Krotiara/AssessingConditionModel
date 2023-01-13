@@ -2,6 +2,7 @@
 using Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using NToastNotify;
+using System.ComponentModel;
 using WebMVC.Models;
 using WebMVC.Services;
 
@@ -165,6 +166,17 @@ namespace WebMVC.Controllers
         [HttpPost]
         public async Task<IActionResult> AddInluence(InfluenceViewFormat influenceViewFormat)
         {
+
+            //Проверка корректности введенных значений параметров.
+            for(int i=0; i < influenceViewFormat.Parameters.Count;i++)
+            {
+                Type valueType = influenceViewFormat.Parameters[i]
+                    .ParameterName.GetAttribute<ParamValueTypeAttribute>().ValueType;
+                if (!influenceViewFormat.Parameters[i].Value.IsValidToParse(valueType))
+                    ModelState.AddModelError($"Parameters[{i}].Value",
+                        $"Введеное значение недопустимо для типа {valueType.Name}.");
+            }
+
             if (ModelState.IsValid)
             {
                 Influence influence = new Influence()

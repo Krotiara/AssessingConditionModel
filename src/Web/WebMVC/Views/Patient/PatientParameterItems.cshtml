@@ -1,5 +1,21 @@
 ﻿@using Interfaces
+@using System.Reflection
 @model InfluenceViewFormat
+@{
+    var enumValues = Enum.GetValues(typeof(ParameterNames))
+    .Cast<ParameterNames>()
+    .Where(x=>
+    {
+        MemberInfo memberInfo = typeof(ParameterNames).GetMember(x.ToString()).First();
+        return memberInfo.GetCustomAttribute<NoAllowToSelectAttribute>() == null;
+    })
+    .Select(x => new SelectListItem
+                {
+                    Value = ((int)x).ToString(),
+                    Text = x.GetDisplayAttributeValue()
+                })
+    .OrderBy(x=>x.Text); 
+}
 <table>
     <thead>
         <tr>
@@ -14,7 +30,7 @@
         {
             <tr>
                 <th>@Html.DropDownListFor(
-                    x=>x.Parameters[i].ParameterName, Html.GetEnumSelectList(typeof(ParameterNames)))
+                    x=>x.Parameters[i].ParameterName, enumValues, new {id= $"drop-{i}"})
                     <div><span asp-validation-for="Parameters[i].ParameterName" class="text-danger"></span></div>
                 </th>
                 <th>@Html.TextBoxFor(x=>x.Parameters[i].Value)

@@ -27,7 +27,8 @@ namespace Interfaces
 
         public static string GetDisplayAttributeValue(this Enum enumValue)
         {
-            return enumValue.GetAttribute<DisplayAttribute>().Name;
+            DisplayAttribute displayAttribute = enumValue.GetAttribute<DisplayAttribute>();
+            return displayAttribute != null? displayAttribute.Name : "";
         }
 
 
@@ -36,8 +37,19 @@ namespace Interfaces
             TypeConverter converter =
                 TypeDescriptor.GetConverter(typeof(T));
 
+            if (!converter.IsValid(inValue))
+                throw new ArgumentException();
+
             return (T)converter.ConvertFromString(null,
                 CultureInfo.InvariantCulture, inValue);
+        }
+
+
+        public static bool IsValidToParse(this string inValue, Type parseType)
+        {
+            TypeConverter converter =
+                TypeDescriptor.GetConverter(parseType);
+            return converter.IsValid(inValue);
         }
 
 
@@ -97,6 +109,7 @@ namespace Interfaces
 
         public static ParameterNames GetParameterByDescription(this string description)
         {
+            description = description.ToLower();
             ParameterNames p = Enum.GetValues(typeof(ParameterNames))
                 .Cast<ParameterNames>()
                 .FirstOrDefault(x =>

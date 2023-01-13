@@ -39,7 +39,7 @@
         <div class="form-group">
             <div>@Html.LabelFor(x => x.InfluenceType, new { @class = "control-label" })</div>
             <div>
-                @Html.DropDownListFor(x=>x.InfluenceType, Html.GetEnumSelectList(typeof(InfluenceTypes)))
+                @Html.DropDownListFor(x=>x.InfluenceType, Html.GetEnumSelectList(typeof(InfluenceTypes)).OrderBy(x=>x.Text))
                 <span asp-validation-for="InfluenceType" class="text-danger"></span>
             </div>
         </div>
