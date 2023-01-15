@@ -24,10 +24,12 @@ namespace WebMVC.Models
         public Patient Patient { get ; set ; }
 
         [Display(Name = "Дата начала")]
+        [DataType(DataType.Date)]
 #warning Нужна валидация
         public DateTime StartTimestamp { get ; set ; }
 
         [Display(Name = "Дата окончания")]
+        [DataType(DataType.Date)]
 #warning Нужна валидация
         public DateTime EndTimestamp { get ; set ; }
 
