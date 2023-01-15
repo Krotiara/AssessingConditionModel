@@ -1,6 +1,7 @@
 ﻿using Interfaces;
 using System.Collections.Concurrent;
 using System.ComponentModel.DataAnnotations;
+using System.Web.Mvc;
 
 namespace WebMVC.Models
 {
@@ -13,6 +14,7 @@ namespace WebMVC.Models
         }
 
         [Display(Name = "Идентификатор воздействия")]
+        [HiddenInput(DisplayValue = false)]
         public int Id { get ; set ; }
 
         [Display(Name ="Идентификатор пациента")]

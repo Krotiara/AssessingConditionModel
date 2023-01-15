@@ -1,5 +1,6 @@
 ﻿using Interfaces;
 using System.ComponentModel.DataAnnotations;
+using System.Web.Mvc;
 
 namespace WebMVC.Models
 {
@@ -7,6 +8,8 @@ namespace WebMVC.Models
     {
         public PatientParameter() { }
 
+
+        [HiddenInput(DisplayValue = false)]
         public int Id { get; set; }
         public int InfluenceId { get; set; }
 
