@@ -191,12 +191,6 @@ namespace Agents.API.Entities
             }
         }
 
-  
-        public void ProcessPrivateTransitions()
-        {
-            throw new NotImplementedException();
-        }
-
 
         public void InitWebRequester(IWebRequester webRequester)
         {

@@ -13,10 +13,6 @@ namespace Agents.API.Entities
 
         public StateDiagram StateDiagram { get; set; }
 
-        public List<IAgent> Connections { get; set; }
-
         public void InitStateDiagram();
-
-        public void ProcessPrivateTransitions();
     }
 }
