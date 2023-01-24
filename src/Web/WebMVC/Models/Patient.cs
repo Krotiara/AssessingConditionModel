@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web.Mvc;
 
 namespace WebMVC.Models
 {
@@ -13,6 +14,8 @@ namespace WebMVC.Models
 
         public Patient() { }
 
+
+        [HiddenInput(DisplayValue = false)]
         public int Id { get ; set ; }
 
         [Display(Name="ФИО")]
@@ -22,6 +25,7 @@ namespace WebMVC.Models
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:yyyy-MM-dd}")]
         [DateSet(ErrorMessage = "Не указана дата рождения")]
         [Display(Name = "Дата рождения")]
+        [DataType(DataType.Date)]
         public DateTime Birthday { get ; set ; }
 
         [Display(Name = "Номер истории болезни")]

@@ -47,8 +47,6 @@ namespace Agents.API.Entities
         [NotMapped]
         public StateDiagram StateDiagram { get ; set ; }
 
-        [NotMapped]
-        public List<IAgent> Connections { get ; set ; }
 
         [NotMapped]
         public double CurrentAge { get; set; }
@@ -143,7 +141,6 @@ namespace Agents.API.Entities
             CurrentBioAge = bioAge;
             CurrentAgeRang = rang;
         }
-
 
 
         private async Task<IList<PatientParameter>> GetLatestPatientParameters(IAgentDetermineStateProperties determineStateProperties)

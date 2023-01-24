@@ -17,10 +17,12 @@ namespace WebMVC.Models
         public int PatientId { get; set; }
 
         [Display(Name = "Начало воздействия")]
+        [DataType(DataType.Date)]
 #warning Нужна валидация
         public DateTime StartTimestamp { get; set; }
 
         [Display(Name = "Окончание воздействия")]
+        [DataType(DataType.Date)]
 #warning Нужна валидация
         public DateTime EndTimestamp { get; set; }
 
