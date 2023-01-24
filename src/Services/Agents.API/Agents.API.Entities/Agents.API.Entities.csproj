@@ -13,6 +13,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\Interfaces\Interfaces.csproj" />
+    <ProjectReference Include="..\Agents.API.Interfaces\Agents.API.Interfaces.csproj" />
   </ItemGroup>
 
 </Project>
