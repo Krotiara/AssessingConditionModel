@@ -14,10 +14,10 @@ namespace Agents.API.Interfaces
 
         public IAgentState CurrentState { get; set; }
 
-        public Func<IAgentDetermineStateProperties, Task<IAgentState>> DetermineState { get; set; }
+        public Func<IDetermineStateProperties, Task<IAgentState>> DetermineState { get; set; }
 
 
-        public async Task UpdateStateAsync(IAgentDetermineStateProperties determineStateProperties)
+        public async Task UpdateStateAsync(IDetermineStateProperties determineStateProperties)
         {
             CurrentState = await DetermineState(determineStateProperties);
         }
