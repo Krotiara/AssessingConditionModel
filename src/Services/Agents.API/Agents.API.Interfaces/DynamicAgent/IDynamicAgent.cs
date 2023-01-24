@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Agents.API.Interfaces
+namespace Agents.API.Interfaces.DynamicAgent
 {
     public interface IDynamicAgent
     {
@@ -12,8 +12,8 @@ namespace Agents.API.Interfaces
 
         public string Name { get; set; }
 
-        public IStateDiagram StateDiagram { get; set; }
+        public Dictionary<string, IAgentProperty> Properties { get; }
 
-        public void InitStateDiagram();
+        public IStateDiagram StateDiagram { get; set; }
     }
 }
