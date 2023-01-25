@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using AgentInputCodeExecutor.API.Entities;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace InputCodeMatcher.API.Controllers
@@ -14,7 +15,7 @@ namespace InputCodeMatcher.API.Controllers
 
         
         [HttpPost("codeExecutor/executeCode")]
-        public JsonResult CalculateAgentParameters([FromBody]List<string> codeLines)
+        public JsonResult CalculateAgentParameters([FromBody]ExecutableAgentCodeSettings execCodeSettings)
         {
             throw new NotImplementedException();
         }

@@ -1,3 +1,7 @@
+using AgentInputCodeExecutor.API.Entities;
+using AgentInputCodeExecutor.API.Service.Command;
+using Interfaces;
+using Interfaces.DynamicAgent;
 using MediatR;
 using System.Reflection;
 
@@ -6,6 +10,12 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddMediatR(Assembly.GetExecutingAssembly());
+
+builder.Services.AddTransient<IAgentProperty, AgentProperty>();
+builder.Services.AddTransient<IExecutableAgentCodeSettings<AgentProperty>, ExecutableAgentCodeSettings>();
+
+builder.Services
+    .AddTransient<IRequestHandler<ExecuteCodeLinesCommand, Unit>, ExecuteCodeLinesCommandHandler>();
 
 var app = builder.Build();
 

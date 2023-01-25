@@ -1,5 +1,5 @@
-﻿using Agents.API.Interfaces.DynamicAgent;
-using Interfaces;
+﻿using Interfaces;
+using Interfaces.DynamicAgent;
 using System;
 using System.Collections.Generic;
 using System.Linq;
