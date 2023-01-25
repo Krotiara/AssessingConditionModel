@@ -31,6 +31,7 @@ namespace AgentInputCodeExecutor.API.Service.Command
 
         public async Task<Unit> Handle(ExecuteCodeLineCommand request, CancellationToken cancellationToken)
         {
+#warning Перед этим нужно преобразование функции из псевдокода в исполняемый внутренний код, где всякие запросы на микросервисы и прочее.
             ScriptState<object> scriptState = await CSharpScript.RunAsync(request.Command.OriginCommand, cancellationToken: cancellationToken);
             if(scriptState.ReturnValue != null && !string.IsNullOrEmpty(scriptState.ReturnValue.ToString()))
             {
