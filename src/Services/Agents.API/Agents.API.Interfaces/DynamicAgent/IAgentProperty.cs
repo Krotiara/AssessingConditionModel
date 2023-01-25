@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,7 +9,7 @@ namespace Agents.API.Interfaces.DynamicAgent
 {
     public interface IAgentProperty
     {
-        public string Name { get; set; }
+        public ParameterNames Name { get; set; }
 
         public Type Type { get; set; }
 

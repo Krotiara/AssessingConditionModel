@@ -1,4 +1,5 @@
 ﻿using Agents.API.Interfaces.DynamicAgent;
+using Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,9 +12,9 @@ namespace Agents.API.Entities.DynamicAgent
     {
         public DetermineStateProperties()
         {
-            Properties = new Dictionary<string, IAgentProperty>();
+            Properties = new Dictionary<ParameterNames, IAgentProperty>();
         }
 
-        public Dictionary<string, IAgentProperty> Properties { get; }
+        public Dictionary<ParameterNames, IAgentProperty> Properties { get; }
     }
 }

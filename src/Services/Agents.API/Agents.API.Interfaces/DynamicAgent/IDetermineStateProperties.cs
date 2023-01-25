@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,6 +9,6 @@ namespace Agents.API.Interfaces.DynamicAgent
 {
     public interface IDetermineStateProperties
     {
-        public Dictionary<string, IAgentProperty> Properties { get; }
+        public Dictionary<ParameterNames, IAgentProperty> Properties { get; }
     }
 }

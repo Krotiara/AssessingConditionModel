@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,7 +13,7 @@ namespace Agents.API.Interfaces.DynamicAgent
 
         public string Name { get; set; }
 
-        public Dictionary<string, IAgentProperty> Properties { get; }
+        public Dictionary<ParameterNames, IAgentProperty> Properties { get; }
 
         public IStateDiagram StateDiagram { get; set; }
     }

@@ -1,4 +1,5 @@
 ﻿using Agents.API.Interfaces.DynamicAgent;
+using Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,14 +11,14 @@ namespace Agents.API.Entities.DynamicAgent
     public class AgentProperty : IAgentProperty
     {
 
-        public AgentProperty(string name, Type type, object value)
+        public AgentProperty(ParameterNames name, Type type, object value)
         {
             Name = name;
             Type = type;
             Value = value;
         }
 
-        public string Name { get; set; }
+        public ParameterNames Name { get; set; }
 
         public Type Type { get; set; }
 

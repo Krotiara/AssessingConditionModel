@@ -1,4 +1,5 @@
 ﻿using Agents.API.Interfaces.DynamicAgent;
+using Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +14,7 @@ namespace Agents.API.Entities.DynamicAgent
         public DynamicAgent(IDynamicAgentInitSettings settings)
         {
             Name = settings.Name;
-            Properties = new Dictionary<string, IAgentProperty>();
+            Properties = new Dictionary<ParameterNames, IAgentProperty>();
             foreach (IAgentProperty prop in settings.Properties)
                 Properties[prop.Name] = prop;
             StateDiagram = new StateDiagram(settings.States, settings.DetermineStateFunc);
@@ -23,6 +24,6 @@ namespace Agents.API.Entities.DynamicAgent
         public string Name { get; set; }
         public IStateDiagram StateDiagram { get ; set ; }
 
-        public Dictionary<string, IAgentProperty> Properties { get; }
+        public Dictionary<ParameterNames, IAgentProperty> Properties { get; }
     }
 }
