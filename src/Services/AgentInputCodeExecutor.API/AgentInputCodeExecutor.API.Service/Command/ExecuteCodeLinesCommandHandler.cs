@@ -1,4 +1,5 @@
 ﻿using AgentInputCodeExecutor.API.Entities;
+using AgentInputCodeExecutor.API.Interfaces;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -27,11 +28,10 @@ namespace AgentInputCodeExecutor.API.Service.Command
         {
             foreach(string codeLine in request.Settings.CodeLines)
             {
-                //1 - parse to command
-                //2 - execute command with add into dict vars
-                
+                ICommand command = await mediator.Send(new ParseCodeLineCommand(codeLine), cancellationToken);
+                await mediator.Send(new ExecuteCodeLineCommand(command, request.Settings.Properties), cancellationToken);             
             }
-            throw new NotImplementedException();
+            return await Unit.Task;
         }
     }
 }

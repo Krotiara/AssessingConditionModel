@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,6 +16,8 @@ namespace AgentInputCodeExecutor.API.Interfaces
 
     public interface ICommand
     {
+        public ParameterNames AssigningParameter { get; }
+
         public string OriginCommand { get; }
 
         CommandType CommandType { get; }
