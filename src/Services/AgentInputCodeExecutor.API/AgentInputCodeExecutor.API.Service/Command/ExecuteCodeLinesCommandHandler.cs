@@ -23,8 +23,14 @@ namespace AgentInputCodeExecutor.API.Service.Command
             this.mediator = mediator;
         }
 
-        public Task<Unit> Handle(ExecuteCodeLinesCommand request, CancellationToken cancellationToken)
+        public async Task<Unit> Handle(ExecuteCodeLinesCommand request, CancellationToken cancellationToken)
         {
+            foreach(string codeLine in request.Settings.CodeLines)
+            {
+                //1 - parse to command
+                //2 - execute command with add into dict vars
+                
+            }
             throw new NotImplementedException();
         }
     }
