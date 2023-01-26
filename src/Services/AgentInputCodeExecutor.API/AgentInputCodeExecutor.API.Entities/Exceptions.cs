@@ -37,5 +37,12 @@ namespace AgentInputCodeExecutor.API.Entities
         public ResolveCommandActionException(string message) : base(message) { }
 
         public ResolveCommandActionException(string message, Exception innerException) : base(message, innerException) { }
-    }  
+    }
+
+    public class GetCommandArgsValuesException : Exception
+    {
+        public GetCommandArgsValuesException(string message) : base(message) { }
+
+        public GetCommandArgsValuesException(string message, Exception innerException) : base(message, innerException) { }
+    }
 }

@@ -7,6 +7,7 @@ using MediatR;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Net;
 using System.Text;
 using System.Threading;
@@ -23,7 +24,7 @@ namespace AgentInputCodeExecutor.API.Service.Service
         private readonly string patientsResolverApiUrl;
         private readonly string bioAgeApiUrl;
 
-        private readonly Dictionary<string, object> delegates;
+        private readonly Dictionary<string, Expression> delegates;
 
         public CodeResolveService(IMediator mediator, IWebRequester webRequester)
         {
@@ -31,7 +32,7 @@ namespace AgentInputCodeExecutor.API.Service.Service
             this.webRequester = webRequester;
             patientsResolverApiUrl = Environment.GetEnvironmentVariable("PATIENTRESOLVER_API_URL");
             bioAgeApiUrl = Environment.GetEnvironmentVariable("BIO_AGE_API_URL");
-            delegates = new Dictionary<string, object>();
+            delegates = new Dictionary<string, Expression>();
             InitDelegates();  
         }
 
@@ -46,14 +47,15 @@ namespace AgentInputCodeExecutor.API.Service.Service
 
         private void InitDelegates()
         {
-            // TODO Список методов нужно вынести в отдельное место.
-            delegates["GetLatestPatientParams"] = async (DateTime startTimestamp, DateTime endTimestamp, int patientId) =>
+            Expression<Func<DateTime, DateTime, int, IList<PatientParameter>>> a = async (DateTime startTimestamp, DateTime endTimestamp, int patientId) =>
             {
                 string body = Newtonsoft.Json.JsonConvert.SerializeObject(new DateTime[2] { startTimestamp, endTimestamp });
                 string url = $"{patientsResolverApiUrl}/patientsApi/latestPatientParameters/{patientId}";
                 return await webRequester
                   .GetResponse<IList<PatientParameter>>(url, "POST", body);
             };
+            // TODO Список методов нужно вынести в отдельное место.
+            delegates["GetLatestPatientParams"] = a;
 
         }
     }

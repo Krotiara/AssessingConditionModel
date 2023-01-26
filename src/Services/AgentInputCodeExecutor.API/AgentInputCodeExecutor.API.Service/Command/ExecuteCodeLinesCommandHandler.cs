@@ -19,9 +19,12 @@ namespace AgentInputCodeExecutor.API.Service.Command
     {
         private readonly IMediator mediator;
 
+        public Dictionary<string, object> LocalVariables { get; }
+
         public ExecuteCodeLinesCommandHandler(IMediator mediator)
         {
             this.mediator = mediator;
+            LocalVariables = new Dictionary<string, object>();
         }
 
         public async Task<Unit> Handle(ExecuteCodeLinesCommand request, CancellationToken cancellationToken)
@@ -29,7 +32,7 @@ namespace AgentInputCodeExecutor.API.Service.Command
             foreach(string codeLine in request.Settings.CodeLines)
             {
                 ICommand command = await mediator.Send(new ParseCodeLineCommand(codeLine), cancellationToken);
-                await mediator.Send(new ExecuteCodeLineCommand(command, request.Settings.Properties), cancellationToken);             
+                await mediator.Send(new ExecuteCodeLineCommand(command, request.Settings.Properties, LocalVariables), cancellationToken);             
             }
             return await Unit.Task;
         }

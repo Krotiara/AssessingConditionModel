@@ -29,10 +29,10 @@ namespace AgentInputCodeExecutor.API.Service.Command
             if (isAssigning)
             {
                 string param = request.CodeLine.Split('=').First().Trim();
-                bool isParsed = Enum.TryParse("Active", out ParameterNames paramName);
+                bool isParsed = Enum.TryParse(param, out ParameterNames paramName);
                 if (!isParsed)
-                    throw new ParseCodeLineException($"Введеный параметр {param} дял присвоения не является допустимым");
-                return await Task.FromResult((ICommand)new ExecutableCommand(request.CodeLine, CommandType.Assigning, paramName));
+                    throw new ParseCodeLineException($"Введеный параметр {param} для присвоения не является допустимым");
+                return await Task.FromResult((ICommand)new ExecutableCommand(request.CodeLine, CommandType.Assigning, paramName, param));
             }
             else
                 return await Task.FromResult(new ExecutableCommand(request.CodeLine, CommandType.VoidCall));

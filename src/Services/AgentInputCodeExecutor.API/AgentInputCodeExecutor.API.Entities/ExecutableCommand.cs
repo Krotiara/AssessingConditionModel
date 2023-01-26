@@ -10,11 +10,12 @@ namespace AgentInputCodeExecutor.API.Entities
 {
     public class ExecutableCommand : ICommand
     {
-        public ExecutableCommand(string originCommand, CommandType commandType, ParameterNames assigningParameter = ParameterNames.None)
+        public ExecutableCommand(string originCommand, CommandType commandType, ParameterNames assigningParameter = ParameterNames.None, string assigningParamOriginalName = null)
         {
             OriginCommand = originCommand;
             CommandType = commandType;
             AssigningParameter = assigningParameter;
+            AssigningParamOriginalName = assigningParamOriginalName;
         }
 
         public string OriginCommand { get; }
@@ -22,5 +23,7 @@ namespace AgentInputCodeExecutor.API.Entities
         public CommandType CommandType { get; }
 
         public ParameterNames AssigningParameter { get; }
+
+        public string AssigningParamOriginalName { get; }
     }
 }

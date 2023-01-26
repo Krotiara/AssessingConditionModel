@@ -18,6 +18,8 @@ namespace AgentInputCodeExecutor.API.Interfaces
     {
         public ParameterNames AssigningParameter { get; }
 
+        public string AssigningParamOriginalName { get; }
+
         public string OriginCommand { get; }
 
         CommandType CommandType { get; }

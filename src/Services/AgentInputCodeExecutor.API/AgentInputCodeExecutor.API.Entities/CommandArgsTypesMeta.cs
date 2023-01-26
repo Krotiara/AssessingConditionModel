@@ -9,13 +9,15 @@ namespace AgentInputCodeExecutor.API.Entities
 {
     public class CommandArgsTypesMeta : ICommandArgsTypesMeta
     {
-        public CommandArgsTypesMeta(Type[] inputArgsTypes, Type outputArgType)
+        public CommandArgsTypesMeta(Type[] inputArgsTypes, string[] inputArgsNames, Type outputArgType)
         {
             InputArgsTypes = inputArgsTypes;
             OutputArgType = outputArgType;
+            InputArgsNames = inputArgsNames;
         }
 
         public Type[] InputArgsTypes { get; set; }
         public Type OutputArgType { get; set; }
+        public string[] InputArgsNames { get; set; }
     }
 }
