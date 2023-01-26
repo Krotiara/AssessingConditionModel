@@ -31,7 +31,8 @@ namespace AgentInputCodeExecutor.API.Service.Command
                 string param = request.CodeLine.Split('=').First().Trim();
                 bool isParsed = Enum.TryParse(param, out ParameterNames paramName);
                 if (!isParsed)
-                    throw new ParseCodeLineException($"Введеный параметр {param} для присвоения не является допустимым");
+                    paramName = ParameterNames.None; //Сделано для допуска свободных названий переменных.
+                   // throw new ParseCodeLineException($"Введеный параметр {param} для присвоения не является допустимым");
                 return await Task.FromResult((ICommand)new ExecutableCommand(request.CodeLine, CommandType.Assigning, paramName, param));
             }
             else
