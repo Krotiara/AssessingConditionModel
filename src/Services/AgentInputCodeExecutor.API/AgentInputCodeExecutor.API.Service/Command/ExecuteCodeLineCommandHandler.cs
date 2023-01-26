@@ -65,6 +65,7 @@ namespace AgentInputCodeExecutor.API.Service.Command
                 object res = lambda.Compile().DynamicInvoke(variables);
                 TypeConverter typeConverter = TypeDescriptor.GetConverter(commandPair.Item1.OutputArgType);
                 var convertedRes = typeConverter.ConvertFrom(res);
+#warning Лучше заносить значения. которые содержатся в мете информации - имена аргументов. Но не факт, Нужно думать.
                 request.LocalVariables[request.Command.AssigningParamOriginalName] = convertedRes;
             }
             else

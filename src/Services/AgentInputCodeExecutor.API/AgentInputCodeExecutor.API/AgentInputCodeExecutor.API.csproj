@@ -11,4 +11,10 @@
     <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\Interfaces\Interfaces.csproj" />
+    <ProjectReference Include="..\AgentInputCodeExecutor.API.Entities\AgentInputCodeExecutor.API.Entities.csproj" />
+    <ProjectReference Include="..\AgentInputCodeExecutor.API.Service\AgentInputCodeExecutor.API.Service.csproj" />
+  </ItemGroup>
+
 </Project>

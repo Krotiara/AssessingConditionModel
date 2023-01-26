@@ -24,6 +24,7 @@ builder.Services
     .AddTransient<IRequestHandler<GetCommandNameCommand, string>, GetCommandNameCommandHandler>()
     .AddTransient<IRequestHandler<ExecuteCodeLinesCommand, Unit>, ExecuteCodeLinesCommandHandler>()
     .AddTransient<IRequestHandler<ExecuteCodeLineCommand, Unit>, ExecuteCodeLineCommandHandler>()
+    .AddTransient<IWebRequester, HttpClientWebRequester>()
     .AddScoped<ICodeResolveService, CodeResolveService>();
 
 var app = builder.Build();
