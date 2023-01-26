@@ -1,5 +1,8 @@
 using AgentInputCodeExecutor.API.Entities;
+using AgentInputCodeExecutor.API.Interfaces;
 using AgentInputCodeExecutor.API.Service.Command;
+using AgentInputCodeExecutor.API.Service.Queue;
+using AgentInputCodeExecutor.API.Service.Service;
 using Interfaces;
 using Interfaces.DynamicAgent;
 using MediatR;
@@ -15,7 +18,13 @@ builder.Services.AddTransient<IAgentProperty, AgentProperty>();
 builder.Services.AddTransient<IExecutableAgentCodeSettings<AgentProperty>, ExecutableAgentCodeSettings>();
 
 builder.Services
-    .AddTransient<IRequestHandler<ExecuteCodeLinesCommand, Unit>, ExecuteCodeLinesCommandHandler>();
+    .AddTransient<IRequestHandler<ExecuteCodeLinesCommand, Unit>, ExecuteCodeLinesCommandHandler>()
+    .AddTransient<IRequestHandler<GetCommandTypesMetaQueue, ICommandArgsTypesMeta>, GetCommandTypesMetaQueueHandler>()
+    .AddTransient<IRequestHandler<ParseCodeLineCommand, ICommand>, ParseCodeLineCommandHandler>()
+    .AddTransient<IRequestHandler<GetCommandNameCommand, string>, GetCommandNameCommandHandler>()
+    .AddTransient<IRequestHandler<ExecuteCodeLinesCommand, Unit>, ExecuteCodeLinesCommandHandler>()
+    .AddTransient<IRequestHandler<ExecuteCodeLineCommand, Unit>, ExecuteCodeLineCommandHandler>()
+    .AddScoped<ICodeResolveService, CodeResolveService>();
 
 var app = builder.Build();
 

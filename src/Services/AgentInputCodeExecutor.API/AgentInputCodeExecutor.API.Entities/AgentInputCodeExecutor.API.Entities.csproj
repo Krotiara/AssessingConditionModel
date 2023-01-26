@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\AgentInputCodeExecutor.API.Interfaces\AgentInputCodeExecutor.API.Interfaces.csproj" />
+  </ItemGroup>
+
 </Project>

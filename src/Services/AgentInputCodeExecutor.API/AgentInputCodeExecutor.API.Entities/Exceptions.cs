@@ -13,4 +13,29 @@ namespace AgentInputCodeExecutor.API.Entities
 
         }
     }
+
+
+    public class GetCommandTypeMetaException : Exception
+    {
+        public GetCommandTypeMetaException(string message) : base(message)
+        {
+
+        }
+    }
+
+
+    public class GetWebResponceException : Exception
+    {
+        public GetWebResponceException(string message) : base(message) { }
+
+        public GetWebResponceException(string message, Exception innerException) : base(message, innerException) { }
+    }
+
+
+    public class ResolveCommandActionException : Exception
+    {
+        public ResolveCommandActionException(string message) : base(message) { }
+
+        public ResolveCommandActionException(string message, Exception innerException) : base(message, innerException) { }
+    }  
 }

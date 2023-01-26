@@ -6,4 +6,13 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="MediatR" Version="11.1.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\AgentInputCodeExecutor.API.Entities\AgentInputCodeExecutor.API.Entities.csproj" />
+    <ProjectReference Include="..\AgentInputCodeExecutor.API.Interfaces\AgentInputCodeExecutor.API.Interfaces.csproj" />
+  </ItemGroup>
+
 </Project>
