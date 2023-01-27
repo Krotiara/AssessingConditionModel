@@ -37,10 +37,9 @@ namespace AgentInputCodeExecutor.API.Service.Queue
             this.mediator = mediator;
             CommandTypesMeta = new Dictionary<string, ICommandArgsTypesMeta>()
             {
-                {"GetLatestPatientParams", new CommandArgsTypesMeta(
-                    new Type[]{typeof(DateTime), typeof(DateTime), typeof(int)},
-                    new string[] {"startTimestamp", "endTimestamp", "patientId" },
-                    typeof(IList<IPatientParameter>))}
+                {"GetLatestPatientParams", new CommandArgsTypesMeta( new List<(Type, string)>
+                {(typeof(DateTime), "startTimestamp"),(typeof(DateTime), "endTimestamp"),(typeof(int), "patientId")},
+                typeof(IList<IPatientParameter>))}
             };
         }
 
