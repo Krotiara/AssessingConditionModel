@@ -1,5 +1,5 @@
-﻿using Agents.API.Interfaces.DynamicAgent;
-using Interfaces;
+﻿using Interfaces;
+using Interfaces.DynamicAgent;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,10 +8,10 @@ using System.Threading.Tasks;
 
 namespace Agents.API.Entities.DynamicAgent
 {
-    public class DynamicAgent : IDynamicAgent
+    public class DynamicAgent : Interfaces.DynamicAgent.IDynamicAgent
     {
 
-        public DynamicAgent(IDynamicAgentInitSettings settings)
+        public DynamicAgent(Interfaces.DynamicAgent.IDynamicAgentInitSettings settings)
         {
             Name = settings.Name;
             Properties = new Dictionary<ParameterNames, IAgentProperty>();
@@ -22,7 +22,7 @@ namespace Agents.API.Entities.DynamicAgent
 
         public int Id { get ; set ; }
         public string Name { get; set; }
-        public IStateDiagram StateDiagram { get ; set ; }
+        public Interfaces.DynamicAgent.IStateDiagram StateDiagram { get ; set ; }
 
         public Dictionary<ParameterNames, IAgentProperty> Properties { get; }
     }

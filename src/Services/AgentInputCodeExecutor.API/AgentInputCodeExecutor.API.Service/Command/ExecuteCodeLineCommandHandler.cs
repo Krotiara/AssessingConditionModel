@@ -46,23 +46,13 @@ namespace AgentInputCodeExecutor.API.Service.Command
 
         public async Task<Unit> Handle(ExecuteCodeLineCommand request, CancellationToken cancellationToken)
         {
-#warning Не доделано. Главная проблема - запихнуть в expression асинхронную функцию. Или найти другой способ исполнения. 
-            (ICommandArgsTypesMeta, object) commandPair = await codeResolveService.ResolveCommandAction(request.Command);
-            List<object> variables = await mediator.Send(new GetCommandArgsValuesQueue(request.Command.OriginCommand, commandPair.Item1, request.LocalVariables));
 
-            List<Type> types = new(commandPair.Item1.InputArgsTypes);
+#warning Не доделано. Главная проблема - запихнуть в expression асинхронную функцию. Или найти другой способ исполнения. 
+            (ICommandArgsTypesMeta, Delegate) commandPair = await codeResolveService.ResolveCommandAction(request.Command);
+            List<object> variables = await mediator.Send(new GetCommandArgsValuesQueue(request.Command.OriginCommand, commandPair.Item1, request.LocalVariables));
             if (request.Command.CommandType == CommandType.Assigning)
             {
-                types.Add(commandPair.Item1.OutputArgType);
-                Type funcType = Expression.GetFuncType(types.ToArray());
-                List<ParameterExpression> parameters = new();
-                foreach (Type type in commandPair.Item1.InputArgsTypes)
-                    parameters.Add(Expression.Parameter(type));
-
-                LambdaExpression lambda = parameters.Count > 0 ?
-                    Expression.Lambda(funcType,/* Expression.Constant(true),*/ parameters) :
-                    Expression.Lambda(funcType, /*Expression.Constant(true)*/);
-                object res = lambda.Compile().DynamicInvoke(variables);
+                object res = commandPair.Item2.DynamicInvoke(variables);
                 TypeConverter typeConverter = TypeDescriptor.GetConverter(commandPair.Item1.OutputArgType);
                 var convertedRes = typeConverter.ConvertFrom(res);
 #warning Лучше заносить значения. которые содержатся в мете информации - имена аргументов. Но не факт, Нужно думать.
@@ -70,23 +60,10 @@ namespace AgentInputCodeExecutor.API.Service.Command
             }
             else
             {
-                Type funcType = Expression.GetActionType(types.ToArray());
-                List<ParameterExpression> parameters = new();
-                foreach (Type type in commandPair.Item1.InputArgsTypes)
-                    parameters.Add(Expression.Parameter(type));
-                LambdaExpression lambda = parameters.Count > 0 ?
-                    Expression.Lambda(funcType, /*Expression.Constant(true)*/, parameters) :
-                    Expression.Lambda(funcType, /*Expression.Constant(true)*/);
-                Expression.Lambda()
+                commandPair.Item2.DynamicInvoke(variables);
             }
-//#warning Перед этим нужно преобразование функции из псевдокода в исполняемый внутренний код, где всякие запросы на микросервисы и прочее.
-//            ScriptState<object> scriptState = await CSharpScript.RunAsync(request.Command.OriginCommand, cancellationToken: cancellationToken);
-//            if(scriptState.ReturnValue != null && !string.IsNullOrEmpty(scriptState.ReturnValue.ToString()))
-//            {
-//                if (request.Command.CommandType == CommandType.Assigning)
-//                    request.Properties[request.Command.AssigningParameter].Value = scriptState.ReturnValue;
-//            }
-//            return await Unit.Task;
+
+            return await Unit.Task;
         }
     }
 }

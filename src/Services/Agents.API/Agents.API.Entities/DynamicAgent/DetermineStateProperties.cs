@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Agents.API.Entities.DynamicAgent
 {
-    public class DetermineStateProperties : IDetermineStateProperties
+    public class DetermineStateProperties : Interfaces.DynamicAgent.IDetermineStateProperties
     {
         public DetermineStateProperties()
         {

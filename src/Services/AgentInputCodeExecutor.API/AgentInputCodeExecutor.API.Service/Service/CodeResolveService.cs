@@ -24,7 +24,7 @@ namespace AgentInputCodeExecutor.API.Service.Service
         private readonly string patientsResolverApiUrl;
         private readonly string bioAgeApiUrl;
 
-        private readonly Dictionary<string, object> delegates;
+        private readonly Dictionary<string, Delegate> delegates;
 
         public CodeResolveService(IMediator mediator, IWebRequester webRequester)
         {
@@ -32,11 +32,11 @@ namespace AgentInputCodeExecutor.API.Service.Service
             this.webRequester = webRequester;
             patientsResolverApiUrl = Environment.GetEnvironmentVariable("PATIENTRESOLVER_API_URL");
             bioAgeApiUrl = Environment.GetEnvironmentVariable("BIO_AGE_API_URL");
-            delegates = new Dictionary<string, object>();
+            delegates = new Dictionary<string, Delegate>();
             InitDelegates();  
         }
 
-        public async Task<(ICommandArgsTypesMeta, object)> ResolveCommandAction(ICommand command)
+        public async Task<(ICommandArgsTypesMeta, Delegate)> ResolveCommandAction(ICommand command)
         {
             string commandName = await mediator.Send(new GetCommandNameCommand(command));
             ICommandArgsTypesMeta meta = await mediator.Send(new GetCommandTypesMetaQueue(commandName));
