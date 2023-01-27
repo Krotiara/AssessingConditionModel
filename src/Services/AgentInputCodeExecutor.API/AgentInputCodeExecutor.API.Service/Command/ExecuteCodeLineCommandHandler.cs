@@ -56,6 +56,7 @@ namespace AgentInputCodeExecutor.API.Service.Command
                 TypeConverter typeConverter = TypeDescriptor.GetConverter(commandPair.Item1.OutputArgType);
                 var convertedRes = typeConverter.ConvertFrom(res);
 #warning Лучше заносить значения. которые содержатся в мете информации - имена аргументов. Но не факт, Нужно думать.
+#warning Забытая установка Properties - нужно останавливать расчитанные параметры агентов.
                 request.LocalVariables[request.Command.AssigningParamOriginalName] = convertedRes;
             }
             else
