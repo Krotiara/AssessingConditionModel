@@ -85,7 +85,7 @@ namespace AgentInputCodeExecutor.API.Tests.UnitTests.Queue
             ICommandArgsTypesMeta types = new CommandArgsTypesMeta(new Type[] { typeof(string)}, new string[] { "test1"}, null);
             GetCommandArgsValuesQueue request = new GetCommandArgsValuesQueue(commandLine, types);
             List<object> res = await new GetCommandArgsValuesQueueHandler().Handle(request, token);
-            Assert.Equal(null, res[0]);
+            Assert.Null(res[0]);
         }
 
 
