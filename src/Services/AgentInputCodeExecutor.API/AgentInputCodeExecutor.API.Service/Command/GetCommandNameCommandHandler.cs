@@ -28,11 +28,11 @@ namespace AgentInputCodeExecutor.API.Service.Command
     {
         public async Task<string> Handle(GetCommandNameCommand request, CancellationToken cancellationToken)
         {
-            Regex methodCallRegex = new Regex(@"=.+(.*)");
+            Regex methodCallRegex = new Regex(@"=.+\(.*\)");
             Match match = methodCallRegex.Match(request.Command.OriginCommand);
             if (match.Success)
             {
-                string commandName = match.Groups[1]
+                string commandName = match
                     .Value
                     .Replace("=", "")
                     .Trim()
