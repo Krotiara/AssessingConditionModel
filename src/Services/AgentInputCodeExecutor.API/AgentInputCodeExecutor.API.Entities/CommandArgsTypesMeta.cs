@@ -9,6 +9,7 @@ namespace AgentInputCodeExecutor.API.Entities
 {
     public class CommandArgsTypesMeta : ICommandArgsTypesMeta
     {
+#warning Нужно инициализацию переделать под строгое соответсвие количества типов и наименований аргументов.
         public CommandArgsTypesMeta(Type[] inputArgsTypes, string[] inputArgsNames, Type outputArgType)
         {
             InputArgsTypes = inputArgsTypes;
