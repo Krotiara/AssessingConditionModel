@@ -55,9 +55,19 @@ namespace AgentInputCodeExecutor.API.Service.Command
                 object res = commandPair.Item2.DynamicInvoke(variables);
                 TypeConverter typeConverter = TypeDescriptor.GetConverter(commandPair.Item1.OutputArgType);
                 var convertedRes = typeConverter.ConvertFrom(res);
-#warning Лучше заносить значения. которые содержатся в мете информации - имена аргументов. Но не факт, Нужно думать.
-#warning Забытая установка Properties - нужно останавливать расчитанные параметры агентов.
                 request.LocalVariables[request.Command.AssigningParamOriginalName] = convertedRes;
+                if (request.Command.AssigningParameter != ParameterNames.None)
+                {
+                    if (request.Properties.ContainsKey(request.Command.AssigningParameter))
+                        request.Properties[request.Command.AssigningParameter].Value = convertedRes;
+                    else
+                        request.Properties[request.Command.AssigningParameter] = new AgentProperty()
+                        {
+                            Name = request.Command.AssigningParameter,
+                            Type = commandPair.Item1.OutputArgType,
+                            Value = convertedRes
+                        };
+                }   
             }
             else
             {
