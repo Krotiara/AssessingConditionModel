@@ -103,11 +103,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AgentInputCodeExecutor.API"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AgentInputCodeExecutor.API", "src\Services\AgentInputCodeExecutor.API\AgentInputCodeExecutor.API\AgentInputCodeExecutor.API.csproj", "{EC59D11B-F852-41B4-9B5D-F2CB8F104B59}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AgentInputCodeExecutor.API.Entities", "src\Services\AgentInputCodeExecutor.API\AgentInputCodeExecutor.API.Entities\AgentInputCodeExecutor.API.Entities.csproj", "{0AFD09E8-1AD3-416F-BA1E-88C70DC0743A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AgentInputCodeExecutor.API.Entities", "src\Services\AgentInputCodeExecutor.API\AgentInputCodeExecutor.API.Entities\AgentInputCodeExecutor.API.Entities.csproj", "{0AFD09E8-1AD3-416F-BA1E-88C70DC0743A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AgentInputCodeExecutor.API.Service", "src\Services\AgentInputCodeExecutor.API\AgentInputCodeExecutor.API.Service\AgentInputCodeExecutor.API.Service.csproj", "{28948FB1-840B-4D1D-AE29-0F64D3F262FC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AgentInputCodeExecutor.API.Service", "src\Services\AgentInputCodeExecutor.API\AgentInputCodeExecutor.API.Service\AgentInputCodeExecutor.API.Service.csproj", "{28948FB1-840B-4D1D-AE29-0F64D3F262FC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AgentInputCodeExecutor.API.Interfaces", "src\Services\AgentInputCodeExecutor.API\AgentInputCodeExecutor.API.Interfaces\AgentInputCodeExecutor.API.Interfaces.csproj", "{C76E5BEB-F93B-41A9-932E-85EE336D041D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AgentInputCodeExecutor.API.Interfaces", "src\Services\AgentInputCodeExecutor.API\AgentInputCodeExecutor.API.Interfaces\AgentInputCodeExecutor.API.Interfaces.csproj", "{C76E5BEB-F93B-41A9-932E-85EE336D041D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AgentInputCodeExecutor.API.Tests", "src\Services\AgentInputCodeExecutor.API\AgentInputCodeExecutor.API.Tests\AgentInputCodeExecutor.API.Tests.csproj", "{AF9A0D72-2B2F-432E-A1ED-5535F9EA49B2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -255,6 +257,10 @@ Global
 		{C76E5BEB-F93B-41A9-932E-85EE336D041D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C76E5BEB-F93B-41A9-932E-85EE336D041D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C76E5BEB-F93B-41A9-932E-85EE336D041D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AF9A0D72-2B2F-432E-A1ED-5535F9EA49B2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AF9A0D72-2B2F-432E-A1ED-5535F9EA49B2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AF9A0D72-2B2F-432E-A1ED-5535F9EA49B2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AF9A0D72-2B2F-432E-A1ED-5535F9EA49B2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -306,6 +312,7 @@ Global
 		{0AFD09E8-1AD3-416F-BA1E-88C70DC0743A} = {FDBD54C5-5A29-4228-8351-8CE3500366F0}
 		{28948FB1-840B-4D1D-AE29-0F64D3F262FC} = {FDBD54C5-5A29-4228-8351-8CE3500366F0}
 		{C76E5BEB-F93B-41A9-932E-85EE336D041D} = {FDBD54C5-5A29-4228-8351-8CE3500366F0}
+		{AF9A0D72-2B2F-432E-A1ED-5535F9EA49B2} = {FDBD54C5-5A29-4228-8351-8CE3500366F0}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {6FA4C998-2594-48A2-A283-C474A19E73B5}

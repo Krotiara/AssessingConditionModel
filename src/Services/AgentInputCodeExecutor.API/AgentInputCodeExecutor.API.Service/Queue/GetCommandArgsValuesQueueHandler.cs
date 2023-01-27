@@ -14,10 +14,12 @@ namespace AgentInputCodeExecutor.API.Service.Queue
 
     public class GetCommandArgsValuesQueue : IRequest<List<object>>
     {
-        public GetCommandArgsValuesQueue(string commandLine, ICommandArgsTypesMeta argsMeta, Dictionary<string, object> LocalVariables)
+        public GetCommandArgsValuesQueue(string commandLine, ICommandArgsTypesMeta argsMeta, Dictionary<string, object> localVariables = null)
         {
             CommandLine = commandLine;
             CommandArgsTypesMeta = argsMeta;
+            LocalVariables = localVariables;
+
         }
 
         public string CommandLine { get; }
@@ -32,12 +34,14 @@ namespace AgentInputCodeExecutor.API.Service.Queue
         public async Task<List<object>> Handle(GetCommandArgsValuesQueue request, CancellationToken cancellationToken)
         {
 #warning нужно тестирование
-            Regex argsRegex = new Regex(@"(.*)");
+            Regex argsRegex = new Regex(@"\(.*\)");
             if (!argsRegex.IsMatch(request.CommandLine))
 #warning Может нужно будет прокидывать эксепшн
                 return new List<object>();
             List<string> args = argsRegex
                 .Match(request.CommandLine).Value
+                .Replace("(","")
+                .Replace(")","")
                 .Split(',')
                 .Select(x => x.Trim())
                 .ToList();
@@ -47,12 +51,29 @@ namespace AgentInputCodeExecutor.API.Service.Queue
             List<object> results = new List<object>();
             for(int i =0; i < args.Count();i++)
             {
-                if (request.LocalVariables.ContainsKey(args[i]))
+                if (request.LocalVariables != null && request.LocalVariables.ContainsKey(args[i]))
                     results.Add(request.LocalVariables[args[i]]);
                 else
                 {
-                    TypeConverter converter = TypeDescriptor.GetConverter(request.CommandArgsTypesMeta.InputArgsTypes[i]);
-                    results.Add(converter.ConvertFrom(args[i]));
+                    string arg = args[i];
+                    if (request.CommandArgsTypesMeta.InputArgsTypes[i] == typeof(string))
+                    {
+                        arg = arg.Replace("\"", "");
+                        if (arg == "null")
+                        {
+                            results.Add(null);  //Кривой каст, нужна замена.
+                            continue;
+                        }
+                    }
+                    try
+                    {
+                        TypeConverter converter = TypeDescriptor.GetConverter(request.CommandArgsTypesMeta.InputArgsTypes[i]);
+                        results.Add(converter.ConvertFrom(arg));
+                    }
+                    catch(Exception ex)
+                    {
+                        throw new GetCommandArgsValuesException("Ошибка преобразования типа аргумента", ex);
+                    }
                 }
             }
             return results;
