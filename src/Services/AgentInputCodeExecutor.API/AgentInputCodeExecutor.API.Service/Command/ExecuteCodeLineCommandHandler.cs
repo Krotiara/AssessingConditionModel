@@ -49,12 +49,13 @@ namespace AgentInputCodeExecutor.API.Service.Command
 
 #warning Не доделано. Главная проблема - запихнуть в expression асинхронную функцию. Или найти другой способ исполнения. 
             (ICommandArgsTypesMeta, Delegate) commandPair = await codeResolveService.ResolveCommandAction(request.Command);
-            List<object> variables = await mediator.Send(new GetCommandArgsValuesQueue(request.Command.OriginCommand, commandPair.Item1, request.LocalVariables));
+            List<object> variables = await mediator.Send(new GetCommandArgsValuesQueue(request.Command.OriginCommand,
+                commandPair.Item1, request.LocalVariables), cancellationToken);
             if (request.Command.CommandType == CommandType.Assigning)
             {
-                object res = commandPair.Item2.DynamicInvoke(variables);
+                object res = commandPair.Item2.DynamicInvoke(variables.ToArray());
                 TypeConverter typeConverter = TypeDescriptor.GetConverter(commandPair.Item1.OutputArgType);
-                var convertedRes = typeConverter.ConvertFrom(res);
+                var convertedRes = typeConverter.ConvertTo(res, commandPair.Item1.OutputArgType);
                 request.LocalVariables[request.Command.AssigningParamOriginalName] = convertedRes;
                 if (request.Command.AssigningParameter != ParameterNames.None)
                 {

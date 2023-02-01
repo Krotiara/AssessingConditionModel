@@ -14,7 +14,7 @@ namespace AgentInputCodeExecutor.API.Service.Queue
 
     public class GetCommandArgsValuesQueue : IRequest<List<object>>
     {
-        public GetCommandArgsValuesQueue(string commandLine, ICommandArgsTypesMeta argsMeta, Dictionary<string, object> localVariables = null)
+        public GetCommandArgsValuesQueue(string commandLine, ICommandArgsTypesMeta argsMeta, Dictionary<string, object>? localVariables = null)
         {
             CommandLine = commandLine;
             CommandArgsTypesMeta = argsMeta;
@@ -26,7 +26,7 @@ namespace AgentInputCodeExecutor.API.Service.Queue
 
         public ICommandArgsTypesMeta CommandArgsTypesMeta { get; }
 
-        public Dictionary<string, object> LocalVariables { get; }
+        public Dictionary<string, object>? LocalVariables { get; }
     }
 
     public class GetCommandArgsValuesQueueHandler : IRequestHandler<GetCommandArgsValuesQueue, List<object>>

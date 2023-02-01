@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -41,26 +42,26 @@ namespace AgentInputCodeExecutor.API.Tests.UnitTests.Command
         public async void ExecuteAssigningVariableMustBeSettedInCommandDictByOriginalName()
         {
             string testVar = "a";
-            int testValue = 45;
             Type testType = typeof(int);
+
+            MethodInfo testMethod = typeof(ExecuteCodeLineCommandTests).GetMethod("GetTestVal");
 
             ICommand testCommand = 
                 new ExecutableCommand($"{testVar} = {testCommandWithoutArgsName}()", CommandType.Assigning, ParameterNames.None, testVar);
             ExecuteCodeLineCommand testCodeLineCommand = new ExecuteCodeLineCommand(testCommand, props, localVars);
-            CommandArgsTypesMeta meta = new CommandArgsTypesMeta(new List<(Type, string)> { (testType, "arg1") }, testType);
+            ICommandArgsTypesMeta meta = new CommandArgsTypesMeta(new List<(Type, string)> {}, testType);
+
+            GetCommandArgsValuesQueue queue = new GetCommandArgsValuesQueue(testCommand.OriginCommand, meta, localVars);
 
             mediator = new Mock<IMediator>();
-            mediator.Setup(x => x.Send(new GetCommandNameCommand(It.IsAny<ICommand>()), token)).ReturnsAsync(testCommandWithoutArgsName);
-            mediator.Setup(x => x.Send(new GetCommandTypesMetaQueue(It.IsAny<string>()), token)).ReturnsAsync(new CommandArgsTypesMeta(new List<(Type, string)> {}, testType));
-            mediator.Setup(x => x.Send(new GetCommandArgsValuesQueue(It.IsAny<string>(), It.IsAny<ICommandArgsTypesMeta>(), localVars), token)).ReturnsAsync(new List<object> { testValue });
-
+            mediator.Setup(x => x.Send(It.IsAny<GetCommandArgsValuesQueue>(), token)).ReturnsAsync(() => new List<object>());
+           
             codeResolver = new Mock<ICodeResolveService>();
-            codeResolver.Setup(x=>x.ResolveCommandAction(It.IsAny<ICommand>())).ReturnsAsync((meta, Delegate.CreateDelegate(typeof(Func<int>), typeof(ExecuteCodeLineCommandTests).GetMethod("GetTestVal"))));
+            codeResolver.Setup(x=>x.ResolveCommandAction(It.IsAny<ICommand>())).ReturnsAsync((meta, Delegate.CreateDelegate(typeof(Func<int>), testMethod)));
 
             await new ExecuteCodeLineCommandHandler(codeResolver.Object, mediator.Object).Handle(testCodeLineCommand, token);
 
-            Assert.True(localVars.ContainsKey(testVar));
-
+            Assert.True(testCodeLineCommand.LocalVariables.ContainsKey(testVar));
         }
 
 
@@ -69,44 +70,79 @@ namespace AgentInputCodeExecutor.API.Tests.UnitTests.Command
             return int.MaxValue;
         }
 
+        public static double GetTestDouble()
+        {
+            return 45;
+        }
+
 
         [Fact]
-        public void ExecuteAssigningInternalVarMustBeSettedInCommandDict()
+        public async Task ExecuteAssigningInternalVarMustBeSettedInCommandDictAsync()
         {
+            ParameterNames testParamName = ParameterNames.Weight;
+            string testParamStr = testParamName.ToString();
+            Type testType = typeof(double);
+            MethodInfo testMethod = typeof(ExecuteCodeLineCommandTests).GetMethod("GetTestDouble");
 
+            ICommand testCommand =
+                new ExecutableCommand($"{testParamStr} = {testCommandWithoutArgsName}()", CommandType.Assigning, testParamName, testParamStr);
+            ExecuteCodeLineCommand testCodeLineCommand = new ExecuteCodeLineCommand(testCommand, props, localVars);
+            ICommandArgsTypesMeta meta = new CommandArgsTypesMeta(new List<(Type, string)> { }, testType);
+
+            GetCommandArgsValuesQueue queue = new GetCommandArgsValuesQueue(testCommand.OriginCommand, meta, localVars);
+
+            mediator = new Mock<IMediator>();
+            mediator.Setup(x => x.Send(It.IsAny<GetCommandArgsValuesQueue>(), token)).ReturnsAsync(() => new List<object>());
+
+            codeResolver = new Mock<ICodeResolveService>();
+            codeResolver.Setup(x => x.ResolveCommandAction(It.IsAny<ICommand>())).ReturnsAsync((meta, Delegate.CreateDelegate(typeof(Func<double>), testMethod)));
+
+            await new ExecuteCodeLineCommandHandler(codeResolver.Object, mediator.Object).Handle(testCodeLineCommand, token);
+
+            Assert.True(testCodeLineCommand.Properties.ContainsKey(testParamName));
+            Assert.True(testCodeLineCommand.LocalVariables.ContainsKey(testParamName.ToString()));
         }
 
 
         [Fact]
         public void ExecuteVoidCommandMustBeCalled()
         {
-
+            throw new NotImplementedException();
         }
 
 
         [Fact]
-        public void ExecuteCommandWithoutCommandTest()
+        public void ExecuteWithoutCommandTest()
         {
-
+            throw new NotImplementedException();
         }
 
 
         [Fact]
-        public void ExecuteCommandWithUnknownCommandMustThrow()
+        public void ExecuteWithUnknownCommandMustThrow()
         {
-
+            throw new NotImplementedException();
         }
 
 
         [Fact]
-        public void ExecuteCommandWithIncorrectAgrsMustThrow()
+        public void ExecuteWithIncorrectAgrsMustThrow()
         {
-
+            throw new NotImplementedException();
         }
 
 
+        [Fact]
+        public void ExecuteWithLocalVarArgMustUseThisArg()
+        {
+            throw new NotImplementedException();
+        }
 
 
-
+        [Fact]
+        public void ExecuteAssigningInternalVarOfTypeListMustBeSave()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
