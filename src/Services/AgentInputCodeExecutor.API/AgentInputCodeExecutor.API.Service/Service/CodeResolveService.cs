@@ -45,8 +45,6 @@ namespace AgentInputCodeExecutor.API.Service.Service
                 if (command.CommandType != CommandType.Assigning)
                     throw new ResolveCommandActionException($"Выполнение действия без команды допустимо только для присвоения значения");
 
-                                    
-
                 //Создать делегат для вычисления/присвоения значения.
                 throw new NotImplementedException();
             }

@@ -45,4 +45,12 @@ namespace AgentInputCodeExecutor.API.Entities
 
         public GetCommandArgsValuesException(string message, Exception innerException) : base(message, innerException) { }
     }
+
+
+    public class ExecuteCodeLineException : Exception
+    {
+        public ExecuteCodeLineException(string message) : base(message) { }
+
+        public ExecuteCodeLineException(string message, Exception innerException) : base(message, innerException) { }
+    }
 }
