@@ -55,6 +55,7 @@ namespace AgentInputCodeExecutor.API.Service.Command
             List<object> variables = await mediator.Send(new GetCommandArgsValuesQueue(request.Command, commandPair.Item1), cancellationToken);
             if (request.Command.CommandType == CommandType.Assigning)
             {
+#warning Выскакивает ошибка при передаче List
                 object res = commandPair.Item2.DynamicInvoke(variables.ToArray());
                 TypeConverter typeConverter = TypeDescriptor.GetConverter(commandPair.Item1.OutputArgType);
                 var convertedRes = typeConverter.ConvertTo(res, commandPair.Item1.OutputArgType);
@@ -79,7 +80,7 @@ namespace AgentInputCodeExecutor.API.Service.Command
 
         private async void ExecuteCommandWithoutCommandCall(ExecuteCodeLineCommand request)
         {
-            Regex varRegex = new Regex(@"(?!"")[a-zA-Z]+(?!"")");
+            Regex varRegex = new(@"(?!"")[a-zA-Z]+(?!"")");
             IEnumerable<string> vars = varRegex.Matches(request.Command.OriginCommand
                 .Split("=").Last()
                 .Trim())

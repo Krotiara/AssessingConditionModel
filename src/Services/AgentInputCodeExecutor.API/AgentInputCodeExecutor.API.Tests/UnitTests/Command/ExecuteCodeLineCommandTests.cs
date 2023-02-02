@@ -21,8 +21,7 @@ namespace AgentInputCodeExecutor.API.Tests.UnitTests.Command
     {
         private Mock<ICodeResolveService> codeResolver;
         private Mock<IMediator> mediator;
-        private Mock<IWebRequester> webRequester;
-        CancellationToken token;
+        readonly CancellationToken token;
 
         private readonly string testCommandWithoutArgsName = "Test";
 
@@ -42,6 +41,8 @@ namespace AgentInputCodeExecutor.API.Tests.UnitTests.Command
 
         public static double GetTestDouble() =>  45;
 
+        public static List<string> GetTestList() => new List<string> { "test1", "test2" };
+
 
         [Fact]
         public async Task ExecuteAssigningVariableMustBeSettedInCommandDictByOriginalName()
@@ -53,7 +54,7 @@ namespace AgentInputCodeExecutor.API.Tests.UnitTests.Command
 
             ICommand testCommand =
                 new ExecutableCommand($"{testParamStr} = {testCommandWithoutArgsName}()", CommandType.Assigning, localVars, testParamStr, testParamName);
-            ExecuteCodeLineCommand testCodeLineCommand = new ExecuteCodeLineCommand(testCommand);
+            ExecuteCodeLineCommand testCodeLineCommand = new(testCommand);
             ICommandArgsTypesMeta meta = new CommandArgsTypesMeta(new List<(Type, string)> { }, testType);
 
             mediator = new Mock<IMediator>();
@@ -79,7 +80,7 @@ namespace AgentInputCodeExecutor.API.Tests.UnitTests.Command
 
             ICommand testCommand =
                  new ExecutableCommand($"{testParamStr} = {testVal1} + {testVal2}", CommandType.Assigning, localVars, testParamStr,testParamName);
-            ExecuteCodeLineCommand testCodeLineCommand = new ExecuteCodeLineCommand(testCommand);
+            ExecuteCodeLineCommand testCodeLineCommand = new(testCommand);
 
             mediator = new Mock<IMediator>();
             codeResolver = new Mock<ICodeResolveService>();
@@ -105,7 +106,7 @@ namespace AgentInputCodeExecutor.API.Tests.UnitTests.Command
             localVars["testFirst"] = new AgentProperty(typeof(int), testVal1, testVal1Param);
             ICommand testCommand =
                  new ExecutableCommand($"{testParamStr} = testFirst + testSecond", CommandType.Assigning, localVars, testParamStr, testParamName);
-            ExecuteCodeLineCommand testCodeLineCommand = new ExecuteCodeLineCommand(testCommand);
+            ExecuteCodeLineCommand testCodeLineCommand = new(testCommand);
 
             mediator = new Mock<IMediator>();
             codeResolver = new Mock<ICodeResolveService>();
@@ -123,12 +124,11 @@ namespace AgentInputCodeExecutor.API.Tests.UnitTests.Command
             ParameterNames testParamName = ParameterNames.Weight;
             string testParamStr = testParamName.ToString();
             Type testType = typeof(double);
-            MethodInfo testMethod = typeof(ExecuteCodeLineCommandTests).GetMethod("GetTestDouble");
 
             ICommand testCommand =
                 new ExecutableCommand($"{testParamStr} = {testCommandWithoutArgsName}()", CommandType.Assigning, localVars, testParamStr, testParamName);
             
-            ExecuteCodeLineCommand testCodeLineCommand = new ExecuteCodeLineCommand(testCommand);
+            ExecuteCodeLineCommand testCodeLineCommand = new(testCommand);
             ICommandArgsTypesMeta meta = new CommandArgsTypesMeta(new List<(Type, string)> { }, testType);
 
             mediator = new Mock<IMediator>();
@@ -142,16 +142,28 @@ namespace AgentInputCodeExecutor.API.Tests.UnitTests.Command
 
 
         [Fact]
-        public void ExecuteWithIncorrectAgrsMustThrow()
+        public async Task ExecuteAssigningInternalVarOfTypeListMustBeSaveAsync()
         {
-            throw new NotImplementedException();
-        }
+            string testParam = "test";
+            Type testType = typeof(List<string>);
+            MethodInfo testMethod = typeof(ExecuteCodeLineCommandTests).GetMethod("GetTestList");
 
+            ICommand testCommand =
+                new ExecutableCommand($"{testParam} = {testCommandWithoutArgsName}()", CommandType.Assigning, localVars, testParam);
+            ExecuteCodeLineCommand testCodeLineCommand = new(testCommand);
 
-        [Fact]
-        public void ExecuteAssigningInternalVarOfTypeListMustBeSave()
-        {
-            throw new NotImplementedException();
+            ICommandArgsTypesMeta meta = new CommandArgsTypesMeta(new List<(Type, string)> { }, testType);
+
+            mediator = new Mock<IMediator>();
+            mediator.Setup(x => x.Send(It.IsAny<GetCommandArgsValuesQueue>(), token)).ReturnsAsync(() => new List<object>());
+
+            codeResolver = new Mock<ICodeResolveService>();
+            codeResolver.Setup(x => x.ResolveCommandAction(It.IsAny<ICommand>(), token)).ReturnsAsync((meta, Delegate.CreateDelegate(typeof(Func<List<string>>), testMethod)));
+
+            await new ExecuteCodeLineCommandHandler(codeResolver.Object, mediator.Object).Handle(testCodeLineCommand, token);
+
+            Assert.True(testCodeLineCommand.Command.LocalVariables.ContainsKey(testParam));
+            Assert.True(testCodeLineCommand.Command.LocalVariables[testParam].Value is List<string>);
         }
     }
 }
