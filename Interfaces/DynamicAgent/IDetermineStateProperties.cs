@@ -10,6 +10,6 @@ namespace Agents.API.Interfaces.DynamicAgent
 {
     public interface IDetermineStateProperties
     {
-        public Dictionary<ParameterNames, IAgentProperty> Properties { get; }
+        public Dictionary<ParameterNames, IProperty> Properties { get; }
     }
 }

@@ -11,7 +11,7 @@ namespace Agents.API.Interfaces.DynamicAgent
     {
         string Name { get; }
 
-        IEnumerable<IAgentProperty> Properties { get; }
+        IEnumerable<IProperty> Properties { get; }
 
         IEnumerable<IAgentState> States { get; }
 

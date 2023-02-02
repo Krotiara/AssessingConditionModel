@@ -14,19 +14,16 @@ namespace AgentInputCodeExecutor.API.Service.Queue
 
     public class GetCommandArgsValuesQueue : IRequest<List<object>>
     {
-        public GetCommandArgsValuesQueue(string commandLine, ICommandArgsTypesMeta argsMeta, Dictionary<string, object>? localVariables = null)
+        public GetCommandArgsValuesQueue(ICommand command, ICommandArgsTypesMeta argsMeta)
         {
-            CommandLine = commandLine;
+            Command = command;
             CommandArgsTypesMeta = argsMeta;
-            LocalVariables = localVariables;
 
         }
 
-        public string CommandLine { get; }
+        public ICommand Command { get; }
 
         public ICommandArgsTypesMeta CommandArgsTypesMeta { get; }
-
-        public Dictionary<string, object>? LocalVariables { get; }
     }
 
     public class GetCommandArgsValuesQueueHandler : IRequestHandler<GetCommandArgsValuesQueue, List<object>>
@@ -35,11 +32,11 @@ namespace AgentInputCodeExecutor.API.Service.Queue
         {
 #warning нужно тестирование
             Regex argsRegex = new Regex(@"\(.*\)");
-            if (!argsRegex.IsMatch(request.CommandLine))
+            if (!argsRegex.IsMatch(request.Command.OriginCommand))
 #warning Может нужно будет прокидывать эксепшн
                 return new List<object>();
             List<string> args = argsRegex
-                .Match(request.CommandLine).Value
+                .Match(request.Command.OriginCommand).Value
                 .Replace("(","")
                 .Replace(")","")
                 .Split(',')
@@ -51,8 +48,8 @@ namespace AgentInputCodeExecutor.API.Service.Queue
             List<object> results = new List<object>();
             for(int i =0; i < args.Count();i++)
             {
-                if (request.LocalVariables != null && request.LocalVariables.ContainsKey(args[i]))
-                    results.Add(request.LocalVariables[args[i]]);
+                if (request.Command.LocalVariables != null && request.Command.LocalVariables.ContainsKey(args[i]))
+                    results.Add(request.Command.LocalVariables[args[i]]);
                 else
                 {
                     string arg = args[i];

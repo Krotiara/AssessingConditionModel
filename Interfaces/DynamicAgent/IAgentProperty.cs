@@ -7,8 +7,10 @@ using System.Threading.Tasks;
 
 namespace Interfaces.DynamicAgent
 {
-    public interface IAgentProperty
+    public interface IProperty
     {
+        public string OriginName { get; set; }
+
         public ParameterNames Name { get; set; }
 
         public Type Type { get; set; }

@@ -1,4 +1,5 @@
 ﻿using Interfaces;
+using Interfaces.DynamicAgent;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,5 +24,7 @@ namespace AgentInputCodeExecutor.API.Interfaces
         public string OriginCommand { get; }
 
         CommandType CommandType { get; }
+
+        public Dictionary<string, IProperty> LocalVariables { get; }
     }
 }

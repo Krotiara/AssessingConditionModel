@@ -39,10 +39,24 @@ namespace AgentInputCodeExecutor.API.Service.Service
         public async Task<(ICommandArgsTypesMeta, Delegate)> ResolveCommandAction(ICommand command)
         {
             string commandName = await mediator.Send(new GetCommandNameCommand(command));
-            ICommandArgsTypesMeta meta = await mediator.Send(new GetCommandTypesMetaQueue(commandName));
-            if (!delegates.ContainsKey(commandName))
-                throw new ResolveCommandActionException($"Не удалось разрешить действие для команды {commandName}");
-            return (meta, delegates[commandName]);
+
+            if (commandName == null)
+            {
+                if (command.CommandType != CommandType.Assigning)
+                    throw new ResolveCommandActionException($"Выполнение действия без команды допустимо только для присвоения значения");
+
+                                    
+
+                //Создать делегат для вычисления/присвоения значения.
+                throw new NotImplementedException();
+            }
+            else
+            {
+                ICommandArgsTypesMeta meta = await mediator.Send(new GetCommandTypesMetaQueue(commandName));
+                if (!delegates.ContainsKey(commandName))
+                    throw new ResolveCommandActionException($"Не удалось разрешить действие для команды {commandName}");
+                return (meta, delegates[commandName]);
+            }
         }
 
         private void InitDelegates()

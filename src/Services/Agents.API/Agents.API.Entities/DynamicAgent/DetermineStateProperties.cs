@@ -12,9 +12,9 @@ namespace Agents.API.Entities.DynamicAgent
     {
         public DetermineStateProperties()
         {
-            Properties = new Dictionary<ParameterNames, IAgentProperty>();
+            Properties = new Dictionary<ParameterNames, IProperty>();
         }
 
-        public Dictionary<ParameterNames, IAgentProperty> Properties { get; }
+        public Dictionary<ParameterNames, IProperty> Properties { get; }
     }
 }

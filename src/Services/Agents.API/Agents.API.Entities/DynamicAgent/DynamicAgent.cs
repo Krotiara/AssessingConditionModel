@@ -14,8 +14,8 @@ namespace Agents.API.Entities.DynamicAgent
         public DynamicAgent(Interfaces.DynamicAgent.IDynamicAgentInitSettings settings)
         {
             Name = settings.Name;
-            Properties = new Dictionary<ParameterNames, IAgentProperty>();
-            foreach (IAgentProperty prop in settings.Properties)
+            Properties = new Dictionary<ParameterNames, IProperty>();
+            foreach (IProperty prop in settings.Properties)
                 Properties[prop.Name] = prop;
             StateDiagram = new StateDiagram(settings.States, settings.DetermineStateFunc);
         }
@@ -24,6 +24,6 @@ namespace Agents.API.Entities.DynamicAgent
         public string Name { get; set; }
         public Interfaces.DynamicAgent.IStateDiagram StateDiagram { get ; set ; }
 
-        public Dictionary<ParameterNames, IAgentProperty> Properties { get; }
+        public Dictionary<ParameterNames, IProperty> Properties { get; }
     }
 }

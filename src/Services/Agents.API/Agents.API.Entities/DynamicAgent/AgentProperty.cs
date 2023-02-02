@@ -8,11 +8,12 @@ using System.Threading.Tasks;
 
 namespace Agents.API.Entities.DynamicAgent
 {
-    public class AgentProperty : IAgentProperty
+    public class AgentProperty : IProperty
     {
 
-        public AgentProperty(ParameterNames name, Type type, object value)
+        public AgentProperty(string originName, ParameterNames name, Type type, object value)
         {
+            OriginName = originName;
             Name = name;
             Type = type;
             Value = value;
@@ -23,5 +24,6 @@ namespace Agents.API.Entities.DynamicAgent
         public Type Type { get; set; }
 
         public object Value { get; set; }
+        public string OriginName { get; set; }
     }
 }

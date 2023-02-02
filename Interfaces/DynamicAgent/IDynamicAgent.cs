@@ -14,7 +14,7 @@ namespace Agents.API.Interfaces.DynamicAgent
 
         public string Name { get; set; }
 
-        public Dictionary<ParameterNames, IAgentProperty> Properties { get; }
+        public Dictionary<ParameterNames, IProperty> Properties { get; }
 
         public IStateDiagram StateDiagram { get; set; }
     }

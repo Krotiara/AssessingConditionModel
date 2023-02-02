@@ -1,6 +1,7 @@
 ﻿using AgentInputCodeExecutor.API.Interfaces;
 using AgentInputCodeExecutor.API.Service.Command;
 using Interfaces;
+using Interfaces.DynamicAgent;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,11 +13,13 @@ namespace AgentInputCodeExecutor.API.Tests.UnitTests.Command
     public class ParseCodeLineCommandTests
     {
         CancellationToken token;
+        private readonly Dictionary<string, IProperty> localVars;
 
         public ParseCodeLineCommandTests()
         {
             var tokenSource = new CancellationTokenSource(TimeSpan.FromMilliseconds(100));
             token = tokenSource.Token;
+            localVars = new Dictionary<string, IProperty>();
         }
 
 
@@ -24,7 +27,7 @@ namespace AgentInputCodeExecutor.API.Tests.UnitTests.Command
         public async Task ParseAssigningCommandMustReturnAssigningType()
         {
             string testLine = "testVar=TestCall()";
-            ICommand command = await new ParseCodeLineCommandHandler().Handle(new ParseCodeLineCommand(testLine), token);
+            ICommand command = await new ParseCodeLineCommandHandler().Handle(new ParseCodeLineCommand(testLine, localVars), token);
             Assert.True(command.CommandType == CommandType.Assigning);
         }
 
@@ -33,7 +36,7 @@ namespace AgentInputCodeExecutor.API.Tests.UnitTests.Command
         public async Task ParseVoidCommandMustReturnVoidType()
         {
             string testLine = "TestCall()";
-            ICommand command = await new ParseCodeLineCommandHandler().Handle(new ParseCodeLineCommand(testLine), token);
+            ICommand command = await new ParseCodeLineCommandHandler().Handle(new ParseCodeLineCommand(testLine, localVars), token);
             Assert.True(command.CommandType == CommandType.VoidCall);
         }
 
@@ -43,10 +46,10 @@ namespace AgentInputCodeExecutor.API.Tests.UnitTests.Command
         {
             string testLine = "Age = TestCall()";
             string testLine1 = "Weight = 45";
-            ICommand command = await new ParseCodeLineCommandHandler().Handle(new ParseCodeLineCommand(testLine), token);
+            ICommand command = await new ParseCodeLineCommandHandler().Handle(new ParseCodeLineCommand(testLine, localVars), token);
             Assert.True(command.AssigningParameter == ParameterNames.Age);
 
-            command = await new ParseCodeLineCommandHandler().Handle(new ParseCodeLineCommand(testLine1), token);
+            command = await new ParseCodeLineCommandHandler().Handle(new ParseCodeLineCommand(testLine1, localVars), token);
             Assert.True(command.AssigningParameter == ParameterNames.Weight);
         }
 
@@ -55,7 +58,7 @@ namespace AgentInputCodeExecutor.API.Tests.UnitTests.Command
         public async Task ParseExternalSystemAssigningParamMustSetParametersNameToNone()
         {
             string testLine = "externalParameter = TestCall()";
-            ICommand command = await new ParseCodeLineCommandHandler().Handle(new ParseCodeLineCommand(testLine), token);
+            ICommand command = await new ParseCodeLineCommandHandler().Handle(new ParseCodeLineCommand(testLine, localVars), token);
             Assert.True(command.AssigningParameter == ParameterNames.None);
         }
     }

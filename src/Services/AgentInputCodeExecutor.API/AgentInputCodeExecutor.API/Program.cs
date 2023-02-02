@@ -14,7 +14,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 builder.Services.AddMediatR(Assembly.GetExecutingAssembly());
 
-builder.Services.AddTransient<IAgentProperty, AgentProperty>();
+builder.Services.AddTransient<IProperty, AgentProperty>();
 builder.Services.AddTransient<IExecutableAgentCodeSettings<AgentProperty>, ExecutableAgentCodeSettings>();
 
 builder.Services

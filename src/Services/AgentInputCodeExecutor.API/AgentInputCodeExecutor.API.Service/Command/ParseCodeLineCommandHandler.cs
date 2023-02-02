@@ -1,6 +1,7 @@
 ﻿using AgentInputCodeExecutor.API.Entities;
 using AgentInputCodeExecutor.API.Interfaces;
 using Interfaces;
+using Interfaces.DynamicAgent;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -15,9 +16,12 @@ namespace AgentInputCodeExecutor.API.Service.Command
     {
         public string CodeLine { get; set; }
 
-        public ParseCodeLineCommand(string codeLine)
+        public Dictionary<string, IProperty> LocalVariables { get; }
+
+        public ParseCodeLineCommand(string codeLine, Dictionary<string, IProperty> localVariables)
         {
             CodeLine = codeLine;
+            LocalVariables = localVariables;
         }
     }
 
@@ -33,10 +37,10 @@ namespace AgentInputCodeExecutor.API.Service.Command
                 if (!isParsed)
                     paramName = ParameterNames.None; //Сделано для допуска свободных названий переменных.
                    // throw new ParseCodeLineException($"Введеный параметр {param} для присвоения не является допустимым");
-                return await Task.FromResult((ICommand)new ExecutableCommand(request.CodeLine, CommandType.Assigning, paramName, param));
+                return await Task.FromResult((ICommand)new ExecutableCommand(request.CodeLine, CommandType.Assigning, request.LocalVariables, param, paramName));
             }
             else
-                return await Task.FromResult(new ExecutableCommand(request.CodeLine, CommandType.VoidCall));
+                return await Task.FromResult(new ExecutableCommand(request.CodeLine, CommandType.VoidCall, request.LocalVariables));
         }
     }
 }

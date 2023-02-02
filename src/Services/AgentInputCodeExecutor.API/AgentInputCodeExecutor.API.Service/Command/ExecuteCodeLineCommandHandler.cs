@@ -20,15 +20,9 @@ namespace AgentInputCodeExecutor.API.Service.Command
     {
         public ICommand Command { get; }
 
-        public Dictionary<ParameterNames, AgentProperty> Properties { get; }
-
-        public Dictionary<string, object> LocalVariables { get; }
-
-        public ExecuteCodeLineCommand(ICommand command, Dictionary<ParameterNames, AgentProperty> properties, Dictionary<string, object> localVariables)
+        public ExecuteCodeLineCommand(ICommand command)
         {
             Command = command;
-            Properties = properties;
-            LocalVariables = localVariables;
         }
     }
 
@@ -44,34 +38,29 @@ namespace AgentInputCodeExecutor.API.Service.Command
             this.mediator = mediator;
         }
 
+
         public async Task<Unit> Handle(ExecuteCodeLineCommand request, CancellationToken cancellationToken)
         {
 
-#warning Не доделано. Главная проблема - запихнуть в expression асинхронную функцию. Или найти другой способ исполнения. 
             (ICommandArgsTypesMeta, Delegate) commandPair = await codeResolveService.ResolveCommandAction(request.Command);
-            List<object> variables = await mediator.Send(new GetCommandArgsValuesQueue(request.Command.OriginCommand,
-                commandPair.Item1, request.LocalVariables), cancellationToken);
+            List<object> variables = await mediator.Send(new GetCommandArgsValuesQueue(request.Command, commandPair.Item1), cancellationToken);
             if (request.Command.CommandType == CommandType.Assigning)
             {
                 object res = commandPair.Item2.DynamicInvoke(variables.ToArray());
                 TypeConverter typeConverter = TypeDescriptor.GetConverter(commandPair.Item1.OutputArgType);
                 var convertedRes = typeConverter.ConvertTo(res, commandPair.Item1.OutputArgType);
-                request.LocalVariables[request.Command.AssigningParamOriginalName] = convertedRes;
-                if (request.Command.AssigningParameter != ParameterNames.None)
+
+                if (request.Command.LocalVariables.ContainsKey(request.Command.AssigningParamOriginalName))
+                    request.Command.LocalVariables[request.Command.AssigningParamOriginalName].Value = convertedRes;
+                else
                 {
-                    if (request.Properties.ContainsKey(request.Command.AssigningParameter))
-                        request.Properties[request.Command.AssigningParameter].Value = convertedRes;
-                    else
-                        request.Properties[request.Command.AssigningParameter] = new AgentProperty()
-                        {
-                            Name = request.Command.AssigningParameter,
-                            Type = commandPair.Item1.OutputArgType,
-                            Value = convertedRes
-                        };
-                }   
+                    request.Command.LocalVariables[request.Command.AssigningParamOriginalName] =
+                        new AgentProperty(request.Command.AssigningParameter, commandPair.Item1.OutputArgType, convertedRes, request.Command.AssigningParamOriginalName);
+                }
             }
             else
             {
+                //На случай вызовов коанд, которые не возвращают значение.
                 commandPair.Item2.DynamicInvoke(variables);
             }
 
