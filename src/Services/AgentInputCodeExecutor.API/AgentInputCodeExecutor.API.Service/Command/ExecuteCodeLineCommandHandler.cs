@@ -51,7 +51,7 @@ namespace AgentInputCodeExecutor.API.Service.Command
 
 #warning Не учтен случай, когда есть и вызов функции, и простые слагаемые. Нужно доьавить обнаружение этого и эксепшн. Усложнять псевдо-выполнитель кода не надо.
 
-            (ICommandArgsTypesMeta, Delegate) commandPair = await codeResolveService.ResolveCommandAction(request.Command);
+            (ICommandArgsTypesMeta, Delegate) commandPair = await codeResolveService.ResolveCommandAction(request.Command, cancellationToken);
             List<object> variables = await mediator.Send(new GetCommandArgsValuesQueue(request.Command, commandPair.Item1), cancellationToken);
             if (request.Command.CommandType == CommandType.Assigning)
             {
@@ -64,7 +64,7 @@ namespace AgentInputCodeExecutor.API.Service.Command
                 else
                 {
                     request.Command.LocalVariables[request.Command.AssigningParamOriginalName] =
-                        new AgentProperty(request.Command.AssigningParameter, commandPair.Item1.OutputArgType, convertedRes, request.Command.AssigningParamOriginalName);
+                        new AgentProperty(commandPair.Item1.OutputArgType, convertedRes, request.Command.AssigningParamOriginalName, request.Command.AssigningParameter);
                 }
             }
             else
@@ -79,14 +79,14 @@ namespace AgentInputCodeExecutor.API.Service.Command
 
         private async void ExecuteCommandWithoutCommandCall(ExecuteCodeLineCommand request)
         {
-            Regex varRegex = new Regex(@"(?!"")[a-zA-Z](?!"")");
+            Regex varRegex = new Regex(@"(?!"")[a-zA-Z]+(?!"")");
             IEnumerable<string> vars = varRegex.Matches(request.Command.OriginCommand
                 .Split("=").Last()
                 .Trim())
                 .Select(x => x.Value.Trim())
                 .OrderByDescending(x => x.Length); //Сортировка дял последующей замены от наибольших по длине переменных до наименьших.
 
-            string executableStr = request.Command.OriginCommand;
+            string executableStr = request.Command.OriginCommand.Split("=").Last();
 
             Type? outputType = null;
 
@@ -110,7 +110,7 @@ namespace AgentInputCodeExecutor.API.Service.Command
                     request.Command.LocalVariables[request.Command.AssigningParamOriginalName].Value = scriptState.ReturnValue;
                 else
                     request.Command.LocalVariables[request.Command.AssigningParamOriginalName] = 
-                        new AgentProperty(request.Command.AssigningParameter, outputType, scriptState.ReturnValue, request.Command.AssigningParamOriginalName);
+                        new AgentProperty(outputType, scriptState.ReturnValue, request.Command.AssigningParamOriginalName, request.Command.AssigningParameter);
             }
         }
 

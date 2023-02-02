@@ -11,7 +11,7 @@ namespace AgentInputCodeExecutor.API.Entities
     public class AgentProperty : IProperty
     {
 
-        public AgentProperty(ParameterNames name, Type type, object value, string originName)
+        public AgentProperty(Type type, object value, string originName, ParameterNames name = ParameterNames.None)
         {
             Name = name;
             Type = type;
@@ -19,7 +19,7 @@ namespace AgentInputCodeExecutor.API.Entities
             OriginName = originName;
         }
 
-        public ParameterNames Name { get; set; } = ParameterNames.None;
+        public ParameterNames Name { get; set; }
         public Type Type { get; set; }
 
         public object Value { get; set; }

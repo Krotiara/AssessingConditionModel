@@ -64,7 +64,7 @@ namespace AgentInputCodeExecutor.API.Tests.UnitTests.Queue
         {
             ICommand command = new ExecutableCommand("TestCall(a)", CommandType.VoidCall, localVars);
             ICommandArgsTypesMeta types = new CommandArgsTypesMeta(new List<(Type, string)> { (typeof(int), "test1")}, null);
-            localVars["a"] = new AgentProperty(ParameterNames.None, typeof(int), 1, "a");
+            localVars["a"] = new AgentProperty(typeof(int), 1, "a");
             GetCommandArgsValuesQueue request = new GetCommandArgsValuesQueue(command, types);
             List<object> res = await new GetCommandArgsValuesQueueHandler().Handle(request, token);
             Assert.Equal(1, res[0]);

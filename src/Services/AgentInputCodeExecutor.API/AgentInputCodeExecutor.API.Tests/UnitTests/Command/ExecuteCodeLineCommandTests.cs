@@ -2,6 +2,7 @@
 using AgentInputCodeExecutor.API.Interfaces;
 using AgentInputCodeExecutor.API.Service.Command;
 using AgentInputCodeExecutor.API.Service.Queue;
+using AgentInputCodeExecutor.API.Service.Service;
 using Interfaces;
 using Interfaces.DynamicAgent;
 using MediatR;
@@ -36,33 +37,6 @@ namespace AgentInputCodeExecutor.API.Tests.UnitTests.Command
         }
 
 
-        [Fact]
-        public async void ExecuteAssigningVariableMustBeSettedInCommandDictByOriginalName()
-        {
-            string testVar = "a";
-            Type testType = typeof(int);
-
-            MethodInfo testMethod = typeof(ExecuteCodeLineCommandTests).GetMethod("GetTestVal");
-
-            ICommand testCommand = 
-                new ExecutableCommand($"{testVar} = {testCommandWithoutArgsName}()", CommandType.Assigning, localVars, testVar);
-            ExecuteCodeLineCommand testCodeLineCommand = new ExecuteCodeLineCommand(testCommand);
-            ICommandArgsTypesMeta meta = new CommandArgsTypesMeta(new List<(Type, string)> {}, testType);
-
-            GetCommandArgsValuesQueue queue = new GetCommandArgsValuesQueue(testCommand, meta);
-
-            mediator = new Mock<IMediator>();
-            mediator.Setup(x => x.Send(It.IsAny<GetCommandArgsValuesQueue>(), token)).ReturnsAsync(() => new List<object>());
-           
-            codeResolver = new Mock<ICodeResolveService>();
-            codeResolver.Setup(x=>x.ResolveCommandAction(It.IsAny<ICommand>())).ReturnsAsync((meta, Delegate.CreateDelegate(typeof(Func<int>), testMethod)));
-
-            await new ExecuteCodeLineCommandHandler(codeResolver.Object, mediator.Object).Handle(testCodeLineCommand, token);
-
-            Assert.True(testCodeLineCommand.Command.LocalVariables.ContainsKey(testVar));
-        }
-
-
         public static int GetTestVal() => int.MaxValue;
        
 
@@ -70,7 +44,7 @@ namespace AgentInputCodeExecutor.API.Tests.UnitTests.Command
 
 
         [Fact]
-        public async Task ExecuteAssigningInternalVarMustBeSettedInCommandDictAsync()
+        public async Task ExecuteAssigningVariableMustBeSettedInCommandDictByOriginalName()
         {
             ParameterNames testParamName = ParameterNames.Weight;
             string testParamStr = testParamName.ToString();
@@ -86,7 +60,7 @@ namespace AgentInputCodeExecutor.API.Tests.UnitTests.Command
             mediator.Setup(x => x.Send(It.IsAny<GetCommandArgsValuesQueue>(), token)).ReturnsAsync(() => new List<object>());
 
             codeResolver = new Mock<ICodeResolveService>();
-            codeResolver.Setup(x => x.ResolveCommandAction(It.IsAny<ICommand>())).ReturnsAsync((meta, Delegate.CreateDelegate(typeof(Func<double>), testMethod)));
+            codeResolver.Setup(x => x.ResolveCommandAction(It.IsAny<ICommand>(), token)).ReturnsAsync((meta, Delegate.CreateDelegate(typeof(Func<double>), testMethod)));
 
             await new ExecuteCodeLineCommandHandler(codeResolver.Object, mediator.Object).Handle(testCodeLineCommand, token);
 
@@ -95,32 +69,25 @@ namespace AgentInputCodeExecutor.API.Tests.UnitTests.Command
 
 
         [Fact]
-        public void ExecuteVoidCommandMustBeCalled()
-        {
-            throw new NotImplementedException();
-        }
-
-
-        [Fact]
         public async void ExecuteWithoutCommandTest()
         {
-            throw new NotImplementedException();
-            //ParameterNames testParamName = ParameterNames.Weight;
-            //string testParamStr = testParamName.ToString();
+            ParameterNames testParamName = ParameterNames.Weight;
+            string testParamStr = testParamName.ToString();
 
-            //int testVal1 = 1;
-            //int testVal2 = 45;
+            int testVal1 = 1;
+            int testVal2 = 45;
 
-            //ICommand testCommand =
-            //     new ExecutableCommand($"{testParamStr} = {testVal1} + {testVal2}", CommandType.Assigning, testParamName, testParamStr);
-            //ExecuteCodeLineCommand testCodeLineCommand = new ExecuteCodeLineCommand(testCommand, props, localVars);
+            ICommand testCommand =
+                 new ExecutableCommand($"{testParamStr} = {testVal1} + {testVal2}", CommandType.Assigning, localVars, testParamStr,testParamName);
+            ExecuteCodeLineCommand testCodeLineCommand = new ExecuteCodeLineCommand(testCommand);
 
-            //mediator = new Mock<IMediator>();
-            //codeResolver = new Mock<ICodeResolveService>();
+            mediator = new Mock<IMediator>();
+            codeResolver = new Mock<ICodeResolveService>();
 
-            //await new ExecuteCodeLineCommandHandler(codeResolver.Object, mediator.Object).Handle(testCodeLineCommand, token);
+            await new ExecuteCodeLineCommandHandler(codeResolver.Object, mediator.Object).Handle(testCodeLineCommand, token);
 
-            //Assert.True(testCodeLineCommand.LocalVariables.ContainsKey(testParamStr));
+            Assert.True(testCodeLineCommand.Command.LocalVariables.ContainsKey(testParamStr));
+            Assert.Equal(testCodeLineCommand.Command.LocalVariables[testParamStr].Value, testVal1 + testVal2);
 
         }
 
@@ -128,26 +95,54 @@ namespace AgentInputCodeExecutor.API.Tests.UnitTests.Command
         [Fact]
         public async void ExecuteWithoutCommandAndWithLocalVariableTest()
         {
-            throw new NotImplementedException();
+            ParameterNames testParamName = ParameterNames.Weight;
+            string testParamStr = testParamName.ToString();
+            int testVal1 = 1;
+            int testVal2 = 45;
+            string testVal1Param = "testFirst";
+            string testVal2Param = "testSecond";
+            localVars["testSecond"] = new AgentProperty(typeof(int), testVal2, testVal2Param);
+            localVars["testFirst"] = new AgentProperty(typeof(int), testVal1, testVal1Param);
+            ICommand testCommand =
+                 new ExecutableCommand($"{testParamStr} = testFirst + testSecond", CommandType.Assigning, localVars, testParamStr, testParamName);
+            ExecuteCodeLineCommand testCodeLineCommand = new ExecuteCodeLineCommand(testCommand);
+
+            mediator = new Mock<IMediator>();
+            codeResolver = new Mock<ICodeResolveService>();
+
+            await new ExecuteCodeLineCommandHandler(codeResolver.Object, mediator.Object).Handle(testCodeLineCommand, token);
+
+            Assert.True(testCodeLineCommand.Command.LocalVariables.ContainsKey(testParamStr));
+            Assert.Equal(testCodeLineCommand.Command.LocalVariables[testParamStr].Value, testVal1 + testVal2);
         }
 
 
         [Fact]
-        public void ExecuteWithUnknownCommandMustThrow()
+        public async Task ExecuteWithUnknownCommandMustThrowAsync()
         {
-            throw new NotImplementedException();
+            ParameterNames testParamName = ParameterNames.Weight;
+            string testParamStr = testParamName.ToString();
+            Type testType = typeof(double);
+            MethodInfo testMethod = typeof(ExecuteCodeLineCommandTests).GetMethod("GetTestDouble");
+
+            ICommand testCommand =
+                new ExecutableCommand($"{testParamStr} = {testCommandWithoutArgsName}()", CommandType.Assigning, localVars, testParamStr, testParamName);
+            
+            ExecuteCodeLineCommand testCodeLineCommand = new ExecuteCodeLineCommand(testCommand);
+            ICommandArgsTypesMeta meta = new CommandArgsTypesMeta(new List<(Type, string)> { }, testType);
+
+            mediator = new Mock<IMediator>();
+            mediator.Setup(x => x.Send(It.IsAny<GetCommandNameCommand>(), token)).ReturnsAsync(() => testCommandWithoutArgsName);
+
+            var resolver = new CodeResolveService(mediator.Object, new Mock<IWebRequester>().Object);
+
+            await Assert.ThrowsAsync<ResolveCommandActionException>
+                (async () => await new ExecuteCodeLineCommandHandler(resolver, mediator.Object).Handle(testCodeLineCommand, token));
         }
 
 
         [Fact]
         public void ExecuteWithIncorrectAgrsMustThrow()
-        {
-            throw new NotImplementedException();
-        }
-
-
-        [Fact]
-        public void ExecuteWithLocalVarArgMustUseThisArg()
         {
             throw new NotImplementedException();
         }
