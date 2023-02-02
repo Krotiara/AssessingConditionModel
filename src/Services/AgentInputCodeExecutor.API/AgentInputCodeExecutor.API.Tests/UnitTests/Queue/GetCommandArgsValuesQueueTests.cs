@@ -98,5 +98,16 @@ namespace AgentInputCodeExecutor.API.Tests.UnitTests.Queue
             List<object> res = await new GetCommandArgsValuesQueueHandler().Handle(request, token);
             Assert.Equal("str", res[0]);
         }
+
+
+        [Fact]
+        public async Task GetArgsFromCommandWithoutCommandMustReturnEmpty()
+        {
+            string commandLine = "a=1+2";
+            ICommandArgsTypesMeta types = new CommandArgsTypesMeta(new List<(Type, string)> {}, typeof(double));
+            GetCommandArgsValuesQueue request = new GetCommandArgsValuesQueue(commandLine, types);
+            List<object> res = await new GetCommandArgsValuesQueueHandler().Handle(request, token);
+            Assert.Empty(res);
+        }
     }
 }

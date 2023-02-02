@@ -65,15 +65,10 @@ namespace AgentInputCodeExecutor.API.Tests.UnitTests.Command
         }
 
 
-        public static int GetTestVal()
-        {
-            return int.MaxValue;
-        }
+        public static int GetTestVal() => int.MaxValue;
+       
 
-        public static double GetTestDouble()
-        {
-            return 45;
-        }
+        public static double GetTestDouble() =>  45;
 
 
         [Fact]
@@ -88,8 +83,6 @@ namespace AgentInputCodeExecutor.API.Tests.UnitTests.Command
                 new ExecutableCommand($"{testParamStr} = {testCommandWithoutArgsName}()", CommandType.Assigning, testParamName, testParamStr);
             ExecuteCodeLineCommand testCodeLineCommand = new ExecuteCodeLineCommand(testCommand, props, localVars);
             ICommandArgsTypesMeta meta = new CommandArgsTypesMeta(new List<(Type, string)> { }, testType);
-
-            GetCommandArgsValuesQueue queue = new GetCommandArgsValuesQueue(testCommand.OriginCommand, meta, localVars);
 
             mediator = new Mock<IMediator>();
             mediator.Setup(x => x.Send(It.IsAny<GetCommandArgsValuesQueue>(), token)).ReturnsAsync(() => new List<object>());
@@ -112,7 +105,31 @@ namespace AgentInputCodeExecutor.API.Tests.UnitTests.Command
 
 
         [Fact]
-        public void ExecuteWithoutCommandTest()
+        public async void ExecuteWithoutCommandTest()
+        {
+            throw new NotImplementedException();
+            //ParameterNames testParamName = ParameterNames.Weight;
+            //string testParamStr = testParamName.ToString();
+
+            //int testVal1 = 1;
+            //int testVal2 = 45;
+
+            //ICommand testCommand =
+            //     new ExecutableCommand($"{testParamStr} = {testVal1} + {testVal2}", CommandType.Assigning, testParamName, testParamStr);
+            //ExecuteCodeLineCommand testCodeLineCommand = new ExecuteCodeLineCommand(testCommand, props, localVars);
+
+            //mediator = new Mock<IMediator>();
+            //codeResolver = new Mock<ICodeResolveService>();
+
+            //await new ExecuteCodeLineCommandHandler(codeResolver.Object, mediator.Object).Handle(testCodeLineCommand, token);
+
+            //Assert.True(testCodeLineCommand.LocalVariables.ContainsKey(testParamStr));
+
+        }
+
+
+        [Fact]
+        public async void ExecuteWithoutCommandAndWithLocalVariableTest()
         {
             throw new NotImplementedException();
         }
