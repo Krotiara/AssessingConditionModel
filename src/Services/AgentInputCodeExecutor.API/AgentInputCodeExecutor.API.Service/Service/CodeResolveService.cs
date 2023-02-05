@@ -51,6 +51,7 @@ namespace AgentInputCodeExecutor.API.Service.Service
             {
                 if (!delegates.ContainsKey(commandName))
                     throw new ResolveCommandActionException($"Не удалось разрешить действие для команды {commandName}");
+#warning Может вернуться null.
                 ICommandArgsTypesMeta meta = await mediator.Send(new GetCommandTypesMetaQueue(commandName), cancellationToken);
                 return (meta, delegates[commandName]);
             }
