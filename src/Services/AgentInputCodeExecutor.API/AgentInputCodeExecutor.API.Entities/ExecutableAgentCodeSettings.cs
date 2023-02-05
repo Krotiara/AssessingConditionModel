@@ -8,11 +8,15 @@ using System.Threading.Tasks;
 
 namespace AgentInputCodeExecutor.API.Entities
 {
-    public class ExecutableAgentCodeSettings : IExecutableAgentCodeSettings<AgentProperty>
+    public class ExecutableAgentCodeSettings : IExecutableAgentCodeSettings
     {
+        public ExecutableAgentCodeSettings(List<string> codeLines, Dictionary<string, IProperty> properties)
+        {
+            CodeLines = codeLines;
+            Properties = properties;
+        }
 
         public List<string> CodeLines { get; set; }
-
-        public Dictionary<ParameterNames, AgentProperty> Properties { get; set; }
+        public Dictionary<string, IProperty> Properties { get; set; }
     }
 }

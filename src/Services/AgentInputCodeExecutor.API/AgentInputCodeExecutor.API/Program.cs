@@ -15,7 +15,7 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddMediatR(Assembly.GetExecutingAssembly());
 
 builder.Services.AddTransient<IProperty, AgentProperty>();
-builder.Services.AddTransient<IExecutableAgentCodeSettings<AgentProperty>, ExecutableAgentCodeSettings>();
+builder.Services.AddTransient<IExecutableAgentCodeSettings, ExecutableAgentCodeSettings>();
 
 builder.Services
     .AddTransient<IRequestHandler<ExecuteCodeLinesCommand, Unit>, ExecuteCodeLinesCommandHandler>()

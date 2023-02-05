@@ -7,10 +7,10 @@ using System.Threading.Tasks;
 
 namespace Interfaces
 {
-    public interface IExecutableAgentCodeSettings<T>
+    public interface IExecutableAgentCodeSettings
     {
         public List<string> CodeLines { get; set; }
 
-        public Dictionary<ParameterNames, T> Properties { get; set; }
+        public Dictionary<string, IProperty> Properties { get; set; }
     }
 }
