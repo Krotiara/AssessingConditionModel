@@ -41,7 +41,7 @@ namespace AgentInputCodeExecutor.API.Tests.UnitTests.Command
 
         public static double GetTestDouble() =>  45;
 
-        public static List<string> GetTestList() => new List<string> { "test1", "test2" };
+        public static string[] GetTestList() => new string[] { "test1", "test2" };
 
 
         [Fact]
@@ -145,7 +145,7 @@ namespace AgentInputCodeExecutor.API.Tests.UnitTests.Command
         public async Task ExecuteAssigningInternalVarOfTypeListMustBeSaveAsync()
         {
             string testParam = "test";
-            Type testType = typeof(List<string>);
+            Type testType = typeof(string[]);
             MethodInfo testMethod = typeof(ExecuteCodeLineCommandTests).GetMethod("GetTestList");
 
             ICommand testCommand =
@@ -158,12 +158,12 @@ namespace AgentInputCodeExecutor.API.Tests.UnitTests.Command
             mediator.Setup(x => x.Send(It.IsAny<GetCommandArgsValuesQueue>(), token)).ReturnsAsync(() => new List<object>());
 
             codeResolver = new Mock<ICodeResolveService>();
-            codeResolver.Setup(x => x.ResolveCommandAction(It.IsAny<ICommand>(), token)).ReturnsAsync((meta, Delegate.CreateDelegate(typeof(Func<List<string>>), testMethod)));
+            codeResolver.Setup(x => x.ResolveCommandAction(It.IsAny<ICommand>(), token)).ReturnsAsync((meta, Delegate.CreateDelegate(typeof(Func<string[]>), testMethod)));
 
             await new ExecuteCodeLineCommandHandler(codeResolver.Object, mediator.Object).Handle(testCodeLineCommand, token);
 
             Assert.True(testCodeLineCommand.Command.LocalVariables.ContainsKey(testParam));
-            Assert.True(testCodeLineCommand.Command.LocalVariables[testParam].Value is List<string>);
+            Assert.True(testCodeLineCommand.Command.LocalVariables[testParam].Value is string[]);
         }
     }
 }

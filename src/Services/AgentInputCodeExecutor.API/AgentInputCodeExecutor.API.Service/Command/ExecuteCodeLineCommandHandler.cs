@@ -6,6 +6,7 @@ using MediatR;
 using Microsoft.CodeAnalysis.CSharp.Scripting;
 using Microsoft.CodeAnalysis.Scripting;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -53,19 +54,22 @@ namespace AgentInputCodeExecutor.API.Service.Command
 
             (ICommandArgsTypesMeta, Delegate) commandPair = await codeResolveService.ResolveCommandAction(request.Command, cancellationToken);
             List<object> variables = await mediator.Send(new GetCommandArgsValuesQueue(request.Command, commandPair.Item1), cancellationToken);
+
             if (request.Command.CommandType == CommandType.Assigning)
             {
-#warning Выскакивает ошибка при передаче List
                 object res = commandPair.Item2.DynamicInvoke(variables.ToArray());
-                TypeConverter typeConverter = TypeDescriptor.GetConverter(commandPair.Item1.OutputArgType);
-                var convertedRes = typeConverter.ConvertTo(res, commandPair.Item1.OutputArgType);
-
+                if (commandPair.Item1.OutputArgType.GetInterface(nameof(IEnumerable)) == null)
+                {
+                    TypeConverter typeConverter = TypeDescriptor.GetConverter(commandPair.Item1.OutputArgType);
+                    res = typeConverter.ConvertTo(res, commandPair.Item1.OutputArgType);
+                }
+               
                 if (request.Command.LocalVariables.ContainsKey(request.Command.AssigningParamOriginalName))
-                    request.Command.LocalVariables[request.Command.AssigningParamOriginalName].Value = convertedRes;
+                    request.Command.LocalVariables[request.Command.AssigningParamOriginalName].Value = res;
                 else
                 {
                     request.Command.LocalVariables[request.Command.AssigningParamOriginalName] =
-                        new AgentProperty(commandPair.Item1.OutputArgType, convertedRes, request.Command.AssigningParamOriginalName, request.Command.AssigningParameter);
+                        new AgentProperty(commandPair.Item1.OutputArgType, res, request.Command.AssigningParamOriginalName, request.Command.AssigningParameter);
                 }
             }
             else
