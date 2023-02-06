@@ -134,7 +134,7 @@ namespace AgentInputCodeExecutor.API.Tests.UnitTests.Command
             mediator = new Mock<IMediator>();
             mediator.Setup(x => x.Send(It.IsAny<GetCommandNameCommand>(), token)).ReturnsAsync(() => testCommandWithoutArgsName);
 
-            var resolver = new CodeResolveService(mediator.Object, new Mock<IWebRequester>().Object);
+            var resolver = new CodeResolveService(mediator.Object, new Mock<ICommandActionsProvider>().Object);
 
             await Assert.ThrowsAsync<ResolveCommandActionException>
                 (async () => await new ExecuteCodeLineCommandHandler(resolver, mediator.Object).Handle(testCodeLineCommand, token));

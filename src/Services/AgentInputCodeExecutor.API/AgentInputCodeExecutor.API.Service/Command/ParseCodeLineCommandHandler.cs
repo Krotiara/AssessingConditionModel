@@ -37,10 +37,10 @@ namespace AgentInputCodeExecutor.API.Service.Command
                 if (!isParsed)
                     paramName = ParameterNames.None; //Сделано для допуска свободных названий переменных.
                    // throw new ParseCodeLineException($"Введеный параметр {param} для присвоения не является допустимым");
-                return await Task.FromResult((ICommand)new ExecutableCommand(request.CodeLine, CommandType.Assigning, request.LocalVariables, param, paramName));
+                return (ICommand)new ExecutableCommand(request.CodeLine, CommandType.Assigning, request.LocalVariables, param, paramName);
             }
             else
-                return await Task.FromResult(new ExecutableCommand(request.CodeLine, CommandType.VoidCall, request.LocalVariables));
+                return new ExecutableCommand(request.CodeLine, CommandType.VoidCall, request.LocalVariables);
         }
     }
 }

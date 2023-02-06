@@ -41,6 +41,7 @@ namespace AgentInputCodeExecutor.API.Service.Queue
                 .Replace(")","")
                 .Split(',')
                 .Select(x => x.Trim())
+                .Where(x => x != string.Empty)
                 .ToList();
             if (args.Count() != request.CommandArgsTypesMeta.InputArgsTypes.Length)
                 throw new GetCommandArgsValuesException("Количество переданных аргументов не совпадает с сигнатурой метода");

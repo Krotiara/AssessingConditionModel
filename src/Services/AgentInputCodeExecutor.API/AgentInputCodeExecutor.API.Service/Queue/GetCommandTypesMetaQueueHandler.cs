@@ -28,27 +28,20 @@ namespace AgentInputCodeExecutor.API.Service.Queue
     {
 
         private readonly IMediator mediator;
+        private readonly IMetaStorageService metaStorageService;
 
-        Dictionary<string, ICommandArgsTypesMeta> CommandTypesMeta { get; }
-
-
-        public GetCommandTypesMetaQueueHandler(IMediator mediator)
+        public GetCommandTypesMetaQueueHandler(IMediator mediator, IMetaStorageService metaStorageService)
         {
-            this.mediator = mediator;
-            CommandTypesMeta = new Dictionary<string, ICommandArgsTypesMeta>()
-            {
-                {"GetLatestPatientParams", new CommandArgsTypesMeta( new List<(Type, string)>
-                {(typeof(DateTime), "startTimestamp"),(typeof(DateTime), "endTimestamp"),(typeof(int), "patientId")},
-                typeof(IList<IPatientParameter>))}
-            };
+            this.metaStorageService = metaStorageService;
         }
 
 
         public async Task<ICommandArgsTypesMeta> Handle(GetCommandTypesMetaQueue request, CancellationToken cancellationToken)
         {
-            if (!CommandTypesMeta.ContainsKey(request.Command))
+            ICommandArgsTypesMeta? meta = metaStorageService.GetMetaByCommandName(request.Command);
+            if(meta == null)
                 throw new GetCommandTypeMetaException($"Не найдено соответсвие для команды {request.Command}");
-            return CommandTypesMeta[request.Command];
+            return meta;
         }
     }
 }

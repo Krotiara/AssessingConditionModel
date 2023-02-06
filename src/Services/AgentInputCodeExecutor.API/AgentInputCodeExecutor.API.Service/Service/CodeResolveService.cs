@@ -19,21 +19,12 @@ namespace AgentInputCodeExecutor.API.Service.Service
     {
 
         private readonly IMediator mediator;
-        private readonly IWebRequester webRequester;
-        //TODO вынести получение в отдельный класс.
-        private readonly string patientsResolverApiUrl;
-        private readonly string bioAgeApiUrl;
+        private readonly ICommandActionsProvider commandActionProvider;
 
-        private readonly Dictionary<string, Delegate> delegates;
-
-        public CodeResolveService(IMediator mediator, IWebRequester webRequester)
+        public CodeResolveService(IMediator mediator, ICommandActionsProvider commandActionProvider)
         {
             this.mediator = mediator;
-            this.webRequester = webRequester;
-            patientsResolverApiUrl = Environment.GetEnvironmentVariable("PATIENTRESOLVER_API_URL");
-            bioAgeApiUrl = Environment.GetEnvironmentVariable("BIO_AGE_API_URL");
-            delegates = new Dictionary<string, Delegate>();
-            InitDelegates();  
+            this.commandActionProvider = commandActionProvider;
         }
 
         public async Task<(ICommandArgsTypesMeta, Delegate)> ResolveCommandAction(ICommand command, CancellationToken cancellationToken)
@@ -49,25 +40,13 @@ namespace AgentInputCodeExecutor.API.Service.Service
             }
             else
             {
-                if (!delegates.ContainsKey(commandName))
+                Delegate? del = commandActionProvider.GetDelegateByCommandName(commandName);
+                if(del == null)
                     throw new ResolveCommandActionException($"Не удалось разрешить действие для команды {commandName}");
 #warning Может вернуться null.
                 ICommandArgsTypesMeta meta = await mediator.Send(new GetCommandTypesMetaQueue(commandName), cancellationToken);
-                return (meta, delegates[commandName]);
+                return (meta, del);
             }
-        }
-
-        private void InitDelegates()
-        {
-           // TODO Список методов нужно вынести в отдельное место.
-           delegates["GetLatestPatientParams"] = async (DateTime startTimestamp, DateTime endTimestamp, int patientId) =>
-            {
-                string body = Newtonsoft.Json.JsonConvert.SerializeObject(new DateTime[2] { startTimestamp, endTimestamp });
-                string url = $"{patientsResolverApiUrl}/patientsApi/latestPatientParameters/{patientId}";
-                return await webRequester
-                  .GetResponse<IList<PatientParameter>>(url, "POST", body);
-            };
-
         }
     }
 }
