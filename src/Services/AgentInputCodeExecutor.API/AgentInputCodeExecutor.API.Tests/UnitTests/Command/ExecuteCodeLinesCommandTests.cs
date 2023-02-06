@@ -77,7 +77,7 @@ namespace AgentInputCodeExecutor.API.Tests.UnitTests.Command
                 else throw new KeyNotFoundException();
             });
 
-            actionsProvider.Setup(x => x.GetDelegateByCommandName(It.IsAny<string>())).Returns((string x) =>
+            actionsProvider.Setup(x => x.GetDelegateByCommandNameWithoutParams(It.IsAny<string>())).Returns((string x) =>
             {
                 if (x == testCommand)
                     return Delegate.CreateDelegate(typeof(Func<int>), typeof(ExecuteCodeLinesCommandTests).GetMethod(testMethod));

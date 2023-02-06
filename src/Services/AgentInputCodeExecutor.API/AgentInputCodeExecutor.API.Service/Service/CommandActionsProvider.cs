@@ -28,7 +28,7 @@ namespace AgentInputCodeExecutor.API.Service.Service
             InitDelegates();
         }
 
-        public Delegate? GetDelegateByCommandName(string commandName)
+        public Delegate? GetDelegateByCommandNameWithoutParams(string commandName)
         {
             return delegates.ContainsKey(commandName) ? delegates[commandName] : null;
         }

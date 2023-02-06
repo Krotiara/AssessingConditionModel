@@ -40,7 +40,7 @@ namespace AgentInputCodeExecutor.API.Service.Service
             }
             else
             {
-                Delegate? del = commandActionProvider.GetDelegateByCommandName(commandName);
+                Delegate? del = commandActionProvider.GetDelegateByCommandNameWithoutParams(commandName);
                 if(del == null)
                     throw new ResolveCommandActionException($"Не удалось разрешить действие для команды {commandName}");
 #warning Может вернуться null.

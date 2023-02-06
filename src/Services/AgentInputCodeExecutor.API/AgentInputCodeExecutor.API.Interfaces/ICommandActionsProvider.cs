@@ -8,6 +8,6 @@ namespace AgentInputCodeExecutor.API.Interfaces
 {
     public interface ICommandActionsProvider
     {
-        public Delegate? GetDelegateByCommandName(string commandName);
+        public Delegate? GetDelegateByCommandNameWithoutParams(string commandName);
     }
 }
