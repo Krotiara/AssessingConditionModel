@@ -40,6 +40,7 @@ namespace AgentInputCodeExecutor.API.Service.Service
             }
             else
             {
+#warning В тесте не вызывается метод, а взовращается делегат метода-теста. WAT
                 Delegate? del = commandActionProvider.GetDelegateByCommandNameWithoutParams(commandName);
                 if(del == null)
                     throw new ResolveCommandActionException($"Не удалось разрешить действие для команды {commandName}");
