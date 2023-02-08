@@ -17,9 +17,11 @@ namespace AgentInputCodeExecutor.API.Service.Service
         {
             commandTypesMeta = new Dictionary<string, ICommandArgsTypesMeta>()
             {
-                {"GetLatestPatientParams", new CommandArgsTypesMeta( new List<(Type, string)>
-                {(typeof(DateTime), "startTimestamp"),(typeof(DateTime), "endTimestamp"),(typeof(int), "patientId")},
-                typeof(IList<IPatientParameter>))}
+                {"GetLatestPatientParams", 
+                    new CommandArgsTypesMeta( new List<(Type, string)> {(typeof(DateTime), "startTimestamp"),
+                        (typeof(DateTime), "endTimestamp"),
+                        (typeof(int), "patientId")}, typeof(IList<IPatientParameter>))},
+                {"GetAge", new CommandArgsTypesMeta(new List<(Type, string)> {(typeof(List<PatientParameter>),"parameters") }, typeof(double)) }
             };
         }
 

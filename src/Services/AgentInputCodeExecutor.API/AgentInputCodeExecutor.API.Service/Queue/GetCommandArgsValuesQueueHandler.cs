@@ -50,7 +50,7 @@ namespace AgentInputCodeExecutor.API.Service.Queue
             for(int i =0; i < args.Count();i++)
             {
                 if (request.Command.LocalVariables != null && request.Command.LocalVariables.ContainsKey(args[i]))
-                    results.Add(request.Command.LocalVariables[args[i]]);
+                    results.Add(request.Command.LocalVariables[args[i]].Value);
                 else
                 {
                     string arg = args[i];

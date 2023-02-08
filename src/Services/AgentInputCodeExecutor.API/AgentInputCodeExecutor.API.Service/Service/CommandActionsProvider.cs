@@ -47,6 +47,15 @@ namespace AgentInputCodeExecutor.API.Service.Service
                   .GetResponse<IList<PatientParameter>>(url, "POST", body);
             };
 
+            delegates["GetAge"] = async (List<PatientParameter> parameters) =>
+            {
+                IPatientParameter ageParam = parameters.FirstOrDefault(x => x.ParameterName == ParameterNames.Age);
+                if (ageParam == null)
+                    throw new NotImplementedException(); //TODO - обработка такого случая.
+                double age = double.Parse(ageParam.Value);
+                return age;
+            };
+
         }
     }
 }
