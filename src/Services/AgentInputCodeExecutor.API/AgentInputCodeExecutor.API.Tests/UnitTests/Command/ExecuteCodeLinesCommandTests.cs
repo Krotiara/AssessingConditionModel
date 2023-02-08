@@ -24,6 +24,8 @@ namespace AgentInputCodeExecutor.API.Tests.UnitTests.Command
 
         private readonly Dictionary<string, IProperty> localVars;
 
+        private static readonly int testReturnValue = 45;
+
         public ExecuteCodeLinesCommandTests()
         {
             localVars = new Dictionary<string, IProperty>();
@@ -36,7 +38,7 @@ namespace AgentInputCodeExecutor.API.Tests.UnitTests.Command
         public async void NextCodeLineMustUsePrevLocalValuesTest()
         {
             double testVal1 = 45;
-            double testVal2 = 5;
+            double testVal2 = testReturnValue;
             double testVal3 = 50;
             string testCommand = "Test";
             string testMethod = "ReturnYouself";
@@ -58,15 +60,15 @@ namespace AgentInputCodeExecutor.API.Tests.UnitTests.Command
 
             codeResolver = new Mock<ICodeResolveService>();
             mediator = new Mock<IMediator>();
-            Mock<IMetaStorageService> metaProvider = new Mock<IMetaStorageService>();
-            Mock<ICommandActionsProvider> actionsProvider = new Mock<ICommandActionsProvider>();
+            Mock<IMetaStorageService> metaProvider = new();
+            Mock<ICommandActionsProvider> actionsProvider = new();
 
-            ParseCodeLineCommandHandler codeLineCommandHandler = new ParseCodeLineCommandHandler();
-            ExecuteCodeLineCommandHandler handler = new ExecuteCodeLineCommandHandler(codeResolver.Object, mediator.Object);
-            GetCommandNameCommandHandler nameResHandler = new GetCommandNameCommandHandler();
-            GetCommandTypesMetaQueueHandler metaHandler = new GetCommandTypesMetaQueueHandler(mediator.Object, metaProvider.Object);
-            GetCommandArgsValuesQueueHandler getArgsHandler = new GetCommandArgsValuesQueueHandler();
-            CodeResolveService service = new CodeResolveService(mediator.Object, actionsProvider.Object);
+            ParseCodeLineCommandHandler codeLineCommandHandler = new();
+            ExecuteCodeLineCommandHandler handler = new(codeResolver.Object, mediator.Object);
+            GetCommandNameCommandHandler nameResHandler = new();
+            GetCommandTypesMetaQueueHandler metaHandler = new(mediator.Object, metaProvider.Object);
+            GetCommandArgsValuesQueueHandler getArgsHandler = new();
+            CodeResolveService service = new(mediator.Object, actionsProvider.Object);
 
             metaProvider.Setup(x => x.GetMetaByCommandName(It.IsAny<string>())).Returns((string x) =>
             {
@@ -77,14 +79,19 @@ namespace AgentInputCodeExecutor.API.Tests.UnitTests.Command
                 else throw new KeyNotFoundException();
             });
 
-            actionsProvider.Setup(x => x.GetDelegateByCommandNameWithoutParams(It.IsAny<string>())).Returns((string x) =>
-            {
-                if (x == testCommand)
-                    return Delegate.CreateDelegate(typeof(Func<int>), typeof(ExecuteCodeLinesCommandTests).GetMethod(testMethod));
-                else if (x == testCommand2)
-                    return Delegate.CreateDelegate(typeof(Func<int, int, int, int>), typeof(ExecuteCodeLinesCommandTests).GetMethod(testMethod2));
-                else throw new KeyNotFoundException();
-            });
+
+            actionsProvider
+                .Setup(x => x.GetDelegateByCommandNameWithoutParams(It.IsAny<string>()))
+                .Returns((string x) =>
+                {
+                    if (x == testCommand)
+                        return Delegate.CreateDelegate(typeof(Func<int>), 
+                            typeof(ExecuteCodeLinesCommandTests).GetMethod(testMethod));
+                    else if (x == testCommand2)
+                        return Delegate.CreateDelegate(typeof(Func<int, int, int, int>), 
+                            typeof(ExecuteCodeLinesCommandTests).GetMethod(testMethod2));
+                    else return null;
+                });
 
 
             mediator.Setup(x => x.Send(It.IsAny<ParseCodeLineCommand>(), It.IsAny<CancellationToken>()))
@@ -111,7 +118,7 @@ namespace AgentInputCodeExecutor.API.Tests.UnitTests.Command
         }
 
 
-        public static int ReturnYouself(int i) => i;
+        public static int ReturnYouself() => testReturnValue;
 
         public static int Sum(int a, int b, int c) => a + b + c;
 
