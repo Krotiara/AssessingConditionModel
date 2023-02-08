@@ -8,10 +8,10 @@ using System.Threading.Tasks;
 
 namespace Agents.API.Entities.DynamicAgent
 {
-    public class DynamicAgent : Interfaces.DynamicAgent.IDynamicAgent
+    public class DynamicAgent : IDynamicAgent
     {
 
-        public DynamicAgent(Interfaces.DynamicAgent.IDynamicAgentInitSettings settings)
+        public DynamicAgent(IDynamicAgentInitSettings settings)
         {
             Name = settings.Name;
             Properties = new Dictionary<ParameterNames, IProperty>();
@@ -22,7 +22,7 @@ namespace Agents.API.Entities.DynamicAgent
 
         public int Id { get ; set ; }
         public string Name { get; set; }
-        public Interfaces.DynamicAgent.IStateDiagram StateDiagram { get ; set ; }
+        public IStateDiagram StateDiagram { get ; set ; }
 
         public Dictionary<ParameterNames, IProperty> Properties { get; }
     }

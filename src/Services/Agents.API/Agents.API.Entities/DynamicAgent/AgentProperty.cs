@@ -11,12 +11,11 @@ namespace Agents.API.Entities.DynamicAgent
     public class AgentProperty : IProperty
     {
 
-        public AgentProperty(string originName, ParameterNames name, Type type, object value)
+        public AgentProperty(string originName, Type type, ParameterNames name = ParameterNames.None)
         {
             OriginName = originName;
             Name = name;
             Type = type;
-            Value = value;
         }
 
         public ParameterNames Name { get; set; }

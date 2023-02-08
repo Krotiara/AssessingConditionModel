@@ -5,16 +5,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Agents.API.Interfaces.DynamicAgent
+namespace Interfaces.DynamicAgent
 {
     public interface IDynamicAgentInitSettings
     {
-        string Name { get; }
 
-        IEnumerable<IProperty> Properties { get; }
+        Dictionary<string, IProperty> Properties { get; set; }
 
-        IEnumerable<IAgentState> States { get; }
+        Dictionary<string, IAgentState> States { get; set; }
 
-        Func<IDetermineStateProperties, Task<IAgentState>> DetermineStateFunc { get; }
+        public string DetermineAgentPropertiesActions { get; set; }
     }
 }

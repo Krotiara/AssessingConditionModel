@@ -1,4 +1,4 @@
-﻿using Agents.API.Interfaces.DynamicAgent;
+﻿using Interfaces.DynamicAgent;
 using System;
 using System.Collections.Generic;
 using System.Linq;

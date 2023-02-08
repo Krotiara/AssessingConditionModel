@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Agents.API.Interfaces.DynamicAgent
+namespace Interfaces.DynamicAgent
 {
     public interface IStateDiagram
     {
