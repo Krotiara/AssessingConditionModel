@@ -81,6 +81,23 @@ namespace AgentInputCodeExecutor.API.Service.Service
                 }
             };
 
+            delegates["GetAgeRangBy"] = async (double age, double bioAge) =>
+            {
+                double ageDelta = bioAge - age;
+                AgentBioAgeStates rang;
+                if (ageDelta <= -9)
+                    rang = AgentBioAgeStates.RangI;
+                else if (ageDelta > -9 && ageDelta <= -3)
+                    rang = AgentBioAgeStates.RangII;
+                else if (ageDelta > -3 && ageDelta <= 3)
+                    rang = AgentBioAgeStates.RangIII;
+                else if (ageDelta > 3 && ageDelta <= 9)
+                    rang = AgentBioAgeStates.RangIV;
+                else
+                    rang = AgentBioAgeStates.RangV;
+                return rang;
+            };
+
         }
     }
 }
