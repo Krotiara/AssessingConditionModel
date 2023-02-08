@@ -20,6 +20,7 @@ namespace InputCodeMatcher.API.Controllers
         [HttpPost("codeExecutor/executeCode")]
         public async Task<ContentResult> CalculateAgentParameters([FromBody]string codeLines)
         {
+            //TODO нужно возвращать не весь словарь, а только те значения, которые относятся к параметрам агентов.
             List<string> lines = codeLines.Split("\n").ToList();
             Dictionary<string, IProperty> localVars = new Dictionary<string, IProperty>();
             ExecutableAgentCodeSettings settings = new ExecutableAgentCodeSettings(lines, localVars);
