@@ -13,6 +13,29 @@ services:
       - ./src/ApiGateways/Envoy/envoy.yaml:/etc/envoy/envoy.yaml
     networks:
         - aModelNetwork
+
+  agentinputcodeexecutor.api:
+    image: ${DOCKER_REGISTRY-}agentinputcodeexecutorapi
+    container_name: agentinputcodeexecutor.api
+    build:
+      context: .
+      dockerfile: src/Services/AgentInputCodeExecutor.API/AgentInputCodeExecutor.API/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - PATIENTRESOLVER_API_URL=http://patientsresolver.api:80
+      - BIO_AGE_API_URL=http://bioAge.api:80
+      #- ASPNETCORE_URLS=https://+:443;http://+:80
+      #- ASPNETCORE_HTTPS_PORT=8004
+      #- ASPNETCORE_Kestrel__Certificates__Default__Password=lisa2021
+      #- ASPNETCORE_Kestrel__Certificates__Default__Path=/https/localhost.pfx
+    ports:
+      - 8034:80
+    networks:
+        - aModelNetwork
+    restart: on-failure
+    depends_on:
+      - rabbitmq
   
   web:
     image: ${DOCKER_REGISTRY-}web
@@ -79,7 +102,6 @@ services:
       - 8033:80
     networks:
         - aModelNetwork
-      #- 8004:443
     restart: on-failure
     depends_on:
       - rabbitmq

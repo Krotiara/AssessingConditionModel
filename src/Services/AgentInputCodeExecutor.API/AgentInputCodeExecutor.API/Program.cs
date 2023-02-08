@@ -12,14 +12,30 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo()
+    {
+        Version = "v1",
+        Title = "Исполнитель кода агентов",
+        Description = "Микросервис отвечает за исполнение кода агентов для расчета их показателей",
+        Contact = new Microsoft.OpenApi.Models.OpenApiContact()
+        {
+            Name = "Lisovenko Anton",
+            Email = String.Empty
+        }
+    });
+});
+
 builder.Services.AddMediatR(Assembly.GetExecutingAssembly());
 
 builder.Services.AddTransient<IProperty, AgentProperty>();
 builder.Services.AddTransient<IExecutableAgentCodeSettings, ExecutableAgentCodeSettings>();
 
 builder.Services
-    .AddTransient<IRequestHandler<ExecuteCodeLinesCommand, Unit>, ExecuteCodeLinesCommandHandler>()
     .AddTransient<IRequestHandler<GetCommandTypesMetaQueue, ICommandArgsTypesMeta>, GetCommandTypesMetaQueueHandler>()
+    .AddTransient<IRequestHandler<GetCommandArgsValuesQueue, List<object>>, GetCommandArgsValuesQueueHandler>()
     .AddTransient<IRequestHandler<ParseCodeLineCommand, ICommand>, ParseCodeLineCommandHandler>()
     .AddTransient<IRequestHandler<GetCommandNameCommand, string>, GetCommandNameCommandHandler>()
     .AddTransient<IRequestHandler<ExecuteCodeLinesCommand, Unit>, ExecuteCodeLinesCommandHandler>()
@@ -45,6 +61,14 @@ app.UseStaticFiles();
 app.UseRouting();
 
 app.UseAuthorization();
+
+app.UseSwagger();
+
+app.UseSwaggerUI(c =>
+{
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "AgentInputCodeExecutor.API");
+    c.RoutePrefix = string.Empty;
+});
 
 app.MapControllerRoute(
     name: "default",

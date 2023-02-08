@@ -10,6 +10,9 @@ namespace AgentInputCodeExecutor.API.Entities
 {
     public class ExecutableAgentCodeSettings : IExecutableAgentCodeSettings
     {
+
+        public ExecutableAgentCodeSettings() { }
+
         public ExecutableAgentCodeSettings(List<string> codeLines, Dictionary<string, IProperty> properties)
         {
             CodeLines = codeLines;

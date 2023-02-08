@@ -11,6 +11,8 @@ namespace AgentInputCodeExecutor.API.Entities
     public class AgentProperty : IProperty
     {
 
+        public AgentProperty() { }
+
         public AgentProperty(Type type, object value, string originName, ParameterNames name = ParameterNames.None)
         {
             Name = name;

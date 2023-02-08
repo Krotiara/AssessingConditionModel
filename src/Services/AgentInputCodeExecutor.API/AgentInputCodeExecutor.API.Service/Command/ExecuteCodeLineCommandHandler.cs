@@ -57,7 +57,14 @@ namespace AgentInputCodeExecutor.API.Service.Command
 
             if (request.Command.CommandType == CommandType.Assigning)
             {
+                //if sync - return output value, if async - need await
+                //https://stackoverflow.com/questions/64766433/c-sharp-asynchronous-invoke-of-generic-delegates
                 object res = commandPair.Item2.DynamicInvoke(variables.ToArray());
+                if (res is Task)
+                {
+                    await (Task)res;
+                    res = res.GetType().GetProperty("Result").GetValue(res);
+                }
                 if (commandPair.Item1.OutputArgType.GetInterface(nameof(IEnumerable)) == null)
                 {
                     TypeConverter typeConverter = TypeDescriptor.GetConverter(commandPair.Item1.OutputArgType);
@@ -75,7 +82,12 @@ namespace AgentInputCodeExecutor.API.Service.Command
             else
             {
                 //На случай вызовов коанд, которые не возвращают значение.
-                commandPair.Item2.DynamicInvoke(variables);
+                var obj = commandPair.Item2.DynamicInvoke(variables);
+                if(obj is Task)
+                {
+                    //// it's regular Task which does not return the value
+                    await (Task)obj;
+                }
             }
 
             return await Unit.Task;

@@ -25,6 +25,7 @@ namespace AgentInputCodeExecutor.API.Service.Service
             this.mediator = mediator;
             patientsResolverApiUrl = Environment.GetEnvironmentVariable("PATIENTRESOLVER_API_URL");
             bioAgeApiUrl = Environment.GetEnvironmentVariable("BIO_AGE_API_URL"); //TODO - в отдельный сервис
+            delegates = new Dictionary<string, Delegate>();
             InitDelegates();
         }
 
@@ -36,6 +37,7 @@ namespace AgentInputCodeExecutor.API.Service.Service
 
         private void InitDelegates()
         {
+            
             // TODO Список методов нужно вынести в отдельное место.
             delegates["GetLatestPatientParams"] = async (DateTime startTimestamp, DateTime endTimestamp, int patientId) =>
             {
