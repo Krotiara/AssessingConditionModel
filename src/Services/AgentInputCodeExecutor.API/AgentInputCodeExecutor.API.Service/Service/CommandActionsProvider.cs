@@ -56,6 +56,31 @@ namespace AgentInputCodeExecutor.API.Service.Service
                 return age;
             };
 
+            delegates["GetBioage"] = async (List<PatientParameter> parameters) =>
+            {
+                try
+                {
+                    BioAgeCalculationParameters calculationParameters = new BioAgeCalculationParameters()
+                    {
+                        CalculationType = BioAgeCalculationType.ByFunctionalParameters,
+                        Parameters = parameters.ToDictionary(entry => entry.ParameterName, entry => entry)
+                    };
+
+                    string requestBody = Newtonsoft.Json.JsonConvert.SerializeObject(calculationParameters);
+                    string url = $"{bioAgeApiUrl}/bioAge/";
+                    return await webRequester.GetResponse<double>(url, "PUT", requestBody);
+                }
+                catch (GetWebResponceException ex)
+                {
+                    throw new NotImplementedException();
+                }
+                catch (Exception unexpectedEx)
+                {
+                    //TODO
+                    throw new NotImplementedException();
+                }
+            };
+
         }
     }
 }

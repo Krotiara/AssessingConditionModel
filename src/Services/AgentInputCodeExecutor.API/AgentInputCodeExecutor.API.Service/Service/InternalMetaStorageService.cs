@@ -21,7 +21,9 @@ namespace AgentInputCodeExecutor.API.Service.Service
                     new CommandArgsTypesMeta( new List<(Type, string)> {(typeof(DateTime), "startTimestamp"),
                         (typeof(DateTime), "endTimestamp"),
                         (typeof(int), "patientId")}, typeof(IList<IPatientParameter>))},
-                {"GetAge", new CommandArgsTypesMeta(new List<(Type, string)> {(typeof(List<PatientParameter>),"parameters") }, typeof(double)) }
+                {"GetAge", new CommandArgsTypesMeta(new List<(Type, string)> {(typeof(List<PatientParameter>),"parameters") }, typeof(double)) },
+                {"GetBioage", new CommandArgsTypesMeta(new List<(Type, string)> {(typeof(List<PatientParameter>),"parameters") }, typeof(double)) },
+                
             };
         }
 

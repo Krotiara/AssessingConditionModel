@@ -81,7 +81,7 @@ namespace AgentInputCodeExecutor.API.Service.Command
             }
             else
             {
-                //На случай вызовов коанд, которые не возвращают значение.
+                //На случай вызовов команд, которые не возвращают значение.
                 var obj = commandPair.Item2.DynamicInvoke(variables);
                 if(obj is Task)
                 {
