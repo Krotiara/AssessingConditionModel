@@ -11,19 +11,30 @@ namespace Agents.API.Entities.DynamicAgent
     public class DynamicAgent : IDynamicAgent
     {
 
-        public DynamicAgent(IDynamicAgentInitSettings settings)
+        public DynamicAgent(int observableId, IDynamicAgentInitSettings settings)
         {
-            Name = settings.Name;
-            Properties = new Dictionary<ParameterNames, IProperty>();
-            foreach (IProperty prop in settings.Properties)
-                Properties[prop.Name] = prop;
-            StateDiagram = new StateDiagram(settings.States, settings.DetermineStateFunc);
+#warning нестабильная инициалзация - если нет name и Id в словаре?
+            //Name = settings.ActionsArgsReplaceDict[CommonArgs.Name].ToString();
+            //Id = (int)settings.ActionsArgsReplaceDict[CommonArgs.ObservedId];
+#warning как менять в процессе работы?
+            settings.ActionsArgsReplaceDict[CommonArgs.ObservedId] = observableId;
+            settings.ActionsArgsReplaceDict[CommonArgs.StartDateTime] = DateTime.Today;
+            settings.ActionsArgsReplaceDict[CommonArgs.EndDateTime] = DateTime.Today;
+            Settings = settings;
         }
 
         public int Id { get ; set ; }
         public string Name { get; set; }
-        public IStateDiagram StateDiagram { get ; set ; }
 
-        public Dictionary<ParameterNames, IProperty> Properties { get; }
+        public IDynamicAgentInitSettings Settings { get; }
+
+        public void UpdateState()
+        {
+#warning подразумевается, что settings уже актуализированы и вообще всегда в актуальном состоянии.
+            string actions = Settings.DetermineAgentPropertiesActions;
+            //TODO - передача действия в исполнитель кода.
+            //TODO - актуализация параметров.
+            //TODO - вызов обновления состояния.
+        }
     }
 }
