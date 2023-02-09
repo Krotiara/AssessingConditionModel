@@ -10,13 +10,13 @@ namespace Agents.API.Entities.DynamicAgent
     public class StateDiagram : IStateDiagram
     {
 
-        public StateDiagram(IEnumerable<IAgentState> states, 
+
+        public StateDiagram(Dictionary<string, IAgentState> states, 
             Func<IDetermineStateProperties, Task<IAgentState>> determineStateFunc)
         {
             States = new Dictionary<string, IAgentState>();
-            foreach (IAgentState state in states)
-                States[state.Name] = state;
-            CurrentState = states.First();
+            States = states;
+            CurrentState = states.First().Value;
             DetermineState = determineStateFunc;
         }
 

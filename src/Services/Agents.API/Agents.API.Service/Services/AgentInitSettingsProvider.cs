@@ -11,42 +11,56 @@ namespace Agents.API.Service.Services
 {
     public class AgentInitSettingsProvider : IAgentInitSettingsProvider
     {
-        public IDynamicAgentInitSettings GetSettingsBy(AgentType agentType, int patientId)
+        public IDynamicAgentInitSettings GetSettingsBy(AgentType agentType)
         {
             //TODO Хранить настройки в бд
             switch(agentType)
             {
                 case AgentType.AgingPatient:
-                    {
-                        var sets = new DynamicAgentInitSettings()
-                        {
-                            Properties = new Dictionary<string, IProperty>
+                     return GetAgingPatientSettings();   
+                default: throw new NotImplementedException();
+            }
+        }
+
+
+        private IDynamicAgentInitSettings GetAgingPatientSettings()
+        {
+            Dictionary<string,IAgentState> states = new();
+            foreach (AgentBioAgeStates state in AgentBioAgeStates.GetValues(typeof(AgentBioAgeStates)))
+                states[state.GetDisplayAttributeValue()] = new AgentState(state.GetDisplayAttributeValue());
+
+                var sets = new DynamicAgentInitSettings(
+                            $"parameters = GetLatestPatientParams({CommonArgs.StartDateTime}, {CommonArgs.EndDateTime}, {CommonArgs.ObservedId})\n" +
+                            $"age = GetAge(parameters)\n" +
+                            $"bioAge = GetBioage(parameters)\n" +
+                            $"rang = GetAgeRangBy(age, bioage)\n" +
+                            $"CurrentAge = age\n" +
+                            $"CurrentBioAge = bioAge\n" +
+                            $"CurrentAgeRang = rang")
+            {
+                ActionsArgsReplaceDict = new Dictionary<CommonArgs, object>
+                            {
+                                { CommonArgs.StartDateTime, null },
+                                { CommonArgs.EndDateTime, null },
+                                { CommonArgs.ObservedId, null }
+                            },
+                Properties = new Dictionary<string, IProperty>
                             {
                                 { "CurrentAge", new AgentProperty("CurrentAge", typeof(double)) },
                                 { "CurrentBioAge", new AgentProperty("CurrentBioAge", typeof(double)) },
                                 { "CurrentAgeRang", new AgentProperty("CurrentAgeRang", typeof(AgentBioAgeStates)) }
                             },
-                            States = new Dictionary<string, IAgentState>(),
-#warning А как тогда обновлять состояние агента, если нужен не Today? 08.02.2023
-                            DetermineAgentPropertiesActions = 
-                            $"parameters = GetLatestPatientParams({DateTime.MinValue},{DateTime.Today},{patientId})\n" +
-                            $"age = GetAge(parameters)\n" +
-                            $"bioAge = GetBioage(parameters)\n" +
-                            $"rang = GetAgeRangBy(age,bioage)\n" +
-                            $"CurrentAge = age\n" +
-                            $"CurrentBioAge = bioAge\n" +
-                            $"CurrentAgeRang = rang"
-                        };
-                           
-                        foreach (AgentBioAgeStates state in AgentBioAgeStates.GetValues(typeof(AgentBioAgeStates)))
-                        {
-                            string stateName = state.GetDisplayAttributeValue();
-                            sets.States[stateName] = new AgentState(stateName);
-                        }
-                        return sets;
-                    }
-                default: throw new NotImplementedException();
-            }
+                StateDiagram = new StateDiagram(states, async x =>
+                {
+                    AgentBioAgeStates rang = (AgentBioAgeStates)x.Properties["CurrentAgeRang"].Value;
+                    return states[rang.GetDisplayAttributeValue()];
+                })
+            };
+
+            
+
+
+            return sets;
         }
     }
 }

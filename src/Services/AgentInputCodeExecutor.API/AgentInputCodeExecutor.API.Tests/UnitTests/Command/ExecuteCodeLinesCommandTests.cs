@@ -53,10 +53,7 @@ namespace AgentInputCodeExecutor.API.Tests.UnitTests.Command
                 $"{testResultName} = {testCommand2}(a,b,{testVal3}"
             }, localVars);
 
-            ExecuteCodeLinesCommand command = new ExecuteCodeLinesCommand()
-            {
-                Settings = sets
-            };
+            ExecuteCodeLinesCommand command = new ExecuteCodeLinesCommand(sets);
 
             codeResolver = new Mock<ICodeResolveService>();
             mediator = new Mock<IMediator>();

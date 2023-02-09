@@ -15,6 +15,6 @@ namespace Agents.API.Service.Services
 
     internal interface IAgentInitSettingsProvider
     {
-        public IDynamicAgentInitSettings GetSettingsBy(AgentType agentType, int patientId);
+        public IDynamicAgentInitSettings GetSettingsBy(AgentType agentType);
     }
 }
