@@ -94,6 +94,8 @@ builder.Services.AddScoped<IRequestHandler<AddAgingStateCommand, AgingState>,
 builder.Services.AddScoped<IRequestHandler<GetAllInfluencesQuery, List<Influence>>, 
     GetAllInfluencesQueryHandler>();
 
+builder.Services.AddSingleton<IDynamicAgentsRepository, DynamicAgentsRepository>();
+
 
 var app = builder.Build();
 
