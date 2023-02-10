@@ -11,19 +11,27 @@ namespace Agents.API.Service.Services
 {
     public class AgentInitSettingsProvider : IAgentInitSettingsProvider
     {
+
+        private readonly IDynamicAgentInitSettings agingPatientSettings;
+
+        public AgentInitSettingsProvider()
+        {
+            agingPatientSettings = InitAgingPatientSettings();
+        }
+
         public IDynamicAgentInitSettings GetSettingsBy(AgentType agentType)
         {
             //TODO Хранить настройки в бд
             switch(agentType)
             {
                 case AgentType.AgingPatient:
-                     return GetAgingPatientSettings();   
+                     return agingPatientSettings;   
                 default: throw new NotImplementedException();
             }
         }
 
 
-        private IDynamicAgentInitSettings GetAgingPatientSettings()
+        private IDynamicAgentInitSettings InitAgingPatientSettings()
         {
             Dictionary<string,IAgentState> states = new();
             foreach (AgentBioAgeStates state in AgentBioAgeStates.GetValues(typeof(AgentBioAgeStates)))
@@ -56,10 +64,6 @@ namespace Agents.API.Service.Services
                     return states[rang.GetDisplayAttributeValue()];
                 })
             };
-
-            
-
-
             return sets;
         }
     }
