@@ -144,6 +144,7 @@ services:
       - ASPNETCORE_URLS=http://+:80
       - PATIENTRESOLVER_API_URL=http://patientsresolver.api:80
       - BIO_AGE_API_URL=http://bioAge.api:80
+      - CODE_EXECUTOR_API_URL=http://agentinputcodeexecutor.api:80
       #- ASPNETCORE_URLS=https://+:443;http://+:80
       #- ASPNETCORE_HTTPS_PORT=8012
       #- ASPNETCORE_Kestrel__Certificates__Default__Password=lisa2021

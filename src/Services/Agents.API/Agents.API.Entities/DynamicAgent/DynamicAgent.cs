@@ -11,7 +11,10 @@ namespace Agents.API.Entities.DynamicAgent
     public class DynamicAgent : IDynamicAgent
     {
 
-        public DynamicAgent(int observableId, IDynamicAgentInitSettings settings)
+        private readonly IWebRequester webRequester;
+        private readonly string codeExecutorUrl;
+
+        public DynamicAgent(int observableId, IDynamicAgentInitSettings settings, IWebRequester webRequester)
         {
 #warning нестабильная инициалзация - если нет name и Id в словаре?
             //Name = settings.ActionsArgsReplaceDict[CommonArgs.Name].ToString();
@@ -21,6 +24,9 @@ namespace Agents.API.Entities.DynamicAgent
             settings.ActionsArgsReplaceDict[CommonArgs.StartDateTime] = DateTime.Today;
             settings.ActionsArgsReplaceDict[CommonArgs.EndDateTime] = DateTime.Today;
             Settings = settings;
+
+            this.webRequester = webRequester;
+            codeExecutorUrl = Environment.GetEnvironmentVariable("CODE_EXECUTOR_API_URL");
         }
 
         public int Id { get ; set ; }
@@ -28,13 +34,19 @@ namespace Agents.API.Entities.DynamicAgent
 
         public IDynamicAgentInitSettings Settings { get; }
 
-        public void UpdateState()
+        public async void UpdateState()
         {
 #warning подразумевается, что settings уже актуализированы и вообще всегда в актуальном состоянии.
             string actions = Settings.DetermineAgentPropertiesActions;
-            //TODO - передача действия в исполнитель кода.
-            //TODO - актуализация параметров.
-            //TODO - вызов обновления состояния.
+            string url = $"{codeExecutorUrl}/codeExecutor/executeCode";
+#warning Нужен дебаг, что возвращается при ContentResult
+            Dictionary<string, IProperty> calculatedArgs = 
+                await webRequester.GetResponse<Dictionary<string, IProperty>>(url, "POST", actions);
+            foreach (KeyValuePair<string, IProperty> entry in calculatedArgs)
+            {
+                Settings.Properties[entry.Key] = entry.Value;
+            }
+            await Settings.StateDiagram.UpdateStateAsync(new DetermineStateProperties(Settings.Properties));
         }
     }
 }

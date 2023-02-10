@@ -10,9 +10,9 @@ namespace Agents.API.Entities.DynamicAgent
 {
     public class DetermineStateProperties : IDetermineStateProperties
     {
-        public DetermineStateProperties()
+        public DetermineStateProperties(Dictionary<string, IProperty> props)
         {
-            Properties = new Dictionary<string, IProperty>();
+            Properties = props;
         }
 
         public Dictionary<string, IProperty> Properties { get; }
