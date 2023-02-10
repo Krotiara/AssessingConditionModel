@@ -98,6 +98,24 @@ namespace AgentInputCodeExecutor.API.Service.Service
                 return rang;
             };
 
+            delegates["GetInfluences"] = async (DateTime startTimestamp, DateTime endTimestamp, int patientId) =>
+            {
+                string body = Newtonsoft.Json.JsonConvert.SerializeObject(new DateTime[2] { startTimestamp, endTimestamp });
+                string url = $"{patientsResolverApiUrl}/patientsApi/influences/{patientId}";
+                return await webRequester.GetResponse<IList<PatientParameter>>(url, "POST", body);
+            };
+
+            delegates["GetAllInfluences"] = async (DateTime startTimestamp, DateTime endTimestamp) =>
+            {
+                string url = $"{patientsResolverApiUrl}/patientsApi/influences/";
+                string body = Newtonsoft.Json.JsonConvert.SerializeObject(new DateTime[2] { startTimestamp, endTimestamp });
+                return await webRequester.GetResponse<List<Influence>>(url, "POST", body);
+            };
+
+
+
+
+
         }
     }
 }
