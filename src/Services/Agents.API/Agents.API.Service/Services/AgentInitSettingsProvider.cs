@@ -38,10 +38,11 @@ namespace Agents.API.Service.Services
                 states[state.GetDisplayAttributeValue()] = new AgentState(state.GetDisplayAttributeValue());
 
                 var sets = new DynamicAgentInitSettings(
-                            $"parameters = GetLatestPatientParams({CommonArgs.StartDateTime}, {CommonArgs.EndDateTime}, {CommonArgs.ObservedId})\n" +
-                            $"age = GetAge(parameters)\n" +
-                            $"bioAge = GetBioage(parameters)\n" +
-                            $"rang = GetAgeRangBy(age, bioage)\n" +
+                            $"parameters = " +
+                            $"{SystemCommands.GetLatestPatientParameters}({CommonArgs.StartDateTime}, {CommonArgs.EndDateTime}, {CommonArgs.ObservedId})\n" +
+                            $"age = {SystemCommands.GetAge}(parameters)\n" +
+                            $"bioAge = {SystemCommands.GetBioage}(parameters)\n" +
+                            $"rang = {SystemCommands.GetAgeRangBy}(age, bioage)\n" +
                             $"CurrentAge = age\n" +
                             $"CurrentBioAge = bioAge\n" +
                             $"CurrentAgeRang = rang")
