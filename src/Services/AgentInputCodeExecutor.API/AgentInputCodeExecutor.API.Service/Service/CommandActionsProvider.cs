@@ -159,6 +159,7 @@ namespace AgentInputCodeExecutor.API.Service.Service
 
 
         //TODO - продумать смену параметров для моделирования и последующий вызов.
+        //TODO - вариант решения - разбить это действие на ряд атомарных команд, а затем просто передавать на исполнение.
         private async Task<AgingState> CalcAgentStateInInfluenceStartAsync(IDynamicAgent agent, Influence influence)
         {
             throw new NotImplementedException();
