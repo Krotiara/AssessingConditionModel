@@ -1,6 +1,7 @@
 ﻿using AgentInputCodeExecutor.API.Entities;
 using AgentInputCodeExecutor.API.Interfaces;
 using Interfaces;
+using Interfaces.DynamicAgent;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -98,6 +99,7 @@ namespace AgentInputCodeExecutor.API.Service.Service
                 return rang;
             };
 
+            //TODO Добавить meta инфу для этого действия
             delegates[SystemCommands.GetInfluences] = async (DateTime startTimestamp, DateTime endTimestamp, int patientId) =>
             {
                 string body = Newtonsoft.Json.JsonConvert.SerializeObject(new DateTime[2] { startTimestamp, endTimestamp });
@@ -105,6 +107,7 @@ namespace AgentInputCodeExecutor.API.Service.Service
                 return await webRequester.GetResponse<IList<PatientParameter>>(url, "POST", body);
             };
 
+            //TODO Добавить meta инфу для этого действия
             delegates[SystemCommands.GetAllInfluences] = async (DateTime startTimestamp, DateTime endTimestamp) =>
             {
                 string url = $"{patientsResolverApiUrl}/patientsApi/influences/";
@@ -112,10 +115,85 @@ namespace AgentInputCodeExecutor.API.Service.Service
                 return await webRequester.GetResponse<List<Influence>>(url, "POST", body);
             };
 
+            //TODO Добавить meta инфу для этого действия
+            delegates[SystemCommands.GetAgingDynamics] = async (DateTime startTimestamp, DateTime endTimestamp, 
+                IDynamicAgent patientAgent, IList<Influence> influences) =>
+            {
+                //try
+                //{
+                    List<IAgingDynamics<AgingState>> res = new List<IAgingDynamics<AgingState>>();
+                    foreach (Influence influence in influences)
+                    {
+                        AgingDynamics agingDynamics = new AgingDynamics()
+                        {
+                            StartTimestamp = influence.StartTimestamp,
+                            EndTimestamp = influence.EndTimestamp,
+                            InfluenceType = influence.InfluenceType,
+                            MedicineName = influence.MedicineName,
+                            PatientId = patientAgent.ObservedId
+                        };
+
+                        agingDynamics.AgentStateInInfluenceStart = await CalcAgentStateInInfluenceStartAsync(patientAgent, influence);
+                        agingDynamics.AgentStateInInfluenceEnd = await CalcAgentStateInInfluenceEndAsync(patientAgent, influence);
+
+                        res.Add(agingDynamics);
+                    }
+                    return res;
+                //}
+                //catch (AgentNotFoundException ex)
+                //{
+                //    throw new GetAgingDynamicsException($"Агент для пациента с id = {request.PatientId} не был найден", ex);
+                //}
+                //catch (GetAgentException ex)
+                //{
+                //    throw new GetAgingDynamicsException($"Не удалось обновить состояние агента для пациента с id = {request.PatientId}", ex);
+                //}
+                //catch (Exception ex)
+                //{
+                //    throw new GetAgingDynamicsException($"Unexpected error", ex);
+                //}
+            };
 
 
+        }
 
 
+        //TODO - продумать смену параметров для моделирования и последующий вызов.
+        private async Task<AgingState> CalcAgentStateInInfluenceStartAsync(IDynamicAgent agent, Influence influence)
+        {
+            throw new NotImplementedException();
+            //await agent.StateDiagram.UpdateStateAsync(new AgentDetermineStateProperties()
+            //{
+            //    Timestamp = influence.StartTimestamp
+            //});
+
+            //return new AgingState()
+            //{
+            //    PatientId = agent.PatientId,
+            //    Age = agent.CurrentAge,
+            //    BioAge = agent.CurrentBioAge,
+            //    BioAgeState = agent.CurrentAgeRang,
+            //    Timestamp = influence.StartTimestamp
+            //};
+        }
+
+
+        private async Task<AgingState> CalcAgentStateInInfluenceEndAsync(IDynamicAgent agent, Influence influence)
+        {
+            throw new NotImplementedException();
+            //await agent.StateDiagram.UpdateStateAsync(new AgentDetermineStateProperties()
+            //{
+            //    Timestamp = influence.EndTimestamp
+            //});
+
+            //return new AgingState()
+            //{
+            //    PatientId = agent.PatientId,
+            //    Age = agent.CurrentAge,
+            //    BioAge = agent.CurrentBioAge,
+            //    BioAgeState = agent.CurrentAgeRang,
+            //    Timestamp = influence.EndTimestamp
+            //};
         }
     }
 }

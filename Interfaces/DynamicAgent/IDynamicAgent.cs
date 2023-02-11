@@ -12,6 +12,8 @@ namespace Interfaces.DynamicAgent
     {
         public int Id { get; set; }
 
+        public int ObservedId { get; set; }
+
         public string Name { get; set; }
 
         public IDynamicAgentInitSettings Settings { get; }

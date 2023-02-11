@@ -15,7 +15,10 @@ namespace Interfaces
         GetBioage,
         GetAgeRangBy,
         GetInfluences,
-        GetAllInfluences
+        GetAllInfluences,
+        GetAgingDynamics,
+        GetAgingState,
+        GetAllPatientsAgingDynamicsQuery
     }
 
 

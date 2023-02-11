@@ -20,6 +20,7 @@ namespace Agents.API.Entities.DynamicAgent
             //Name = settings.ActionsArgsReplaceDict[CommonArgs.Name].ToString();
             //Id = (int)settings.ActionsArgsReplaceDict[CommonArgs.ObservedId];
 #warning как менять в процессе работы?
+            ObservedId = observableId;
             settings.ActionsArgsReplaceDict[CommonArgs.ObservedId] = observableId;
             settings.ActionsArgsReplaceDict[CommonArgs.StartDateTime] = DateTime.Today;
             settings.ActionsArgsReplaceDict[CommonArgs.EndDateTime] = DateTime.Today;
@@ -30,6 +31,9 @@ namespace Agents.API.Entities.DynamicAgent
         }
 
         public int Id { get ; set ; }
+
+        public int ObservedId { get; set; }
+
         public string Name { get; set; }
 
         public IDynamicAgentInitSettings Settings { get; }
