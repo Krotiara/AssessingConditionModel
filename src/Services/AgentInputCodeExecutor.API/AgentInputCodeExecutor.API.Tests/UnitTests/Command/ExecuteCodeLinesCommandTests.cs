@@ -68,7 +68,7 @@ namespace AgentInputCodeExecutor.API.Tests.UnitTests.Command
             GetCommandArgsValuesQueueHandler getArgsHandler = new();
             CodeResolveService service = new(mediator.Object, actionsProvider.Object);
 
-            metaProvider.Setup(x => x.GetMetaByCommandName(It.IsAny<string>())).Returns((string x) =>
+            metaProvider.Setup(x => x.GetMetaByCommandName(It.IsAny<SystemCommands>())).Returns((string x) =>
             {
                 if (x == testCommand)
                     return new CommandArgsTypesMeta(new List<(Type, string)>(), typeof(int));

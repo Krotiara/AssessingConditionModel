@@ -15,12 +15,12 @@ namespace AgentInputCodeExecutor.API.Service.Queue
     public class GetCommandTypesMetaQueue: IRequest<ICommandArgsTypesMeta>
     {
       
-        public GetCommandTypesMetaQueue(string commandName)
+        public GetCommandTypesMetaQueue(SystemCommands commandName)
         {
             Command = commandName;  
         }
 
-        public string Command { get; }
+        public SystemCommands Command { get; }
     }
 
 
