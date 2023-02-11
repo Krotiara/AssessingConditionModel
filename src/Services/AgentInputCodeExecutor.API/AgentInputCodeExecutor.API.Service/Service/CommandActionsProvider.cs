@@ -15,7 +15,7 @@ namespace AgentInputCodeExecutor.API.Service.Service
 
         private readonly IMediator mediator;
         private readonly IWebRequester webRequester;
-        private readonly Dictionary<string, Delegate> delegates;
+        private readonly Dictionary<SystemCommands, Delegate> delegates;
         private readonly string patientsResolverApiUrl;
         private readonly string bioAgeApiUrl;
 
@@ -25,11 +25,11 @@ namespace AgentInputCodeExecutor.API.Service.Service
             this.mediator = mediator;
             patientsResolverApiUrl = Environment.GetEnvironmentVariable("PATIENTRESOLVER_API_URL");
             bioAgeApiUrl = Environment.GetEnvironmentVariable("BIO_AGE_API_URL"); //TODO - в отдельный сервис
-            delegates = new Dictionary<string, Delegate>();
+            delegates = new Dictionary<SystemCommands, Delegate>();
             InitDelegates();
         }
 
-        public Delegate? GetDelegateByCommandNameWithoutParams(string commandName)
+        public Delegate? GetDelegateByCommandNameWithoutParams(SystemCommands commandName)
         {
             return delegates.ContainsKey(commandName) ? delegates[commandName] : null;
         }
@@ -39,7 +39,7 @@ namespace AgentInputCodeExecutor.API.Service.Service
         {
             
             // TODO Список методов нужно вынести в отдельное место.
-            delegates["GetLatestPatientParams"] = async (DateTime startTimestamp, DateTime endTimestamp, int patientId) =>
+            delegates[SystemCommands.GetLatestPatientParameters] = async (DateTime startTimestamp, DateTime endTimestamp, int patientId) =>
             {
                 string body = Newtonsoft.Json.JsonConvert.SerializeObject(new DateTime[2] { startTimestamp, endTimestamp });
                 string url = $"{patientsResolverApiUrl}/patientsApi/latestPatientParameters/{patientId}";
@@ -47,7 +47,7 @@ namespace AgentInputCodeExecutor.API.Service.Service
                   .GetResponse<IList<PatientParameter>>(url, "POST", body);
             };
 
-            delegates["GetAge"] = async (List<PatientParameter> parameters) =>
+            delegates[SystemCommands.GetAge] = async (List<PatientParameter> parameters) =>
             {
                 IPatientParameter ageParam = parameters.FirstOrDefault(x => x.ParameterName == ParameterNames.Age);
                 if (ageParam == null)
@@ -56,7 +56,7 @@ namespace AgentInputCodeExecutor.API.Service.Service
                 return age;
             };
 
-            delegates["GetBioage"] = async (List<PatientParameter> parameters) =>
+            delegates[SystemCommands.GetBioage] = async (List<PatientParameter> parameters) =>
             {
                 try
                 {
@@ -81,7 +81,7 @@ namespace AgentInputCodeExecutor.API.Service.Service
                 }
             };
 
-            delegates["GetAgeRangBy"] = async (double age, double bioAge) =>
+            delegates[SystemCommands.GetAgeRangBy] = async (double age, double bioAge) =>
             {
                 double ageDelta = bioAge - age;
                 AgentBioAgeStates rang;
@@ -98,14 +98,14 @@ namespace AgentInputCodeExecutor.API.Service.Service
                 return rang;
             };
 
-            delegates["GetInfluences"] = async (DateTime startTimestamp, DateTime endTimestamp, int patientId) =>
+            delegates[SystemCommands.GetInfluences] = async (DateTime startTimestamp, DateTime endTimestamp, int patientId) =>
             {
                 string body = Newtonsoft.Json.JsonConvert.SerializeObject(new DateTime[2] { startTimestamp, endTimestamp });
                 string url = $"{patientsResolverApiUrl}/patientsApi/influences/{patientId}";
                 return await webRequester.GetResponse<IList<PatientParameter>>(url, "POST", body);
             };
 
-            delegates["GetAllInfluences"] = async (DateTime startTimestamp, DateTime endTimestamp) =>
+            delegates[SystemCommands.GetAllInfluences] = async (DateTime startTimestamp, DateTime endTimestamp) =>
             {
                 string url = $"{patientsResolverApiUrl}/patientsApi/influences/";
                 string body = Newtonsoft.Json.JsonConvert.SerializeObject(new DateTime[2] { startTimestamp, endTimestamp });

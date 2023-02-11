@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,6 +9,6 @@ namespace AgentInputCodeExecutor.API.Interfaces
 {
     public interface ICommandActionsProvider
     {
-        public Delegate? GetDelegateByCommandNameWithoutParams(string commandName);
+        public Delegate? GetDelegateByCommandNameWithoutParams(SystemCommands commandName);
     }
 }

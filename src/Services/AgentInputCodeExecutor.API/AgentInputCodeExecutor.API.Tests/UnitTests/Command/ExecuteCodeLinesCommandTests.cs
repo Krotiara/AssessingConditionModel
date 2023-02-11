@@ -37,6 +37,7 @@ namespace AgentInputCodeExecutor.API.Tests.UnitTests.Command
         [Fact]
         public async void NextCodeLineMustUsePrevLocalValuesTest()
         {
+#warning Нужно мокать Enum
             double testVal1 = 45;
             double testVal2 = testReturnValue;
             double testVal3 = 50;
@@ -78,7 +79,7 @@ namespace AgentInputCodeExecutor.API.Tests.UnitTests.Command
 
 
             actionsProvider
-                .Setup(x => x.GetDelegateByCommandNameWithoutParams(It.IsAny<string>()))
+                .Setup(x => x.GetDelegateByCommandNameWithoutParams(It.IsAny<SystemCommands>()))
                 .Returns((string x) =>
                 {
                     if (x == testCommand)

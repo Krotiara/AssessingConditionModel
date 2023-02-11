@@ -7,6 +7,18 @@ using System.Threading.Tasks;
 
 namespace Interfaces
 {
+
+    public enum SystemCommands
+    {
+        GetLatestPatientParameters,
+        GetAge,
+        GetBioage,
+        GetAgeRangBy,
+        GetInfluences,
+        GetAllInfluences
+    }
+
+
     public enum InfluenceTypes
     {
         [Display(Name = "-")]

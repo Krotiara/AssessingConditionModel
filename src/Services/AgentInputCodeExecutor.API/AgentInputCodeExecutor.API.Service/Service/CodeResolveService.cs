@@ -30,6 +30,15 @@ namespace AgentInputCodeExecutor.API.Service.Service
         public async Task<(ICommandArgsTypesMeta, Delegate)> ResolveCommandAction(ICommand command, CancellationToken cancellationToken)
         {
             string commandName = await mediator.Send(new GetCommandNameCommand(command), cancellationToken);
+            SystemCommands apiCommand;
+            try
+            {
+                apiCommand = (SystemCommands)Enum.Parse(typeof(SystemCommands), commandName);
+            }
+            catch(ArgumentException)
+            {
+                throw new ResolveCommandActionException($"Была передана команда, не содержащаяся в API системы: {commandName}");
+            }
 
             if (commandName == null)
             {
@@ -41,7 +50,7 @@ namespace AgentInputCodeExecutor.API.Service.Service
             else
             {
 #warning В тесте не вызывается метод, а взовращается делегат метода-теста. WAT
-                Delegate? del = commandActionProvider.GetDelegateByCommandNameWithoutParams(commandName);
+                Delegate? del = commandActionProvider.GetDelegateByCommandNameWithoutParams(apiCommand);
                 if(del == null)
                     throw new ResolveCommandActionException($"Не удалось разрешить действие для команды {commandName}");
 #warning Может вернуться null.
