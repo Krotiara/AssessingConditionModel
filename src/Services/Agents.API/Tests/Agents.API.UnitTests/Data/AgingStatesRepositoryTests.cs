@@ -16,23 +16,23 @@ namespace Agents.API.UnitTests.Data
     public class AgingStatesRepositoryTests
     {
         CancellationToken token;
-        DbContextOptions<AgentsDbContext> options;
-        Mock<IDbContextFactory<AgentsDbContext>> dbFactoryMock;
+ 
         IAgingStatesRepository rep;
 
         public AgingStatesRepositoryTests()
         {
-            options = new DbContextOptionsBuilder<AgentsDbContext>()
-              .UseInMemoryDatabase(Guid.NewGuid().ToString())
-              .ConfigureWarnings(x => x.Ignore(InMemoryEventId.TransactionIgnoredWarning))
-              .Options;
-            var tokenSource = new CancellationTokenSource(TimeSpan.FromMilliseconds(100));
-            // dbContext = new AgentsDbContext(options);
-            token = tokenSource.Token;
-            dbFactoryMock = new Mock<IDbContextFactory<AgentsDbContext>>();
-            dbFactoryMock.Setup(x => x.CreateDbContext()).Returns(() => new AgentsDbContext(options));
-            var webRequesterMock = new Mock<IWebRequester>();
-            rep = new AgentPatientsRepository(dbFactoryMock.Object, webRequesterMock.Object);
+            throw new NotImplementedException(); //TODO рефакторинг всвязи с новым api.
+            //options = new DbContextOptionsBuilder<AgentsDbContext>()
+            //  .UseInMemoryDatabase(Guid.NewGuid().ToString())
+            //  .ConfigureWarnings(x => x.Ignore(InMemoryEventId.TransactionIgnoredWarning))
+            //  .Options;
+            //var tokenSource = new CancellationTokenSource(TimeSpan.FromMilliseconds(100));
+            //// dbContext = new AgentsDbContext(options);
+            //token = tokenSource.Token;
+            //dbFactoryMock = new Mock<IDbContextFactory<AgentsDbContext>>();
+            //dbFactoryMock.Setup(x => x.CreateDbContext()).Returns(() => new AgentsDbContext(options));
+            //var webRequesterMock = new Mock<IWebRequester>();
+            //rep = new AgentPatientsRepository(dbFactoryMock.Object, webRequesterMock.Object);
         }
 
         [Fact]
