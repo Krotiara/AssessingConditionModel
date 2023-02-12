@@ -1,5 +1,4 @@
-﻿using Agents.API.Data.Database;
-using Agents.API.Entities;
+﻿using Agents.API.Entities;
 using Agents.API.Service.Query;
 using Interfaces;
 using MediatR;

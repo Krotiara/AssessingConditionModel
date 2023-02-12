@@ -1,8 +1,9 @@
-﻿using Agents.API.Data.Database;
-using Agents.API.Data.Repository;
+﻿using Agents.API.Data.Repository;
 using Agents.API.Entities;
+using Agents.API.Entities.DynamicAgent;
 using Agents.API.Service.Services;
 using Interfaces;
+using Interfaces.DynamicAgent;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Moq;
@@ -16,80 +17,95 @@ using Xunit;
 namespace Agents.API.UnitTests.Service
 {
     public class InitPatientAgentsServiceTests
-    {
-        AgentsDbContext dbContext;
+    {       
         CancellationToken token;
-        IDbContextFactory<AgentsDbContext> dbContextFactory;
         IWebRequester webRequester;
+        Mock<IAgentInitSettingsProvider> agentInitSettingsProvider;
 
         public InitPatientAgentsServiceTests()
-        {
-            var options = new DbContextOptionsBuilder<AgentsDbContext>()
-                .UseInMemoryDatabase(Guid.NewGuid().ToString())
-                .ConfigureWarnings(x => x.Ignore(InMemoryEventId.TransactionIgnoredWarning))
-                .Options;
-            var tokenSource = new CancellationTokenSource(TimeSpan.FromMilliseconds(100));
-            dbContext = new AgentsDbContext(options);
+        {         
+            var tokenSource = new CancellationTokenSource(TimeSpan.FromMilliseconds(100));          
             token = tokenSource.Token;
-            var dbFactoryMock = new Mock<IDbContextFactory<AgentsDbContext>>();
-            dbFactoryMock.Setup(x => x.CreateDbContext()).Returns(() => dbContext);
-            var webRequesterMock = new Mock<IWebRequester>();
-
-            dbContextFactory = dbFactoryMock.Object;
+            var webRequesterMock = new Mock<IWebRequester>();        
             webRequester = webRequesterMock.Object;
+            agentInitSettingsProvider = new Mock<IAgentInitSettingsProvider>();
+            agentInitSettingsProvider.Setup(x => x.GetSettingsBy(It.IsAny<AgentType>())).Returns(() => GetTestSettings());
+        }
+
+
+        private IDynamicAgentInitSettings GetTestSettings()
+        {           
+            Dictionary<string, IAgentState> states = new() { {"Test1", new AgentState("Test1") }, { "Test2", new AgentState("Test2")}};
+          
+            var sets = new DynamicAgentInitSettings(
+                        $"CurrentTest1 = 1\n" +
+                        $"CurrentTest2 = 2\n", AgentType.AgingPatient)
+            {
+                ActionsArgsReplaceDict = new Dictionary<CommonArgs, object>
+                        {
+                            { CommonArgs.StartDateTime, null },
+                            { CommonArgs.EndDateTime, null },
+                            { CommonArgs.ObservedId, null }
+                        },
+                Properties = new Dictionary<string, IProperty>
+                        {
+                            { "CurrentTest1", new AgentProperty("CurrentTest1", typeof(double)) },
+                            { "CurrentTest2", new AgentProperty("CurrentTest2", typeof(double)) }
+                        },
+                StateDiagram = new StateDiagram(states, async x =>
+                {
+                    return states["Test1"];
+                })
+            };
+            return sets;
+            
         }
 
 
         [Fact]
         public async void InitAgentForCorrectPatientMustBeReturn()
         {
-            using(dbContext)
-            {  
-                Patient testPatient = GetTestCorrectPatient();
 
-                AgentPatientsRepository rep = new AgentPatientsRepository(dbContextFactory, webRequester);
-                InitPatientAgentsService service = new InitPatientAgentsService(rep);
+            Patient testPatient = GetTestCorrectPatient();
+            IDynamicAgentsRepository rep = new DynamicAgentsRepository(webRequester);
+            
+            InitPatientAgentsService service = new InitPatientAgentsService(rep, agentInitSettingsProvider.Object);
 
-                Assert.NotEmpty(await service.InitPatientAgentsAsync(new List<IPatient> { testPatient }));
-            }
+            Assert.NotEmpty(await service.InitPatientAgentsAsync(new List<(IPatient,AgentType)> { (testPatient, AgentType.AgingPatient) }));
+
         }
 
 
         [Fact]
         public async void InitAgentForIncorrectPatientMustThrow()
         {
-            using (dbContext)
-            {
+            
                 IList<Patient> testPatients = GetTestIncorrectPatients();
-
-                AgentPatientsRepository rep = new AgentPatientsRepository(dbContextFactory, webRequester);
-                InitPatientAgentsService service = new InitPatientAgentsService(rep);
+                IDynamicAgentsRepository rep = new DynamicAgentsRepository(webRequester);
+                InitPatientAgentsService service = new InitPatientAgentsService(rep, agentInitSettingsProvider.Object);
                 foreach (Patient testPatient in testPatients)
                 {
                     await Assert.ThrowsAsync<InitAgentsRangeException>(
-                        async () => await service.InitPatientAgentsAsync(new List<IPatient> { testPatient }));
-                }
+                        async () => await service.InitPatientAgentsAsync(new List<(IPatient, AgentType)> { (testPatient, AgentType.AgingPatient) }));
             }
+            
         }
 
 
         [Fact]
         public async void InitAgentMustSetStateDiagram()
-        {
-            using (dbContext)
-            {     
-                Patient testPatient = GetTestCorrectPatient();
+        {           
+            Patient testPatient = GetTestCorrectPatient();
 
-                AgentPatientsRepository rep = new AgentPatientsRepository(dbContextFactory, webRequester);
-                InitPatientAgentsService service = new InitPatientAgentsService(rep);
+            IDynamicAgentsRepository rep = new DynamicAgentsRepository(webRequester);
+            InitPatientAgentsService service = new InitPatientAgentsService(rep, agentInitSettingsProvider.Object);
 
-                var agents = await service.InitPatientAgentsAsync(new List<IPatient> { testPatient });
-                AgentPatient agent = agents[0];
+            var agents = await service.InitPatientAgentsAsync(new List<(IPatient, AgentType)> { (testPatient, AgentType.AgingPatient) });
+            IDynamicAgent agent = agents[0];
 
-                Assert.NotNull(agent.StateDiagram);
-                Assert.NotNull(agent.StateDiagram.States);
-                Assert.True(agent.StateDiagram.States.Any());
-            }
+            Assert.NotNull(agent.Settings.StateDiagram);
+            Assert.NotNull(agent.Settings.StateDiagram.States);
+            Assert.True(agent.Settings.StateDiagram.States.Any());    
         }
 
 

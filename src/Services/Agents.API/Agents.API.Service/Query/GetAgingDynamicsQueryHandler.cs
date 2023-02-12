@@ -1,6 +1,8 @@
 ﻿using Agents.API.Data.Repository;
 using Agents.API.Entities;
+using Agents.API.Entities.DynamicAgent;
 using Interfaces;
+using Interfaces.DynamicAgent;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -12,10 +14,10 @@ namespace Agents.API.Service.Query
 {
     public class GetAgingDynamicsQueryHandler : IRequestHandler<GetAgingDynamicsQuery, List<IAgingDynamics<AgingState>>>
     {
-        private readonly IAgentPatientsRepository agentPatientsRepository;
+        private readonly IDynamicAgentsRepository agentPatientsRepository;
         private readonly IMediator mediator;
 
-        public GetAgingDynamicsQueryHandler(IAgentPatientsRepository agentPatientsRepository, IMediator mediator)
+        public GetAgingDynamicsQueryHandler(IDynamicAgentsRepository agentPatientsRepository, IMediator mediator)
         {
             this.agentPatientsRepository = agentPatientsRepository;
             this.mediator = mediator;
@@ -25,7 +27,7 @@ namespace Agents.API.Service.Query
         {
             try
             {
-                AgentPatient agent = await agentPatientsRepository.GetAgentPatient(request.PatientId);
+                IDynamicAgent agent = agentPatientsRepository.GetAgent(request.PatientId, AgentType.AgingPatient);
                 List<Influence> influences = await mediator.Send(new GetPatientInfluencesQuery()
                 {
                     PatientId = request.PatientId,
@@ -67,39 +69,41 @@ namespace Agents.API.Service.Query
         }
 
 
-        private async Task<AgingState> CalcAgentStateInInfluenceStartAsync(AgentPatient agent, Influence influence)
+        private async Task<AgingState> CalcAgentStateInInfluenceStartAsync(IDynamicAgent agent, Influence influence)
         {
-            await agent.StateDiagram.UpdateStateAsync(new AgentDetermineStateProperties()
-            {
-                Timestamp = influence.StartTimestamp
-            });
+            throw new NotImplementedException(); //TODO - нужна реализация через новое api.
+            //await agent.StateDiagram.UpdateStateAsync(new AgentDetermineStateProperties()
+            //{
+            //    Timestamp = influence.StartTimestamp
+            //});
 
-            return new AgingState()
-            {
-                PatientId = agent.PatientId,
-                Age = agent.CurrentAge,
-                BioAge = agent.CurrentBioAge,
-                BioAgeState = agent.CurrentAgeRang,
-                Timestamp = influence.StartTimestamp
-            };
+            //return new AgingState()
+            //{
+            //    PatientId = agent.PatientId,
+            //    Age = agent.CurrentAge,
+            //    BioAge = agent.CurrentBioAge,
+            //    BioAgeState = agent.CurrentAgeRang,
+            //    Timestamp = influence.StartTimestamp
+            //};
         }
 
 
-        private async Task<AgingState> CalcAgentStateInInfluenceEndAsync(AgentPatient agent, Influence influence)
+        private async Task<AgingState> CalcAgentStateInInfluenceEndAsync(IDynamicAgent agent, Influence influence)
         {
-            await agent.StateDiagram.UpdateStateAsync(new AgentDetermineStateProperties()
-            {
-                Timestamp = influence.EndTimestamp
-            });
+            throw new NotImplementedException(); // //TODO - нужна реализация через новое api.
+            //await agent.StateDiagram.UpdateStateAsync(new AgentDetermineStateProperties()
+            //{
+            //    Timestamp = influence.EndTimestamp
+            //});
 
-            return new AgingState()
-            {
-                PatientId = agent.PatientId,
-                Age = agent.CurrentAge,
-                BioAge = agent.CurrentBioAge,
-                BioAgeState = agent.CurrentAgeRang,
-                Timestamp = influence.EndTimestamp
-            };
+            //return new AgingState()
+            //{
+            //    PatientId = agent.PatientId,
+            //    Age = agent.CurrentAge,
+            //    BioAge = agent.CurrentBioAge,
+            //    BioAgeState = agent.CurrentAgeRang,
+            //    Timestamp = influence.EndTimestamp
+            //};
         }
     }
 }

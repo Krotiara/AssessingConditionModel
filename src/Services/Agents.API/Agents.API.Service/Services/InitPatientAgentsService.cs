@@ -1,6 +1,7 @@
 ﻿using Agents.API.Data.Repository;
 using Agents.API.Entities;
 using Interfaces;
+using Interfaces.DynamicAgent;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,23 +13,28 @@ namespace Agents.API.Service.Services
     public class InitPatientAgentsService : IInitPatientAgentsService
     {
 
-        private readonly IAgentPatientsRepository agentPatientsRepository;
+        private readonly IDynamicAgentsRepository agentPatientsRepository;
+        private readonly IAgentInitSettingsProvider settingsProvider;
 
-        public InitPatientAgentsService(IAgentPatientsRepository agentPatientsRepository)
+        public InitPatientAgentsService(IDynamicAgentsRepository agentPatientsRepository,
+            IAgentInitSettingsProvider agentInitSettingsProvider)
         {
             this.agentPatientsRepository = agentPatientsRepository;
+            this.settingsProvider = agentInitSettingsProvider;
         }
 
-        public async Task<IList<AgentPatient>> InitPatientAgentsAsync(IList<IPatient> patients)
+        public async Task<IList<IDynamicAgent>> InitPatientAgentsAsync(IList<(IPatient, AgentType)> patients)
         {
             //TODO распараллелить
             List<string> errorMessages = new List<string>();
-            List<AgentPatient> agentPatients = new List<AgentPatient>();
-            foreach (IPatient patient in patients)
+            List<IDynamicAgent> agentPatients = new List<IDynamicAgent>();
+
+            foreach ((IPatient, AgentType) pair in patients)
             {
                 try
                 {
-                    agentPatients.Add(await agentPatientsRepository.InitAgentPatient(patient));
+                    IDynamicAgentInitSettings settings = settingsProvider.GetSettingsBy(pair.Item2);
+                    agentPatients.Add(agentPatientsRepository.InitAgent(pair.Item1.MedicalHistoryNumber, settings));
                 }
                 catch(InitAgentException ex)
                 {

@@ -45,7 +45,7 @@ namespace Agents.API.Service.Services
                             $"rang = {SystemCommands.GetAgeRangBy}(age, bioage)\n" +
                             $"CurrentAge = age\n" +
                             $"CurrentBioAge = bioAge\n" +
-                            $"CurrentAgeRang = rang")
+                            $"CurrentAgeRang = rang", AgentType.AgingPatient)
             {
                 ActionsArgsReplaceDict = new Dictionary<CommonArgs, object>
                             {

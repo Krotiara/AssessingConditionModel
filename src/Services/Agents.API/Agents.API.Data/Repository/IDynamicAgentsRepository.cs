@@ -1,4 +1,5 @@
-﻿using Interfaces.DynamicAgent;
+﻿using Interfaces;
+using Interfaces.DynamicAgent;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,7 @@ namespace Agents.API.Data.Repository
 {
     public interface IDynamicAgentsRepository
     {
-        public IDynamicAgent GetAgent(int observableId);
+        public IDynamicAgent GetAgent(int observableId, AgentType agentType);
 
         public IDynamicAgent InitAgent(int observableId, IDynamicAgentInitSettings settings);
 

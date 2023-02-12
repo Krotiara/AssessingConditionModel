@@ -1,5 +1,4 @@
-﻿using Agents.API.Data.Database;
-using Agents.API.Data.Repository;
+﻿using Agents.API.Data.Repository;
 using Agents.API.Entities;
 using Interfaces;
 using Microsoft.EntityFrameworkCore;

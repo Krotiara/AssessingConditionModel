@@ -1,4 +1,5 @@
-﻿using Interfaces.DynamicAgent;
+﻿using Interfaces;
+using Interfaces.DynamicAgent;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,12 +9,9 @@ using System.Threading.Tasks;
 namespace Agents.API.Service.Services
 {
 
-    public enum AgentType
-    {
-        AgingPatient
-    }
+    
 
-    internal interface IAgentInitSettingsProvider
+    public interface IAgentInitSettingsProvider
     {
         public IDynamicAgentInitSettings GetSettingsBy(AgentType agentType);
     }

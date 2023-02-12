@@ -1,6 +1,7 @@
 ﻿using Agents.API.Data.Repository;
 using Agents.API.Entities;
 using Interfaces;
+using Interfaces.DynamicAgent;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -14,10 +15,10 @@ namespace Agents.API.Service.Query
         IRequestHandler<GetAllPatientsAgingDynamicsQuery, List<IAgingDynamics<AgingState>>>
     {
 
-        private readonly IAgentPatientsRepository agentPatientsRepository;
+        private readonly IDynamicAgentsRepository agentPatientsRepository;
         private readonly IMediator mediator;
 
-        public GetAllPatientsAgingDynamicsQueryHandler(IAgentPatientsRepository agentPatientsRepository, IMediator mediator)
+        public GetAllPatientsAgingDynamicsQueryHandler(IDynamicAgentsRepository agentPatientsRepository, IMediator mediator)
         {
             this.agentPatientsRepository = agentPatientsRepository;
             this.mediator = mediator;
@@ -26,7 +27,7 @@ namespace Agents.API.Service.Query
         public async Task<List<IAgingDynamics<AgingState>>> Handle(GetAllPatientsAgingDynamicsQuery request, CancellationToken cancellationToken)
         {
             List<IAgingDynamics<AgingState>> result = new List<IAgingDynamics<AgingState>>();
-            Dictionary<int, AgentPatient> agents = new Dictionary<int, AgentPatient>();
+            Dictionary<int, IDynamicAgent> agents = new Dictionary<int, IDynamicAgent>();
             List<Influence> influences = await mediator.Send(new GetAllInfluencesQuery()
             {
                 StartTimestamp = request.StartTimestamp,
@@ -40,7 +41,7 @@ namespace Agents.API.Service.Query
                 try
                 {
                     if (!agents.ContainsKey(influence.PatientId))
-                        agents[influence.PatientId] = await agentPatientsRepository.GetAgentPatient(influence.PatientId);
+                        agents[influence.PatientId] = agentPatientsRepository.GetAgent(influence.PatientId, AgentType.AgingPatient);
                     AgingDynamics agingDynamics = new AgingDynamics()
                     {
                         StartTimestamp = influence.StartTimestamp,
@@ -64,21 +65,22 @@ namespace Agents.API.Service.Query
         }
 
 
-        private async Task<AgingState> CalcAgentState(AgentPatient agent, DateTime timestamp)
+        private async Task<AgingState> CalcAgentState(IDynamicAgent agent, DateTime timestamp)
         {
-            await agent.StateDiagram.UpdateStateAsync(new AgentDetermineStateProperties()
-            {
-                Timestamp = timestamp
-            });
+            throw new NotImplementedException(); //TODO - нужна реалзиация с новым видом API
+            //await agent.StateDiagram.UpdateStateAsync(new AgentDetermineStateProperties()
+            //{
+            //    Timestamp = timestamp
+            //});
 
-            return new AgingState()
-            {
-                PatientId = agent.PatientId,
-                Age = agent.CurrentAge,
-                BioAge = agent.CurrentBioAge,
-                BioAgeState = agent.CurrentAgeRang,
-                Timestamp = timestamp
-            };
+            //return new AgingState()
+            //{
+            //    PatientId = agent.PatientId,
+            //    Age = agent.CurrentAge,
+            //    BioAge = agent.CurrentBioAge,
+            //    BioAgeState = agent.CurrentAgeRang,
+            //    Timestamp = timestamp
+            //};
         }
     }
 }

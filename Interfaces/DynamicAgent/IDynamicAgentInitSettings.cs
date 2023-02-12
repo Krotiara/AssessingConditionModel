@@ -18,6 +18,8 @@ namespace Interfaces.DynamicAgent
     public interface IDynamicAgentInitSettings
     {
 
+        public AgentType AgentType { get; }
+
         Dictionary<string, IProperty> Properties { get; set; }
 
         public IStateDiagram StateDiagram { get; set; }

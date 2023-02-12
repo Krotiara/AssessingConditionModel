@@ -1,4 +1,5 @@
-﻿using Interfaces.DynamicAgent;
+﻿using Interfaces;
+using Interfaces.DynamicAgent;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,10 +13,13 @@ namespace Agents.API.Entities.DynamicAgent
 
         private readonly string actionsWithoutArgsPlacement;
 
-        public DynamicAgentInitSettings(string actionsWithoutArgsPlacement)
+        public DynamicAgentInitSettings(string actionsWithoutArgsPlacement, AgentType agentType)
         {
             this.actionsWithoutArgsPlacement = actionsWithoutArgsPlacement;
+            AgentType = agentType;
         }
+
+        public AgentType AgentType { get; }
 
         public Dictionary<string, IProperty> Properties { get; set; }
 

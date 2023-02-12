@@ -1,5 +1,4 @@
-﻿using Agents.API.Data.Database;
-using Agents.API.Data.Repository;
+﻿using Agents.API.Data.Repository;
 using Agents.API.Entities;
 using Agents.API.Service.Services;
 using Interfaces;
@@ -20,14 +19,9 @@ namespace Agents.API.UnitTests.Data
     {
         //AgentsDbContext dbContext;
         CancellationToken token;
-        DbContextOptions<AgentsDbContext> options;
 
         public AgentPatientsRepositoryTests()
         {
-            options = new DbContextOptionsBuilder<AgentsDbContext>()
-               .UseInMemoryDatabase(Guid.NewGuid().ToString())
-               .ConfigureWarnings(x => x.Ignore(InMemoryEventId.TransactionIgnoredWarning))
-               .Options;
             var tokenSource = new CancellationTokenSource(TimeSpan.FromMilliseconds(100));
            // dbContext = new AgentsDbContext(options);
             token = tokenSource.Token;
@@ -37,8 +31,6 @@ namespace Agents.API.UnitTests.Data
         [Fact]
         public async void InitAgentForCorrectPatientMustBeAdded()
         {
-            var dbFactoryMock = new Mock<IDbContextFactory<AgentsDbContext>>();
-            dbFactoryMock.Setup(x => x.CreateDbContext()).Returns(() => new AgentsDbContext(options));
             var webRequesterMock = new Mock<IWebRequester>();
             Patient testPatient = GetTestCorrectPatient();
 

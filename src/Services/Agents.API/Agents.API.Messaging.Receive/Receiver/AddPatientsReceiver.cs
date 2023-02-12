@@ -34,7 +34,7 @@ namespace Agents.API.Messaging.Receive.Receiver
             List<IPatient> data = JsonConvert.DeserializeObject<List<Patient>>(serializedStr)
                 .Cast<IPatient>()
                 .ToList();
-            await initPatientAgentsService.InitPatientAgentsAsync(data);
+            await initPatientAgentsService.InitPatientAgentsAsync(data.Select(x=> (x, AgentType.AgingPatient)).ToList());
         }
     }
 }

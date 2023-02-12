@@ -8,6 +8,11 @@ using System.Threading.Tasks;
 namespace Interfaces
 {
 
+    public enum AgentType
+    {
+        AgingPatient
+    }
+
     public enum SystemCommands
     {
         GetLatestPatientParameters,
