@@ -19,28 +19,28 @@ namespace Agents.API.Messaging.Receive.Receiver
 
     public class AddPatientsReceiver : Receiver
     {
-        IInitPatientAgentsService initPatientAgentsService;
+        //IInitPatientAgentsService initPatientAgentsService;
 
         readonly IServiceScopeFactory serviceScopeFactory;
 
         public AddPatientsReceiver(IServiceScopeFactory serviceScopeFactory, IOptions<AddDataConfig> rabbitMqOptions)
         {
-            this.serviceScopeFactory = serviceScopeFactory;
-            IServiceScope scope = serviceScopeFactory.CreateScope();
-            initPatientAgentsService = scope.ServiceProvider.GetRequiredService<IInitPatientAgentsService>();
-            //this.initPatientAgentsService = initPatientAgentsService;
-            InitReceiver(ReceiveAction, rabbitMqOptions);
+            //this.serviceScopeFactory = serviceScopeFactory;
+            //IServiceScope scope = serviceScopeFactory.CreateScope();
+            //initPatientAgentsService = scope.ServiceProvider.GetRequiredService<IInitPatientAgentsService>();
+            ////this.initPatientAgentsService = initPatientAgentsService;
+            //InitReceiver(ReceiveAction, rabbitMqOptions);
         }
 
 
         private async Task ReceiveAction(string serializedStr)
         {
-            List<IPatient> data = JsonConvert.DeserializeObject<List<Patient>>(serializedStr)
-                .Cast<IPatient>()
-                .ToList();
-            await initPatientAgentsService
-                .InitAgentsAsync((IList<Interfaces.IAgentInitSettings>)data
-                .Select(x=> new AgentInitSettings(x.MedicalHistoryNumber, AgentType.AgingPatient)).ToList());
+            //List<IPatient> data = JsonConvert.DeserializeObject<List<Patient>>(serializedStr)
+            //    .Cast<IPatient>()
+            //    .ToList();
+            //await initPatientAgentsService
+            //    .InitAgentsAsync((IList<Interfaces.IAgentInitSettings>)data
+            //    .Select(x=> new AgentInitSettings(x.MedicalHistoryNumber, AgentType.AgingPatient)).ToList());
         }
     }
 }

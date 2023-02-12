@@ -10,6 +10,7 @@ using Agents.API.Messaging.Receive.Configs;
 using Agents.API.Service.Query;
 using Agents.API.Data.Repository;
 using Agents.API.Service.Command;
+using Agents.API.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -65,7 +66,6 @@ builder.Services
     .AddScoped<IUpdatePatientsDataInfo, UpdatePatientsInfo>()
     .AddTransient<IWebRequester, HttpClientWebRequester>();
 builder.Services
-    .AddTransient<IInitPatientAgentsService, InitPatientAgentsService>()
     .AddTransient<IUpdatePatientAgentsService, UpdatePatientAgentsService>();
 builder.Services
     .AddTransient<IAgingDynamics<AgingState>, AgingDynamics>()

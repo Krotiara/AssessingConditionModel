@@ -1,5 +1,6 @@
 ﻿using Agents.API.Entities;
 using Agents.API.Entities.DynamicAgent;
+using Agents.API.Interfaces;
 using Interfaces;
 using Interfaces.DynamicAgent;
 using System;
@@ -15,11 +16,13 @@ namespace Agents.API.Data.Repository
     public class DynamicAgentsRepository : IDynamicAgentsRepository
     {
         private Dictionary<(int, AgentType), IDynamicAgent> dynamicAgents;
+        private readonly IAgentInitSettingsProvider agentInitSettingsProvider;
         private readonly IWebRequester webRequester;
 
-        public DynamicAgentsRepository(IWebRequester webRequester)
+        public DynamicAgentsRepository(IWebRequester webRequester, IAgentInitSettingsProvider agentInitSettingsProvider)
         {
             dynamicAgents = new Dictionary<(int, AgentType), IDynamicAgent>();
+            this.agentInitSettingsProvider = agentInitSettingsProvider;
             this.webRequester = webRequester;
         }
 
@@ -36,8 +39,13 @@ namespace Agents.API.Data.Repository
         public IDynamicAgent GetAgent(int observableId, AgentType agentType)
         {
             if (!dynamicAgents.ContainsKey((observableId, agentType)))
-                throw new GetAgentException($"Не найден агент для объекта с Id = {observableId}.");
-            return dynamicAgents[(observableId, agentType)];
+            {
+                IDynamicAgentInitSettings initSets = agentInitSettingsProvider.GetSettingsBy(agentType);
+                return InitAgent(observableId, initSets);
+                
+            }
+            else
+                return dynamicAgents[(observableId, agentType)];
         }
 
         public void Clear()

@@ -1,5 +1,6 @@
 ﻿using Interfaces;
 using Interfaces.DynamicAgent;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -41,12 +42,12 @@ namespace Agents.API.Entities.DynamicAgent
         public async Task UpdateState()
         {
 #warning подразумевается, что settings уже актуализированы и вообще всегда в актуальном состоянии.
-            string actions = Settings.DetermineAgentPropertiesActions;
+            string actions = Newtonsoft.Json.JsonConvert.SerializeObject(Settings.DetermineAgentPropertiesActions);
             string url = $"{codeExecutorUrl}/codeExecutor/executeCode";
 #warning Нужен дебаг, что возвращается при ContentResult
-            Dictionary<string, IProperty> calculatedArgs = 
-                await webRequester.GetResponse<Dictionary<string, IProperty>>(url, "POST", actions);
-            foreach (KeyValuePair<string, IProperty> entry in calculatedArgs)
+            Dictionary<string, AgentProperty> calculatedArgs = 
+                await webRequester.GetResponse<Dictionary<string, AgentProperty>>(url, "POST", actions);
+            foreach (KeyValuePair<string, AgentProperty> entry in calculatedArgs)
             {
                 Settings.Properties[entry.Key] = entry.Value;
             }

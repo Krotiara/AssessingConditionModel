@@ -1,4 +1,5 @@
 ﻿using Agents.API.Entities.DynamicAgent;
+using Agents.API.Interfaces;
 using Interfaces;
 using Interfaces.DynamicAgent;
 using System;
@@ -42,7 +43,7 @@ namespace Agents.API.Service.Services
                             $"{SystemCommands.GetLatestPatientParameters}({CommonArgs.StartDateTime}, {CommonArgs.EndDateTime}, {CommonArgs.ObservedId})\n" +
                             $"age = {SystemCommands.GetAge}(parameters)\n" +
                             $"bioAge = {SystemCommands.GetBioage}(parameters)\n" +
-                            $"rang = {SystemCommands.GetAgeRangBy}(age, bioage)\n" +
+                            $"rang = {SystemCommands.GetAgeRangBy}(age, bioAge)\n" +
                             $"CurrentAge = age\n" +
                             $"CurrentBioAge = bioAge\n" +
                             $"CurrentAgeRang = rang", AgentType.AgingPatient)
@@ -60,9 +61,9 @@ namespace Agents.API.Service.Services
                                 { "CurrentAgeRang", new AgentProperty("CurrentAgeRang", typeof(AgentBioAgeStates)) }
                             },
                 StateDiagram = new StateDiagram(states, async x =>
-                {
-                    AgentBioAgeStates rang = (AgentBioAgeStates)x.Properties["CurrentAgeRang"].Value;
-                    return states[rang.GetDisplayAttributeValue()];
+                {                  
+                    AgentBioAgeStates rang = Enum.Parse<AgentBioAgeStates>(x.Properties["CurrentAgeRang"].Value.ToString());
+                    return states[rang.GetDisplayAttributeValue()];                    
                 })
             };
             return sets;
