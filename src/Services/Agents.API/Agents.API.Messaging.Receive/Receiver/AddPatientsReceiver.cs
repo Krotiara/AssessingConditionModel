@@ -13,6 +13,10 @@ using System.Threading.Tasks;
 
 namespace Agents.API.Messaging.Receive.Receiver
 {
+
+
+#warning TODO - переделать под получение сообщение при начале модеелируемого процесса.
+
     public class AddPatientsReceiver : Receiver
     {
         IInitPatientAgentsService initPatientAgentsService;

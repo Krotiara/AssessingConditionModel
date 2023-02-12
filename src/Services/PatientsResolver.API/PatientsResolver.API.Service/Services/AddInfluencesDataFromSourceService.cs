@@ -27,9 +27,6 @@ namespace PatientsResolver.API.Service.Services
                 IList<Patient> addedPatients = await mediator.Send(new AddNotExistedPatientsCommand() 
                 { Patients = data.Select(x => x.Patient).ToList() });
 
-                if(addedPatients.Count > 0)
-                    await mediator.Send(new SendPatientsCommand() { Patients = addedPatients.ToList()});
-
                 List<Influence> addedData = 
                     await mediator.Send(new AddInfluenceDataCommand() { Data = data });
 

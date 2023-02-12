@@ -47,9 +47,6 @@ namespace PatientsResolver.API.Controllers
             try
             {
                 IList<Patient> addedPatients = await mediator.Send(new AddNotExistedPatientsCommand() {Patients = new List<Patient> { patient } });
-                if (addedPatients.Count > 0)
-                    await mediator.Send(new SendPatientsCommand() { Patients = addedPatients.ToList() });
-
                 return Ok(addedPatients.Count > 0);
             }
             catch(AddPatientException ex)

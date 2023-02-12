@@ -51,8 +51,8 @@ builder.Services.Configure<AddDataConfig>(builder.Configuration.GetSection("Rabb
 /*Теперь вы можете выполнять ваши запросы. Для этого вам потребуется получить экземпляр интерфейса IMediator. Он регистрируется в вашем контейнере зависимостей той же командой AddMediatR.*/
 if (builder.Configuration.GetSection("RabbitMq").Get<RabbitMqConfiguration>().Enabled)
     builder.Services.AddHostedService<UpdatePatientsDataReceiver>();
-if(builder.Configuration.GetSection("RabbitMqAddInfo").Get<AddDataConfig>().Enabled)
-    builder.Services.AddHostedService<AddPatientsReceiver>();
+//if(builder.Configuration.GetSection("RabbitMqAddInfo").Get<AddDataConfig>().Enabled)
+//    builder.Services.AddHostedService<AddPatientsReceiver>();
 #endregion
 
 string connectionString = builder.Configuration.GetConnectionString("PostgresConnection");
