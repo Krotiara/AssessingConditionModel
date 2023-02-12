@@ -19,36 +19,31 @@ namespace Agents.API.Service.Services
         {
             int successCount = 0;
             //TODO распараллелить
-
-            //12/02/2023 - реализовать через новое api
-            throw new NotImplementedException();
-            //foreach((int, DateTime) pair in updateInfo.UpdateInfo)
-            //{
-            //    try
-            //    {
-            //        int patientId = pair.Item1;
-            //        DateTime timeStamp = pair.Item2;
-            //        IDynamicAgent agent = agentPatientsRepository.GetAgent(patientId);
-            //        if (agent == null)
-            //            throw new AgentNotFoundException($"Agent patient with patient id = {patientId} was not found.");
-            //        AgentDetermineStateProperties agentDetermineStateProperties = new AgentDetermineStateProperties() { Timestamp = timeStamp, IsNeedRecalculation = true};
-            //        await agent.UpdateState(agentDetermineStateProperties);
-            //        successCount++;
-            //    }
-            //    catch (AgentNotFoundException ex)
-            //    {
-            //        //TODO log
-                   
-            //        continue;
-            //    }
-            //    catch (DetermineStateException ex)
-            //    {
-            //        //TODO log
-                    
-            //        continue;
-            //    }
-            //}
-            //return successCount;
+            foreach((int,DateTime) pair in updateInfo.UpdateInfo)
+            {
+                try
+                {
+                    int patientId = pair.Item1;
+                    DateTime timeStamp = pair.Item2;
+                    //TODO учет других AgentType
+                    IDynamicAgent agent = agentPatientsRepository.GetAgent(patientId, AgentType.AgingPatient);
+                    agent.Settings.ActionsArgsReplaceDict[CommonArgs.EndDateTime] = timeStamp;
+                    agent.Settings.ActionsArgsReplaceDict[CommonArgs.StartDateTime] = DateTime.MinValue; //TODO - по идее лучше так не делать, так как захватывает все данные из бд от начала до timeStamp.
+                    await agent.UpdateState();
+                    successCount++;
+                }
+                catch(GetAgentException ex)
+                {
+                    //TODO log
+                    continue;
+                }
+                catch(DetermineStateException ex)
+                {
+                    //TODO log
+                    continue;
+                }
+            }
+            return successCount;
         }
     }
 }

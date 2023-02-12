@@ -18,6 +18,6 @@ namespace Interfaces.DynamicAgent
 
         public IDynamicAgentInitSettings Settings { get; }
 
-        public void UpdateState();
+        public Task UpdateState();
     }
 }

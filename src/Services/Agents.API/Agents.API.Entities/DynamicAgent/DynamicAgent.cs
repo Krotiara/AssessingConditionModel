@@ -38,7 +38,7 @@ namespace Agents.API.Entities.DynamicAgent
 
         public IDynamicAgentInitSettings Settings { get; }
 
-        public async void UpdateState()
+        public async Task UpdateState()
         {
 #warning подразумевается, что settings уже актуализированы и вообще всегда в актуальном состоянии.
             string actions = Settings.DetermineAgentPropertiesActions;
