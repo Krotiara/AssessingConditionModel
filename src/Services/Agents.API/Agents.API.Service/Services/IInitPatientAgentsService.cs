@@ -1,4 +1,5 @@
 ﻿using Agents.API.Entities;
+using Agents.API.Interfaces;
 using Interfaces;
 using Interfaces.DynamicAgent;
 using System;
@@ -11,6 +12,6 @@ namespace Agents.API.Service.Services
 {
     public interface IInitPatientAgentsService
     {
-        public Task<IList<IDynamicAgent>> InitPatientAgentsAsync(IList<(IPatient, AgentType)> patients);
+        public Task<IList<IDynamicAgent>> InitAgentsAsync(IEnumerable<IAgentInitSettings> observedObjsSettings);
     }
 }

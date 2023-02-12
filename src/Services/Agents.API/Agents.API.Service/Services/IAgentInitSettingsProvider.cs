@@ -8,9 +8,6 @@ using System.Threading.Tasks;
 
 namespace Agents.API.Service.Services
 {
-
-    
-
     public interface IAgentInitSettingsProvider
     {
         public IDynamicAgentInitSettings GetSettingsBy(AgentType agentType);

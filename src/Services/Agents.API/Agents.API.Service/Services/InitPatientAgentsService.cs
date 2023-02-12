@@ -1,5 +1,6 @@
 ﻿using Agents.API.Data.Repository;
 using Agents.API.Entities;
+using Agents.API.Interfaces;
 using Interfaces;
 using Interfaces.DynamicAgent;
 using System;
@@ -23,18 +24,18 @@ namespace Agents.API.Service.Services
             this.settingsProvider = agentInitSettingsProvider;
         }
 
-        public async Task<IList<IDynamicAgent>> InitPatientAgentsAsync(IList<(IPatient, AgentType)> patients)
+        public async Task<IList<IDynamicAgent>> InitAgentsAsync(IEnumerable<IAgentInitSettings> observedObjsSettings)
         {
             //TODO распараллелить
             List<string> errorMessages = new List<string>();
-            List<IDynamicAgent> agentPatients = new List<IDynamicAgent>();
+            IList<IDynamicAgent> agents = new List<IDynamicAgent>();
 
-            foreach ((IPatient, AgentType) pair in patients)
+            foreach (IAgentInitSettings agentInitSets in observedObjsSettings)
             {
                 try
                 {
-                    IDynamicAgentInitSettings settings = settingsProvider.GetSettingsBy(pair.Item2);
-                    agentPatients.Add(agentPatientsRepository.InitAgent(pair.Item1.MedicalHistoryNumber, settings));
+                    IDynamicAgentInitSettings settings = settingsProvider.GetSettingsBy(agentInitSets.AgentType);
+                    agents.Add(agentPatientsRepository.InitAgent(agentInitSets.ObservedId, settings));
                 }
                 catch(InitAgentException ex)
                 {
@@ -45,7 +46,7 @@ namespace Agents.API.Service.Services
             if (errorMessages.Count > 0)
                 throw new InitAgentsRangeException(string.Join("\n", errorMessages));
             else
-                return agentPatients;
+                return agents;
         }
     }
 }
