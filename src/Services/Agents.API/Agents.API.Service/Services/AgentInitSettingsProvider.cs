@@ -61,7 +61,8 @@ namespace Agents.API.Service.Services
                                 { "CurrentAgeRang", new AgentProperty("CurrentAgeRang", typeof(AgentBioAgeStates)) }
                             },
                 StateDiagram = new StateDiagram(states, async x =>
-                {                  
+                {     
+                    //TODO Убрать из провайдера команду расчета ранга, поместить сюда, так как там как раз правило по изменению состояний агентов. 
                     AgentBioAgeStates rang = Enum.Parse<AgentBioAgeStates>(x.Properties["CurrentAgeRang"].Value.ToString());
                     return states[rang.GetDisplayAttributeValue()];                    
                 })
