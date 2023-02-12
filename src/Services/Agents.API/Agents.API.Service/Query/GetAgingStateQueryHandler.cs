@@ -28,6 +28,7 @@ namespace Agents.API.Service.Query
                 if (agentPatient == null)
                     throw new GetAgingStateException($"Agent patient for patient with id = {request.PatientId} not found.");
 
+
                 //TODO реалзиация через новое API.
                 //TODO - убрать во внешнее api
                 throw new NotImplementedException();

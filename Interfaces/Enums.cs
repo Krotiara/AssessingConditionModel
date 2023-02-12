@@ -8,6 +8,13 @@ using System.Threading.Tasks;
 namespace Interfaces
 {
 
+    public enum CommonArgs
+    {
+        ObservedId,
+        StartDateTime,
+        EndDateTime
+    }
+
     public enum AgentType
     {
         AgingPatient

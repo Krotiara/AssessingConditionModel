@@ -1,6 +1,7 @@
 ﻿using Agents.API.Data.Repository;
 using Agents.API.Entities;
 using Agents.API.Entities.DynamicAgent;
+using Agents.API.Interfaces;
 using Agents.API.Service.Services;
 using Interfaces;
 using Interfaces.DynamicAgent;
@@ -65,13 +66,13 @@ namespace Agents.API.UnitTests.Service
         [Fact]
         public async void InitAgentForCorrectPatientMustBeReturn()
         {
-
-            Patient testPatient = GetTestCorrectPatient();
-            IDynamicAgentsRepository rep = new DynamicAgentsRepository(webRequester);
+            throw new NotImplementedException(); //TODO доработать в связи с правкой API
+            //Patient testPatient = GetTestCorrectPatient();
+            //IDynamicAgentsRepository rep = new DynamicAgentsRepository(webRequester);
             
-            InitPatientAgentsService service = new InitPatientAgentsService(rep, agentInitSettingsProvider.Object);
+            //InitPatientAgentsService service = new InitPatientAgentsService(rep, agentInitSettingsProvider.Object);
 
-            Assert.NotEmpty(await service.InitPatientAgentsAsync(new List<(IPatient,AgentType)> { (testPatient, AgentType.AgingPatient) }));
+            //Assert.NotEmpty(await service.InitPatientAgentsAsync(new List<(IPatient,AgentType)> { (testPatient, AgentType.AgingPatient) }));
 
         }
 
@@ -79,33 +80,34 @@ namespace Agents.API.UnitTests.Service
         [Fact]
         public async void InitAgentForIncorrectPatientMustThrow()
         {
-            
-                IList<Patient> testPatients = GetTestIncorrectPatients();
-                IDynamicAgentsRepository rep = new DynamicAgentsRepository(webRequester);
-                InitPatientAgentsService service = new InitPatientAgentsService(rep, agentInitSettingsProvider.Object);
-                foreach (Patient testPatient in testPatients)
-                {
-                    await Assert.ThrowsAsync<InitAgentsRangeException>(
-                        async () => await service.InitPatientAgentsAsync(new List<(IPatient, AgentType)> { (testPatient, AgentType.AgingPatient) }));
-            }
+            throw new NotImplementedException(); //TODO доработать в связи с правкой API
+            //IList<Patient> testPatients = GetTestIncorrectPatients();
+            //    IDynamicAgentsRepository rep = new DynamicAgentsRepository(webRequester);
+            //    InitPatientAgentsService service = new InitPatientAgentsService(rep, agentInitSettingsProvider.Object);
+            //    foreach (Patient testPatient in testPatients)
+            //    {
+            //        await Assert.ThrowsAsync<InitAgentsRangeException>(
+            //            async () => await service.InitPatientAgentsAsync(new List<(IPatient, AgentType)> { (testPatient, AgentType.AgingPatient) }));
+            //}
             
         }
 
 
         [Fact]
         public async void InitAgentMustSetStateDiagram()
-        {           
-            Patient testPatient = GetTestCorrectPatient();
+        {
+            throw new NotImplementedException(); //TODO доработать в связи с правкой API
+            //Patient testPatient = GetTestCorrectPatient();
 
-            IDynamicAgentsRepository rep = new DynamicAgentsRepository(webRequester);
-            InitPatientAgentsService service = new InitPatientAgentsService(rep, agentInitSettingsProvider.Object);
+            //IDynamicAgentsRepository rep = new DynamicAgentsRepository(webRequester);
+            //InitPatientAgentsService service = new InitPatientAgentsService(rep, agentInitSettingsProvider.Object);
 
-            var agents = await service.InitPatientAgentsAsync(new List<(IPatient, AgentType)> { (testPatient, AgentType.AgingPatient) });
-            IDynamicAgent agent = agents[0];
+            //var agents = await service.InitPatientAgentsAsync(new List<(IPatient, AgentType)> { (testPatient, AgentType.AgingPatient) });
+            //IDynamicAgent agent = agents[0];
 
-            Assert.NotNull(agent.Settings.StateDiagram);
-            Assert.NotNull(agent.Settings.StateDiagram.States);
-            Assert.True(agent.Settings.StateDiagram.States.Any());    
+            //Assert.NotNull(agent.Settings.StateDiagram);
+            //Assert.NotNull(agent.Settings.StateDiagram.States);
+            //Assert.True(agent.Settings.StateDiagram.States.Any());    
         }
 
 

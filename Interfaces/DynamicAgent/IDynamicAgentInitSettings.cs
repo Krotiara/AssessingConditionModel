@@ -8,12 +8,6 @@ using System.Threading.Tasks;
 namespace Interfaces.DynamicAgent
 {
 
-    public enum CommonArgs
-    {
-        ObservedId,
-        StartDateTime,
-        EndDateTime
-    }
 
     public interface IDynamicAgentInitSettings
     {
