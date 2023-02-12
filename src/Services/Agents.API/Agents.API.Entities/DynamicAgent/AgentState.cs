@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Agents.API.Entities.DynamicAgent
 {
-    public class AgentState : Interfaces.DynamicAgent.IAgentState
+    public class AgentState : IAgentState
     {
         public AgentState(string name)
         {
