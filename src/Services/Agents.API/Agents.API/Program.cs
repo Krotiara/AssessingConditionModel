@@ -65,21 +65,18 @@ builder.Services
     .AddScoped<IUpdatePatientsDataInfo, UpdatePatientsInfo>()
     .AddTransient<IWebRequester, HttpClientWebRequester>();
 builder.Services
-    .AddTransient<IUpdatePatientAgentsService, UpdatePatientAgentsService>();
+    .AddTransient<IUpdatePatientAgentsService, UpdatePatientAgentsService>()
+    .AddTransient<IDataProviderService, DataProviderService>();
 builder.Services
     .AddTransient<IAgingDynamics<AgingState>, AgingDynamics>()
     .AddTransient<IAgentInitSettingsProvider, AgentInitSettingsProvider>();
 
 builder.Services.AddScoped<IRequestHandler<GetAgingStateQuery, AgingState>, 
     GetAgingStateQueryHandler>();
-builder.Services.AddScoped<IRequestHandler<GetPatientInfluencesQuery, List<Influence>>, 
-    GetPatientInfluencesQueryHandler>();
 builder.Services.AddScoped<IRequestHandler<GetAgingDynamicsQuery, List<IAgingDynamics<AgingState>>>, 
     GetAgingDynamicsQueryHandler>();
 builder.Services.AddScoped<IRequestHandler<GetAllPatientsAgingDynamicsQuery, List<IAgingDynamics<AgingState>>>,
     GetAllPatientsAgingDynamicsQueryHandler>();
-builder.Services.AddScoped<IRequestHandler<GetAllInfluencesQuery, List<Influence>>, 
-    GetAllInfluencesQueryHandler>();
 
 builder.Services.AddSingleton<IDynamicAgentsRepository, DynamicAgentsRepository>();
 

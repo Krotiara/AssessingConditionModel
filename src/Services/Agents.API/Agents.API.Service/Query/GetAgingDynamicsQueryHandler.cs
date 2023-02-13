@@ -1,6 +1,7 @@
 ﻿using Agents.API.Data.Repository;
 using Agents.API.Entities;
 using Agents.API.Entities.DynamicAgent;
+using Agents.API.Service.Services;
 using Interfaces;
 using Interfaces.DynamicAgent;
 using MediatR;
@@ -15,12 +16,15 @@ namespace Agents.API.Service.Query
     public class GetAgingDynamicsQueryHandler : IRequestHandler<GetAgingDynamicsQuery, List<IAgingDynamics<AgingState>>>
     {
         private readonly IDynamicAgentsRepository agentPatientsRepository;
+        private readonly IDataProviderService dataProviderService;
         private readonly IMediator mediator;
 
-        public GetAgingDynamicsQueryHandler(IDynamicAgentsRepository agentPatientsRepository, IMediator mediator)
+        public GetAgingDynamicsQueryHandler(IDynamicAgentsRepository agentPatientsRepository, 
+            IMediator mediator, IDataProviderService dataProviderService)
         {
             this.agentPatientsRepository = agentPatientsRepository;
             this.mediator = mediator;
+            this.dataProviderService = dataProviderService;
         }
 
         public async Task<List<IAgingDynamics<AgingState>>> Handle(GetAgingDynamicsQuery request, CancellationToken cancellationToken)
@@ -28,13 +32,12 @@ namespace Agents.API.Service.Query
             try
             {
                 IDynamicAgent agent = agentPatientsRepository.GetAgent(request.PatientId, AgentType.AgingPatient);
-                List<Influence> influences = await mediator.Send(new GetPatientInfluencesQuery() //TODO нужно ли переносить в исполнитель кода?
-                {
-                    PatientId = request.PatientId,
-                    StartTimestamp = request.StartTimestamp,
-                    EndTimestamp = request.EndTimestamp
-                });
 
+                List<Influence> influences =
+                await dataProviderService.ExecuteSystemCommand<List<Influence>>(
+                    SystemCommands.GetInfluences, new object[] { request.StartTimestamp, request.EndTimestamp, request.PatientId });
+
+               
                 List<IAgingDynamics<AgingState>> res = new List<IAgingDynamics<AgingState>>();
                 foreach(Influence influence in influences)
                 {

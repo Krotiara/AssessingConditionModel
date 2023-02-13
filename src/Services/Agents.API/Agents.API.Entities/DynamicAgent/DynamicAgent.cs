@@ -44,7 +44,6 @@ namespace Agents.API.Entities.DynamicAgent
 #warning подразумевается, что settings уже актуализированы и вообще всегда в актуальном состоянии.
             string actions = Newtonsoft.Json.JsonConvert.SerializeObject(Settings.DetermineAgentPropertiesActions);
             string url = $"{codeExecutorUrl}/codeExecutor/executeCode";
-#warning Нужен дебаг, что возвращается при ContentResult
             Dictionary<string, AgentProperty> calculatedArgs = 
                 await webRequester.GetResponse<Dictionary<string, AgentProperty>>(url, "POST", actions);
             foreach (KeyValuePair<string, AgentProperty> entry in calculatedArgs)

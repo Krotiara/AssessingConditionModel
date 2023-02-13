@@ -1,5 +1,6 @@
 ﻿using Agents.API.Data.Repository;
 using Agents.API.Entities;
+using Agents.API.Service.Services;
 using Interfaces;
 using Interfaces.DynamicAgent;
 using MediatR;
@@ -16,11 +17,13 @@ namespace Agents.API.Service.Query
     {
 
         private readonly IDynamicAgentsRepository agentPatientsRepository;
+        private readonly IDataProviderService dataProviderService;
         private readonly IMediator mediator;
 
-        public GetAllPatientsAgingDynamicsQueryHandler(IDynamicAgentsRepository agentPatientsRepository, IMediator mediator)
+        public GetAllPatientsAgingDynamicsQueryHandler(IDynamicAgentsRepository agentPatientsRepository, IMediator mediator, IDataProviderService dataProviderService)
         {
             this.agentPatientsRepository = agentPatientsRepository;
+            this.dataProviderService = dataProviderService;
             this.mediator = mediator;
         }
 
@@ -28,12 +31,10 @@ namespace Agents.API.Service.Query
         {
             List<IAgingDynamics<AgingState>> result = new List<IAgingDynamics<AgingState>>();
             Dictionary<int, IDynamicAgent> agents = new Dictionary<int, IDynamicAgent>();
-            List<Influence> influences = await mediator.Send(new GetAllInfluencesQuery()
-            {
-                StartTimestamp = request.StartTimestamp,
-                EndTimestamp = request.EndTimestamp
-            });
 
+            List<Influence> influences = 
+                await dataProviderService.ExecuteSystemCommand<List<Influence>>(
+                    SystemCommands.GetAllInfluences, new object[] { request.StartTimestamp, request.EndTimestamp });
 
             //TODO parallel
             foreach(Influence influence in influences)
