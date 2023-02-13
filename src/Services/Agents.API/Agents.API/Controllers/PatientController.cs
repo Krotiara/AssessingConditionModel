@@ -22,7 +22,7 @@ namespace Agents.API.Controllers
         {
             try
             {
-                return await mediator.Send(new GetAgingStateQuery() { PatientId = patientId });
+                return await mediator.Send(new GetAgingStateQuery(patientId, DateTime.Today));
             }
             catch(GetAgingStateException ex)
             {

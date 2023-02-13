@@ -28,7 +28,7 @@ namespace Agents.API.Service.Query
                 if (agentPatient == null)
                     throw new GetAgingStateException($"Agent patient for patient with id = {request.PatientId} not found.");
 
-                agentPatient.Settings.ActionsArgsReplaceDict[CommonArgs.EndDateTime] = DateTime.Today;
+                agentPatient.Settings.ActionsArgsReplaceDict[CommonArgs.EndDateTime] = request.Timestamp;
                 agentPatient.Settings.ActionsArgsReplaceDict[CommonArgs.StartDateTime] = DateTime.MinValue; //TODO - по идее лучше так не делать, так как захватывает все данные из бд от начала до timeStamp.
                 await agentPatient.UpdateState();
 
