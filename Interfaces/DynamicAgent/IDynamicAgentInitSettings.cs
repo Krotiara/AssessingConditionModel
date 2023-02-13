@@ -21,5 +21,7 @@ namespace Interfaces.DynamicAgent
         public string DetermineAgentPropertiesActions { get;}
 
         public Dictionary<CommonArgs, object> ActionsArgsReplaceDict { get; set; }
+
+        public T GetPropertyValue<T>(string propertyName);
     }
 }

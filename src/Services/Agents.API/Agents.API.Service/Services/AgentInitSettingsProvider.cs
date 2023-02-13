@@ -56,8 +56,8 @@ namespace Agents.API.Service.Services
                             },
                 Properties = new Dictionary<string, IProperty>
                             {
-                                { "CurrentAge", new AgentProperty("CurrentAge", typeof(double)) },
-                                { "CurrentBioAge", new AgentProperty("CurrentBioAge", typeof(double)) },
+                                { "CurrentAge", new AgentProperty("CurrentAge", typeof(long)) },
+                                { "CurrentBioAge", new AgentProperty("CurrentBioAge", typeof(long)) },
                                 { "CurrentAgeRang", new AgentProperty("CurrentAgeRang", typeof(AgentBioAgeStates)) }
                             },
                 StateDiagram = new StateDiagram(states, async x =>

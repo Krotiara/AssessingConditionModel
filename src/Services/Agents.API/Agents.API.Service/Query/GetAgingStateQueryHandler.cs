@@ -28,20 +28,23 @@ namespace Agents.API.Service.Query
                 if (agentPatient == null)
                     throw new GetAgingStateException($"Agent patient for patient with id = {request.PatientId} not found.");
 
+                agentPatient.Settings.ActionsArgsReplaceDict[CommonArgs.EndDateTime] = DateTime.Today;
+                agentPatient.Settings.ActionsArgsReplaceDict[CommonArgs.StartDateTime] = DateTime.MinValue; //TODO - по идее лучше так не делать, так как захватывает все данные из бд от начала до timeStamp.
+                await agentPatient.UpdateState();
 
-                //TODO реалзиация через новое API.
-                //TODO - убрать во внешнее api
-                throw new NotImplementedException();
+                long age = agentPatient.Settings.GetPropertyValue<long>("CurrentAge");
+                long bioAge = agentPatient.Settings.GetPropertyValue<long>("CurrentBioAge");
+                AgentBioAgeStates agingRang = agentPatient.Settings.GetPropertyValue<AgentBioAgeStates>("CurrentAgeRang");
 
-                //AgingState state = new AgingState()
-                //{
-                //    PatientId = request.PatientId,
-                //    Age = agentPatient.CurrentAge,
-                //    BioAge = agentPatient.CurrentBioAge,
-                //    BioAgeState = agentPatient.CurrentAgeRang,
-                //    Timestamp = DateTime.Now //TODO переименовать query под currentState
-                //};
-                //return state;
+                AgingState state = new AgingState()
+                {
+                    PatientId = request.PatientId,
+                    Age = age,
+                    BioAge = bioAge,
+                    BioAgeState = agingRang,
+                    Timestamp = DateTime.Today //TODO переименовать query под currentState
+                };
+                return state;
             }
             catch(AgentNotFoundException ex)
             {

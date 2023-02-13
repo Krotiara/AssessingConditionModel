@@ -77,4 +77,12 @@ namespace Agents.API.Entities
         public GetAgingDynamicsException(string message, Exception innerException) : base(message, innerException) { }
     }
 
+
+    public class GetAgentPropertyValueException : Exception
+    {
+        public GetAgentPropertyValueException(string message) : base(message) { }
+
+        public GetAgentPropertyValueException(string message, Exception innerException) : base(message, innerException) { }
+    }
+
 }

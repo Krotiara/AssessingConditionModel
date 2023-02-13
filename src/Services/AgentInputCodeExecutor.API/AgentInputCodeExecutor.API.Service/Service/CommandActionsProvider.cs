@@ -53,7 +53,7 @@ namespace AgentInputCodeExecutor.API.Service.Service
                 IPatientParameter ageParam = parameters.FirstOrDefault(x => x.ParameterName == ParameterNames.Age);
                 if (ageParam == null)
                     throw new NotImplementedException(); //TODO - обработка такого случая.
-                double age = double.Parse(ageParam.Value);
+                long age = long.Parse(ageParam.Value);
                 return age;
             };
 
@@ -69,7 +69,7 @@ namespace AgentInputCodeExecutor.API.Service.Service
 
                     string requestBody = Newtonsoft.Json.JsonConvert.SerializeObject(calculationParameters);
                     string url = $"{bioAgeApiUrl}/bioAge/";
-                    return await webRequester.GetResponse<double>(url, "PUT", requestBody);
+                    return await webRequester.GetResponse<long>(url, "PUT", requestBody);
                 }
                 catch (GetWebResponceException ex)
                 {
@@ -82,9 +82,9 @@ namespace AgentInputCodeExecutor.API.Service.Service
                 }
             };
 
-            delegates[SystemCommands.GetAgeRangBy] = async (double age, double bioAge) =>
+            delegates[SystemCommands.GetAgeRangBy] = async (long age, long bioAge) =>
             {
-                double ageDelta = bioAge - age;
+                long ageDelta = bioAge - age;
                 AgentBioAgeStates rang;
                 if (ageDelta <= -9)
                     rang = AgentBioAgeStates.RangI;
