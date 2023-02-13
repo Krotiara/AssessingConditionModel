@@ -41,6 +41,7 @@ builder.Services
     .AddTransient<IRequestHandler<ExecuteCodeLinesCommand, Unit>, ExecuteCodeLinesCommandHandler>()
     .AddTransient<IRequestHandler<ExecuteCodeLineCommand, Unit>, ExecuteCodeLineCommandHandler>()
     .AddTransient<IRequestHandler<ExecuteCommand, object>, ExecuteCommandHandler>()
+    .AddTransient<IRequestHandler<ConvertArgsCommand, object[]>, ConvertArgsCommandHandler>()
     .AddTransient<IWebRequester, HttpClientWebRequester>()
     .AddTransient<IMetaStorageService, InternalMetaStorageService>()
     .AddScoped<ICodeResolveService, CodeResolveService>()

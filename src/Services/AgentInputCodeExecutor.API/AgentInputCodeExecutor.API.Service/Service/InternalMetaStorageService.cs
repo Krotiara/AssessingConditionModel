@@ -23,7 +23,8 @@ namespace AgentInputCodeExecutor.API.Service.Service
                         (typeof(int), "patientId")}, typeof(IList<IPatientParameter>))},
                 {SystemCommands.GetAge, new CommandArgsTypesMeta(new List<(Type, string)> {(typeof(List<PatientParameter>),"parameters") }, typeof(long)) },
                 {SystemCommands.GetBioage, new CommandArgsTypesMeta(new List<(Type, string)> {(typeof(List<PatientParameter>),"parameters") }, typeof(long)) },
-                {SystemCommands.GetAgeRangBy, new CommandArgsTypesMeta(new List<(Type, string)>{(typeof(double),"age"),(typeof(double),"bioAge")}, typeof(long)) }
+                {SystemCommands.GetAgeRangBy, new CommandArgsTypesMeta(new List<(Type, string)>{(typeof(double),"age"),(typeof(double),"bioAge")}, typeof(long)),
+                //{SystemCommands.GetInfluences, new CommandArgsTypesMeta(new List<(Type, string)>{ }) } } //TODO - нужна мета
             };
         }
 

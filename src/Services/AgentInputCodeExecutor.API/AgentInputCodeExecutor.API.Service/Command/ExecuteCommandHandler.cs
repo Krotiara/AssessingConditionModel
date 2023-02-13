@@ -1,5 +1,6 @@
 ﻿using AgentInputCodeExecutor.API.Entities;
 using AgentInputCodeExecutor.API.Interfaces;
+using AgentInputCodeExecutor.API.Service.Queue;
 using Interfaces;
 using MediatR;
 using System;
@@ -28,10 +29,12 @@ namespace AgentInputCodeExecutor.API.Service.Command
     public class ExecuteCommandHandler : IRequestHandler<ExecuteCommand, object>
     {
         private readonly ICommandActionsProvider commandActionsProvider;
+        private readonly IMediator mediator;
 
-        public ExecuteCommandHandler(ICommandActionsProvider commandActionsProvider)
+        public ExecuteCommandHandler(ICommandActionsProvider commandActionsProvider, IMediator mediator)
         {
             this.commandActionsProvider = commandActionsProvider;
+            this.mediator = mediator;
         }
 
         public async Task<object> Handle(ExecuteCommand request, CancellationToken cancellationToken)
@@ -40,9 +43,11 @@ namespace AgentInputCodeExecutor.API.Service.Command
             if (del == null)
                 throw new ResolveCommandActionException($"Не найден делегат для команды {request.SystemCommand}");
 
+            object[] args = await mediator.Send(new ConvertArgsCommand(request.SystemCommand, request.args));
+
 #warning TODO Нужна мета информация о параметрах - получить по аналогии с GetCommandArgsValuesQueueHandler (сразу преобразованные аргументы).
 
-            object res = del.DynamicInvoke(request.args);
+            object res = del.DynamicInvoke(args);
             if (res is Task)
             {
                 await (Task)res;
