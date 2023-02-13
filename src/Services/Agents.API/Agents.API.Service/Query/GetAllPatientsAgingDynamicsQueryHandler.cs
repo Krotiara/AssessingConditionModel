@@ -50,10 +50,8 @@ namespace Agents.API.Service.Query
                         MedicineName = influence.MedicineName,
                         PatientId = influence.PatientId
                     };
-                    agingDynamics.AgentStateInInfluenceStart = 
-                        await CalcAgentState(agents[influence.PatientId], influence.StartTimestamp);
-                    agingDynamics.AgentStateInInfluenceEnd = 
-                        await CalcAgentState(agents[influence.PatientId], influence.EndTimestamp);
+                    agingDynamics.AgentStateInInfluenceStart = await mediator.Send(new GetAgingStateQuery(influence.PatientId, influence.StartTimestamp));
+                    agingDynamics.AgentStateInInfluenceEnd = await mediator.Send(new GetAgingStateQuery(influence.PatientId, influence.EndTimestamp));
                     result.Add(agingDynamics);
                 }
                 catch(Exception ex)
@@ -62,25 +60,6 @@ namespace Agents.API.Service.Query
                 }
             }
             return result;
-        }
-
-
-        private async Task<AgingState> CalcAgentState(IDynamicAgent agent, DateTime timestamp)
-        {
-            throw new NotImplementedException(); //TODO - нужна реалзиация с новым видом API
-            //await agent.StateDiagram.UpdateStateAsync(new AgentDetermineStateProperties()
-            //{
-            //    Timestamp = timestamp
-            //});
-
-            //return new AgingState()
-            //{
-            //    PatientId = agent.PatientId,
-            //    Age = agent.CurrentAge,
-            //    BioAge = agent.CurrentBioAge,
-            //    BioAgeState = agent.CurrentAgeRang,
-            //    Timestamp = timestamp
-            //};
         }
     }
 }

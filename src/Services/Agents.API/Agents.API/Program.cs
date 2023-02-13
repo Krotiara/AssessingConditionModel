@@ -9,7 +9,6 @@ using Agents.API.Service.Services;
 using Agents.API.Messaging.Receive.Configs;
 using Agents.API.Service.Query;
 using Agents.API.Data.Repository;
-using Agents.API.Service.Command;
 using Agents.API.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -79,8 +78,6 @@ builder.Services.AddScoped<IRequestHandler<GetAgingDynamicsQuery, List<IAgingDyn
     GetAgingDynamicsQueryHandler>();
 builder.Services.AddScoped<IRequestHandler<GetAllPatientsAgingDynamicsQuery, List<IAgingDynamics<AgingState>>>,
     GetAllPatientsAgingDynamicsQueryHandler>();
-builder.Services.AddScoped<IRequestHandler<AddAgingStateCommand, AgingState>, 
-    AddAgingStateCommandHandler>();
 builder.Services.AddScoped<IRequestHandler<GetAllInfluencesQuery, List<Influence>>, 
     GetAllInfluencesQueryHandler>();
 
