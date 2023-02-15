@@ -11,6 +11,21 @@ using System.Threading.Tasks;
 
 namespace Agents.API.Service.Query
 {
+
+    public class GetAgingStateQuery : IRequest<AgingState>
+    {
+
+        public GetAgingStateQuery(int patientId, DateTime timestamp)
+        {
+            PatientId = patientId;
+            Timestamp = timestamp;
+        }
+
+        public int PatientId { get; set; }
+
+        public DateTime Timestamp { get; set; }
+    }
+
     public class GetAgingStateQueryHandler : IRequestHandler<GetAgingStateQuery, AgingState>
     {
         private readonly IDynamicAgentsRepository agentPatientsRepository;

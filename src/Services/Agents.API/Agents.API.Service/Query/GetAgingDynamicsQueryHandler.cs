@@ -13,6 +13,16 @@ using System.Threading.Tasks;
 
 namespace Agents.API.Service.Query
 {
+
+    public class GetAgingDynamicsQuery : IRequest<List<IAgingDynamics<AgingState>>>
+    {
+        public int PatientId { get; set; }
+
+        public DateTime StartTimestamp { get; set; }
+
+        public DateTime EndTimestamp { get; set; }
+    }
+
     public class GetAgingDynamicsQueryHandler : IRequestHandler<GetAgingDynamicsQuery, List<IAgingDynamics<AgingState>>>
     {
         private readonly IDynamicAgentsRepository agentPatientsRepository;

@@ -12,6 +12,14 @@ using System.Threading.Tasks;
 
 namespace Agents.API.Service.Query
 {
+
+    public class GetAllPatientsAgingDynamicsQuery : IRequest<List<IAgingDynamics<AgingState>>>
+    {
+        public DateTime StartTimestamp { get; set; }
+
+        public DateTime EndTimestamp { get; set; }
+    }
+
     public class GetAllPatientsAgingDynamicsQueryHandler :
         IRequestHandler<GetAllPatientsAgingDynamicsQuery, List<IAgingDynamics<AgingState>>>
     {
