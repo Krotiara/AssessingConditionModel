@@ -1,13 +1,16 @@
 ﻿using AgentInputCodeExecutor.API.Entities;
 using AgentInputCodeExecutor.API.Interfaces;
 using AgentInputCodeExecutor.API.Service.Queue;
+using Agents.API.Service.Services;
 using Interfaces;
 using MediatR;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Reflection;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace AgentInputCodeExecutor.API.Service.Command
@@ -50,8 +53,17 @@ namespace AgentInputCodeExecutor.API.Service.Command
             {
                 try
                 {
-                    TypeConverter converter = TypeDescriptor.GetConverter(commandMeta.InputArgsTypes[i]);
-                    res.Add(converter.ConvertFrom(request.RawArgs[i]));
+                    if (request.RawArgs[i] is JsonElement)
+                    {
+                        JsonElement elem = (JsonElement)request.RawArgs[i];
+                        Type type = commandMeta.InputArgsTypes[i];
+                        res.Add(elem.Deserialize(type));
+                    }
+                    else
+                    {
+                        TypeConverter converter = TypeDescriptor.GetConverter(commandMeta.InputArgsTypes[i]);
+                        res.Add(converter.ConvertFrom(request.RawArgs[i]));
+                    }
                 }
                 catch (Exception ex)
                 {

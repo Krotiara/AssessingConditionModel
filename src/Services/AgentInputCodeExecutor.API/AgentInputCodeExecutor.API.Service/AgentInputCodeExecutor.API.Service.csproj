@@ -12,6 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Agents.API\Agents.API.Service\Agents.API.Service.csproj" />
     <ProjectReference Include="..\AgentInputCodeExecutor.API.Entities\AgentInputCodeExecutor.API.Entities.csproj" />
     <ProjectReference Include="..\AgentInputCodeExecutor.API.Interfaces\AgentInputCodeExecutor.API.Interfaces.csproj" />
   </ItemGroup>

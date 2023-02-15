@@ -5,6 +5,7 @@ using Interfaces.DynamicAgent;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using System.Text.Json;
 
 namespace InputCodeMatcher.API.Controllers
 {
@@ -32,12 +33,12 @@ namespace InputCodeMatcher.API.Controllers
 
 
         [HttpPost("codeExecutor/executeCommand/{commandName}")]
-        public async Task<ContentResult> ExecuteCommand(string commandName, [FromBody] object[] args)
+        public async Task<ContentResult> ExecuteCommand(string commandName, [FromBody] JsonElement[] args)
         {
             bool isValidCommand = Enum.TryParse(commandName, out SystemCommands command);
             if (!isValidCommand)
                 throw new NotImplementedException(); //TODO
-            object res = await mediator.Send(new ExecuteCommand(command, args));
+            object res = await mediator.Send(new ExecuteCommand(command, args.Select(x=> x as object).ToArray()));
             return Content(JsonConvert.SerializeObject(res), "application/json");
         }
     }
