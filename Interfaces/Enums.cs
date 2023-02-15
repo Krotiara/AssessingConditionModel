@@ -30,7 +30,7 @@ namespace Interfaces
         GetAllInfluences,
         GetAgingDynamics,
         GetAgingState,
-        GetAllPatientsAgingDynamicsQuery
+        GetInfluencesWithoutParameters
     }
 
 

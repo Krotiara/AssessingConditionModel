@@ -95,6 +95,28 @@ namespace PatientsResolver.API.Controllers
             }
         }
 
+        [HttpPost("patientsApi/influencesWithoutParams/{patientId}")]
+        public async Task<ActionResult<List<Influence>>> GetPatientInfluencesWithoutParams(int patientId, [FromBody] DateTime[] timeSpan)
+        {
+            try
+            {
+                DateTime start = DateTime.MinValue;
+                DateTime end = DateTime.MaxValue;
+                if (timeSpan != null && timeSpan.Length == 2)
+                {
+                    start = timeSpan[0];
+                    end = timeSpan[1];
+                }
+
+                return Ok(await mediator.Send(new GetPatientInfluencesQuery(patientId, start, end, false)));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        
 
         [HttpPost("patientsApi/influences/")]
         public async Task<ActionResult<List<Influence>>> GetInfluences([FromBody] DateTime[] timeSpan)

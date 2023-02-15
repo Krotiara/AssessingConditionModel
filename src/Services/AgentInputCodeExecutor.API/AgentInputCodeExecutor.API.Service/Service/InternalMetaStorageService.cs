@@ -31,6 +31,10 @@ namespace AgentInputCodeExecutor.API.Service.Service
                     new CommandArgsTypesMeta(new List<(Type, string)> {(typeof(DateTime),"start"),
                         (typeof(DateTime),"end"),
                         (typeof(int),"observedId") }, typeof(List<Influence>))},
+                {SystemCommands.GetInfluencesWithoutParameters,
+                    new CommandArgsTypesMeta(new List<(Type, string)> {(typeof(DateTime),"start"),
+                        (typeof(DateTime),"end"),
+                        (typeof(int),"observedId") }, typeof(List<Influence>))},
                 {SystemCommands.GetAllInfluences,
                     new CommandArgsTypesMeta(new List<(Type, string)>
                     {(typeof(DateTime),"start"),

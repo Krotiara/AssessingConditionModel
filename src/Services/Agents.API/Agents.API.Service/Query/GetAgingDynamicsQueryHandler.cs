@@ -45,7 +45,7 @@ namespace Agents.API.Service.Query
 
                 List<Influence> influences =
                 await dataProviderService.ExecuteSystemCommand<List<Influence>>(
-                    SystemCommands.GetInfluences, new object[] { request.StartTimestamp, request.EndTimestamp, request.PatientId });
+                    SystemCommands.GetInfluencesWithoutParameters, new object[] { request.StartTimestamp, request.EndTimestamp, request.PatientId });
 
                
                 List<IAgingDynamics<AgingState>> res = new List<IAgingDynamics<AgingState>>();

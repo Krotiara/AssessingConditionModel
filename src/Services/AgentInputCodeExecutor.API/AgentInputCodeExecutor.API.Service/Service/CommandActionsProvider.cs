@@ -106,8 +106,15 @@ namespace AgentInputCodeExecutor.API.Service.Service
                 return await webRequester.GetResponse<IList<Influence>>(url, "POST", body);
             };
 
-            //TODO Добавить meta инфу для этого действия
-            delegates[SystemCommands.GetAllInfluences] = async (DateTime startTimestamp, DateTime endTimestamp) =>
+            delegates[SystemCommands.GetInfluencesWithoutParameters] = async (DateTime startTimestamp, DateTime endTimestamp, int patientId) =>
+            {
+                string body = Newtonsoft.Json.JsonConvert.SerializeObject(new DateTime[2] { startTimestamp, endTimestamp });
+                string url = $"{patientsResolverApiUrl}/patientsApi/influencesWithoutParams/{patientId}";
+                return await webRequester.GetResponse<IList<Influence>>(url, "POST", body);
+            };
+
+                //TODO Добавить meta инфу для этого действия
+                delegates[SystemCommands.GetAllInfluences] = async (DateTime startTimestamp, DateTime endTimestamp) =>
             {
                 string url = $"{patientsResolverApiUrl}/patientsApi/influences/";
                 string body = Newtonsoft.Json.JsonConvert.SerializeObject(new DateTime[2] { startTimestamp, endTimestamp });

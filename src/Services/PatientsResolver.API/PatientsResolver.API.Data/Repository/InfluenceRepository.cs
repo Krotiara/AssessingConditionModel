@@ -127,7 +127,8 @@ namespace PatientsResolver.API.Data.Repository
         }
 
 
-        public async Task<List<Influence>> GetPatientInfluences(int patientId, DateTime startTimestamp, DateTime endTimestamp)
+        public async Task<List<Influence>> GetPatientInfluences(int patientId,
+            DateTime startTimestamp, DateTime endTimestamp, bool includeParams = true)
         {
             
             IExecutionStrategy strategy = dbContext.Database.CreateExecutionStrategy();
@@ -145,14 +146,15 @@ namespace PatientsResolver.API.Data.Repository
                     .Include(x => x.Patient)
                     .ToListAsync();
 
-                InitParameters(dbContext, datas);
+                if(includeParams)
+                    InitParameters(dbContext, datas);
 
                 return datas;
             });
         }
 
 
-        public async Task<List<Influence>> GetInfluences(DateTime startTimestamp, DateTime endTimestamp)
+        public async Task<List<Influence>> GetInfluences(DateTime startTimestamp, DateTime endTimestamp, bool includeParams = true)
         {
             
             IExecutionStrategy strategy = dbContext.Database.CreateExecutionStrategy();
@@ -168,7 +170,8 @@ namespace PatientsResolver.API.Data.Repository
                     .Include(x => x.Patient)
                     .ToListAsync();
 
-                InitParameters(dbContext, datas);
+                if (includeParams)
+                    InitParameters(dbContext, datas);
 
                 return datas;
             });
