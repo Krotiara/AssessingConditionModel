@@ -17,5 +17,7 @@ namespace Agents.API.Entities.DynamicAgent
         public string Name { get; set; }
 
         public double NumericCharacteristic { get; set; }
+
+        public DateTime Timestamp { get; set; }
     }
 }
