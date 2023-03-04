@@ -9,5 +9,7 @@ namespace Interfaces.DynamicAgent
     public interface IAgentState
     {
         public string Name { get; set; }
+
+        public double NumericCharacteristic { get; set; }
     }
 }
