@@ -10,6 +10,7 @@ using Agents.API.Messaging.Receive.Configs;
 using Agents.API.Service.Query;
 using Agents.API.Data.Repository;
 using Agents.API.Interfaces;
+using Interfaces.DynamicAgent;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -71,11 +72,13 @@ builder.Services
     .AddTransient<IAgingDynamics<AgingState>, AgingDynamics>()
     .AddTransient<IAgentInitSettingsProvider, AgentInitSettingsProvider>();
 
-builder.Services.AddScoped<IRequestHandler<GetAgingStateQuery, AgingState>, 
-    GetAgingStateQueryHandler>();
-builder.Services.AddScoped<IRequestHandler<GetAgingDynamicsQuery, List<IAgingDynamics<AgingState>>>, 
-    GetAgingDynamicsQueryHandler>();
-builder.Services.AddScoped<IRequestHandler<GetAllPatientsAgingDynamicsQuery, List<IAgingDynamics<AgingState>>>,
+builder.Services
+    .AddTransient<IRequestHandler<GetAgentStateQuery, IAgentState>, GetAgentStateQueryHandler>();
+
+builder.Services
+    .AddScoped<IRequestHandler<GetAgingStateQuery, AgingState>, GetAgingStateQueryHandler>()
+    .AddScoped<IRequestHandler<GetAgingDynamicsQuery, List<IAgingDynamics<AgingState>>>, GetAgingDynamicsQueryHandler>()
+    .AddScoped<IRequestHandler<GetAllPatientsAgingDynamicsQuery, List<IAgingDynamics<AgingState>>>,
     GetAllPatientsAgingDynamicsQueryHandler>();
 
 builder.Services.AddSingleton<IDynamicAgentsRepository, DynamicAgentsRepository>();
