@@ -11,5 +11,7 @@ namespace Interfaces.DynamicAgent
     public interface IDetermineStateProperties
     {
         public Dictionary<string, IProperty> Properties { get; }
+
+        public DateTime Timestamp { get; }
     }
 }

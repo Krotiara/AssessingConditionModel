@@ -50,7 +50,10 @@ namespace Agents.API.Entities.DynamicAgent
             {
                 Settings.Properties[entry.Key] = entry.Value;
             }
-            await Settings.StateDiagram.UpdateStateAsync(new DetermineStateProperties(Settings.Properties));
+
+            DateTime stateTimestamp = (DateTime)Settings.ActionsArgsReplaceDict[CommonArgs.EndDateTime];
+
+            await Settings.StateDiagram.UpdateStateAsync(new DetermineStateProperties(Settings.Properties, stateTimestamp));
         }
     }
 }

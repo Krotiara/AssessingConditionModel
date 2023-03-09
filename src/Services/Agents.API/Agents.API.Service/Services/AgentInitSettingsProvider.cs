@@ -64,7 +64,10 @@ namespace Agents.API.Service.Services
                 {     
                     //TODO Убрать из провайдера команду расчета ранга, поместить сюда, так как там как раз правило по изменению состояний агентов. 
                     AgentBioAgeStates rang = Enum.Parse<AgentBioAgeStates>(x.Properties["CurrentAgeRang"].Value.ToString());
-                    return states[rang.GetDisplayAttributeValue()];                    
+                    IAgentState state = states[rang.GetDisplayAttributeValue()];
+                    state.Timestamp = x.Timestamp;
+                    state.NumericCharacteristic = (double)x.Properties["CurrentBioAge"].Value - (double)x.Properties["CurrentAge"].Value;
+                    return state;                    
                 })
             };
             return sets;
