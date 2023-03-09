@@ -66,7 +66,7 @@ namespace Agents.API.Service.Services
                     AgentBioAgeStates rang = Enum.Parse<AgentBioAgeStates>(x.Properties["CurrentAgeRang"].Value.ToString());
                     IAgentState state = states[rang.GetDisplayAttributeValue()];
                     state.Timestamp = x.Timestamp;
-                    state.NumericCharacteristic = (double)x.Properties["CurrentBioAge"].Value - (double)x.Properties["CurrentAge"].Value;
+                    state.NumericCharacteristic = (long)x.Properties["CurrentBioAge"].Value - (long)x.Properties["CurrentAge"].Value;
                     return state;                    
                 })
             };

@@ -75,12 +75,6 @@ builder.Services
 builder.Services
     .AddTransient<IRequestHandler<GetAgentStateQuery, IAgentState>, GetAgentStateQueryHandler>();
 
-builder.Services
-    .AddScoped<IRequestHandler<GetAgingStateQuery, AgingState>, GetAgingStateQueryHandler>()
-    .AddScoped<IRequestHandler<GetAgingDynamicsQuery, List<IAgingDynamics<AgingState>>>, GetAgingDynamicsQueryHandler>()
-    .AddScoped<IRequestHandler<GetAllPatientsAgingDynamicsQuery, List<IAgingDynamics<AgingState>>>,
-    GetAllPatientsAgingDynamicsQueryHandler>();
-
 builder.Services.AddSingleton<IDynamicAgentsRepository, DynamicAgentsRepository>();
 
 
@@ -108,7 +102,7 @@ app.UseSwagger();
 
 app.UseSwaggerUI(c =>
 {
-    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Patient Data Handler API");
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Agents API");
     c.RoutePrefix = string.Empty;
 });
 
