@@ -5,7 +5,7 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace Agents.API.Entities.DynamicAgent
 {
-    internal class AgentStateDb : IAgentState
+    public class AgentStateDb : IAgentState
     {
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
