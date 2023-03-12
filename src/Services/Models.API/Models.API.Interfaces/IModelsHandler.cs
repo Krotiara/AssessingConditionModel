@@ -8,7 +8,10 @@ namespace Models.API.Interfaces
 {
     public interface IModelsHandler
     {
-        public IModelMeta GetModelMeta(string modelId);
+
+        public Task InsertModel(Stream model, IModelMeta meta);
+
+        public Task<IModelMeta> GetModelMeta(string modelId);
 
         public Task<double[]> PredictAsync(string modelId, double[] args);
     }
