@@ -22,8 +22,12 @@ namespace Models.API.Data
             throw new NotImplementedException();
         }
 
-        public Task InsertModel(Stream model, IModelMeta meta)
+        public async Task InsertModel(Stream model, IModelMeta meta)
         {
+            await _s3Client.Client.PutObjectAsync(new Minio.PutObjectArgs()
+                .WithBucket(_s3Client.Bucket)
+                .WithStreamData(model)
+                .WithFileName(meta.Name));
             throw new NotImplementedException();
         }
 

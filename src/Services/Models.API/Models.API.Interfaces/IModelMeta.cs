@@ -8,6 +8,8 @@ namespace Models.API.Interfaces
 {
     public interface IModelMeta
     {
+        public string StorageId { get; set; }
+
         public string Name { get; set; }
 
         public double Accuracy { get; set; }

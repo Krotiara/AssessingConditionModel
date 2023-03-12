@@ -13,6 +13,8 @@ namespace Models.API.Entities
     {
         public MinioClient Client { get; }
 
+        public string Bucket { get; }
+
         public S3ClientService(IOptions<S3StorageSettings> options, ILogger<S3ClientService> logger)
         { 
             if (options.Value == null) return;
@@ -22,6 +24,7 @@ namespace Models.API.Entities
                 .WithCredentials(sets.AccessKey,sets.SecretKey)
                 .WithSSL()
                 .Build();
+            Bucket = sets.Bucket;
         }
     }
 }
