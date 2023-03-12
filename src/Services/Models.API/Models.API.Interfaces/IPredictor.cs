@@ -8,6 +8,6 @@ namespace Models.API.Interfaces
 {
     public interface IPredictor
     {
-        public double[] Predict(string modelPath, double[] args, int[] dimensions );
+        public double[] Predict(string modelPath, double[] args, int[] dimensions);
     }
 }
