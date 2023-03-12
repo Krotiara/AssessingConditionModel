@@ -1,13 +1,19 @@
+using MediatR;
 using Models.API;
 using Models.API.Data;
+using Models.API.Service.Command;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 IServiceCollection services = builder.Services;
 
 services.AddControllers();
+services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
 
 services.AddS3ClientService(builder.Configuration);
 services.AddTransient<ModelsStore>();
+
+services.AddTransient<IRequestHandler<InsertModelCommand, Unit>, InsertModelCommandHandler>();
 
 //Swagger
 services.AddSwaggerGen();
@@ -34,7 +40,11 @@ app.MapControllers();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(options =>
+    {
+        options.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
+        options.RoutePrefix = string.Empty;
+    });
 }
 
 app.Run();
