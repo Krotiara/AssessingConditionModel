@@ -31,7 +31,6 @@ namespace Models.API.Data
             {
                 { "ModelTag", "Model" }
             };
-
            
             PutObjectArgs args = new Minio.PutObjectArgs()
                 .WithBucket(_s3Client.Bucket)
@@ -43,27 +42,13 @@ namespace Models.API.Data
                 .WithTagging(Tagging.GetObjectTags(tags))
                 .WithVersionId(meta.Version.ToString());
 
-            //await _s3Client.Client.PutObjectAsync(_s3Client.Bucket, meta.Name, model, 855);
             await _s3Client.Client.PutObjectAsync(args);
-            throw new NotImplementedException();
         }
+
 
         public Task<double[]> PredictAsync(string modelId, double[] args)
         {
             throw new NotImplementedException();
         }
-
-
-        //private string GetFileETag(Stream stream)
-        //{
-        //    MemoryStream ms = new MemoryStream();
-        //    stream.CopyTo(ms);
-        //    byte[] StringBytes = ms.ToArray();
-        //    MD5CryptoServiceProvider MD5Enc = new MD5CryptoServiceProvider();
-        //    //use file name and modify date as the unique identifier
-        //    //get string bytes
-        //    //hash string using MD5 and return the hex-encoded hash
-        //    return "\"" + BitConverter.ToString(MD5Enc.ComputeHash(StringBytes)).Replace("-", string.Empty) + "\"";
-        //}
     }
 }

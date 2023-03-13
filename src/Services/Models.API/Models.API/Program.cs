@@ -11,8 +11,9 @@ services.AddControllers();
 services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
 
 services.AddS3ClientService(builder.Configuration);
-services.AddTransient<ModelsStore>();
+services.AddPostgresService(builder.Configuration);
 
+services.AddTransient<ModelsStore>();
 services.AddTransient<IRequestHandler<InsertModelCommand, Unit>, InsertModelCommandHandler>();
 
 //Swagger

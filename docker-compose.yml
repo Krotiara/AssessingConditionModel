@@ -31,6 +31,8 @@ services:
       - 8035:80
     networks:
         - aModelNetwork
+    volumes:
+        - "C:/TestData:/data"
     restart: on-failure
 
   agentinputcodeexecutor.api:
@@ -205,13 +207,30 @@ services:
     restart: always
     volumes:
       - postgresData:/var/lib/postgresql/data
-      - ./sql:/docker-entrypoint-initdb.d
+      - ./sql/patientsDb:/docker-entrypoint-initdb.d
     environment:
       POSTGRES_USER: "postgres"
       POSTGRES_PASSWORD: "lisa2021"
       POSTGRES_DB: "PatientData_db"
     networks:
         - aModelNetwork
+
+  postgres_image_models:
+    container_name: postgres_image_models
+    image: postgres:latest
+    ports:
+        - "5433:5432"
+    restart: always
+    volumes:
+        - postgresModelsData:/var/lib/postgresql/data
+        - ./sql/models:/docker-entrypoint-initdb.d
+    environment:
+        POSTGRES_USER: "postgres"
+        POSTGRES_PASSWORD: "lisa2021"
+        POSTGRES_DB: "Models_db"
+    networks:
+        - aModelNetwork
+
 
   #pgadmin:
   #   container_name: pgadmin_container
@@ -231,19 +250,12 @@ services:
   #   #networks:
   #   # - postgres
 
-  #bioAge.mlServer:
-  #   image: ${DOCKER_REGISTRY-}bioagemlserver
-  #   build:
-  #      context: .
-  #      dockerfile: src/Services/BioAge.MLServer/BioAge.MLServer/Dockerfile
-  #   ports:
-  #     - "8080:80"
-
-
 volumes:
    db_volume:
    pgadmin:
    postgresData:
+       external: true
+   postgresModelsData:
        external: true
 
 networks:
