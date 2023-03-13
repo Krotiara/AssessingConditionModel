@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Models.API.Entities;
 using Models.API.Service.Command;
 
 namespace Models.API.Controllers
@@ -15,9 +16,12 @@ namespace Models.API.Controllers
 
 
         [HttpPost("models/insert")]
-        public async Task<IActionResult> InsertModel()
+        public async Task<IActionResult> InsertModel([FromForm] UploadModel uploadModel)
         {
-            await _mediator.Send(new InsertModelCommand());
+            MemoryStream ms = new MemoryStream();
+            using (FileStream file = new FileStream(uploadModel.File, FileMode.Open, FileAccess.Read))
+                file.CopyTo(ms);
+            await _mediator.Send(new InsertModelCommand(uploadModel, ms));
             return Ok();
         }
 

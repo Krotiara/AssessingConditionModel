@@ -16,7 +16,17 @@ namespace Models.API.Service.Service
             throw new NotImplementedException();
         }
 
+        public Task Upload(Stream model, IModelMeta meta)
+        {
+            throw new NotImplementedException();
+        }
+
         public Task<double[]> PredictAsync(string modelId, double[] args)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<IModelMeta> IModelsHandler.GetModelMeta(string modelId)
         {
             throw new NotImplementedException();
         }

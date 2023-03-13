@@ -9,7 +9,7 @@ namespace Models.API.Interfaces
     public interface IModelsHandler
     {
 
-        public Task InsertModel(Stream model, IModelMeta meta);
+        public Task Upload(Stream model, IModelMeta meta);
 
         public Task<IModelMeta> GetModelMeta(string modelId);
 
