@@ -48,12 +48,10 @@ namespace Models.API.Data
             GetObjectArgs args = new GetObjectArgs()
                .WithBucket(_s3Client.Bucket)
                .WithObject(fileName)
-               .WithCallbackStream(async stream => await stream.CopyToAsync(memoryStream).ConfigureAwait(false));
+               .WithCallbackStream(stream => stream.CopyTo(memoryStream));
             await _s3Client.Client.GetObjectAsync(args).ConfigureAwait(false);
+            memoryStream.Seek(0, SeekOrigin.Begin);
             return memoryStream;
         }
-
-
-       
     }
 }
