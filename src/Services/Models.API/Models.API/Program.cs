@@ -1,7 +1,9 @@
 using MediatR;
 using Models.API;
 using Models.API.Data;
+using Models.API.Entities;
 using Models.API.Service.Command;
+using Models.API.Service.Query;
 using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -14,7 +16,10 @@ services.AddS3ClientService(builder.Configuration);
 services.AddPostgresService(builder.Configuration);
 
 services.AddTransient<ModelsStore>();
-services.AddTransient<IRequestHandler<InsertModelCommand, Unit>, InsertModelCommandHandler>();
+services
+    .AddTransient<IRequestHandler<InsertModelCommand, Unit>, InsertModelCommandHandler>()
+    .AddTransient<IRequestHandler<GetModelMetaQuery, ModelMeta>, GetModelMetaQueryHandler>()
+    .AddTransient<IRequestHandler<PredictModelCommand, double[]>, PredictModelCommandHandler>();
 
 //Swagger
 services.AddSwaggerGen();

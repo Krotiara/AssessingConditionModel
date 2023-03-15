@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Models.API.Entities;
 using Models.API.Service.Command;
+using Models.API.Service.Query;
 
 namespace Models.API.Controllers
 {
@@ -25,9 +26,25 @@ namespace Models.API.Controllers
             return Ok();
         }
 
-        public IActionResult Index()
+
+        [HttpGet("models/{id}")]
+        public async Task<IActionResult> GetModelMeta(string id)
         {
-            return View();
+            ModelMeta meta = await _mediator.Send(new GetModelMetaQuery() { ModelId = id });
+            if (meta == null)
+                return NotFound();
+            else return Ok(meta);
+        }
+
+
+        [HttpPost("models/predict")]
+        public async Task<IActionResult> Predict(string modelId, double[] inputArgs)
+        {
+            ModelMeta meta = await _mediator.Send(new GetModelMetaQuery() { ModelId = modelId });
+            if (meta == null)
+                return NotFound();
+            double[] output = await _mediator.Send(new PredictModelCommand() { ModelMeta = meta, InputArgs = inputArgs });
+            throw new NotImplementedException();
         }
     }
 }

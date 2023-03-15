@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Models.API.Data
 {
-    public class ModelsStore: IModelsHandler
+    public class ModelsStore
     {
         private readonly S3ClientService _s3Client;
 
@@ -20,11 +20,7 @@ namespace Models.API.Data
             _s3Client = s3Client;
         }
 
-        public Task<IModelMeta> GetModelMeta(string modelId)
-        {
-            throw new NotImplementedException();
-        }
-
+    
         public async Task Upload(Stream model, IModelMeta meta)
         {
             var tags = new Dictionary<string, string>
@@ -42,13 +38,22 @@ namespace Models.API.Data
                 .WithTagging(Tagging.GetObjectTags(tags))
                 .WithVersionId(meta.Version.ToString());
 
-            await _s3Client.Client.PutObjectAsync(args);
+            await _s3Client.Client.PutObjectAsync(args).ConfigureAwait(false);
         }
 
 
-        public Task<double[]> PredictAsync(string modelId, double[] args)
+        public async Task<MemoryStream> Get(string fileName)
         {
-            throw new NotImplementedException();
+            MemoryStream memoryStream = new MemoryStream();
+            GetObjectArgs args = new GetObjectArgs()
+               .WithBucket(_s3Client.Bucket)
+               .WithObject(fileName)
+               .WithCallbackStream(async stream => await stream.CopyToAsync(memoryStream).ConfigureAwait(false));
+            await _s3Client.Client.GetObjectAsync(args).ConfigureAwait(false);
+            return memoryStream;
         }
+
+
+       
     }
 }
