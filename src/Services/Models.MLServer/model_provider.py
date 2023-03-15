@@ -33,7 +33,7 @@ class ModelProvider:
         for meta in model_metas:
             self.load_model(meta)
 
-    def _get_model_from_s3(self, model_meta):
+    def get_model_from_s3(self, model_meta):
         model_key = self._get_key(model_meta, "model")
         print(model_key)
         model = None

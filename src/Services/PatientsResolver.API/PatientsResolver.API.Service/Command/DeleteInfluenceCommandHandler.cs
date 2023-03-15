@@ -15,7 +15,8 @@ namespace PatientsResolver.API.Service.Command
     {
         public int InfluenceId { get; }
 
-        public DeleteInfluenceCommand(int influenceId)        {
+        public DeleteInfluenceCommand(int influenceId)
+        {
             InfluenceId = influenceId;
         }
 
