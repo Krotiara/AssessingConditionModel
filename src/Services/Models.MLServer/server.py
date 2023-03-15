@@ -5,7 +5,6 @@ import numpy as np
 from model_provider import ModelProvider
 from Models.model_meta import ModelMeta
 import db_connection
-from sqlalchemy.orm import joinedload
 
 
 class NpEncoder(json.JSONEncoder):
