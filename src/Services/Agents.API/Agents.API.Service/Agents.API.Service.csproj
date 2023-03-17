@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <PackageReference Include="MediatR" Version="11.0.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Scripting" Version="4.4.0" />
   </ItemGroup>
 
   <ItemGroup>

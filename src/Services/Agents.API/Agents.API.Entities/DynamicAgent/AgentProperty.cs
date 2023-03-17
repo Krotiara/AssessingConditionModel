@@ -18,6 +18,14 @@ namespace Agents.API.Entities.DynamicAgent
             Type = type;
         }
 
+        public AgentProperty(Type type, object value, string originName, ParameterNames name = ParameterNames.None)
+        {
+            Name = name;
+            Type = type;
+            Value = value;
+            OriginName = originName;
+        }
+
         public ParameterNames Name { get; set; }
 
         public Type Type { get; set; }

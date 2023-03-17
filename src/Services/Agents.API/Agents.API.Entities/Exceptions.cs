@@ -85,4 +85,51 @@ namespace Agents.API.Entities
         public GetAgentPropertyValueException(string message, Exception innerException) : base(message, innerException) { }
     }
 
+
+    public class ParseCodeLineException : Exception
+    {
+        public ParseCodeLineException(string message) : base(message)
+        {
+
+        }
+    }
+
+
+    public class GetCommandTypeMetaException : Exception
+    {
+        public GetCommandTypeMetaException(string message) : base(message)
+        {
+
+        }
+    }
+
+    public class ResolveCommandActionException : Exception
+    {
+        public ResolveCommandActionException(string message) : base(message) { }
+
+        public ResolveCommandActionException(string message, Exception innerException) : base(message, innerException) { }
+    }
+
+    public class GetCommandArgsValuesException : Exception
+    {
+        public GetCommandArgsValuesException(string message) : base(message) { }
+
+        public GetCommandArgsValuesException(string message, Exception innerException) : base(message, innerException) { }
+    }
+
+
+    public class ExecuteCodeLineException : Exception
+    {
+        public ExecuteCodeLineException(string message) : base(message) { }
+
+        public ExecuteCodeLineException(string message, Exception innerException) : base(message, innerException) { }
+    }
+
+    public class ExecuteCommandException : Exception
+    {
+        public ExecuteCommandException(string message) : base(message) { }
+
+        public ExecuteCommandException(string message, Exception innerException) : base(message, innerException) { }
+    }
+
 }

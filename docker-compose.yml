@@ -148,29 +148,29 @@ services:
     depends_on:
       - rabbitmq
 
-  bioAge.api:
-    image: ${DOCKER_REGISTRY-}bioageapi
-    container_name: bioAge.api
-    build:
-      context: .
-      dockerfile: src/Services/BioAge.API/BioAge.API/Dockerfile
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_URLS=http://+:80
-      #- ASPNETCORE_URLS=https://+:443;http://+:80
-      #- ASPNETCORE_HTTPS_PORT=8006
-      #- ASPNETCORE_Kestrel__Certificates__Default__Password=lisa2021
-      #- ASPNETCORE_Kestrel__Certificates__Default__Path=/https/localhost.pfx
-    ports:
-      - 8007:80
-      #- 8006:443
-    #volumes:
-    #  - ./https:/https:ro
-    networks:
-        - aModelNetwork
-    restart: on-failure
-    #extra_hosts:
-    #  - host.docker.internal:host-gateway
+  #bioAge.api:
+  #  image: ${DOCKER_REGISTRY-}bioageapi
+  #  container_name: bioAge.api
+  #  build:
+  #    context: .
+  #    dockerfile: src/Services/BioAge.API/BioAge.API/Dockerfile
+  #  environment:
+  #    - ASPNETCORE_ENVIRONMENT=Development
+  #    - ASPNETCORE_URLS=http://+:80
+  #    #- ASPNETCORE_URLS=https://+:443;http://+:80
+  #    #- ASPNETCORE_HTTPS_PORT=8006
+  #    #- ASPNETCORE_Kestrel__Certificates__Default__Password=lisa2021
+  #    #- ASPNETCORE_Kestrel__Certificates__Default__Path=/https/localhost.pfx
+  #  ports:
+  #    - 8007:80
+  #    #- 8006:443
+  #  #volumes:
+  #  #  - ./https:/https:ro
+  #  networks:
+  #      - aModelNetwork
+  #  restart: on-failure
+  #  #extra_hosts:
+  #  #  - host.docker.internal:host-gateway
 
   #containerregister.api:
   #  image: ${DOCKER_REGISTRY-}containerregisterapi
