@@ -38,13 +38,13 @@ namespace Models.API.Controllers
 
 
         [HttpPost("models/predict")]
-        public async Task<IActionResult> Predict(string modelId, double[] inputArgs)
+        public async Task<ActionResult<float[]>> Predict(string modelId, float[] inputArgs)
         {
             ModelMeta meta = await _mediator.Send(new GetModelMetaQuery() { ModelId = modelId });
             if (meta == null)
                 return NotFound();
-            double[] output = await _mediator.Send(new PredictModelCommand() { ModelMeta = meta, InputArgs = inputArgs });
-            throw new NotImplementedException();
+            float[] output = await _mediator.Send(new PredictModelCommand() { ModelMeta = meta, InputArgs = inputArgs });
+            return Ok(output);
         }
     }
 }
