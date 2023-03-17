@@ -11,6 +11,8 @@ using Agents.API.Service.Query;
 using Agents.API.Data.Repository;
 using Agents.API.Interfaces;
 using Interfaces.DynamicAgent;
+using Agents.API.Service.Command;
+using Agents.API.Entities.DynamicAgent;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -64,10 +66,10 @@ AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
 builder.Services
     .AddScoped<IUpdatePatientsDataInfo, UpdatePatientsInfo>()
+    .AddScoped<ICodeExecutor, CodeExecutorService>()
     .AddTransient<IWebRequester, HttpClientWebRequester>();
 builder.Services
-    .AddTransient<IUpdatePatientAgentsService, UpdatePatientAgentsService>()
-    .AddTransient<IDataProviderService, DataProviderService>();
+    .AddTransient<IUpdatePatientAgentsService, UpdatePatientAgentsService>();
 builder.Services
     .AddTransient<IAgingDynamics<AgingState>, AgingDynamics>()
     .AddTransient<IAgentInitSettingsProvider, AgentInitSettingsProvider>();
@@ -76,6 +78,20 @@ builder.Services
     .AddTransient<IRequestHandler<GetAgentStateQuery, IAgentState>, GetAgentStateQueryHandler>();
 
 builder.Services.AddSingleton<IDynamicAgentsRepository, DynamicAgentsRepository>();
+
+builder.Services.AddTransient<IProperty, AgentProperty>();
+builder.Services.AddTransient<IExecutableAgentCodeSettings, ExecutableAgentCodeSettings>();
+builder.Services
+    .AddTransient<IRequestHandler<GetCommandTypesMetaQueue, ICommandArgsTypesMeta>, GetCommandTypesMetaQueueHandler>()
+    .AddTransient<IRequestHandler<GetCommandArgsValuesQueue, List<object>>, GetCommandArgsValuesQueueHandler>()
+    .AddTransient<IRequestHandler<ParseCodeLineCommand, ICommand>, ParseCodeLineCommandHandler>()
+    .AddTransient<IRequestHandler<GetCommandNameCommand, string>, GetCommandNameCommandHandler>()
+    .AddTransient<IRequestHandler<ExecuteCodeLineCommand, Unit>, ExecuteCodeLineCommandHandler>()
+    .AddTransient<IRequestHandler<ConvertArgsCommand, object[]>, ConvertArgsCommandHandler>()
+    .AddTransient<IWebRequester, HttpClientWebRequester>()
+    .AddTransient<IMetaStorageService, InternalMetaStorageService>()
+    .AddScoped<ICodeResolveService, CodeResolveService>()
+    .AddSingleton<ICommandActionsProvider, CommandActionsProvider>();
 
 
 var app = builder.Build();

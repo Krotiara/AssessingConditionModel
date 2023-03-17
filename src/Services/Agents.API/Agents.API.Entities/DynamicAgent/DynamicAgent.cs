@@ -1,4 +1,5 @@
-﻿using Interfaces;
+﻿using Agents.API.Interfaces;
+using Interfaces;
 using Interfaces.DynamicAgent;
 using Newtonsoft.Json;
 using System;
@@ -11,11 +12,9 @@ namespace Agents.API.Entities.DynamicAgent
 {
     public class DynamicAgent : IDynamicAgent
     {
+        private readonly ICodeExecutor _codeExecutor;
 
-        private readonly IWebRequester webRequester;
-        private readonly string codeExecutorUrl;
-
-        public DynamicAgent(int observableId, IDynamicAgentInitSettings settings, IWebRequester webRequester)
+        public DynamicAgent(int observableId, IDynamicAgentInitSettings settings, ICodeExecutor codeExecutor)
         {
 #warning нестабильная инициалзация - если нет name и Id в словаре?
             //Name = settings.ActionsArgsReplaceDict[CommonArgs.Name].ToString();
@@ -27,8 +26,7 @@ namespace Agents.API.Entities.DynamicAgent
             settings.ActionsArgsReplaceDict[CommonArgs.EndDateTime] = DateTime.Today;
             Settings = settings;
 
-            this.webRequester = webRequester;
-            codeExecutorUrl = Environment.GetEnvironmentVariable("CODE_EXECUTOR_API_URL");
+            this._codeExecutor = codeExecutor;
         }
 
         public int Id { get ; set ; }
@@ -41,12 +39,9 @@ namespace Agents.API.Entities.DynamicAgent
 
         public async Task UpdateState()
         {
-#warning подразумевается, что settings уже актуализированы и вообще всегда в актуальном состоянии.
-            string actions = Newtonsoft.Json.JsonConvert.SerializeObject(Settings.DetermineAgentPropertiesActions);
-            string url = $"{codeExecutorUrl}/codeExecutor/executeCode";
-            Dictionary<string, AgentProperty> calculatedArgs = 
-                await webRequester.GetResponse<Dictionary<string, AgentProperty>>(url, "POST", actions);
-            foreach (KeyValuePair<string, AgentProperty> entry in calculatedArgs)
+#warning подразумевается, что settings уже актуализированы и вообще всегда в актуальном состоянии.  
+            Dictionary<string, IProperty> calculatedArgs = await _codeExecutor.ExecuteCode(Settings.DetermineAgentPropertiesActions); 
+            foreach (KeyValuePair<string, IProperty> entry in calculatedArgs)
             {
                 Settings.Properties[entry.Key] = entry.Value;
             }

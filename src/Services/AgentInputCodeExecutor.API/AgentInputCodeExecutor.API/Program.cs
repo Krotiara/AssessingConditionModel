@@ -32,7 +32,6 @@ builder.Services.AddMediatR(Assembly.GetExecutingAssembly());
 
 builder.Services.AddTransient<IProperty, AgentProperty>();
 builder.Services.AddTransient<IExecutableAgentCodeSettings, ExecutableAgentCodeSettings>();
-
 builder.Services
     .AddTransient<IRequestHandler<GetCommandTypesMetaQueue, ICommandArgsTypesMeta>, GetCommandTypesMetaQueueHandler>()
     .AddTransient<IRequestHandler<GetCommandArgsValuesQueue, List<object>>, GetCommandArgsValuesQueueHandler>()
