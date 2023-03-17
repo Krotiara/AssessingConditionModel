@@ -1,5 +1,6 @@
 ﻿using Agents.API.Data.Repository;
 using Agents.API.Entities;
+using Agents.API.Interfaces;
 using Interfaces;
 using Interfaces.DynamicAgent;
 
