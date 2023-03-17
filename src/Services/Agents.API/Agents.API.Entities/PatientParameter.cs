@@ -1,6 +1,7 @@
 ﻿using Interfaces;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -21,5 +22,13 @@ namespace Agents.API.Entities
 
         public int PositiveDynamicCoef { get; set; }
         public bool IsDynamic { get; set; }
+
+        public T ConvertValue<T>()
+        {
+            string valueToParse = Value;
+            if (typeof(T) is float || typeof(T) is double)
+                valueToParse = valueToParse.Replace(",", ".");
+            return (T)TypeDescriptor.GetConverter(typeof(T)).ConvertFrom(valueToParse);
+        }
     }
 }

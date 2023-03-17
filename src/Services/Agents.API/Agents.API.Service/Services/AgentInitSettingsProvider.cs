@@ -43,7 +43,7 @@ namespace Agents.API.Service.Services
                             $"parameters = " +
                             $"{SystemCommands.GetLatestPatientParameters}({CommonArgs.StartDateTime}, {CommonArgs.EndDateTime}, {CommonArgs.ObservedId})\n" +
                             $"age = {SystemCommands.GetAge}(parameters)\n" +
-                            $"bioAge = {SystemCommands.GetBioage}(parameters)\n" + 
+                            $"bioAge = {SystemCommands.GetBioageByFunctionalParameters}(parameters)\n" + 
                             $"rang = {SystemCommands.GetAgeRangBy}(age, bioAge)\n" +
                             $"CurrentAge = age\n" +
                             $"CurrentBioAge = bioAge\n" +

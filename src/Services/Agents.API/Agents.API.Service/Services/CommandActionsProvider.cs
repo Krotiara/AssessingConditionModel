@@ -44,36 +44,36 @@ namespace Agents.API.Service.Services
             {
                 string body = Newtonsoft.Json.JsonConvert.SerializeObject(new DateTime[2] { startTimestamp, endTimestamp });
                 string url = $"{_patientsResolverApiUrl}/patientsApi/latestPatientParameters/{patientId}";
-                return await _webRequester
-                  .GetResponse<IList<PatientParameter>>(url, "POST", body);
+                IList<PatientParameter> parameters = await _webRequester.GetResponse<IList<PatientParameter>>(url, "POST", body);
+                return parameters.ToDictionary(x => x.ParameterName, x=>x);
             };
 
-            _delegates[SystemCommands.GetAge] = async (List<PatientParameter> parameters) =>
+            _delegates[SystemCommands.GetAge] = async (Dictionary<ParameterNames,PatientParameter> parameters) =>
             {
-                IPatientParameter ageParam = parameters.FirstOrDefault(x => x.ParameterName == ParameterNames.Age);
-                if (ageParam == null)
+                if(!parameters.ContainsKey(ParameterNames.Age))
                     throw new NotImplementedException(); //TODO - обработка такого случая.
-                long age = long.Parse(ageParam.Value);
-                return age;
+                return long.Parse(parameters[ParameterNames.Age].Value);
             };
 
-            _delegates[SystemCommands.GetBioage] = async (PredictRequest predictRequest) =>
+            _delegates[SystemCommands.GetBioageByFunctionalParameters] = async (Dictionary<ParameterNames, PatientParameter> pDict) =>
             {
-                try
-                {                  
-                    string requestBody = Newtonsoft.Json.JsonConvert.SerializeObject(predictRequest);
-                    string url = $"{_modelsApiUrl}/models/predict/";
-                    return await _webRequester.GetResponse<long>(url, "POST", requestBody);
-                }
-                catch (GetWebResponceException ex)
+                float[] inputArgs = new float[] 
                 {
-                    throw new NotImplementedException();
-                }
-                catch (Exception unexpectedEx)
-                {
-                    //TODO
-                    throw new NotImplementedException();
-                }
+                    pDict[ParameterNames.SystolicPressure].ConvertValue<float>(),
+                    pDict[ParameterNames.DiastolicPressure].ConvertValue<float>(),
+                    pDict[ParameterNames.SystolicPressure].ConvertValue<float>() - pDict[ParameterNames.DiastolicPressure].ConvertValue<float>(),
+                    pDict[ParameterNames.InhaleBreathHolding].ConvertValue<float>(),
+                    pDict[ParameterNames.OuthaleBreathHolding].ConvertValue<float>(),
+                    pDict[ParameterNames.LungCapacity].ConvertValue<float>(),
+                    pDict[ParameterNames.Weight].ConvertValue<float>(),
+                    pDict[ParameterNames.Accommodation].ConvertValue<float>(),
+                    pDict[ParameterNames.HearingAcuity].ConvertValue<float>(),
+                    pDict[ParameterNames.StaticBalancing].ConvertValue<float>()
+                };
+                PredictRequest request = new PredictRequest() { ModelId = "bioAgeFuncModel", InputArgs = inputArgs };
+                string requestBody = Newtonsoft.Json.JsonConvert.SerializeObject(request);
+                string url = $"{_modelsApiUrl}/models/predict/";
+                return await _webRequester.GetResponse<double[]>(url, "POST", requestBody);
             };
 
             _delegates[SystemCommands.GetAgeRangBy] = async (long age, long bioAge) =>

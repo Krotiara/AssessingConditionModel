@@ -24,7 +24,7 @@ namespace Interfaces
     {
         GetLatestPatientParameters,
         GetAge,
-        GetBioage,
+        GetBioageByFunctionalParameters,
         GetAgeRangBy,
         GetInfluences,
         GetAllInfluences,
