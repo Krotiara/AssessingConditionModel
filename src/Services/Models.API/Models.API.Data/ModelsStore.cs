@@ -3,6 +3,7 @@ using Minio.DataModel.Tags;
 using Models.API.Entities;
 using Models.API.Interfaces;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
@@ -14,10 +15,12 @@ namespace Models.API.Data
     public class ModelsStore
     {
         private readonly S3ClientService _s3Client;
+        private readonly ConcurrentDictionary<string, MemoryStream> _loadedModels;
 
         public ModelsStore(S3ClientService s3Client)
         {
             _s3Client = s3Client;
+            _loadedModels = new ConcurrentDictionary<string, MemoryStream>();
         }
 
     
@@ -42,8 +45,10 @@ namespace Models.API.Data
         }
 
 
-        public async Task<MemoryStream> Get(string fileName)
+        public async Task<MemoryStream> Get(string fileName, bool useModelFromCache = true)
         {
+            if (_loadedModels.ContainsKey(fileName) && useModelFromCache)
+                return _loadedModels[fileName];
             MemoryStream memoryStream = new MemoryStream();
             GetObjectArgs args = new GetObjectArgs()
                .WithBucket(_s3Client.Bucket)
@@ -51,6 +56,7 @@ namespace Models.API.Data
                .WithCallbackStream(stream => stream.CopyTo(memoryStream));
             await _s3Client.Client.GetObjectAsync(args).ConfigureAwait(false);
             memoryStream.Seek(0, SeekOrigin.Begin);
+            _loadedModels[fileName] = memoryStream;
             return memoryStream;
         }
     }
