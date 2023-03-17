@@ -14,25 +14,25 @@ namespace AgentInputCodeExecutor.API.Service.Service
     public class CommandActionsProvider : ICommandActionsProvider
     {
 
-        private readonly IMediator mediator;
-        private readonly IWebRequester webRequester;
-        private readonly Dictionary<SystemCommands, Delegate> delegates;
-        private readonly string patientsResolverApiUrl;
-        private readonly string bioAgeApiUrl;
+        private readonly IMediator _mediator;
+        private readonly IWebRequester _webRequester;
+        private readonly Dictionary<SystemCommands, Delegate> _delegates;
+        private readonly string _patientsResolverApiUrl;
+        private readonly string _modelsApiUrl;
 
         public CommandActionsProvider(IMediator mediator, IWebRequester webRequester)
         {
-            this.webRequester = webRequester;
-            this.mediator = mediator;
-            patientsResolverApiUrl = Environment.GetEnvironmentVariable("PATIENTRESOLVER_API_URL");
-            bioAgeApiUrl = Environment.GetEnvironmentVariable("BIO_AGE_API_URL"); //TODO - в отдельный сервис
-            delegates = new Dictionary<SystemCommands, Delegate>();
+            this._webRequester = webRequester;
+            this._mediator = mediator;
+            _patientsResolverApiUrl = Environment.GetEnvironmentVariable("PATIENTRESOLVER_API_URL");
+            _modelsApiUrl = Environment.GetEnvironmentVariable("MODELS_API_URL"); //TODO - в отдельный сервис
+            _delegates = new Dictionary<SystemCommands, Delegate>();
             InitDelegates();
         }
 
         public Delegate? GetDelegateByCommandNameWithoutParams(SystemCommands commandName)
         {
-            return delegates.ContainsKey(commandName) ? delegates[commandName] : null;
+            return _delegates.ContainsKey(commandName) ? _delegates[commandName] : null;
         }
 
 
@@ -40,15 +40,16 @@ namespace AgentInputCodeExecutor.API.Service.Service
         {
             
             // TODO Список методов нужно вынести в отдельное место.
-            delegates[SystemCommands.GetLatestPatientParameters] = async (DateTime startTimestamp, DateTime endTimestamp, int patientId) =>
+            _delegates[SystemCommands.GetLatestPatientParameters] = async (DateTime startTimestamp, DateTime endTimestamp, int patientId) =>
             {
                 string body = Newtonsoft.Json.JsonConvert.SerializeObject(new DateTime[2] { startTimestamp, endTimestamp });
-                string url = $"{patientsResolverApiUrl}/patientsApi/latestPatientParameters/{patientId}";
-                return await webRequester
+                string url = $"{_patientsResolverApiUrl}/patientsApi/latestPatientParameters/{patientId}";
+                return await _webRequester
                   .GetResponse<IList<PatientParameter>>(url, "POST", body);
             };
 
-            delegates[SystemCommands.GetAge] = async (List<PatientParameter> parameters) =>
+#warning Какой смысл пересылать весь лист параметров для такого маленького действия?
+            _delegates[SystemCommands.GetAge] = async (List<PatientParameter> parameters) =>
             {
                 IPatientParameter ageParam = parameters.FirstOrDefault(x => x.ParameterName == ParameterNames.Age);
                 if (ageParam == null)
@@ -57,19 +58,13 @@ namespace AgentInputCodeExecutor.API.Service.Service
                 return age;
             };
 
-            delegates[SystemCommands.GetBioage] = async (List<PatientParameter> parameters) =>
+            _delegates[SystemCommands.GetBioage] = async (PredictRequest predictRequest) =>
             {
                 try
-                {
-                    BioAgeCalculationParameters calculationParameters = new BioAgeCalculationParameters()
-                    {
-                        CalculationType = BioAgeCalculationType.ByFunctionalParameters,
-                        Parameters = parameters.ToDictionary(entry => entry.ParameterName, entry => entry)
-                    };
-
-                    string requestBody = Newtonsoft.Json.JsonConvert.SerializeObject(calculationParameters);
-                    string url = $"{bioAgeApiUrl}/bioAge/";
-                    return await webRequester.GetResponse<long>(url, "PUT", requestBody);
+                {                  
+                    string requestBody = Newtonsoft.Json.JsonConvert.SerializeObject(predictRequest);
+                    string url = $"{_modelsApiUrl}/models/predict/";
+                    return await _webRequester.GetResponse<long>(url, "PUT", requestBody);
                 }
                 catch (GetWebResponceException ex)
                 {
@@ -82,7 +77,7 @@ namespace AgentInputCodeExecutor.API.Service.Service
                 }
             };
 
-            delegates[SystemCommands.GetAgeRangBy] = async (long age, long bioAge) =>
+            _delegates[SystemCommands.GetAgeRangBy] = async (long age, long bioAge) =>
             {
                 long ageDelta = bioAge - age;
                 AgentBioAgeStates rang;
@@ -99,26 +94,26 @@ namespace AgentInputCodeExecutor.API.Service.Service
                 return rang;
             };
 
-            delegates[SystemCommands.GetInfluences] = async (DateTime startTimestamp, DateTime endTimestamp, int patientId) =>
+            _delegates[SystemCommands.GetInfluences] = async (DateTime startTimestamp, DateTime endTimestamp, int patientId) =>
             {
                 string body = Newtonsoft.Json.JsonConvert.SerializeObject(new DateTime[2] { startTimestamp, endTimestamp });
-                string url = $"{patientsResolverApiUrl}/patientsApi/influences/{patientId}";
-                return await webRequester.GetResponse<IList<Influence>>(url, "POST", body);
+                string url = $"{_patientsResolverApiUrl}/patientsApi/influences/{patientId}";
+                return await _webRequester.GetResponse<IList<Influence>>(url, "POST", body);
             };
 
-            delegates[SystemCommands.GetInfluencesWithoutParameters] = async (DateTime startTimestamp, DateTime endTimestamp, int patientId) =>
+            _delegates[SystemCommands.GetInfluencesWithoutParameters] = async (DateTime startTimestamp, DateTime endTimestamp, int patientId) =>
             {
                 string body = Newtonsoft.Json.JsonConvert.SerializeObject(new DateTime[2] { startTimestamp, endTimestamp });
-                string url = $"{patientsResolverApiUrl}/patientsApi/influencesWithoutParams/{patientId}";
-                return await webRequester.GetResponse<IList<Influence>>(url, "POST", body);
+                string url = $"{_patientsResolverApiUrl}/patientsApi/influencesWithoutParams/{patientId}";
+                return await _webRequester.GetResponse<IList<Influence>>(url, "POST", body);
             };
 
                 //TODO Добавить meta инфу для этого действия
-                delegates[SystemCommands.GetAllInfluences] = async (DateTime startTimestamp, DateTime endTimestamp) =>
+                _delegates[SystemCommands.GetAllInfluences] = async (DateTime startTimestamp, DateTime endTimestamp) =>
             {
-                string url = $"{patientsResolverApiUrl}/patientsApi/influences/";
+                string url = $"{_patientsResolverApiUrl}/patientsApi/influences/";
                 string body = Newtonsoft.Json.JsonConvert.SerializeObject(new DateTime[2] { startTimestamp, endTimestamp });
-                return await webRequester.GetResponse<List<Influence>>(url, "POST", body);
+                return await _webRequester.GetResponse<List<Influence>>(url, "POST", body);
             };
         }
     }

@@ -38,12 +38,12 @@ namespace Models.API.Controllers
 
 
         [HttpPost("models/predict")]
-        public async Task<ActionResult<float[]>> Predict(string modelId, float[] inputArgs)
+        public async Task<ActionResult<float[]>> Predict(PredictRequest predictRequest)
         {
-            ModelMeta meta = await _mediator.Send(new GetModelMetaQuery() { ModelId = modelId });
+            ModelMeta meta = await _mediator.Send(new GetModelMetaQuery() { ModelId = predictRequest.ModelId });
             if (meta == null)
                 return NotFound();
-            float[] output = await _mediator.Send(new PredictModelCommand() { ModelMeta = meta, InputArgs = inputArgs });
+            float[] output = await _mediator.Send(new PredictModelCommand() { ModelMeta = meta, InputArgs = predictRequest.InputArgs });
             return Ok(output);
         }
     }
