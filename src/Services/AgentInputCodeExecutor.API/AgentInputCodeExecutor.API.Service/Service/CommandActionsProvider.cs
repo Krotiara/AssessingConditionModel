@@ -64,7 +64,7 @@ namespace AgentInputCodeExecutor.API.Service.Service
                 {                  
                     string requestBody = Newtonsoft.Json.JsonConvert.SerializeObject(predictRequest);
                     string url = $"{_modelsApiUrl}/models/predict/";
-                    return await _webRequester.GetResponse<long>(url, "PUT", requestBody);
+                    return await _webRequester.GetResponse<long>(url, "POST", requestBody);
                 }
                 catch (GetWebResponceException ex)
                 {
