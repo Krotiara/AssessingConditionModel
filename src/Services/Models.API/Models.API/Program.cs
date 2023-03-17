@@ -19,7 +19,7 @@ services.AddTransient<ModelsStore>();
 services
     .AddTransient<IRequestHandler<InsertModelCommand, Unit>, InsertModelCommandHandler>()
     .AddTransient<IRequestHandler<GetModelMetaQuery, ModelMeta>, GetModelMetaQueryHandler>()
-    .AddTransient<IRequestHandler<PredictModelCommand, double[]>, PredictModelCommandHandler>();
+    .AddTransient<IRequestHandler<PredictModelCommand, float[]>, PredictModelCommandHandler>();
 
 //Swagger
 services.AddSwaggerGen();

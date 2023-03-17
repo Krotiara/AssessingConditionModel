@@ -10,6 +10,8 @@ using Razorvine.Pickle;
 using NumSharp;
 using NumSharp.Extensions;
 using Numpy;
+using Microsoft.ML.OnnxRuntime;
+using Microsoft.ML.OnnxRuntime.Tensors;
 
 namespace Models.API.Service.Command
 {
@@ -38,17 +40,19 @@ namespace Models.API.Service.Command
         }
     }
 
-    public class PredictModelCommand: IRequest<double[]>
+    public class PredictModelCommand: IRequest<float[]>
     {
         public ModelMeta ModelMeta { get; set; }
 
-        public double[] InputArgs { get; set; }
+        public float[] InputArgs { get; set; }
     }
 
-    public class PredictModelCommandHandler : IRequestHandler<PredictModelCommand, double[]>
+    public class PredictModelCommandHandler : IRequestHandler<PredictModelCommand, float[]>
     {
         private readonly ModelsStore _modelsStore;
         private readonly Unpickler _unpickler;
+
+        private bool IsSupportExtension(string path) => Path.GetExtension(path) == ".onnx";
 
         public PredictModelCommandHandler(ModelsStore modelsStore)
         {
@@ -56,16 +60,21 @@ namespace Models.API.Service.Command
             _unpickler = new Unpickler();
         }
 
-        public async Task<double[]> Handle(PredictModelCommand request, CancellationToken cancellationToken)
+        public async Task<float[]> Handle(PredictModelCommand request, CancellationToken cancellationToken)
         {
+            if (!IsSupportExtension(request.ModelMeta.Name))
+                return null;
+
             MemoryStream model = await _modelsStore.Get(request.ModelMeta.Name);
-            Unpickler.registerConstructor("numpy.ndarray", "NDArray", new NumpyArrayConstructor());
-            Unpickler.registerConstructor("numpy.core.multiarray._reconstruct", "NDArray", new NumpyReconstructConstructor()); #error here
-            object obj = _unpickler.load(model);
-           // ITransformer trainedModel = _mLContext.Model.Load(model, out DataViewSchema modelSchema);
-
-            throw new NotImplementedException();
-
+            var session = new InferenceSession(model.ToArray());
+            Tensor<float> t1 = new DenseTensor<float>(request.InputArgs, new int[] { request.ModelMeta.OutputParamsCount, request.ModelMeta.InputParamsCount });
+            NamedOnnxValue t1Value = NamedOnnxValue.CreateFromTensor("float_input", t1); //float_input - всегда один и тот же?
+            using (var outPut = session.Run(new List<NamedOnnxValue> { t1Value }))
+            {
+                DisposableNamedOnnxValue val = outPut.First();
+                DenseTensor<float> value = val.Value as DenseTensor<float>;
+                return value.Buffer.ToArray();           
+            }
         }
     }
 }
