@@ -31,14 +31,13 @@ namespace Agents.API.Service.Command
 
     public class ExecuteCodeLineCommandHandler : IRequestHandler<ExecuteCodeLineCommand, Unit>
     {
-
-        private readonly ICodeResolveService codeResolveService;
-        private readonly IMediator mediator;
+        private readonly ICodeResolveService _codeResolveService;
+        private readonly IMediator _mediator;
 
         public ExecuteCodeLineCommandHandler(ICodeResolveService codeResolveService, IMediator mediator)
         {
-            this.codeResolveService = codeResolveService;
-            this.mediator = mediator;
+            this._codeResolveService = codeResolveService;
+            this._mediator = mediator;
         }
 
 
@@ -53,8 +52,8 @@ namespace Agents.API.Service.Command
 
 #warning Не учтен случай, когда есть и вызов функции, и простые слагаемые. Нужно доьавить обнаружение этого и эксепшн. Усложнять псевдо-выполнитель кода не надо.
 
-            (ICommandArgsTypesMeta, Delegate) commandPair = await codeResolveService.ResolveCommandAction(request.Command, cancellationToken);
-            List<object> variables = await mediator.Send(new GetCommandArgsValuesQueue(request.Command, commandPair.Item1), cancellationToken);
+            (ICommandArgsTypesMeta, Delegate) commandPair = await _codeResolveService.ResolveCommandAction(request.Command, cancellationToken);
+            List<object> variables = await _mediator.Send(new GetCommandArgsValuesQueue(request.Command, commandPair.Item1), cancellationToken);
 
             if (request.Command.CommandType == CommandType.Assigning)
             {

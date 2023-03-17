@@ -13,6 +13,7 @@ using Agents.API.Entities;
 using Agents.API.Messaging.Receive.Configs;
 using Agents.API.Service.Services;
 using Microsoft.Extensions.DependencyInjection;
+using Agents.API.Interfaces;
 
 namespace Agents.API.Messaging.Receive.Receiver
 {

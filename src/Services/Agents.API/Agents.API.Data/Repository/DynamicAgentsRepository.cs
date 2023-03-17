@@ -16,14 +16,15 @@ namespace Agents.API.Data.Repository
     public class DynamicAgentsRepository : IDynamicAgentsRepository
     {
         private Dictionary<(int, AgentType), IDynamicAgent> dynamicAgents;
+#warning Из-за прокидывания ссылок здесь сделать пришлось нижние Singleton-м.
         private readonly IAgentInitSettingsProvider agentInitSettingsProvider;
-        private readonly IWebRequester webRequester;
+        private readonly ICodeExecutor _codeExecutor;
 
-        public DynamicAgentsRepository(IWebRequester webRequester, IAgentInitSettingsProvider agentInitSettingsProvider)
+        public DynamicAgentsRepository(ICodeExecutor codeExecutor, IAgentInitSettingsProvider agentInitSettingsProvider)
         {
             dynamicAgents = new Dictionary<(int, AgentType), IDynamicAgent>();
             this.agentInitSettingsProvider = agentInitSettingsProvider;
-            this.webRequester = webRequester;
+            _codeExecutor = codeExecutor;
         }
 
 
@@ -31,7 +32,7 @@ namespace Agents.API.Data.Repository
         {
             if (dynamicAgents.ContainsKey((observableId, settings.AgentType)))
                 throw new InitAgentException($"Уже существует агент для отслеживаемого объекта с Id = {observableId}.");
-            dynamicAgents[(observableId, settings.AgentType)] = new DynamicAgent(observableId, settings, webRequester);
+            dynamicAgents[(observableId, settings.AgentType)] = new DynamicAgent(observableId, settings, _codeExecutor);
             return dynamicAgents[(observableId, settings.AgentType)];
         }
 

@@ -36,28 +36,28 @@ services:
     restart: on-failure
 
 
-  agentinputcodeexecutor.api:
-    image: ${DOCKER_REGISTRY-}agentinputcodeexecutorapi
-    container_name: agentinputcodeexecutor.api
-    build:
-      context: .
-      dockerfile: src/Services/AgentInputCodeExecutor.API/AgentInputCodeExecutor.API/Dockerfile
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_URLS=http://+:80
-      - PATIENTRESOLVER_API_URL=http://patientsresolver.api:80
-      - MODELS_API_URL=http://models.api:80
-      #- ASPNETCORE_URLS=https://+:443;http://+:80
-      #- ASPNETCORE_HTTPS_PORT=8004
-      #- ASPNETCORE_Kestrel__Certificates__Default__Password=lisa2021
-      #- ASPNETCORE_Kestrel__Certificates__Default__Path=/https/localhost.pfx
-    ports:
-      - 8034:80
-    networks:
-        - aModelNetwork
-    restart: on-failure
-    depends_on:
-      - rabbitmq
+  #agentinputcodeexecutor.api:
+  #  image: ${DOCKER_REGISTRY-}agentinputcodeexecutorapi
+  #  container_name: agentinputcodeexecutor.api
+  #  build:
+  #    context: .
+  #    dockerfile: src/Services/AgentInputCodeExecutor.API/AgentInputCodeExecutor.API/Dockerfile
+  #  environment:
+  #    - ASPNETCORE_ENVIRONMENT=Development
+  #    - ASPNETCORE_URLS=http://+:80
+  #    - PATIENTRESOLVER_API_URL=http://patientsresolver.api:80
+  #    - MODELS_API_URL=http://models.api:80
+  #    #- ASPNETCORE_URLS=https://+:443;http://+:80
+  #    #- ASPNETCORE_HTTPS_PORT=8004
+  #    #- ASPNETCORE_Kestrel__Certificates__Default__Password=lisa2021
+  #    #- ASPNETCORE_Kestrel__Certificates__Default__Path=/https/localhost.pfx
+  #  ports:
+  #    - 8034:80
+  #  networks:
+  #      - aModelNetwork
+  #  restart: on-failure
+  #  depends_on:
+  #    - rabbitmq
   
   web:
     image: ${DOCKER_REGISTRY-}web
@@ -132,7 +132,8 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:80
-      - CODE_EXECUTOR_API_URL=http://agentinputcodeexecutor.api:80
+      - PATIENTRESOLVER_API_URL=http://patientsresolver.api:80
+      - MODELS_API_URL=http://models.api:80
       #- ASPNETCORE_URLS=https://+:443;http://+:80
       #- ASPNETCORE_HTTPS_PORT=8012
       #- ASPNETCORE_Kestrel__Certificates__Default__Password=lisa2021

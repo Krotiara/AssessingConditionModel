@@ -11,6 +11,8 @@ namespace Agents.API.Entities.DynamicAgent
     public class AgentProperty : IProperty
     {
 
+        public AgentProperty() { }
+
         public AgentProperty(string originName, Type type, ParameterNames name = ParameterNames.None)
         {
             OriginName = originName;

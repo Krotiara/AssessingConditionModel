@@ -66,13 +66,13 @@ AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
 builder.Services
     .AddScoped<IUpdatePatientsDataInfo, UpdatePatientsInfo>()
-    .AddScoped<ICodeExecutor, CodeExecutorService>()
+    .AddSingleton<ICodeExecutor, CodeExecutorService>()
     .AddTransient<IWebRequester, HttpClientWebRequester>();
 builder.Services
     .AddTransient<IUpdatePatientAgentsService, UpdatePatientAgentsService>();
 builder.Services
     .AddTransient<IAgingDynamics<AgingState>, AgingDynamics>()
-    .AddTransient<IAgentInitSettingsProvider, AgentInitSettingsProvider>();
+    .AddSingleton<IAgentInitSettingsProvider, AgentInitSettingsProvider>();
 
 builder.Services
     .AddTransient<IRequestHandler<GetAgentStateQuery, IAgentState>, GetAgentStateQueryHandler>();
@@ -90,7 +90,7 @@ builder.Services
     .AddTransient<IRequestHandler<ConvertArgsCommand, object[]>, ConvertArgsCommandHandler>()
     .AddTransient<IWebRequester, HttpClientWebRequester>()
     .AddTransient<IMetaStorageService, InternalMetaStorageService>()
-    .AddScoped<ICodeResolveService, CodeResolveService>()
+    .AddTransient<ICodeResolveService, CodeResolveService>()
     .AddSingleton<ICommandActionsProvider, CommandActionsProvider>();
 
 

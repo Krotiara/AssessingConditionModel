@@ -48,7 +48,6 @@ namespace Agents.API.Service.Services
                   .GetResponse<IList<PatientParameter>>(url, "POST", body);
             };
 
-#warning Какой смысл пересылать весь лист параметров для такого маленького действия?
             _delegates[SystemCommands.GetAge] = async (List<PatientParameter> parameters) =>
             {
                 IPatientParameter ageParam = parameters.FirstOrDefault(x => x.ParameterName == ParameterNames.Age);
