@@ -38,7 +38,7 @@ namespace Models.API.Controllers
 
 
         [HttpPost("models/predict")]
-        public async Task<ActionResult<float[]>> Predict(PredictRequest predictRequest)
+        public async Task<ActionResult<float[]>> Predict([FromBody]PredictRequest predictRequest)
         {
             ModelMeta meta = await _mediator.Send(new GetModelMetaQuery() { ModelId = predictRequest.ModelId });
             if (meta == null)

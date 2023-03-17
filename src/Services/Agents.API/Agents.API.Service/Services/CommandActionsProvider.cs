@@ -52,7 +52,7 @@ namespace Agents.API.Service.Services
             {
                 if(!parameters.ContainsKey(ParameterNames.Age))
                     throw new NotImplementedException(); //TODO - обработка такого случая.
-                return long.Parse(parameters[ParameterNames.Age].Value);
+                return int.Parse(parameters[ParameterNames.Age].Value);
             };
 
             _delegates[SystemCommands.GetBioageByFunctionalParameters] = async (Dictionary<ParameterNames, PatientParameter> pDict) =>
@@ -70,15 +70,16 @@ namespace Agents.API.Service.Services
                     pDict[ParameterNames.HearingAcuity].ConvertValue<float>(),
                     pDict[ParameterNames.StaticBalancing].ConvertValue<float>()
                 };
-                PredictRequest request = new PredictRequest() { ModelId = "bioAgeFuncModel", InputArgs = inputArgs };
+                IPredictRequest request = new PredictRequest() { ModelId = "bioAgeFuncModel", InputArgs = inputArgs };
                 string requestBody = Newtonsoft.Json.JsonConvert.SerializeObject(request);
                 string url = $"{_modelsApiUrl}/models/predict/";
-                return await _webRequester.GetResponse<double[]>(url, "POST", requestBody);
+                float[] res = (await _webRequester.GetResponse<float[]>(url, "POST", requestBody));
+                return (int)Math.Ceiling(res.First());
             };
 
-            _delegates[SystemCommands.GetAgeRangBy] = async (long age, long bioAge) =>
+            _delegates[SystemCommands.GetAgeRangBy] = async (int age, int bioAge) =>
             {
-                long ageDelta = bioAge - age;
+                int ageDelta = bioAge - age;
                 AgentBioAgeStates rang;
                 if (ageDelta <= -9)
                     rang = AgentBioAgeStates.RangI;

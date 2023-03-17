@@ -9,6 +9,8 @@ namespace Models.API.Entities
 {
     public class PredictRequest : IPredictRequest
     {
+        public PredictRequest() { }
+
         public string ModelId { get; set; }
         public float[] InputArgs { get; set; }
     }
