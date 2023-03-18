@@ -13,6 +13,8 @@ namespace PatientsResolver.API.Service.Query
     public class GetPatientQuery : IRequest<Patient>
     {
         public int PatientId { get; set; }
+
+        public string MedicalOrganization { get; set; }
     }
 
     public class GetPatientQueryHandler: IRequestHandler<GetPatientQuery, Patient>
@@ -26,7 +28,7 @@ namespace PatientsResolver.API.Service.Query
 
         public async Task<Patient> Handle(GetPatientQuery request, CancellationToken cancellationToken)
         {
-           Patient? p =  await patientDataRepository.GetPatientBy(request.PatientId);
+           Patient? p =  await patientDataRepository.GetPatientBy(request.PatientId, request.MedicalOrganization);
             if (p == null)
                 throw new PatientNotFoundException($"Не найден пациент с id = {request.PatientId}");
             else return p;

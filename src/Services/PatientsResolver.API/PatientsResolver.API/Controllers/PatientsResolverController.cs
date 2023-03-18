@@ -21,23 +21,17 @@ namespace PatientsResolver.API.Controllers
             this.mediator = mediator;
         }
 
-   
+
         #region patients routes
-        [HttpGet("patientsApi/patients/{patientId}")]
-        public async Task<ActionResult<Patient>> GetPatient(int patientId)
+        [HttpGet("patientsApi/patients/{medOrganization}/{patientId}")]
+        public async Task<ActionResult<Patient>> GetPatient(string medOrganization, int patientId)
         {
-            try
-            {
-                return Ok(await mediator.Send(new GetPatientQuery() { PatientId = patientId }));
-            }
-            catch(PatientNotFoundException ex)
-            {
-                return BadRequest(ex.Message);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest($"Unexpected error: {ex.Message}");
-            }
+            Patient patient = await mediator.Send(new GetPatientQuery() { PatientId = patientId, MedicalOrganization = medOrganization });
+            if (patient == null)
+                return NotFound();
+            else 
+                return Ok(patient);
+           
         }
 
 
@@ -73,11 +67,11 @@ namespace PatientsResolver.API.Controllers
 
 
         [HttpDelete("patientsApi/deletePatient")]
-        public async Task<ActionResult<bool>> DeletePatient(int patientId)
+        public async Task<ActionResult<bool>> DeletePatient(int patientId, string medicalOrganization)
         {
             try
             {
-                return await mediator.Send(new DeletePatientCommand(patientId));
+                return await mediator.Send(new DeletePatientCommand(patientId, medicalOrganization));
             }
             catch(DeletePatientException ex)
             {
