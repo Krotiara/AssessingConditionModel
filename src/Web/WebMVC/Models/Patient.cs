@@ -41,5 +41,6 @@ namespace WebMVC.Models
         [Display(Name = "Вид лечения")]
         [GenderSet(ErrorMessage = "Не указан вид лечения")]
         public TreatmentType TreatmentType { get; set; }
+        public string MedicalOrganization { get; set; }
     }
 }

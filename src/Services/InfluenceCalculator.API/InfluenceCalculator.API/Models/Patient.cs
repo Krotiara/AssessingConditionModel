@@ -10,5 +10,6 @@ namespace InfluenceCalculator.API.Models
         public int MedicalHistoryNumber { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
         public GenderEnum Gender { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
         public TreatmentType TreatmentType { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public string MedicalOrganization { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
     }
 }

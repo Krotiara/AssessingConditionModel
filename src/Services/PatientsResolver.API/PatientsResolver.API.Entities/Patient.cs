@@ -37,6 +37,12 @@ namespace PatientsResolver.API.Entities
 
         [NotNull]
         [Required]
+        [Key]
+        [Column("MedicalOrganization")]
+        public string MedicalOrganization { get; set; }
+
+        [NotNull]
+        [Required]
         [Column("Gender")]
         public GenderEnum Gender { get; set; }
 
@@ -44,5 +50,6 @@ namespace PatientsResolver.API.Entities
         [Required]
         [Column("TreatmentType")]
         public TreatmentType TreatmentType { get; set; }
+       
     }
 }
