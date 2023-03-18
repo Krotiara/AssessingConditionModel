@@ -40,7 +40,7 @@ namespace Agents.API.Messaging.Receive.Receiver
             //    .ToList();
             //await initPatientAgentsService
             //    .InitAgentsAsync((IList<Interfaces.IAgentInitSettings>)data
-            //    .Select(x=> new AgentInitSettings(x.MedicalHistoryNumber, AgentType.AgingPatient)).ToList());
+            //    .Select(x=> new AgentInitSettings(x.Id, AgentType.AgingPatient)).ToList());
         }
     }
 }

@@ -56,7 +56,7 @@ namespace Agents.API.UnitTests.Service
             //AgentPatient aP = await rep.InitAgentPatient(testPatient);
             
             //UpdatePatientsInfo info = new UpdatePatientsInfo() 
-            //{ UpdateInfo = new HashSet<(int, DateTime)> { (testPatient.MedicalHistoryNumber, DateTime.Now) } };
+            //{ UpdateInfo = new HashSet<(int, DateTime)> { (testPatient.Id, DateTime.Now) } };
             //int updatedCount = await service.UpdatePatientAgents(info);
            
             //Assert.Equal(1, updatedCount);
@@ -83,7 +83,7 @@ namespace Agents.API.UnitTests.Service
             //Patient testPatient = GetTestPatient(mockPatientId);
 
             //UpdatePatientsInfo info = new UpdatePatientsInfo()
-            //{ UpdateInfo = new HashSet<(int, DateTime)> { (testPatient.MedicalHistoryNumber, DateTime.Now) } };
+            //{ UpdateInfo = new HashSet<(int, DateTime)> { (testPatient.Id, DateTime.Now) } };
             //int updatedCount = await service.UpdatePatientAgents(info);
 
             //Assert.Equal(0, updatedCount);
@@ -100,6 +100,6 @@ namespace Agents.API.UnitTests.Service
         }
 
         private Patient GetTestPatient(int patientId) => 
-            new Patient() { Name = "test", MedicalHistoryNumber = patientId, Gender = GenderEnum.Female, Birthday = DateTime.Today };
+            new Patient() { Name = "test", Id = patientId, Gender = GenderEnum.Female, Birthday = DateTime.Today };
     }
 }

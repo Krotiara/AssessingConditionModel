@@ -15,7 +15,9 @@ namespace WebMVC.Models
         public Patient() { }
 
 
-        [HiddenInput(DisplayValue = false)]
+        [Display(Name = "Номер истории болезни")]
+        [Range(1, int.MaxValue, ErrorMessage = "Значение должно быть положительным числом")]
+        [Required(ErrorMessage = "Не указан идентификатор пациента")]
         public int Id { get ; set ; }
 
         [Display(Name="ФИО")]
@@ -27,11 +29,6 @@ namespace WebMVC.Models
         [Display(Name = "Дата рождения")]
         [DataType(DataType.Date)]
         public DateTime Birthday { get ; set ; }
-
-        [Display(Name = "Номер истории болезни")]
-        [Range(1, int.MaxValue, ErrorMessage = "Значение должно быть положительным числом")]
-        [Required(ErrorMessage = "Не указан идентификатор пациента")]
-        public int MedicalHistoryNumber { get ; set ; }
 
         [Display(Name = "Пол")]
         [GenderSet(ErrorMessage = "Не указан пол")]

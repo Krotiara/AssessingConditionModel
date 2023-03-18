@@ -39,25 +39,25 @@ namespace PatientsResolver.API.Service.Command
             foreach(Patient patient in request.Patients)
                 if(patientsRepository
                     .GetAll()
-                    .FirstOrDefault(x => x.MedicalHistoryNumber ==  patient.MedicalHistoryNumber 
+                    .FirstOrDefault(x => x.Id ==  patient.Id 
                     && x.MedicalOrganization == patient.MedicalOrganization) == null)
                 {
                     try
                     {
 #warning По идее лучше сделать правилами при заполнении, а то выглядит костыльно.
-                        if (patient.MedicalHistoryNumber <= 0 || 
+                        if (patient.Id <= 0 || 
                             patient.Gender == Interfaces.GenderEnum.None
                             /*patient.Birthday == default(DateTime)*/) //Пока убрал, так как в входных данных нет. 14.12.2022
-                                throw new AddPatientException($"Some requied values is empty for patient with history number = {patient.MedicalHistoryNumber}");
+                                throw new AddPatientException($"Some requied values is empty for patient with history number = {patient.Id}");
 
                         bool isAdded = await mediator.Send(new AddPatientCommand() { Patient = patient }); /* patientsRepository.AddAsync(patient);*/
                         if (isAdded)
                             addedPatients.Add(patient);
-                        else throw new AddPatientException($"Patient with history number = {patient.MedicalHistoryNumber} was not added");
+                        else throw new AddPatientException($"Patient with history number = {patient.Id} was not added");
                     }
                     catch(Exception ex)
                     {
-                        exMessages.Add($"Patient with history = {patient.MedicalHistoryNumber}:{ex}.");
+                        exMessages.Add($"Patient with history = {patient.Id}:{ex}.");
                         continue;
                     }
                 }

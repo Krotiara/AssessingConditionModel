@@ -54,7 +54,7 @@ namespace PatientsResolver.API.UnitTests.Command
                 InfluenceType = Interfaces.InfluenceTypes.AntiInflammatory,
                 MedicineName = "test",
                 PatientId = patientId,
-                Patient = new Patient() { MedicalHistoryNumber = patientId, 
+                Patient = new Patient() { Id = patientId, 
                     Gender = Interfaces.GenderEnum.Female, Birthday = DateTime.Now, Name = "" },
                 StartTimestamp = DateTime.Today,
                 EndTimestamp = DateTime.Today,     
@@ -101,7 +101,7 @@ namespace PatientsResolver.API.UnitTests.Command
             Influence infWithNotEqualPatientIds1 = GetCorrectTestInfluence();
             Influence infWithNotEqualPatientIds2 = GetCorrectTestInfluence();
             infWithNotEqualPatientIds1.PatientId = infWithNotEqualPatientIds1.PatientId + 1;
-            infWithNotEqualPatientIds2.Patient.MedicalHistoryNumber = infWithNotEqualPatientIds2.Patient.MedicalHistoryNumber + 1;
+            infWithNotEqualPatientIds2.Patient.Id = infWithNotEqualPatientIds2.Patient.Id + 1;
 
             List<Influence> testData = new List<Influence> { infWithNotEqualPatientIds1, infWithNotEqualPatientIds2 };
             // set delay time after which the CancellationToken will be canceled
@@ -194,7 +194,7 @@ namespace PatientsResolver.API.UnitTests.Command
             {
                 InfluenceType = Interfaces.InfluenceTypes.Antioxidant,
                 MedicineName = "test",
-                Patient = new Patient() { MedicalHistoryNumber = medHistoryNumber, Gender = Interfaces.GenderEnum.Female, Birthday = DateTime.Now, Name = "test" },
+                Patient = new Patient() { Id = medHistoryNumber, Gender = Interfaces.GenderEnum.Female, Birthday = DateTime.Now, Name = "test" },
                 StartTimestamp = DateTime.Today,
                 EndTimestamp = DateTime.Today,
                 PatientId = medHistoryNumber

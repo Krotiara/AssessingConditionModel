@@ -25,14 +25,13 @@ CREATE TABLE "PatientParameters"
 
 CREATE TABLE "Patients"
 (
-    "Id" bigint NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 9223372036854775807 CACHE 1 ),
-    "MedicalHistoryNumber" bigint NOT NULL,
+    "Id" bigint NOT NULL,
     "MedicalOrganization" text NOT NULL,
     "Name" text COLLATE pg_catalog."default" NOT NULL,
     "Birthday" date NOT NULL,
     "Gender" int NOT NULL,
     "TreatmentType" int NOT NULL,
-    CONSTRAINT "Patients_pkey" PRIMARY KEY ("Id")
+    CONSTRAINT "Patients_pkey" PRIMARY KEY ("Id", "MedicalOrganization")
 );
 
 CREATE TABLE "Influences"
@@ -43,7 +42,8 @@ CREATE TABLE "Influences"
     "StartTimestamp" date NOT NULL,
     "EndTimestamp" date NOT NULL,
     "InfluenceType" int NOT NULL,
-    "MedicineName" text COLLATE pg_catalog."default" NOT NULL
+    "MedicineName" text COLLATE pg_catalog."default" NOT NULL,
+    CONSTRAINT "Influences_pkey" PRIMARY KEY ("Id")
 );
 
 CREATE TABLE "PatientAgents"

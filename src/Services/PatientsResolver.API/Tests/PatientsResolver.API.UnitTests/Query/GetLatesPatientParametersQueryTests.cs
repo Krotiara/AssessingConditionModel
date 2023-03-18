@@ -71,7 +71,7 @@ namespace PatientsResolver.API.UnitTests.Query
             {
                 InfluenceType = Interfaces.InfluenceTypes.Antioxidant,
                 MedicineName = "test",
-                Patient = new Patient() { MedicalHistoryNumber = medHistoryNumber, Gender = Interfaces.GenderEnum.Female, Birthday = DateTime.Now, Name = "test" },
+                Patient = new Patient() { Id = medHistoryNumber, Gender = Interfaces.GenderEnum.Female, Birthday = DateTime.Now, Name = "test" },
                 StartTimestamp = DateTime.Today,
                 EndTimestamp = DateTime.Today,
                 PatientId = medHistoryNumber

@@ -11,11 +11,11 @@ namespace PatientsResolver.API.Entities
 
         public Patient()
         {
-            MedicalHistoryNumber = int.MinValue;
+            Id = int.MinValue;
         }
 
         [NotNull]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        //[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Column("Id")]
         public int Id { get; set; }
 
@@ -29,10 +29,10 @@ namespace PatientsResolver.API.Entities
         [Column("Birthday")]
         public DateTime Birthday { get; set; }
 
-        [NotNull]
-        [Required]
-        [Column("MedicalHistoryNumber")]
-        public int MedicalHistoryNumber { get; set; }
+        //[NotNull]
+        //[Required]
+        //[Column("MedicalHistoryNumber")]
+        //public int MedicalHistoryNumber { get; set; }
 
         [NotNull]
         [Required]

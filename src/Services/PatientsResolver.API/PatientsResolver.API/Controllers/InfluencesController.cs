@@ -76,7 +76,7 @@ namespace PatientsResolver.API.Controllers
 
 
         #region influences routes
-        [HttpPost("patientsApi/influences/{patientId}")]
+        [HttpPost("patientsApi/influences")]
         public async Task<ActionResult<List<Influence>>> GetPatientInfluences(PatientInfluencesRequest request)
         {
             try
@@ -92,7 +92,7 @@ namespace PatientsResolver.API.Controllers
             }
         }
 
-        [HttpPost("patientsApi/influencesWithoutParams/{patientId}")]
+        [HttpPost("patientsApi/influencesWithoutParams")]
         public async Task<ActionResult<List<Influence>>> GetPatientInfluencesWithoutParams(PatientInfluencesRequest request)
         {
             try
@@ -108,28 +108,7 @@ namespace PatientsResolver.API.Controllers
             }
         }
 
-        
-
-        [HttpPost("patientsApi/influences/")]
-        public async Task<ActionResult<List<Influence>>> GetInfluences([FromBody] DateTime[] timeSpan)
-        {
-            try
-            {
-                DateTime start = DateTime.MinValue;
-                DateTime end = DateTime.MaxValue;
-                if (timeSpan != null && timeSpan.Length == 2)
-                {
-                    start = timeSpan[0];
-                    end = timeSpan[1];
-                }
-                return Ok(await mediator.Send(new GetInfluencesQuery(start, end)));
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
-
+       
 
         [HttpPost("patientsApi/addInfluenceData/")]
         public async Task<ActionResult<bool>> AddData([FromBody] FileData fileData)

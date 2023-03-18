@@ -116,7 +116,7 @@ namespace Agents.API.UnitTests.Service
             int patientId = new Random().Next(1, 10000);
             return new Patient()
             {
-                MedicalHistoryNumber = patientId,
+                Id = patientId,
                 Birthday = DateTime.Today,
                 Name = "test",
                 Gender = GenderEnum.Male
@@ -130,7 +130,7 @@ namespace Agents.API.UnitTests.Service
             Patient emptyGender = GetTestCorrectPatient();
             emptyGender.Gender = GenderEnum.None;
             Patient incorrectId = GetTestCorrectPatient();
-            incorrectId.MedicalHistoryNumber = -1;
+            incorrectId.Id = -1;
             return new List<Patient>(){ nullPatient, emptyGender, incorrectId };
         }
        

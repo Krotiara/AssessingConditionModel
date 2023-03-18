@@ -106,15 +106,7 @@ namespace Agents.API.Service.Services
                 string body = Newtonsoft.Json.JsonConvert.SerializeObject(new DateTime[2] { startTimestamp, endTimestamp });
                 string url = $"{_patientsResolverApiUrl}/patientsApi/influencesWithoutParams/{patientId}";
                 return await _webRequester.GetResponse<IList<Influence>>(url, "POST", body);
-            };
-
-                //TODO Добавить meta инфу для этого действия
-                _delegates[SystemCommands.GetAllInfluences] = async (DateTime startTimestamp, DateTime endTimestamp) =>
-            {
-                string url = $"{_patientsResolverApiUrl}/patientsApi/influences/";
-                string body = Newtonsoft.Json.JsonConvert.SerializeObject(new DateTime[2] { startTimestamp, endTimestamp });
-                return await _webRequester.GetResponse<List<Influence>>(url, "POST", body);
-            };
+            };      
         }
     }
 }

@@ -40,7 +40,7 @@ namespace PatientsResolver.API.Data.Repository
 
                         Patient patient = await dbContext
                             .Patients
-                            .FirstOrDefaultAsync(x => x.MedicalHistoryNumber == influence.PatientId);
+                            .FirstOrDefaultAsync(x => x.Id == influence.PatientId);
 
 #warning В данной реализации не добавляется пациент, если здесь не был найден. Просто пробрасывается ошибка.
                         if (patient == null)
@@ -90,7 +90,7 @@ namespace PatientsResolver.API.Data.Repository
            && inf.EndTimestamp != default(DateTime)
            && inf.StartParameters != null
            && inf.DynamicParameters != null
-           && (inf.Patient != null? inf.Patient.MedicalHistoryNumber == inf.PatientId : true);
+           && (inf.Patient != null? inf.Patient.Id == inf.PatientId : true);
 
 
         private async Task ProcessParametersAsync(PatientsDataDbContext dbContext, int influenceId, IEnumerable<PatientParameter> parameters, CancellationToken cancellationToken)
@@ -104,7 +104,7 @@ namespace PatientsResolver.API.Data.Repository
 
         private async Task ProcessPatientAsync(Patient patient, Influence influence, CancellationToken cancellationToken)
         {
-            influence.PatientId = patient.MedicalHistoryNumber;
+            influence.PatientId = patient.Id;
             influence.Patient = patient;
         }
 
@@ -134,6 +134,7 @@ namespace PatientsResolver.API.Data.Repository
             IExecutionStrategy strategy = dbContext.Database.CreateExecutionStrategy();
             return await strategy.ExecuteAsync(async () =>
             {
+                var a = dbContext.Influences.ToArray();
                 IQueryable<Influence> patientDatas = dbContext
                         .Influences
                         .Where(x => x.PatientId == patientId 

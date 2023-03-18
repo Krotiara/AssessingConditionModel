@@ -27,7 +27,6 @@ namespace Interfaces
         GetBioageByFunctionalParameters,
         GetAgeRangBy,
         GetInfluences,
-        GetAllInfluences,
         GetAgingDynamics,
         GetAgingState,
         GetInfluencesWithoutParameters

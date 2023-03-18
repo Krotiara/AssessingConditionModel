@@ -39,7 +39,7 @@ namespace PatientsResolver.API.Service.Command
         {
             Patient? patient = patientsRepository
                 .GetAll()
-                .FirstOrDefault(x => x.MedicalHistoryNumber == request.PatientId && x.MedicalOrganization == request.MedicalOrganization);
+                .FirstOrDefault(x => x.Id == request.PatientId && x.MedicalOrganization == request.MedicalOrganization);
             if (patient == null)
                 throw new DeletePatientException($"Пациент с id = {request.PatientId} не найден");
             try

@@ -72,7 +72,7 @@
 
 <script>
     function GetAgingDynamics() {
-        var pId = @Model.Patient.MedicalHistoryNumber;
+        var pId = @Model.Patient.Id;
         var startTime = document.getElementById("dt1").value;
         var endTime = document.getElementById("dt2").value;
         $.ajax({
@@ -90,7 +90,7 @@
 
 <script>
     function GetPatientInfluences() {
-        var pId = @Model.Patient.MedicalHistoryNumber;
+        var pId = @Model.Patient.Id;
         var startTime = document.getElementById("patientInfluencesDt1").value;
         var endTime = document.getElementById("patientInfluencesDt2").value;
         $.ajax({

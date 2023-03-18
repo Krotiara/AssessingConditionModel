@@ -93,11 +93,11 @@ namespace Agents.API.UnitTests.Data
             //webRequesterMock.Setup(x => x.GetResponse<double>(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).Returns(
             //    () => Task.FromResult<double>(mockBioAge));
             //webRequesterMock.Setup(x => x.GetResponse<IList<PatientParameter>>(It.IsAny<string>(), It.IsAny<string>(),
-            //    It.IsAny<string>())).Returns(() => GetTestParameters(testPatient.MedicalHistoryNumber, mockAge));
+            //    It.IsAny<string>())).Returns(() => GetTestParameters(testPatient.Id, mockAge));
             //AgentPatientsRepository rep = new AgentPatientsRepository(dbFactoryMock.Object, webRequesterMock.Object);
 
             //await Assert.ThrowsAsync<AgentNotFoundException>(async () 
-            //    => await rep.GetAgentPatient(testPatient.MedicalHistoryNumber));
+            //    => await rep.GetAgentPatient(testPatient.Id));
         }
 
 
@@ -115,12 +115,12 @@ namespace Agents.API.UnitTests.Data
             //webRequesterMock.Setup(x => x.GetResponse<double>(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).Returns(
             //    () => Task.FromResult<double>(mockBioAge));
             //webRequesterMock.Setup(x => x.GetResponse<IList<PatientParameter>>(It.IsAny<string>(), It.IsAny<string>(),
-            //    It.IsAny<string>())).Returns(() => GetTestParameters(testPatient.MedicalHistoryNumber, mockAge));
+            //    It.IsAny<string>())).Returns(() => GetTestParameters(testPatient.Id, mockAge));
             //AgentPatientsRepository rep = new AgentPatientsRepository(dbFactoryMock.Object, webRequesterMock.Object);
 
             //await rep.InitAgentPatient(testPatient);
 
-            //AgentPatient agentPatient = await rep.GetAgentPatient(testPatient.MedicalHistoryNumber);
+            //AgentPatient agentPatient = await rep.GetAgentPatient(testPatient.Id);
 
             //Assert.True(agentPatient.CurrentAgeRang == assertRang);
             //Assert.True(agentPatient.CurrentAge == mockAge);
@@ -142,13 +142,13 @@ namespace Agents.API.UnitTests.Data
             //webRequesterMock.Setup(x => x.GetResponse<double>(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).Returns(
             //    () => Task.FromResult<double>(mockBioAge));
             //webRequesterMock.Setup(x => x.GetResponse<IList<PatientParameter>>(It.IsAny<string>(), It.IsAny<string>(),
-            //    It.IsAny<string>())).Returns(() => GetTestParameters(testPatient.MedicalHistoryNumber));
+            //    It.IsAny<string>())).Returns(() => GetTestParameters(testPatient.Id));
             //AgentPatientsRepository rep = new AgentPatientsRepository(dbFactoryMock.Object, webRequesterMock.Object);
 
             //await rep.InitAgentPatient(testPatient);
 
             //await Assert.ThrowsAsync<GetAgentException>(
-            //    async () => await rep.GetAgentPatient(testPatient.MedicalHistoryNumber));
+            //    async () => await rep.GetAgentPatient(testPatient.Id));
         }
 
 
@@ -165,7 +165,7 @@ namespace Agents.API.UnitTests.Data
             //webRequesterMock.Setup(x => x.GetResponse<double>(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).Returns(
             //    () => Task.FromResult<double>(mockBioAge));
             //webRequesterMock.Setup(x => x.GetResponse<IList<PatientParameter>>(It.IsAny<string>(), It.IsAny<string>(),
-            //    It.IsAny<string>())).Returns(() => GetTestParameters(testPatient.MedicalHistoryNumber));
+            //    It.IsAny<string>())).Returns(() => GetTestParameters(testPatient.Id));
             //AgentPatientsRepository rep = new AgentPatientsRepository(dbFactoryMock.Object, webRequesterMock.Object);
 
             //AgentPatient p = await rep.InitAgentPatient(testPatient);
@@ -180,7 +180,7 @@ namespace Agents.API.UnitTests.Data
             int patientId = new Random().Next(1, 10000);
             return new Patient()
             {
-                MedicalHistoryNumber = patientId,
+                Id = patientId,
                 Birthday = DateTime.Today,
                 Name = "test",
                 Gender = GenderEnum.Male
@@ -194,7 +194,7 @@ namespace Agents.API.UnitTests.Data
             Patient emptyGender = GetTestCorrectPatient();
             emptyGender.Gender = GenderEnum.None;
             Patient incorrectId = GetTestCorrectPatient();
-            incorrectId.MedicalHistoryNumber = -1;
+            incorrectId.Id = -1;
             return new List<Patient>() { nullPatient, emptyGender, incorrectId };
         }
 

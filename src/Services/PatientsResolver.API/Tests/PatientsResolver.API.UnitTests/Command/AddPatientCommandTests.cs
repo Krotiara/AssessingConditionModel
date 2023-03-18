@@ -46,7 +46,7 @@ namespace PatientsResolver.API.UnitTests.Command
             int testMedNumber = new Random().Next(1,1000);
             Patient testPatient = new Patient()
             {
-                MedicalHistoryNumber = testMedNumber,
+                Id = testMedNumber,
                 Name = "",
                 Gender = Interfaces.GenderEnum.Female,
                 Birthday = DateTime.Today
@@ -72,7 +72,7 @@ namespace PatientsResolver.API.UnitTests.Command
             AddPatientCommandHandler handler = new AddPatientCommandHandler(p);
 
             Patient emptyHistory = GetTestCorrectPatient();
-            emptyHistory.MedicalHistoryNumber = int.MinValue;
+            emptyHistory.Id = int.MinValue;
             Patient emptyGender = GetTestCorrectPatient();
             emptyGender.Gender = Interfaces.GenderEnum.None;
             Patient emptyBirthday = GetTestCorrectPatient();
@@ -101,7 +101,7 @@ namespace PatientsResolver.API.UnitTests.Command
             PatientsRepository p = new PatientsRepository(dbContextFactory.Object);
             AddPatientCommandHandler handler = new AddPatientCommandHandler(p);
             Patient emptyName = GetTestCorrectPatient();
-            int testMedNumber = emptyName.MedicalHistoryNumber;
+            int testMedNumber = emptyName.Id;
             emptyName.Name = "";
             await handler.Handle(
                 new AddPatientCommand() { Patient = emptyName }, cancellationTokenSource.Token);
@@ -123,7 +123,7 @@ namespace PatientsResolver.API.UnitTests.Command
             PatientsRepository p = new PatientsRepository(dbContextFactory.Object);
             AddPatientCommandHandler handler = new AddPatientCommandHandler(p);
             Patient testPatient = GetTestCorrectPatient();
-            int testMedNumber = testPatient.MedicalHistoryNumber;
+            int testMedNumber = testPatient.Id;
             await handler.Handle(
                 new AddPatientCommand() { Patient = testPatient }, cancellationTokenSource.Token);
 
@@ -135,7 +135,7 @@ namespace PatientsResolver.API.UnitTests.Command
 
         private Patient GetTestCorrectPatient() => new Patient()
         {
-            MedicalHistoryNumber = new Random().Next(1, 1000),
+            Id = new Random().Next(1, 1000),
             Name = "Test name",
             Gender = Interfaces.GenderEnum.Female,
             Birthday = DateTime.Today

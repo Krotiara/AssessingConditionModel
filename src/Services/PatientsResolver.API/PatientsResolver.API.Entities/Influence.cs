@@ -51,7 +51,7 @@ namespace PatientsResolver.API.Entities
         [Column("MedicalOrganization")]
         public string MedicalOrganization { get; set; }
 
-        [ForeignKey(nameof(PatientId))]
+        [ForeignKey("PatientId, MedicalOrganization")]
         public Patient Patient { get; set; }
 
         [NotMapped]
