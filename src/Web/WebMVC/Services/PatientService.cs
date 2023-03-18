@@ -17,7 +17,7 @@ namespace WebMVC.Services
         public async Task<bool> AddPatientsInluenceData(byte[] data)
         {
             string url = $"{gatewayUrl}/patientsApi/addInfluenceData/";
-            FileData fD = new FileData() { RawData = data };
+            FileData fD = new FileData() { RawData = data, MedicalOrganization = "test" };
             string body = Newtonsoft.Json.JsonConvert.SerializeObject(fD);
             return await webRequester.GetResponse<bool>(url, "POST", body);
         }
