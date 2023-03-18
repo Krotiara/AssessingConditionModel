@@ -37,7 +37,8 @@ namespace PatientsResolver.API.Service.Command
                     $"birthday - {request.Patient.Birthday}, " +
                     $"medical history number - {request.Patient.MedicalHistoryNumber}, " +
                     $"gender - {request.Patient.Gender}.");
-            Patient? patient = patientsRepository.GetAll().FirstOrDefault(x => x.MedicalHistoryNumber == request.Patient.MedicalHistoryNumber);
+            Patient? patient = patientsRepository.GetAll().FirstOrDefault(x => x.MedicalHistoryNumber == request.Patient.MedicalHistoryNumber 
+                                                                            && x.MedicalOrganization == request.Patient.MedicalOrganization);
             if (patient == null)
                 throw new UpdatePatientException($"Пациент с id = {request.Patient.MedicalHistoryNumber} не найден для изменения");
             SetNewValues(request.Patient, patient);           

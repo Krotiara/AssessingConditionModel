@@ -52,7 +52,7 @@ namespace PatientsResolver.API.UnitTests.Query
             await handler.Handle(new AddInfluenceDataCommand() { Data = new List<Influence> { testInf } }, token);
 
             GetPatientInfluencesQueryHandler h = new GetPatientInfluencesQueryHandler(rep);
-            var infs = await h.Handle(new GetPatientInfluencesQuery(testInf.PatientId, testInf.StartTimestamp,  testInf.EndTimestamp), token);
+            var infs = await h.Handle(new GetPatientInfluencesQuery(testInf.PatientId, "test", testInf.StartTimestamp,  testInf.EndTimestamp), token);
 
             Assert.NotNull(infs.First().Patient);
             
@@ -98,7 +98,7 @@ namespace PatientsResolver.API.UnitTests.Query
             await handler.Handle(new AddInfluenceDataCommand() { Data = new List<Influence> { testInf } }, token);
 
             GetPatientInfluencesQueryHandler h = new GetPatientInfluencesQueryHandler(rep);
-            var infs = await h.Handle(new GetPatientInfluencesQuery(testInf.PatientId, testInf.StartTimestamp, testInf.EndTimestamp), token);
+            var infs = await h.Handle(new GetPatientInfluencesQuery(testInf.PatientId, "test", testInf.StartTimestamp, testInf.EndTimestamp), token);
 
             Influence addedTestInnf = infs.First();
             Assert.True(addedTestInnf.StartParameters.Count == startParamsCount);

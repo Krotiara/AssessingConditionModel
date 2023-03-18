@@ -7,16 +7,18 @@ namespace PatientsResolver.API.Service.Query
 
     public class GetPatientInfluencesQuery : IRequest<List<Influence>>
     {
-        public GetPatientInfluencesQuery(int patientId, DateTime startTimestamp, DateTime endTimestamp, bool includeParams = true)
+        public GetPatientInfluencesQuery(int patientId, string medicalOrganization, DateTime startTimestamp, DateTime endTimestamp, bool includeParams = true)
         {
             PatientId = patientId;
             StartTimestamp = startTimestamp;
             EndTimestamp = endTimestamp;
             IncludeParams = includeParams;
+            MedicalOrganization = medicalOrganization;
+
         }
 
-        public GetPatientInfluencesQuery(int patientId, bool includeParams = true) :
-            this(patientId, DateTime.MinValue, DateTime.MaxValue, includeParams)
+        public GetPatientInfluencesQuery(int patientId, string medicalOrganization, bool includeParams = true) :
+            this(patientId, medicalOrganization, DateTime.MinValue, DateTime.MaxValue, includeParams)
         {
 
         }
@@ -28,6 +30,8 @@ namespace PatientsResolver.API.Service.Query
         public DateTime EndTimestamp { get; set; }
 
         public bool IncludeParams { get; set; }
+
+        public string MedicalOrganization { get; set; }
     }
 
     public class GetPatientInfluencesQueryHandler : IRequestHandler<GetPatientInfluencesQuery, List<Influence>>
@@ -41,7 +45,7 @@ namespace PatientsResolver.API.Service.Query
 
         public async Task<List<Influence>> Handle(GetPatientInfluencesQuery request, CancellationToken cancellationToken)
         {
-            return await influenceRepository.GetPatientInfluences(request.PatientId,
+            return await influenceRepository.GetPatientInfluences(request.PatientId, request.MedicalOrganization,
                 request.StartTimestamp, request.EndTimestamp, request.IncludeParams);
         }
     }

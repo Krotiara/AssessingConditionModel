@@ -56,7 +56,7 @@ namespace PatientsResolver.API.UnitTests.Query
 
             GetLatesPatientParametersQueryHandler handlerParams = new GetLatesPatientParametersQueryHandler(patientParamsRep);
             List<PatientParameter> parameters = await handlerParams.Handle(
-                new GetLatesPatientParametersQuery() { PatientId = testInf.PatientId, StartTimestamp = testInf.StartTimestamp, EndTimestamp = testInf.EndTimestamp },token);
+                new GetLatesPatientParametersQuery(new Entities.Requests.PatientParametersRequest() {PatientId = testInf.PatientId, MedicalOrganization = testInf.MedicalOrganization, EndTimestamp = testInf.EndTimestamp, StartTimestamp = testInf.StartTimestamp }),token);;
 
             foreach (var parameter in parameters)
                 Assert.True(parameter.ParameterName != ParameterNames.None);

@@ -30,7 +30,8 @@ namespace PatientsResolver.API.Service.Command
         {
             if (!IsCorrectPatient(request.Patient))
                 throw new AddPatientException("Patient fields is not correct");
-            bool isPatientExist = patientsRepository.GetAll().FirstOrDefault(x => x.MedicalHistoryNumber == request.Patient.MedicalHistoryNumber) != null;
+            bool isPatientExist = patientsRepository.GetAll().FirstOrDefault(x => x.MedicalHistoryNumber == request.Patient.MedicalHistoryNumber 
+                                        && x.MedicalOrganization == request.Patient.MedicalOrganization) != null;
             if (isPatientExist)
                 throw new AddPatientException($"Patient with medical history number = {request.Patient.MedicalHistoryNumber} is already exist.");
             try
@@ -50,7 +51,8 @@ namespace PatientsResolver.API.Service.Command
             return patient != null
                 //&& patient.Birthday != default(DateTime)  пока убрал, а то в входных данных нет.
                 && patient.MedicalHistoryNumber > 0 
-                && patient.Gender != Interfaces.GenderEnum.None;
+                && patient.Gender != Interfaces.GenderEnum.None
+                && patient.MedicalOrganization != null;
         }
     }
 }

@@ -31,13 +31,11 @@ namespace PatientsResolver.API.Entities
 
         [NotNull]
         [Required]
-        [Key]
         [Column("MedicalHistoryNumber")]
         public int MedicalHistoryNumber { get; set; }
 
         [NotNull]
         [Required]
-        [Key]
         [Column("MedicalOrganization")]
         public string MedicalOrganization { get; set; }
 

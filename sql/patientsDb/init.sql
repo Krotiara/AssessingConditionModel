@@ -32,7 +32,7 @@ CREATE TABLE "Patients"
     "Birthday" date NOT NULL,
     "Gender" int NOT NULL,
     "TreatmentType" int NOT NULL,
-    CONSTRAINT "Patients_pkey" PRIMARY KEY ("MedicalHistoryNumber","MedicalOrganization")
+    CONSTRAINT "Patients_pkey" PRIMARY KEY ("Id")
 );
 
 CREATE TABLE "Influences"

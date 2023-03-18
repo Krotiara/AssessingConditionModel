@@ -39,7 +39,8 @@ namespace PatientsResolver.API.Service.Command
             foreach(Patient patient in request.Patients)
                 if(patientsRepository
                     .GetAll()
-                    .FirstOrDefault(x => x.MedicalHistoryNumber ==  patient.MedicalHistoryNumber) == null)
+                    .FirstOrDefault(x => x.MedicalHistoryNumber ==  patient.MedicalHistoryNumber 
+                    && x.MedicalOrganization == patient.MedicalOrganization) == null)
                 {
                     try
                     {

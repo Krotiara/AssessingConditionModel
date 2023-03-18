@@ -54,7 +54,7 @@ namespace PatientsResolver.API.UnitTests.Command
             AddPatientCommandHandler handler = new AddPatientCommandHandler(p);
             Assert.True(await handler.Handle(
                 new AddPatientCommand(){ Patient = testPatient }, cancellationTokenSource.Token));
-            Assert.True(p.GetPatientBy(testMedNumber) != null); 
+            Assert.True(p.GetPatientBy(testMedNumber,"test") != null); 
         }
 
 
@@ -105,7 +105,7 @@ namespace PatientsResolver.API.UnitTests.Command
             emptyName.Name = "";
             await handler.Handle(
                 new AddPatientCommand() { Patient = emptyName }, cancellationTokenSource.Token);
-            Assert.True(p.GetPatientBy(testMedNumber) != null);
+            Assert.True(p.GetPatientBy(testMedNumber,"test") != null);
                         
         }
 

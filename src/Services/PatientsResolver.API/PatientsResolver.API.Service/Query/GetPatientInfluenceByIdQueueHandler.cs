@@ -14,9 +14,12 @@ namespace PatientsResolver.API.Service.Query
     public class GetPatientInfluenceByIdQueue : IRequest<Influence>
     {
         public int InfluenceId { get; }
-        public GetPatientInfluenceByIdQueue(int influenceId)
+
+        public string MedicalOrganization { get; set; }
+        public GetPatientInfluenceByIdQueue(int influenceId, string medicalOrganization)
         {
             InfluenceId = influenceId;
+            MedicalOrganization = medicalOrganization;
         }
     }
 
@@ -32,7 +35,7 @@ namespace PatientsResolver.API.Service.Query
 
         public async Task<Influence> Handle(GetPatientInfluenceByIdQueue request, CancellationToken cancellationToken)
         {
-            Influence? inf = await influenceRepository.GetPatientInfluence(request.InfluenceId);
+            Influence? inf = await influenceRepository.GetPatientInfluence(request.InfluenceId, request.MedicalOrganization);
             if (inf == null)
                 throw new InfluenceNotFoundException($"Не найдено воздействие с id={request.InfluenceId}");
             else

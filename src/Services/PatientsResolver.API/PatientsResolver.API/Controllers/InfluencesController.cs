@@ -1,8 +1,10 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using PatientsResolver.API.Entities;
+using PatientsResolver.API.Entities.Requests;
 using PatientsResolver.API.Service.Command;
 using PatientsResolver.API.Service.Query;
+using System;
 
 namespace PatientsResolver.API.Controllers
 {
@@ -16,12 +18,12 @@ namespace PatientsResolver.API.Controllers
         }
 
 
-        [HttpGet("patientsApi/influence/{influenceId}")]
-        public async Task<ActionResult<Influence>> GetPatientInfluence(int influenceId)
+        [HttpGet("patientsApi/influence/{medOrganization}/{influenceId}")]
+        public async Task<ActionResult<Influence>> GetPatientInfluence(string medOrganization, int influenceId)
         {
             try
             {
-                return await mediator.Send(new GetPatientInfluenceByIdQueue(influenceId));
+                return await mediator.Send(new GetPatientInfluenceByIdQueue(influenceId, medOrganization));
             }
             catch(Exception ex)
             {
@@ -59,12 +61,12 @@ namespace PatientsResolver.API.Controllers
         }
 
 
-        [HttpDelete("patientsApi/influence/delete/{influenceId}")]
-        public async Task<ActionResult<bool>> DeletePatientInfluence(int influenceId) 
+        [HttpDelete("patientsApi/influence/delete/{medOrganization}/{influenceId}")]
+        public async Task<ActionResult<bool>> DeletePatientInfluence(string medOrganization, int influenceId) 
         {
             try
             {
-                return await mediator.Send(new DeleteInfluenceCommand(influenceId));
+                return await mediator.Send(new DeleteInfluenceCommand(influenceId, medOrganization));
             }
             catch(Exception ex)
             {
@@ -75,19 +77,14 @@ namespace PatientsResolver.API.Controllers
 
         #region influences routes
         [HttpPost("patientsApi/influences/{patientId}")]
-        public async Task<ActionResult<List<Influence>>> GetPatientInfluences(int patientId, [FromBody] DateTime[] timeSpan)
+        public async Task<ActionResult<List<Influence>>> GetPatientInfluences(PatientInfluencesRequest request)
         {
             try
             {
-                DateTime start = DateTime.MinValue;
-                DateTime end = DateTime.MaxValue;
-                if (timeSpan != null && timeSpan.Length == 2)
-                {
-                    start = timeSpan[0];
-                    end = timeSpan[1];
-                }
+                DateTime start = request.StartTimestamp == null? DateTime.MinValue: (DateTime)request.StartTimestamp;
+                DateTime end = request.EndTimestamp == null ? DateTime.MaxValue : (DateTime)request.EndTimestamp;
 
-                return Ok(await mediator.Send(new GetPatientInfluencesQuery(patientId, start, end)));
+                return Ok(await mediator.Send(new GetPatientInfluencesQuery(request.PatientId, request.MedicalOrganization, start, end)));
             }
             catch (Exception ex)
             {
@@ -96,19 +93,14 @@ namespace PatientsResolver.API.Controllers
         }
 
         [HttpPost("patientsApi/influencesWithoutParams/{patientId}")]
-        public async Task<ActionResult<List<Influence>>> GetPatientInfluencesWithoutParams(int patientId, [FromBody] DateTime[] timeSpan)
+        public async Task<ActionResult<List<Influence>>> GetPatientInfluencesWithoutParams(PatientInfluencesRequest request)
         {
             try
             {
-                DateTime start = DateTime.MinValue;
-                DateTime end = DateTime.MaxValue;
-                if (timeSpan != null && timeSpan.Length == 2)
-                {
-                    start = timeSpan[0];
-                    end = timeSpan[1];
-                }
+                DateTime start = request.StartTimestamp == null ? DateTime.MinValue : (DateTime)request.StartTimestamp;
+                DateTime end = request.EndTimestamp == null ? DateTime.MaxValue : (DateTime)request.EndTimestamp;
 
-                return Ok(await mediator.Send(new GetPatientInfluencesQuery(patientId, start, end, false)));
+                return Ok(await mediator.Send(new GetPatientInfluencesQuery(request.PatientId, request.MedicalOrganization, start, end, false)));
             }
             catch (Exception ex)
             {

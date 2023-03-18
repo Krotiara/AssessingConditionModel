@@ -127,7 +127,7 @@ namespace PatientsResolver.API.Data.Repository
         }
 
 
-        public async Task<List<Influence>> GetPatientInfluences(int patientId,
+        public async Task<List<Influence>> GetPatientInfluences(int patientId, string medicalOrganization,
             DateTime startTimestamp, DateTime endTimestamp, bool includeParams = true)
         {
             
@@ -136,8 +136,10 @@ namespace PatientsResolver.API.Data.Repository
             {
                 IQueryable<Influence> patientDatas = dbContext
                         .Influences
-                        .Where(x => x.PatientId == patientId)
-                        .Where(x => x.StartTimestamp >= startTimestamp && x.EndTimestamp <= endTimestamp);
+                        .Where(x => x.PatientId == patientId 
+                                 && x.MedicalOrganization == medicalOrganization 
+                                 && x.StartTimestamp >= startTimestamp 
+                                 && x.EndTimestamp <= endTimestamp);
 
                 if (patientDatas.Count() == 0)
                     return new List<Influence>();
@@ -200,7 +202,7 @@ namespace PatientsResolver.API.Data.Repository
         {
             IQueryable<PatientParameter> parameters = dbContext
                 .PatientsParameters
-                .Where(y => y.InfluenceId == influence.Id);
+                .Where(y => y.InfluenceId == influence.Id && y.MedicalOrganization == influence.MedicalOrganization);
             foreach (PatientParameter p in parameters)
                 try
                 {
@@ -218,13 +220,14 @@ namespace PatientsResolver.API.Data.Repository
         }
 
 
-        public async Task<Influence?> GetPatientInfluence(int inluenceId)
+        public async Task<Influence?> GetPatientInfluence(int inluenceId, string medicalOrganization)
         {
             
             IExecutionStrategy strategy = dbContext.Database.CreateExecutionStrategy();
             return await strategy.ExecuteAsync(async () =>
             {
-                Influence? inf = await dbContext.Influences.FirstOrDefaultAsync(x => x.Id == inluenceId);
+                Influence? inf = 
+                await dbContext.Influences.FirstOrDefaultAsync(x => x.Id == inluenceId && x.MedicalOrganization == medicalOrganization);
                 if (inf != null)
                     InitParametersFor(dbContext, inf);
                 return inf;
@@ -247,7 +250,7 @@ namespace PatientsResolver.API.Data.Repository
                 {
                     try
                     {
-                        Influence dbInfluence = await GetPatientInfluence(influence.Id);
+                        Influence dbInfluence = await GetPatientInfluence(influence.Id, influence.MedicalOrganization);
                         await CopyFieldsToDbInfuence(influence, dbInfluence, cancellationToken);
                         await t.CommitAsync(cancellationToken);
                         return dbInfluence;
@@ -320,11 +323,11 @@ namespace PatientsResolver.API.Data.Repository
             dbContext.Entry(dbParameter).State = EntityState.Modified;
         }
 
-        public async Task<bool> DeleteInfluence(int influenceId, CancellationToken cancellationToken)
+        public async Task<bool> DeleteInfluence(int influenceId, string medicalOrganization, CancellationToken cancellationToken)
         {
             
             IExecutionStrategy strategy = dbContext.Database.CreateExecutionStrategy();
-            Influence inf = await GetPatientInfluence(influenceId);
+            Influence inf = await GetPatientInfluence(influenceId, medicalOrganization);
             if (inf == null)
                 throw new KeyNotFoundException($"Не найдено воздействие с id = {influenceId}");
             return await strategy.ExecuteAsync(async () =>
