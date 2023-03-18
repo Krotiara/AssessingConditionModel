@@ -35,5 +35,7 @@ namespace WebMVC.Models
         public bool IsDynamic { get; set; }
        
         public int PositiveDynamicCoef { get; set; }
+
+        public string MedicalOrganization { get; set; }
     }
 }

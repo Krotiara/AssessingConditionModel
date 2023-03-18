@@ -12,6 +12,7 @@ CREATE TABLE "PatientParameters"
 (
     "Id" bigint NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 9223372036854775807 CACHE 1 ),
     "PatientId" bigint NOT NULL,
+    "MedicalOrganization" text NOT NULL,
     "Timestamp" date NOT NULL,
     "Name" text COLLATE pg_catalog."default" NOT NULL,
     "Value" text COLLATE pg_catalog."default" NOT NULL,
@@ -38,6 +39,7 @@ CREATE TABLE "Influences"
 (
     "Id" bigint NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 9223372036854775807 CACHE 1 ),
     "PatientId" bigint NOT NULL,
+    "MedicalOrganization" text NOT NULL,
     "StartTimestamp" date NOT NULL,
     "EndTimestamp" date NOT NULL,
     "InfluenceType" int NOT NULL,

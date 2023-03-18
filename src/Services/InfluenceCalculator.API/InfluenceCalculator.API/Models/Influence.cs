@@ -14,5 +14,6 @@ namespace InfluenceCalculator.API.Models
         public Patient Patient { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
         public ConcurrentDictionary<ParameterNames, PatientParameter> StartParameters { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
         public ConcurrentDictionary<ParameterNames, PatientParameter> DynamicParameters { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public string MedicalOrganization { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
     }
 }

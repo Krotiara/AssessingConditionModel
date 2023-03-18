@@ -15,6 +15,8 @@ namespace Interfaces
 
         public int PatientId { get; set; }
 
+        public string MedicalOrganization { get; set; }
+
         public DateTime Timestamp { get; set; }
 
         public ParameterNames ParameterName { get; set; }

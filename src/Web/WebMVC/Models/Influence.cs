@@ -42,5 +42,6 @@ namespace WebMVC.Models
         public string MedicineName { get ; set ; }
         public ConcurrentDictionary<ParameterNames, PatientParameter> StartParameters { get ; set ; }
         public ConcurrentDictionary<ParameterNames, PatientParameter> DynamicParameters { get ; set ; }
+        public string MedicalOrganization { get; set; }
     }
 }

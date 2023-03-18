@@ -55,5 +55,6 @@ namespace PatientDataHandler.API.Entities
         public ParameterNames ParameterName { get; set; }
 
         public bool IsDynamic { get; set; }
+        public string MedicalOrganization { get; set; }
     }
 }

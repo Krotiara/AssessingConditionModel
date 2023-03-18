@@ -21,5 +21,6 @@ namespace PatientDataHandler.API.Entities
         public ConcurrentDictionary<ParameterNames, PatientParameter> StartParameters { get; set; }
         public ConcurrentDictionary<ParameterNames, PatientParameter> DynamicParameters { get; set; }
         public Patient Patient { get; set; }
+        public string MedicalOrganization { get; set; }
     }
 }

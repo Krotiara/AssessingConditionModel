@@ -51,5 +51,8 @@ namespace PatientsResolver.API.Entities
         public ParameterNames ParameterName { get; set ; }
 
         public bool IsDynamic { get; set; }
+
+        [Column("MedicalOrganization")]
+        public string MedicalOrganization { get; set; }
     }
 }

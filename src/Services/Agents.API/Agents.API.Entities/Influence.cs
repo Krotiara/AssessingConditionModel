@@ -24,5 +24,6 @@ namespace Agents.API.Entities
         public Patient Patient { get ; set ; }
         public ConcurrentDictionary<ParameterNames, PatientParameter> StartParameters { get ; set ; }
         public ConcurrentDictionary<ParameterNames, PatientParameter> DynamicParameters { get ; set ; }
+        public string MedicalOrganization { get; set; }
     }
 }

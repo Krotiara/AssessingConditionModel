@@ -22,6 +22,7 @@ namespace Agents.API.Entities
 
         public int PositiveDynamicCoef { get; set; }
         public bool IsDynamic { get; set; }
+        public string MedicalOrganization { get; set; }
 
 
 #warning Опасно менят ьвообще дял всех типов запятые на точки.
