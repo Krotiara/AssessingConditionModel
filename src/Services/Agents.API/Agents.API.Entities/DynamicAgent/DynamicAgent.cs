@@ -14,14 +14,16 @@ namespace Agents.API.Entities.DynamicAgent
     {
         private readonly ICodeExecutor _codeExecutor;
 
-        public DynamicAgent(int observableId, IDynamicAgentInitSettings settings, ICodeExecutor codeExecutor)
+        public DynamicAgent(int observableId, string observedObjectAffilation, IDynamicAgentInitSettings settings, ICodeExecutor codeExecutor)
         {
 #warning нестабильная инициалзация - если нет name и Id в словаре?
             //Name = settings.ActionsArgsReplaceDict[CommonArgs.Name].ToString();
             //Id = (int)settings.ActionsArgsReplaceDict[CommonArgs.ObservedId];
 #warning как менять в процессе работы?
             ObservedId = observableId;
+            ObservedObjectAffilation = observedObjectAffilation;
             settings.ActionsArgsReplaceDict[CommonArgs.ObservedId] = observableId;
+            settings.ActionsArgsReplaceDict[CommonArgs.MedicalOrganization] = observedObjectAffilation;
             settings.ActionsArgsReplaceDict[CommonArgs.StartDateTime] = DateTime.Today;
             settings.ActionsArgsReplaceDict[CommonArgs.EndDateTime] = DateTime.Today;
             Settings = settings;
@@ -36,6 +38,7 @@ namespace Agents.API.Entities.DynamicAgent
         public string Name { get; set; }
 
         public IDynamicAgentInitSettings Settings { get; }
+        public string ObservedObjectAffilation { get; set; }
 
         public async Task UpdateState()
         {

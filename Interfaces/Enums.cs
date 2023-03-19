@@ -11,6 +11,7 @@ namespace Interfaces
     public enum CommonArgs
     {
         ObservedId,
+        MedicalOrganization,
         StartDateTime,
         EndDateTime
     }

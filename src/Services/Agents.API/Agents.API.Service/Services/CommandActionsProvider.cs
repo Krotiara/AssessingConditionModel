@@ -1,4 +1,5 @@
 ﻿using Agents.API.Entities;
+using Agents.API.Entities.Requests;
 using Agents.API.Interfaces;
 using Interfaces;
 using Interfaces.DynamicAgent;
@@ -40,10 +41,17 @@ namespace Agents.API.Service.Services
         {
             
             // TODO Список методов нужно вынести в отдельное место.
-            _delegates[SystemCommands.GetLatestPatientParameters] = async (DateTime startTimestamp, DateTime endTimestamp, int patientId) =>
+            _delegates[SystemCommands.GetLatestPatientParameters] = async (DateTime startTimestamp, DateTime endTimestamp, int patientId, string medOrganization) =>
             {
-                string body = Newtonsoft.Json.JsonConvert.SerializeObject(new DateTime[2] { startTimestamp, endTimestamp });
-                string url = $"{_patientsResolverApiUrl}/patientsApi/latestPatientParameters/{patientId}";
+                PatientParametersRequest request = new PatientParametersRequest()
+                {
+                    PatientId = patientId,
+                    MedicalOrganization = medOrganization,
+                    StartTimestamp = startTimestamp,
+                    EndTimestamp = endTimestamp
+                };
+                string body = Newtonsoft.Json.JsonConvert.SerializeObject(request);
+                string url = $"{_patientsResolverApiUrl}/patientsApi/latestPatientParameters";
                 IList<PatientParameter> parameters = await _webRequester.GetResponse<IList<PatientParameter>>(url, "POST", body);
                 return parameters.ToDictionary(x => x.ParameterName, x=>x);
             };
@@ -94,17 +102,31 @@ namespace Agents.API.Service.Services
                 return rang;
             };
 
-            _delegates[SystemCommands.GetInfluences] = async (DateTime startTimestamp, DateTime endTimestamp, int patientId) =>
+            _delegates[SystemCommands.GetInfluences] = async (DateTime startTimestamp, DateTime endTimestamp, int patientId, string medOrganization) =>
             {
-                string body = Newtonsoft.Json.JsonConvert.SerializeObject(new DateTime[2] { startTimestamp, endTimestamp });
-                string url = $"{_patientsResolverApiUrl}/patientsApi/influences/{patientId}";
+                PatientInfluencesRequest request = new PatientInfluencesRequest()
+                {
+                    PatientId = patientId,
+                    MedicalOrganization = medOrganization,
+                    StartTimestamp = startTimestamp,
+                    EndTimestamp = endTimestamp
+                };
+                string body = Newtonsoft.Json.JsonConvert.SerializeObject(request);
+                string url = $"{_patientsResolverApiUrl}/patientsApi/influences";
                 return await _webRequester.GetResponse<IList<Influence>>(url, "POST", body);
             };
 
-            _delegates[SystemCommands.GetInfluencesWithoutParameters] = async (DateTime startTimestamp, DateTime endTimestamp, int patientId) =>
+            _delegates[SystemCommands.GetInfluencesWithoutParameters] = async (DateTime startTimestamp, DateTime endTimestamp, int patientId, string medOrganization) =>
             {
-                string body = Newtonsoft.Json.JsonConvert.SerializeObject(new DateTime[2] { startTimestamp, endTimestamp });
-                string url = $"{_patientsResolverApiUrl}/patientsApi/influencesWithoutParams/{patientId}";
+                PatientInfluencesRequest request = new PatientInfluencesRequest()
+                {
+                    PatientId = patientId,
+                    MedicalOrganization = medOrganization,
+                    StartTimestamp = startTimestamp,
+                    EndTimestamp = endTimestamp
+                };
+                string body = Newtonsoft.Json.JsonConvert.SerializeObject(request);
+                string url = $"{_patientsResolverApiUrl}/patientsApi/influencesWithoutParams";
                 return await _webRequester.GetResponse<IList<Influence>>(url, "POST", body);
             };      
         }

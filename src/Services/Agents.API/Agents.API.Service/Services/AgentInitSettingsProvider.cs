@@ -38,10 +38,10 @@ namespace Agents.API.Service.Services
             foreach (AgentBioAgeStates state in AgentBioAgeStates.GetValues(typeof(AgentBioAgeStates)))
                 states[state.GetDisplayAttributeValue()] = new AgentState(state.GetDisplayAttributeValue());
 
-#warning Нужнен каст к PredictRequest predictRequest или объединение микросервисов.
             var sets = new DynamicAgentInitSettings(
                             $"parameters = " +
-                            $"{SystemCommands.GetLatestPatientParameters}({CommonArgs.StartDateTime}, {CommonArgs.EndDateTime}, {CommonArgs.ObservedId})\n" +
+                            $"{SystemCommands.GetLatestPatientParameters}({CommonArgs.StartDateTime}, " +
+                            $"{CommonArgs.EndDateTime}, {CommonArgs.ObservedId}, {CommonArgs.MedicalOrganization})\n" +
                             $"age = {SystemCommands.GetAge}(parameters)\n" +
                             $"bioAge = {SystemCommands.GetBioageByFunctionalParameters}(parameters)\n" + 
                             $"rang = {SystemCommands.GetAgeRangBy}(age, bioAge)\n" +

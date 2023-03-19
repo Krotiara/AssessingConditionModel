@@ -20,7 +20,9 @@ namespace Agents.API.Service.Services
                 {SystemCommands.GetLatestPatientParameters,
                     new CommandArgsTypesMeta( new List<(Type, string)> {(typeof(DateTime), "startTimestamp"),
                         (typeof(DateTime), "endTimestamp"),
-                        (typeof(int), "patientId")}, typeof(IList<IPatientParameter>))},
+                        (typeof(int), "patientId"),
+                        (typeof(string), "medicalOrganization")}, 
+                        typeof(Dictionary<ParameterNames,PatientParameter>))},
                 {SystemCommands.GetAge,
                     new CommandArgsTypesMeta(new List<(Type, string)> {(typeof(Dictionary<ParameterNames,PatientParameter>),"parameters") }, typeof(int)) },
                 {SystemCommands.GetBioageByFunctionalParameters,
@@ -30,11 +32,13 @@ namespace Agents.API.Service.Services
                 {SystemCommands.GetInfluences,
                     new CommandArgsTypesMeta(new List<(Type, string)> {(typeof(DateTime),"start"),
                         (typeof(DateTime),"end"),
-                        (typeof(int),"observedId") }, typeof(List<Influence>))},
+                        (typeof(int),"observedId"),
+                        (typeof(string), "medicalOrganization")}, typeof(List<Influence>))},
                 {SystemCommands.GetInfluencesWithoutParameters,
                     new CommandArgsTypesMeta(new List<(Type, string)> {(typeof(DateTime),"start"),
                         (typeof(DateTime),"end"),
-                        (typeof(int),"observedId") }, typeof(List<Influence>))}                  
+                        (typeof(int),"observedId"),
+                        (typeof(string), "medicalOrganization")}, typeof(List<Influence>))}                  
             };
         }
 
