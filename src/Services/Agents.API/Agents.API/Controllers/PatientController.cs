@@ -18,6 +18,10 @@ namespace Agents.API.Controllers
         }
 
 
+        //[HttpPost]
+        //public async Task<ActionResult> InitAgents
+
+
         [HttpPost("agents/currentState")]
         public async Task<ActionResult> GetAgentCurrentState(AgentKey agentKey) => await PredictState(agentKey, DateTime.Now);
         
