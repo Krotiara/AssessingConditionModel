@@ -1,5 +1,7 @@
 ﻿using Agents.API.Entities;
 using Agents.API.Entities.DynamicAgent;
+using Agents.API.Entities.Requests;
+using Agents.API.Interfaces;
 using Agents.API.Service.Query;
 using Interfaces;
 using MediatR;
@@ -10,28 +12,35 @@ namespace Agents.API.Controllers
     public class PatientController: Controller
     {
 
-        private readonly IMediator mediator;
+        private readonly IMediator _mediator;
+        private readonly IAgentsService _agentsService;
 
-        public PatientController(IMediator mediator)
+        public PatientController(IMediator mediator, IAgentsService agentsService)
         {
-            this.mediator = mediator;
+            _mediator = mediator;
+            _agentsService = agentsService;
         }
 
 
-        //[HttpPost]
-        //public async Task<ActionResult> InitAgents
+        [HttpPost]
+        public async Task<ActionResult> InitAgents([FromBody]InitAgentsRequest request)
+        {
+            foreach (var pair in request.AgentsToInit)
+                _agentsService.InitAgentBy(pair.Item1, pair.Item2);
+            return Ok();
+        }
 
 
-        [HttpPost("agents/currentState")]
+        [HttpGet("agents/currentState")]
         public async Task<ActionResult> GetAgentCurrentState(AgentKey agentKey) => await PredictState(agentKey, DateTime.Now);
         
 
-        [HttpPost("agents/predict")]
+        [HttpGet("agents/predict")]
         public async Task<ActionResult> PredictState(AgentKey agentKey, DateTime timeStamp)
         {
             try
             {
-                return Ok(await mediator.Send(new GetAgentStateQuery(agentKey, timeStamp)));
+                return Ok(await _mediator.Send(new GetAgentStateQuery(agentKey, timeStamp)));
             }
             catch (GetAgingStateException ex)
             {

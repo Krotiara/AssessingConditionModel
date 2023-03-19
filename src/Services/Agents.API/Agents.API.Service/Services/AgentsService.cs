@@ -27,6 +27,8 @@ namespace Agents.API.Service.Services
             return _dynamicAgentsRepository.InitAgent(key, initSets);
         }
 
+
+        //TODO - на будущее - инициализация по кастомным агентам.
         public IDynamicAgent InitAgentBy(IAgentKey key, IDynamicAgentInitSettings settings)
         {
             return _dynamicAgentsRepository.InitAgent(key, settings);
