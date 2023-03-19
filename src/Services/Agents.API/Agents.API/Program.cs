@@ -52,8 +52,8 @@ builder.Services.AddMediatR(Assembly.GetExecutingAssembly());
 builder.Services.Configure<RabbitMqConfiguration>(builder.Configuration.GetSection("RabbitMq"));
 builder.Services.Configure<AddDataConfig>(builder.Configuration.GetSection("RabbitMqAddInfo"));
 /*Теперь вы можете выполнять ваши запросы. Для этого вам потребуется получить экземпляр интерфейса IMediator. Он регистрируется в вашем контейнере зависимостей той же командой AddMediatR.*/
-if (builder.Configuration.GetSection("RabbitMq").Get<RabbitMqConfiguration>().Enabled)
-    builder.Services.AddHostedService<UpdatePatientsDataReceiver>();
+//if (builder.Configuration.GetSection("RabbitMq").Get<RabbitMqConfiguration>().Enabled)
+//    builder.Services.AddHostedService<UpdatePatientsDataReceiver>();
 //if(builder.Configuration.GetSection("RabbitMqAddInfo").Get<AddDataConfig>().Enabled)
 //    builder.Services.AddHostedService<AddPatientsReceiver>();
 #endregion
@@ -65,11 +65,8 @@ string connectionString = builder.Configuration.GetConnectionString("PostgresCon
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
 builder.Services
-    .AddScoped<IUpdatePatientsDataInfo, UpdatePatientsInfo>()
     .AddSingleton<ICodeExecutor, CodeExecutorService>()
     .AddTransient<IWebRequester, HttpClientWebRequester>();
-builder.Services
-    .AddTransient<IUpdatePatientAgentsService, UpdatePatientAgentsService>();
 builder.Services
     .AddTransient<IAgingDynamics<AgingState>, AgingDynamics>()
     .AddSingleton<IAgentInitSettingsProvider, AgentInitSettingsProvider>();

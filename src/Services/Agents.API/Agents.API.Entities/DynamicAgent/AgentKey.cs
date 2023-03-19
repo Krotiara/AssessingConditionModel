@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Agents.API.Entities.DynamicAgent
 {
-    public class AgentKey
+    public class AgentKey: IAgentKey
     {
         public int ObservedId { get; set; }
 

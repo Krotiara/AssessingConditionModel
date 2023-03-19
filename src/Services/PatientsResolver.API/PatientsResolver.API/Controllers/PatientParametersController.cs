@@ -18,7 +18,7 @@ namespace PatientsResolver.API.Controllers
 
 
         [HttpPost("patientsApi/latestPatientParameters")]
-        public async Task<ActionResult<List<IPatientParameter>>> GetLatestPatientParameters(PatientParametersRequest request)
+        public async Task<ActionResult<List<IPatientParameter>>> GetLatestPatientParameters([FromBody]PatientParametersRequest request)
         {
             try
             {

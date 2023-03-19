@@ -24,25 +24,14 @@ namespace PatientsResolver.API.Service.Services
         {
             try
             {
-                IList<Patient> addedPatients = await mediator.Send(new AddNotExistedPatientsCommand() 
+                IList<Patient> addedPatients = await mediator.Send(new AddNotExistedPatientsCommand()
                 { Patients = data.Select(x => x.Patient).ToList() });
 
-                List<Influence> addedData = 
+                List<Influence> addedData =
                     await mediator.Send(new AddInfluenceDataCommand() { Data = data });
 
-                if(addedData.Count > 0)
-                {
-                    IUpdatePatientsDataInfo updateInfo = new UpdatePatientsInfo();
-                    foreach (Influence inf in addedData)
-                    {
-                        updateInfo.UpdateInfo.Add((inf.PatientId, inf.StartTimestamp));
-                        updateInfo.UpdateInfo.Add((inf.PatientId, inf.EndTimestamp));
-                    }
-                    await mediator.Send(new SendUpdatePatientsInfoCommand() { UpdatePatientsInfo = updateInfo });
-                }
-                
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 //TODO log
                 throw new AddInfluenceRangeException("Ошибка добавления воздействий в сервисе", ex);

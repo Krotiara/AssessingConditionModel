@@ -59,7 +59,6 @@ builder.Services.AddScoped<IInfluence<Patient, PatientParameter>, Influence>();
 
 builder.Services.AddTransient<IAddInfluencesDataFromSourceService, AddInfluencesDataFromSourceService>();
 builder.Services.AddSingleton<IPatientFileDataSender, PatientFileDataSender>();
-builder.Services.AddSingleton<IUpdatePatientsSender, UpdatePatientsSender>();
 
 builder.Services.AddScoped<IInfluenceRepository, InfluenceRepository>();
 builder.Services.AddScoped<InfluenceRepository>();
@@ -100,8 +99,6 @@ builder.Services.AddScoped<IRequestHandler<AddInfluenceDataCommand, List<Influen
     AddInfluenceDataCommandHandler>();
 builder.Services.AddScoped<IRequestHandler<GetPatientInfluencesQuery, List<Influence>>,
     GetPatientInfluencesQueryHandler>();
-builder.Services.AddScoped<IRequestHandler<SendUpdatePatientsInfoCommand, Unit>,
-    SendUpdatePatientsInfoCommandHandler>();
 builder.Services.AddScoped<IRequestHandler<GetLatesPatientParametersQuery, List<PatientParameter>>,
     GetLatesPatientParametersQueryHandler>();
 builder.Services.AddScoped<IRequestHandler<GetInfluencesQuery, List<Influence>>,

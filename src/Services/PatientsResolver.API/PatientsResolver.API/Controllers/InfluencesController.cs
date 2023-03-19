@@ -77,7 +77,7 @@ namespace PatientsResolver.API.Controllers
 
         #region influences routes
         [HttpPost("patientsApi/influences")]
-        public async Task<ActionResult<List<Influence>>> GetPatientInfluences(PatientInfluencesRequest request)
+        public async Task<ActionResult<List<Influence>>> GetPatientInfluences([FromBody]PatientInfluencesRequest request)
         {
             try
             {
@@ -93,7 +93,7 @@ namespace PatientsResolver.API.Controllers
         }
 
         [HttpPost("patientsApi/influencesWithoutParams")]
-        public async Task<ActionResult<List<Influence>>> GetPatientInfluencesWithoutParams(PatientInfluencesRequest request)
+        public async Task<ActionResult<List<Influence>>> GetPatientInfluencesWithoutParams([FromBody] PatientInfluencesRequest request)
         {
             try
             {
