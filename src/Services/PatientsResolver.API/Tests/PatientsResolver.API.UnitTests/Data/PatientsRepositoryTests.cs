@@ -39,7 +39,7 @@ namespace PatientsResolver.API.UnitTests.Data
             var cancellationTokenSource = new CancellationTokenSource(TimeSpan.FromMilliseconds(100));
             
             PatientsRepository rep = new PatientsRepository(dbContextFactory.Object);
-            Patient testPatient = new Patient() { Name = "test", MedicalHistoryNumber = 000, 
+            Patient testPatient = new Patient() { Name = "test", Id = 000, 
                 Gender = Interfaces.GenderEnum.Female, Birthday = DateTime.Now };
 
             Assert.True(rep.GetAll().Count() == 0);

@@ -31,5 +31,6 @@ namespace InfluenceCalculator.API.Models
         public DateTime Timestamp { get; set; }
         public ParameterNames ParameterName { get => throw new NotImplementedException(); set => throw new NotImplementedException(); } //TODO по имени получить Parameters.
         public bool IsDynamic { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public string MedicalOrganization { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
     }
 }

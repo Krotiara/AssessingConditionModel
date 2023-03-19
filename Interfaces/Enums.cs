@@ -7,6 +7,34 @@ using System.Threading.Tasks;
 
 namespace Interfaces
 {
+
+    public enum CommonArgs
+    {
+        ObservedId,
+        MedicalOrganization,
+        StartDateTime,
+        EndDateTime
+    }
+
+    public enum AgentType
+    {
+        Custom,
+        AgingPatient
+    }
+
+    public enum SystemCommands
+    {
+        GetLatestPatientParameters,
+        GetAge,
+        GetBioageByFunctionalParameters,
+        GetAgeRangBy,
+        GetInfluences,
+        GetAgingDynamics,
+        GetAgingState,
+        GetInfluencesWithoutParameters
+    }
+
+
     public enum InfluenceTypes
     {
         [Display(Name = "-")]

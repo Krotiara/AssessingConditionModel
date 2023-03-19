@@ -15,8 +15,12 @@ namespace PatientsResolver.API.Service.Command
     {
         public int InfluenceId { get; }
 
-        public DeleteInfluenceCommand(int influenceId)        {
+        public string MedicalOrganization { get; }
+
+        public DeleteInfluenceCommand(int influenceId, string medicalOrganization)
+        {
             InfluenceId = influenceId;
+            MedicalOrganization = medicalOrganization;
         }
 
     }
@@ -34,7 +38,7 @@ namespace PatientsResolver.API.Service.Command
         {
             try
             {
-                return await influenceRepository.DeleteInfluence(request.InfluenceId, cancellationToken);
+                return await influenceRepository.DeleteInfluence(request.InfluenceId, request.MedicalOrganization, cancellationToken);
             }
             catch(Exception ex)
             {

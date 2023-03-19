@@ -5,12 +5,14 @@ using Interfaces;
 using Agents.API.Entities;
 using Agents.API.Messaging.Receive.Receiver;
 using Microsoft.EntityFrameworkCore;
-using Agents.API.Data.Database;
 using Agents.API.Service.Services;
 using Agents.API.Messaging.Receive.Configs;
 using Agents.API.Service.Query;
 using Agents.API.Data.Repository;
+using Agents.API.Interfaces;
+using Interfaces.DynamicAgent;
 using Agents.API.Service.Command;
+using Agents.API.Entities.DynamicAgent;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -50,49 +52,44 @@ builder.Services.AddMediatR(Assembly.GetExecutingAssembly());
 builder.Services.Configure<RabbitMqConfiguration>(builder.Configuration.GetSection("RabbitMq"));
 builder.Services.Configure<AddDataConfig>(builder.Configuration.GetSection("RabbitMqAddInfo"));
 /*Теперь вы можете выполнять ваши запросы. Для этого вам потребуется получить экземпляр интерфейса IMediator. Он регистрируется в вашем контейнере зависимостей той же командой AddMediatR.*/
-if (builder.Configuration.GetSection("RabbitMq").Get<RabbitMqConfiguration>().Enabled)
-    builder.Services.AddHostedService<UpdatePatientsDataReceiver>();
-if(builder.Configuration.GetSection("RabbitMqAddInfo").Get<AddDataConfig>().Enabled)
-    builder.Services.AddHostedService<AddPatientsReceiver>();
+//if (builder.Configuration.GetSection("RabbitMq").Get<RabbitMqConfiguration>().Enabled)
+//    builder.Services.AddHostedService<UpdatePatientsDataReceiver>();
+//if(builder.Configuration.GetSection("RabbitMqAddInfo").Get<AddDataConfig>().Enabled)
+//    builder.Services.AddHostedService<AddPatientsReceiver>();
 #endregion
 
 string connectionString = builder.Configuration.GetConnectionString("PostgresConnection");
-//builder.Services.AddDbContext<AgentsDbContext>(options => options.UseNpgsql(connectionString, builder =>
-//{
-//    builder.EnableRetryOnFailure(5, TimeSpan.FromSeconds(2), null);
-//}), ServiceLifetime.Scoped); // Registration dbContext as service.
-
-builder.Services.AddDbContextFactory<AgentsDbContext>(options => options.UseNpgsql(connectionString, builder =>
-{
-    builder.EnableRetryOnFailure(5, TimeSpan.FromSeconds(2), null);
-}), ServiceLifetime.Scoped);
 
 
 //Для избежания ошибки Cannot write DateTime with Kind=Local to PostgreSQL type 'timestamp with time zone', only UTC is supported.
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
-builder.Services.AddScoped<IUpdatePatientsDataInfo, UpdatePatientsInfo>();
-builder.Services.AddTransient<IWebRequester, HttpClientWebRequester>();
-builder.Services.AddTransient<IInitPatientAgentsService, InitPatientAgentsService>();
-builder.Services.AddTransient<IUpdatePatientAgentsService, UpdatePatientAgentsService>();
-builder.Services.AddScoped<IAgentPatientsRepository, AgentPatientsRepository>();
-builder.Services.AddScoped<IAgingStatesRepository, AgentPatientsRepository>();
-builder.Services.AddTransient<IAgingDynamics<AgingState>, AgingDynamics>();
+builder.Services
+    .AddSingleton<ICodeExecutor, CodeExecutorService>()
+    .AddTransient<IWebRequester, HttpClientWebRequester>();
+builder.Services
+    .AddTransient<IAgingDynamics<AgingState>, AgingDynamics>()
+    .AddSingleton<IAgentInitSettingsProvider, AgentInitSettingsProvider>()
+    .AddSingleton<IAgentsService, AgentsService>();
 
-builder.Services.AddScoped<IRequestHandler<GetAgingStateQuery, AgingState>, 
-    GetAgingStateQueryHandler>();
-builder.Services.AddScoped<IRequestHandler<GetPatientInfluencesQuery, List<Influence>>, 
-    GetPatientInfluencesQueryHandler>();
-builder.Services.AddScoped<IRequestHandler<GetAgingDynamicsQuery, List<IAgingDynamics<AgingState>>>, 
-    GetAgingDynamicsQueryHandler>();
-builder.Services.AddScoped<IRequestHandler<GetAllPatientsAgingDynamicsQuery, List<IAgingDynamics<AgingState>>>,
-    GetAllPatientsAgingDynamicsQueryHandler>();
-builder.Services.AddScoped<IRequestHandler<GetAgingStateQueryDb, AgingState>, 
-    GetAgingStateQueryDbHandler>();
-builder.Services.AddScoped<IRequestHandler<AddAgingStateCommand, AgingState>, 
-    AddAgingStateCommandHandler>();
-builder.Services.AddScoped<IRequestHandler<GetAllInfluencesQuery, List<Influence>>, 
-    GetAllInfluencesQueryHandler>();
+builder.Services
+    .AddTransient<IRequestHandler<GetAgentStateQuery, IAgentState>, GetAgentStateQueryHandler>();
+
+builder.Services.AddSingleton<IDynamicAgentsRepository, DynamicAgentsRepository>();
+
+builder.Services.AddTransient<IProperty, AgentProperty>();
+builder.Services.AddTransient<IExecutableAgentCodeSettings, ExecutableAgentCodeSettings>();
+builder.Services
+    .AddTransient<IRequestHandler<GetCommandTypesMetaQueue, ICommandArgsTypesMeta>, GetCommandTypesMetaQueueHandler>()
+    .AddTransient<IRequestHandler<GetCommandArgsValuesQueue, List<object>>, GetCommandArgsValuesQueueHandler>()
+    .AddTransient<IRequestHandler<ParseCodeLineCommand, ICommand>, ParseCodeLineCommandHandler>()
+    .AddTransient<IRequestHandler<GetCommandNameCommand, string>, GetCommandNameCommandHandler>()
+    .AddTransient<IRequestHandler<ExecuteCodeLineCommand, Unit>, ExecuteCodeLineCommandHandler>()
+    .AddTransient<IRequestHandler<ConvertArgsCommand, object[]>, ConvertArgsCommandHandler>()
+    .AddTransient<IWebRequester, HttpClientWebRequester>()
+    .AddTransient<IMetaStorageService, InternalMetaStorageService>()
+    .AddTransient<ICodeResolveService, CodeResolveService>()
+    .AddSingleton<ICommandActionsProvider, CommandActionsProvider>();
 
 
 var app = builder.Build();
@@ -119,7 +116,7 @@ app.UseSwagger();
 
 app.UseSwaggerUI(c =>
 {
-    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Patient Data Handler API");
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Agents API");
     c.RoutePrefix = string.Empty;
 });
 

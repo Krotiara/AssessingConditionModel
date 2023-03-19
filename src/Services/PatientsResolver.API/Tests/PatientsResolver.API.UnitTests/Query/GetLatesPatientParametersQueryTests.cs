@@ -56,7 +56,7 @@ namespace PatientsResolver.API.UnitTests.Query
 
             GetLatesPatientParametersQueryHandler handlerParams = new GetLatesPatientParametersQueryHandler(patientParamsRep);
             List<PatientParameter> parameters = await handlerParams.Handle(
-                new GetLatesPatientParametersQuery() { PatientId = testInf.PatientId, StartTimestamp = testInf.StartTimestamp, EndTimestamp = testInf.EndTimestamp },token);
+                new GetLatesPatientParametersQuery(new Entities.Requests.PatientParametersRequest() {PatientId = testInf.PatientId, MedicalOrganization = testInf.MedicalOrganization, EndTimestamp = testInf.EndTimestamp, StartTimestamp = testInf.StartTimestamp }),token);;
 
             foreach (var parameter in parameters)
                 Assert.True(parameter.ParameterName != ParameterNames.None);
@@ -71,7 +71,7 @@ namespace PatientsResolver.API.UnitTests.Query
             {
                 InfluenceType = Interfaces.InfluenceTypes.Antioxidant,
                 MedicineName = "test",
-                Patient = new Patient() { MedicalHistoryNumber = medHistoryNumber, Gender = Interfaces.GenderEnum.Female, Birthday = DateTime.Now, Name = "test" },
+                Patient = new Patient() { Id = medHistoryNumber, Gender = Interfaces.GenderEnum.Female, Birthday = DateTime.Now, Name = "test" },
                 StartTimestamp = DateTime.Today,
                 EndTimestamp = DateTime.Today,
                 PatientId = medHistoryNumber

@@ -1,5 +1,7 @@
-﻿using Agents.API.Data.Database;
-using Agents.API.Entities;
+﻿using Agents.API.Entities;
+using Agents.API.Entities.DynamicAgent;
+using Agents.API.Entities.Requests;
+using Agents.API.Interfaces;
 using Agents.API.Service.Query;
 using Interfaces;
 using MediatR;
@@ -10,74 +12,39 @@ namespace Agents.API.Controllers
     public class PatientController: Controller
     {
 
-        private readonly IMediator mediator;
+        private readonly IMediator _mediator;
+        private readonly IAgentsService _agentsService;
 
-        public PatientController(IMediator mediator)
+        public PatientController(IMediator mediator, IAgentsService agentsService)
         {
-            this.mediator = mediator;
+            _mediator = mediator;
+            _agentsService = agentsService;
         }
 
 
-        [HttpGet("agents/agingState/{patientId}")]
-        public async Task<ActionResult<IAgingState>> GetAgingState(int patientId)
+        [HttpPost]
+        public async Task<ActionResult> InitAgents([FromBody]InitAgentsRequest request)
         {
-            try
-            {
-                return await mediator.Send(new GetAgingStateQuery() { PatientId = patientId });
-            }
-            catch(GetAgingStateException ex)
-            {
-                return BadRequest(ex.Message);
-            }
-            catch(Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            foreach (var pair in request.AgentsToInit)
+                _agentsService.InitAgentBy(pair.Item1, pair.Item2);
+            return Ok();
         }
 
 
-        [HttpPost("agents/agingDynamics/{patientId}")]
-        public async Task<ActionResult<IList<IAgingDynamics<AgingState>>>> GetAgingDynamics(int patientId, [FromBody]DateTime[] timeSpan)
+        [HttpGet("agents/currentState")]
+        public async Task<ActionResult> GetAgentCurrentState(AgentKey agentKey) => await PredictState(agentKey, DateTime.Now);
+        
+
+        [HttpGet("agents/predict")]
+        public async Task<ActionResult> PredictState(AgentKey agentKey, DateTime timeStamp)
         {
             try
             {
-                DateTime start = DateTime.MinValue;
-                DateTime end = DateTime.MaxValue;
-                if(timeSpan != null && timeSpan.Length == 2)
-                {
-                    start = timeSpan[0];
-                    end = timeSpan[1];
-                }
-                return await mediator.Send(new GetAgingDynamicsQuery() { PatientId = patientId, StartTimestamp = start, EndTimestamp = end });
+                return Ok(await _mediator.Send(new GetAgentStateQuery(agentKey, timeStamp)));
             }
-            catch(GetAgingDynamicsException ex)
+            catch (GetAgingStateException ex)
             {
-                return BadRequest(ex.Message);
-            }
-            catch(Exception ex)
-            {
-                return BadRequest($"Unexpected error: {ex}");
-            }
-        }
-
-
-        [HttpPost("agents/agingDynamics/")]
-        public async Task<ActionResult<IList<IAgingDynamics<AgingState>>>> GetAgingDynamics([FromBody] DateTime[] timeSpan)
-        {
-            try
-            {
-                DateTime start = DateTime.MinValue;
-                DateTime end = DateTime.MaxValue;
-                if (timeSpan != null && timeSpan.Length == 2)
-                {
-                    start = timeSpan[0];
-                    end = timeSpan[1];
-                }
-                return await mediator.Send(new GetAllPatientsAgingDynamicsQuery() {StartTimestamp = start, EndTimestamp = end });
-            }
-            catch(Exception ex)
-            {
-                throw new NotImplementedException();//TODO
+                return NotFound(ex.Message);
             }
         }
     }

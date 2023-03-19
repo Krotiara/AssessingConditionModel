@@ -30,9 +30,10 @@ namespace PatientsResolver.API.Service.Command
         {
             if (!IsCorrectPatient(request.Patient))
                 throw new AddPatientException("Patient fields is not correct");
-            bool isPatientExist = patientsRepository.GetAll().FirstOrDefault(x => x.MedicalHistoryNumber == request.Patient.MedicalHistoryNumber) != null;
+            bool isPatientExist = patientsRepository.GetAll().FirstOrDefault(x => x.Id == request.Patient.Id 
+                                        && x.MedicalOrganization == request.Patient.MedicalOrganization) != null;
             if (isPatientExist)
-                throw new AddPatientException($"Patient with medical history number = {request.Patient.MedicalHistoryNumber} is already exist.");
+                throw new AddPatientException($"Patient with medical history number = {request.Patient.Id} is already exist.");
             try
             {
                 await patientsRepository.AddAsync(request.Patient);
@@ -40,7 +41,7 @@ namespace PatientsResolver.API.Service.Command
             }
             catch(Exception ex)
             {
-                throw new AddPatientException($"Add patient with with medical history number = {request.Patient.MedicalHistoryNumber} error", ex);
+                throw new AddPatientException($"Add patient with with medical history number = {request.Patient.Id} error", ex);
             }
         }
 
@@ -49,8 +50,9 @@ namespace PatientsResolver.API.Service.Command
         {
             return patient != null
                 //&& patient.Birthday != default(DateTime)  пока убрал, а то в входных данных нет.
-                && patient.MedicalHistoryNumber > 0 
-                && patient.Gender != Interfaces.GenderEnum.None;
+                && patient.Id > 0 
+                && patient.Gender != Interfaces.GenderEnum.None
+                && patient.MedicalOrganization != null;
         }
     }
 }

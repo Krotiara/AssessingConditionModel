@@ -35,11 +35,12 @@ namespace PatientsResolver.API.Service.Command
             if (!IsCorrectPatient(request.Patient))
                 throw new UpdatePatientException($"Не валидные данные пациента: " +
                     $"birthday - {request.Patient.Birthday}, " +
-                    $"medical history number - {request.Patient.MedicalHistoryNumber}, " +
+                    $"medical history number - {request.Patient.Id}, " +
                     $"gender - {request.Patient.Gender}.");
-            Patient? patient = patientsRepository.GetAll().FirstOrDefault(x => x.MedicalHistoryNumber == request.Patient.MedicalHistoryNumber);
+            Patient? patient = patientsRepository.GetAll().FirstOrDefault(x => x.Id == request.Patient.Id 
+                                                                            && x.MedicalOrganization == request.Patient.MedicalOrganization);
             if (patient == null)
-                throw new UpdatePatientException($"Пациент с id = {request.Patient.MedicalHistoryNumber} не найден для изменения");
+                throw new UpdatePatientException($"Пациент с id = {request.Patient.Id} не найден для изменения");
             SetNewValues(request.Patient, patient);           
             try
             {
@@ -57,7 +58,7 @@ namespace PatientsResolver.API.Service.Command
         {
             return patient != null
                 //&& patient.Birthday != default(DateTime) пока убрал, а то в входных данных нет.
-                && patient.MedicalHistoryNumber > 0
+                && patient.Id > 0
                 && patient.Gender != Interfaces.GenderEnum.None;
         }
 

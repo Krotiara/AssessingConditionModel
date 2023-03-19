@@ -30,6 +30,18 @@ namespace PatientDataHandler.API.Service.Command
             FileData fileData = request.Data; //TODO по FileData определение DataParserTypes
             IDataProvider dataProvider = dataParserResolver.Invoke(DataParserTypes.TestVahitova);
             IList<Influence> patientDatas = dataProvider.ParseData(fileData.RawData);
+
+            //Очень кривое прокидывание MedicalOrganization
+            foreach (Influence inf in patientDatas)
+            {
+                inf.MedicalOrganization = fileData.MedicalOrganization;
+                inf.Patient.MedicalOrganization = fileData.MedicalOrganization;
+                foreach (var p in inf.StartParameters)
+                    p.Value.MedicalOrganization = fileData.MedicalOrganization;
+                foreach (var p in inf.DynamicParameters)
+                    p.Value.MedicalOrganization = fileData.MedicalOrganization;
+            }
+
             patientsDataSender.SendPatientsData(patientDatas);
             return Unit.Task;
 

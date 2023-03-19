@@ -15,7 +15,7 @@
         "postgres_image": "StartWithoutDebugging",
         "rabbitmq": "StartWithoutDebugging",
         "agents.api": "StartDebugging",
-        "bioAge.api": "StartDebugging",
+        "models.api": "StartDebugging",
         //"tempgateway": "StartDebugging",
         "web": "StartDebugging",
         "envoygateway": "StartDebugging"

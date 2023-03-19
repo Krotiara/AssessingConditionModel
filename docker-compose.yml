@@ -13,6 +13,51 @@ services:
       - ./src/ApiGateways/Envoy/envoy.yaml:/etc/envoy/envoy.yaml
     networks:
         - aModelNetwork
+
+  models.api:
+    image: ${DOCKER_REGISTRY-}modelsapi
+    container_name: models.api
+    build:
+      context: .
+      dockerfile: src/Services/Models.API/Models.API/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      #- ASPNETCORE_URLS=https://+:443;http://+:80
+      #- ASPNETCORE_HTTPS_PORT=8004
+      #- ASPNETCORE_Kestrel__Certificates__Default__Password=lisa2021
+      #- ASPNETCORE_Kestrel__Certificates__Default__Path=/https/localhost.pfx
+    ports:
+      - 8035:80
+    networks:
+        - aModelNetwork
+    volumes:
+        - "C:/TestData:/data"
+    restart: on-failure
+
+
+  #agentinputcodeexecutor.api:
+  #  image: ${DOCKER_REGISTRY-}agentinputcodeexecutorapi
+  #  container_name: agentinputcodeexecutor.api
+  #  build:
+  #    context: .
+  #    dockerfile: src/Services/AgentInputCodeExecutor.API/AgentInputCodeExecutor.API/Dockerfile
+  #  environment:
+  #    - ASPNETCORE_ENVIRONMENT=Development
+  #    - ASPNETCORE_URLS=http://+:80
+  #    - PATIENTRESOLVER_API_URL=http://patientsresolver.api:80
+  #    - MODELS_API_URL=http://models.api:80
+  #    #- ASPNETCORE_URLS=https://+:443;http://+:80
+  #    #- ASPNETCORE_HTTPS_PORT=8004
+  #    #- ASPNETCORE_Kestrel__Certificates__Default__Password=lisa2021
+  #    #- ASPNETCORE_Kestrel__Certificates__Default__Path=/https/localhost.pfx
+  #  ports:
+  #    - 8034:80
+  #  networks:
+  #      - aModelNetwork
+  #  restart: on-failure
+  #  depends_on:
+  #    - rabbitmq
   
   web:
     image: ${DOCKER_REGISTRY-}web
@@ -33,30 +78,6 @@ services:
       - ./https:/https:ro
     networks:
         - aModelNetwork
-
-  #tempgateway:
-  #  image: ${DOCKER_REGISTRY-}tempgateway
-  #  container_name: Gate
-  #  build:
-  #    context: .
-  #    dockerfile: src/ApiGateways/TempGateway/TempGateway/Dockerfile
-  #  environment:
-  #    - ASPNETCORE_ENVIRONMENT=Development
-  #    - ASPNETCORE_URLS=http://+:80
-  #    - PATIENTRESOLVER_API_URL=http://patientsresolver.api:80
-  #    - AGENTS_API_URL=http://agents.api:80
-  #    #- ASPNETCORE_URLS=https://+:443;http://+:80
-  #    #- ASPNETCORE_HTTPS_PORT=8009
-  #    #- ASPNETCORE_Kestrel__Certificates__Default__Password=lisa2021
-  #    #- ASPNETCORE_Kestrel__Certificates__Default__Path=/https/localhost.pfx
-  #  ports:
-  #    - 8008:80
-  #    #- 8009:443
-  #  #volumes:
-  #  #  #- "C:/TestData:/data"
-  #  #  - ./https:/https:ro
-  #  networks:
-  #      - aModelNetwork
 
   patientsresolver.api:
     image: ${DOCKER_REGISTRY-}patientsresolverapi
@@ -79,16 +100,9 @@ services:
       - 8033:80
     networks:
         - aModelNetwork
-      #- 8004:443
     restart: on-failure
     depends_on:
       - rabbitmq
-
-  #influencecalculator.api:
-  #  image: ${DOCKER_REGISTRY-}influencecalculatorapi
-  #  build:
-  #    context: .
-  #    dockerfile: src/Services/InfluenceCalculator.API/InfluenceCalculator.API/Dockerfile
 
   patientdatahandler.api:
     image: ${DOCKER_REGISTRY-}patientdatahandlerapi
@@ -99,8 +113,6 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:80
-      #- ASPNETCORE_Kestrel__Certificates__Default__Password=lisa2021
-      #- ASPNETCORE_Kestrel__Certificates__Default__Path=/https/localhost.pfx
     ports:
       - 8005:80
     #volumes:
@@ -121,7 +133,7 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:80
       - PATIENTRESOLVER_API_URL=http://patientsresolver.api:80
-      - BIO_AGE_API_URL=http://bioAge.api:80
+      - MODELS_API_URL=http://models.api:80
       #- ASPNETCORE_URLS=https://+:443;http://+:80
       #- ASPNETCORE_HTTPS_PORT=8012
       #- ASPNETCORE_Kestrel__Certificates__Default__Password=lisa2021
@@ -137,29 +149,29 @@ services:
     depends_on:
       - rabbitmq
 
-  bioAge.api:
-    image: ${DOCKER_REGISTRY-}bioageapi
-    container_name: bioAge.api
-    build:
-      context: .
-      dockerfile: src/Services/BioAge.API/BioAge.API/Dockerfile
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_URLS=http://+:80
-      #- ASPNETCORE_URLS=https://+:443;http://+:80
-      #- ASPNETCORE_HTTPS_PORT=8006
-      #- ASPNETCORE_Kestrel__Certificates__Default__Password=lisa2021
-      #- ASPNETCORE_Kestrel__Certificates__Default__Path=/https/localhost.pfx
-    ports:
-      - 8007:80
-      #- 8006:443
-    #volumes:
-    #  - ./https:/https:ro
-    networks:
-        - aModelNetwork
-    restart: on-failure
-    #extra_hosts:
-    #  - host.docker.internal:host-gateway
+  #bioAge.api:
+  #  image: ${DOCKER_REGISTRY-}bioageapi
+  #  container_name: bioAge.api
+  #  build:
+  #    context: .
+  #    dockerfile: src/Services/BioAge.API/BioAge.API/Dockerfile
+  #  environment:
+  #    - ASPNETCORE_ENVIRONMENT=Development
+  #    - ASPNETCORE_URLS=http://+:80
+  #    #- ASPNETCORE_URLS=https://+:443;http://+:80
+  #    #- ASPNETCORE_HTTPS_PORT=8006
+  #    #- ASPNETCORE_Kestrel__Certificates__Default__Password=lisa2021
+  #    #- ASPNETCORE_Kestrel__Certificates__Default__Path=/https/localhost.pfx
+  #  ports:
+  #    - 8007:80
+  #    #- 8006:443
+  #  #volumes:
+  #  #  - ./https:/https:ro
+  #  networks:
+  #      - aModelNetwork
+  #  restart: on-failure
+  #  #extra_hosts:
+  #  #  - host.docker.internal:host-gateway
 
   #containerregister.api:
   #  image: ${DOCKER_REGISTRY-}containerregisterapi
@@ -195,13 +207,30 @@ services:
     restart: always
     volumes:
       - postgresData:/var/lib/postgresql/data
-      - ./sql:/docker-entrypoint-initdb.d
+      - ./sql/patientsDb:/docker-entrypoint-initdb.d
     environment:
       POSTGRES_USER: "postgres"
       POSTGRES_PASSWORD: "lisa2021"
       POSTGRES_DB: "PatientData_db"
     networks:
         - aModelNetwork
+
+  postgres_image_models:
+    container_name: postgres_image_models
+    image: postgres:latest
+    ports:
+        - "5433:5432"
+    restart: always
+    volumes:
+        - postgresModelsData:/var/lib/postgresql/data
+        - ./sql/models:/docker-entrypoint-initdb.d
+    environment:
+        POSTGRES_USER: "postgres"
+        POSTGRES_PASSWORD: "lisa2021"
+        POSTGRES_DB: "Models_db"
+    networks:
+        - aModelNetwork
+
 
   #pgadmin:
   #   container_name: pgadmin_container
@@ -221,19 +250,12 @@ services:
   #   #networks:
   #   # - postgres
 
-  #bioAge.mlServer:
-  #   image: ${DOCKER_REGISTRY-}bioagemlserver
-  #   build:
-  #      context: .
-  #      dockerfile: src/Services/BioAge.MLServer/BioAge.MLServer/Dockerfile
-  #   ports:
-  #     - "8080:80"
-
-
 volumes:
    db_volume:
    pgadmin:
    postgresData:
+       external: true
+   postgresModelsData:
        external: true
 
 networks:

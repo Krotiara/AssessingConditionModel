@@ -1,5 +1,7 @@
 ﻿
 
+using Agents.API.Interfaces;
+
 namespace Agents.API.Entities
 {
     public class AgentDetermineStateProperties : IAgentDetermineStateProperties

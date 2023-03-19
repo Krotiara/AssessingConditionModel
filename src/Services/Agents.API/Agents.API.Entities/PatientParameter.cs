@@ -1,6 +1,7 @@
 ﻿using Interfaces;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -21,5 +22,10 @@ namespace Agents.API.Entities
 
         public int PositiveDynamicCoef { get; set; }
         public bool IsDynamic { get; set; }
+        public string MedicalOrganization { get; set; }
+
+
+#warning Опасно менят ьвообще дял всех типов запятые на точки.
+        public T ConvertValue<T>() => (T)TypeDescriptor.GetConverter(typeof(T)).ConvertFrom(Value.Replace(",", "."));
     }
 }

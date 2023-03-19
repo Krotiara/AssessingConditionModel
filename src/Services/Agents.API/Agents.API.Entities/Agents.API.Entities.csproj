@@ -8,11 +8,13 @@
 
   <ItemGroup>
     <PackageReference Include="MediatR" Version="11.0.0" />
+    <PackageReference Include="MongoDB.Driver" Version="2.19.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\Interfaces\Interfaces.csproj" />
+    <ProjectReference Include="..\Agents.API.Interfaces\Agents.API.Interfaces.csproj" />
   </ItemGroup>
 
 </Project>

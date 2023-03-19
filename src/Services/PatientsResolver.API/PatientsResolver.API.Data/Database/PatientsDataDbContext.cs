@@ -27,9 +27,10 @@ namespace PatientsResolver.API.Data
         {      
             modelBuilder.Entity<Influence>()
                 .HasOne<Patient>(x=>x.Patient);
+            modelBuilder.Entity<Patient>().HasKey(x => new { x.Id, x.MedicalOrganization });
             //Чтобы не пытался обновить ключ при update, иначе ошибка.
-            modelBuilder.Entity<Patient>()
-                .Property(x => x.Id).Metadata.SetAfterSaveBehavior(Microsoft.EntityFrameworkCore.Metadata.PropertySaveBehavior.Ignore);
+            //modelBuilder.Entity<Patient>()
+            //    .Property(x => x.Id).Metadata.SetAfterSaveBehavior(Microsoft.EntityFrameworkCore.Metadata.PropertySaveBehavior.Ignore);  
             modelBuilder.Entity<Influence>()
                 .Property(x => x.Id).Metadata.SetAfterSaveBehavior(Microsoft.EntityFrameworkCore.Metadata.PropertySaveBehavior.Throw);
             modelBuilder.Entity<PatientParameter>()

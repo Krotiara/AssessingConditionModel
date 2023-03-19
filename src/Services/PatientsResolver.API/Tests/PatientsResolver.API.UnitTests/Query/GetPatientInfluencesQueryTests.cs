@@ -52,7 +52,7 @@ namespace PatientsResolver.API.UnitTests.Query
             await handler.Handle(new AddInfluenceDataCommand() { Data = new List<Influence> { testInf } }, token);
 
             GetPatientInfluencesQueryHandler h = new GetPatientInfluencesQueryHandler(rep);
-            var infs = await h.Handle(new GetPatientInfluencesQuery(testInf.PatientId, testInf.StartTimestamp,  testInf.EndTimestamp), token);
+            var infs = await h.Handle(new GetPatientInfluencesQuery(testInf.PatientId, "test", testInf.StartTimestamp,  testInf.EndTimestamp), token);
 
             Assert.NotNull(infs.First().Patient);
             
@@ -70,7 +70,7 @@ namespace PatientsResolver.API.UnitTests.Query
         //        AddInfluenceDataCommandHandler handler = new AddInfluenceDataCommandHandler(rep);
         //        await handler.Handle(new AddInfluenceDataCommand() { Data = new List<Influence> { testInf } }, token);
 
-        //        Patient p = await dbContext.Patients.FirstOrDefaultAsync(x => x.MedicalHistoryNumber == testInf.PatientId);
+        //        Patient p = await dbContext.Patients.FirstOrDefaultAsync(x => x.Id == testInf.PatientId);
         //        dbContext.Patients.Remove(p);
         //        await dbContext.SaveChangesAsync();
 
@@ -98,7 +98,7 @@ namespace PatientsResolver.API.UnitTests.Query
             await handler.Handle(new AddInfluenceDataCommand() { Data = new List<Influence> { testInf } }, token);
 
             GetPatientInfluencesQueryHandler h = new GetPatientInfluencesQueryHandler(rep);
-            var infs = await h.Handle(new GetPatientInfluencesQuery(testInf.PatientId, testInf.StartTimestamp, testInf.EndTimestamp), token);
+            var infs = await h.Handle(new GetPatientInfluencesQuery(testInf.PatientId, "test", testInf.StartTimestamp, testInf.EndTimestamp), token);
 
             Influence addedTestInnf = infs.First();
             Assert.True(addedTestInnf.StartParameters.Count == startParamsCount);
@@ -114,7 +114,7 @@ namespace PatientsResolver.API.UnitTests.Query
             {
                 InfluenceType = Interfaces.InfluenceTypes.Antioxidant,
                 MedicineName = "test",
-                Patient = new Patient() { MedicalHistoryNumber = medHistoryNumber, Gender = Interfaces.GenderEnum.Female, Birthday = DateTime.Now, Name = "test" },
+                Patient = new Patient() { Id = medHistoryNumber, Gender = Interfaces.GenderEnum.Female, Birthday = DateTime.Now, Name = "test" },
                 StartTimestamp = DateTime.Today,
                 EndTimestamp = DateTime.Today,
                 PatientId = medHistoryNumber

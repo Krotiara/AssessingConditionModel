@@ -8,12 +8,17 @@
 
   <ItemGroup>
     <PackageReference Include="MediatR" Version="11.0.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Scripting" Version="4.4.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\Interfaces\Interfaces.csproj" />
     <ProjectReference Include="..\Agents.API.Data\Agents.API.Data.csproj" />
     <ProjectReference Include="..\Agents.API.Entities\Agents.API.Entities.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Command\" />
   </ItemGroup>
 
 </Project>

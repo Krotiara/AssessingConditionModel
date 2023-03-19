@@ -1,6 +1,7 @@
 ﻿using Interfaces;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using PatientsResolver.API.Entities.Requests;
 using PatientsResolver.API.Service.Query;
 
 namespace PatientsResolver.API.Controllers
@@ -16,17 +17,12 @@ namespace PatientsResolver.API.Controllers
 
 
 
-        [HttpPost("patientsApi/latestPatientParameters/{patientId}")]
-        public async Task<ActionResult<List<IPatientParameter>>> GetLatestPatientParameters(int patientId, [FromBody] DateTime[] timeSpan)
+        [HttpPost("patientsApi/latestPatientParameters")]
+        public async Task<ActionResult<List<IPatientParameter>>> GetLatestPatientParameters([FromBody]PatientParametersRequest request)
         {
             try
             {
-                return Ok(await mediator.Send(new GetLatesPatientParametersQuery()
-                {
-                    PatientId = patientId,
-                    StartTimestamp = timeSpan.FirstOrDefault(),
-                    EndTimestamp = timeSpan.LastOrDefault()
-                }));
+                return Ok(await mediator.Send(new GetLatesPatientParametersQuery(request)));
             }
             catch (Exception ex)
             {

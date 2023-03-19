@@ -26,6 +26,8 @@ namespace Interfaces
         /// </summary>
         public string MedicineName { get; set; }
 
+        public string MedicalOrganization { get; set; }
+
         public ConcurrentDictionary<ParameterNames, T2> StartParameters { get; set; }
 
         public ConcurrentDictionary<ParameterNames, T2> DynamicParameters { get; set; }

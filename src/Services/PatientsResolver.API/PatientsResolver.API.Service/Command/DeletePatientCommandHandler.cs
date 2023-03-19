@@ -15,9 +15,12 @@ namespace PatientsResolver.API.Service.Command
     {
         public int PatientId { get; set; }
 
-        public DeletePatientCommand(int patientId)
+        public string MedicalOrganization { get; set; }
+
+        public DeletePatientCommand(int patientId, string medicalOrganization)
         {
             PatientId = patientId;
+            MedicalOrganization = medicalOrganization;
         }
     }
 
@@ -34,7 +37,9 @@ namespace PatientsResolver.API.Service.Command
 
         public async Task<bool> Handle(DeletePatientCommand request, CancellationToken cancellationToken)
         {
-            Patient? patient = patientsRepository.GetAll().FirstOrDefault(x => x.MedicalHistoryNumber == request.PatientId);
+            Patient? patient = patientsRepository
+                .GetAll()
+                .FirstOrDefault(x => x.Id == request.PatientId && x.MedicalOrganization == request.MedicalOrganization);
             if (patient == null)
                 throw new DeletePatientException($"Пациент с id = {request.PatientId} не найден");
             try

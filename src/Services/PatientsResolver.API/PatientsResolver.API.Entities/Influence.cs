@@ -47,7 +47,11 @@ namespace PatientsResolver.API.Entities
         [Column("PatientId")]
         public int PatientId { get; set; }
 
-        [ForeignKey(nameof(PatientId))]
+        [NotNull]
+        [Column("MedicalOrganization")]
+        public string MedicalOrganization { get; set; }
+
+        [ForeignKey("PatientId, MedicalOrganization")]
         public Patient Patient { get; set; }
 
         [NotMapped]
@@ -55,5 +59,6 @@ namespace PatientsResolver.API.Entities
 
         [NotMapped]
         public ConcurrentDictionary<ParameterNames, PatientParameter> DynamicParameters { get; set; }
+       
     }
 }

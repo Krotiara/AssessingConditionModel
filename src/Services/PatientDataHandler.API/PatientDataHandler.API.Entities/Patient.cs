@@ -12,10 +12,10 @@ namespace PatientDataHandler.API.Entities
         public int Id { get ; set ; }
         public string Name { get ; set ; }
         public DateTime Birthday { get ; set ; }
-        public int MedicalHistoryNumber { get ; set ; }
 
         public GenderEnum Gender { get; set; }
 
         public TreatmentType TreatmentType { get; set; }
+        public string MedicalOrganization { get; set; }
     }
 }

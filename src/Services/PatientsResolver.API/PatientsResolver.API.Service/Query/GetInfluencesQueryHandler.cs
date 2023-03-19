@@ -16,10 +16,13 @@ namespace PatientsResolver.API.Service.Query
 
         public DateTime EndTimestamp { get; set; }
 
-        public GetInfluencesQuery(DateTime start, DateTime end)
+        public bool IncludeParams { get; set; }
+
+        public GetInfluencesQuery(DateTime start, DateTime end, bool includeParams = true)
         {
             StartTimestamp = start;
             EndTimestamp = end;
+            IncludeParams = includeParams;
         }
     }
 
@@ -32,9 +35,11 @@ namespace PatientsResolver.API.Service.Query
             this.influenceRepository = influenceRepository;
         }
 
+
         public async Task<List<Influence>> Handle(GetInfluencesQuery request, CancellationToken cancellationToken)
         {
-            return await influenceRepository.GetInfluences(request.StartTimestamp, request.EndTimestamp);
+            return await influenceRepository
+                .GetInfluences(request.StartTimestamp, request.EndTimestamp, request.IncludeParams);
         }
     }
 }

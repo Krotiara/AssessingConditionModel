@@ -1,5 +1,4 @@
-﻿using Agents.API.Data.Database;
-using Agents.API.Data.Repository;
+﻿using Agents.API.Data.Repository;
 using Agents.API.Entities;
 using Agents.API.Service.Services;
 using Interfaces;
@@ -19,73 +18,75 @@ namespace Agents.API.UnitTests.Service
     {
        // AgentsDbContext dbContext;
         CancellationToken token;
-        IDbContextFactory<AgentsDbContext> dbContextFactory;
         //IWebRequester webRequester;
 
         public UpdatePatientAgentsServiceTests()
         {
-            var options = new DbContextOptionsBuilder<AgentsDbContext>()
-               .UseInMemoryDatabase(Guid.NewGuid().ToString())
-               .ConfigureWarnings(x => x.Ignore(InMemoryEventId.TransactionIgnoredWarning))
-               .Options;
-            var tokenSource = new CancellationTokenSource(TimeSpan.FromMilliseconds(100));
-            AgentsDbContext dbContext = new AgentsDbContext(options);
-            token = tokenSource.Token;
-            var dbFactoryMock = new Mock<IDbContextFactory<AgentsDbContext>>();
-            dbFactoryMock.Setup(x => x.CreateDbContext()).Returns(() => new AgentsDbContext(options));
-            dbContextFactory = dbFactoryMock.Object;  
+            throw new NotImplementedException(); //TODO рефакторинг всвязи с новым api.
+            //var options = new DbContextOptionsBuilder<AgentsDbContext>()
+            //   .UseInMemoryDatabase(Guid.NewGuid().ToString())
+            //   .ConfigureWarnings(x => x.Ignore(InMemoryEventId.TransactionIgnoredWarning))
+            //   .Options;
+            //var tokenSource = new CancellationTokenSource(TimeSpan.FromMilliseconds(100));
+            //AgentsDbContext dbContext = new AgentsDbContext(options);
+            //token = tokenSource.Token;
+            //var dbFactoryMock = new Mock<IDbContextFactory<AgentsDbContext>>();
+            //dbFactoryMock.Setup(x => x.CreateDbContext()).Returns(() => new AgentsDbContext(options));
+            //dbContextFactory = dbFactoryMock.Object;  
         }
 
 
         [Fact]
         public async void UpdateExsistedPatientAgentsMustReturnItsCount()
         {
-            double mockAge = new Random().Next(25, 60);
-            double mockBioAge = new Random().Next(30, 50);
-            int mockPatientId = new Random().Next(1, 1000);
-            var webRequesterMock = new Mock<IWebRequester>();
-            webRequesterMock.Setup(x => x.GetResponse<double>(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).Returns(
-                () => Task.FromResult<double>(mockBioAge));
-            webRequesterMock.Setup(x => x.GetResponse<IList<PatientParameter>>(It.IsAny<string>(), It.IsAny<string>(),
-                It.IsAny<string>())).Returns(() => GetTestParameters(mockPatientId, mockAge));
-            IWebRequester webRequester = webRequesterMock.Object;
-            IAgentPatientsRepository rep = new AgentPatientsRepository(dbContextFactory, webRequester);
-            UpdatePatientAgentsService service = new UpdatePatientAgentsService(rep);
+            throw new NotImplementedException(); //TODO рефакторинг всвязи с новым api.
+            //double mockAge = new Random().Next(25, 60);
+            //double mockBioAge = new Random().Next(30, 50);
+            //int mockPatientId = new Random().Next(1, 1000);
+            //var webRequesterMock = new Mock<IWebRequester>();
+            //webRequesterMock.Setup(x => x.GetResponse<double>(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).Returns(
+            //    () => Task.FromResult<double>(mockBioAge));
+            //webRequesterMock.Setup(x => x.GetResponse<IList<PatientParameter>>(It.IsAny<string>(), It.IsAny<string>(),
+            //    It.IsAny<string>())).Returns(() => GetTestParameters(mockPatientId, mockAge));
+            //IWebRequester webRequester = webRequesterMock.Object;
+            //IAgentPatientsRepository rep = new AgentPatientsRepository(dbContextFactory, webRequester);
+            //UpdatePatientAgentsService service = new UpdatePatientAgentsService(rep);
 
-            Patient testPatient = GetTestPatient(mockPatientId);
-            AgentPatient aP = await rep.InitAgentPatient(testPatient);
+            //Patient testPatient = GetTestPatient(mockPatientId);
+            //AgentPatient aP = await rep.InitAgentPatient(testPatient);
             
-            UpdatePatientsInfo info = new UpdatePatientsInfo() 
-            { UpdateInfo = new HashSet<(int, DateTime)> { (testPatient.MedicalHistoryNumber, DateTime.Now) } };
-            int updatedCount = await service.UpdatePatientAgents(info);
+            //UpdatePatientsInfo info = new UpdatePatientsInfo() 
+            //{ UpdateInfo = new HashSet<(int, DateTime)> { (testPatient.Id, DateTime.Now) } };
+            //int updatedCount = await service.UpdatePatientAgents(info);
            
-            Assert.Equal(1, updatedCount);
+            //Assert.Equal(1, updatedCount);
         }
 
 
         [Fact]
         public async void UpdateNotExistedPatientAgentsMustNotCount()
         {
-            double mockAge = new Random().Next(25, 60);
-            double mockBioAge = new Random().Next(30, 50);
-            int mockPatientId = new Random().Next(1, 1000);
-            var webRequesterMock = new Mock<IWebRequester>();
-            webRequesterMock.Setup(x => x.GetResponse<double>(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).Returns(
-                () => Task.FromResult<double>(mockBioAge));
-            webRequesterMock.Setup(x => x.GetResponse<IList<PatientParameter>>(It.IsAny<string>(), It.IsAny<string>(),
-                It.IsAny<string>())).Returns(() => GetTestParameters(mockPatientId, mockAge));
+            throw new NotImplementedException(); //TODO рефакторинг всвязи с новым api.
+            //double mockAge = new Random().Next(25, 60);
+            //double mockBioAge = new Random().Next(30, 50);
+            //int mockPatientId = new Random().Next(1, 1000);
+            //var webRequesterMock = new Mock<IWebRequester>();
+            //webRequesterMock.Setup(x => x.GetResponse<double>(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).Returns(
+            //    () => Task.FromResult<double>(mockBioAge));
+            //webRequesterMock.Setup(x => x.GetResponse<IList<PatientParameter>>(It.IsAny<string>(), It.IsAny<string>(),
+            //    It.IsAny<string>())).Returns(() => GetTestParameters(mockPatientId, mockAge));
 
-            IWebRequester webRequester = webRequesterMock.Object;
-            IAgentPatientsRepository rep = new AgentPatientsRepository(dbContextFactory, webRequester);
-            UpdatePatientAgentsService service = new UpdatePatientAgentsService(rep);
+            //IWebRequester webRequester = webRequesterMock.Object;
+            //IAgentPatientsRepository rep = new AgentPatientsRepository(dbContextFactory, webRequester);
+            //UpdatePatientAgentsService service = new UpdatePatientAgentsService(rep);
 
-            Patient testPatient = GetTestPatient(mockPatientId);
+            //Patient testPatient = GetTestPatient(mockPatientId);
 
-            UpdatePatientsInfo info = new UpdatePatientsInfo()
-            { UpdateInfo = new HashSet<(int, DateTime)> { (testPatient.MedicalHistoryNumber, DateTime.Now) } };
-            int updatedCount = await service.UpdatePatientAgents(info);
+            //UpdatePatientsInfo info = new UpdatePatientsInfo()
+            //{ UpdateInfo = new HashSet<(int, DateTime)> { (testPatient.Id, DateTime.Now) } };
+            //int updatedCount = await service.UpdatePatientAgents(info);
 
-            Assert.Equal(0, updatedCount);
+            //Assert.Equal(0, updatedCount);
         }
 
 
@@ -99,6 +100,6 @@ namespace Agents.API.UnitTests.Service
         }
 
         private Patient GetTestPatient(int patientId) => 
-            new Patient() { Name = "test", MedicalHistoryNumber = patientId, Gender = GenderEnum.Female, Birthday = DateTime.Today };
+            new Patient() { Name = "test", Id = patientId, Gender = GenderEnum.Female, Birthday = DateTime.Today };
     }
 }

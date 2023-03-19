@@ -95,7 +95,7 @@ namespace PatientDataHandler.API.Service.Services
                             PatientId = id,
                             Patient = new Patient()
                             {
-                                MedicalHistoryNumber = id,
+                                Id = id,
                                 Name = "",
                                 Birthday = DateTime.MinValue
                             }

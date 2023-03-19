@@ -50,7 +50,7 @@ namespace PatientsResolver.API.UnitTests.Command
                 .Returns(addPatientCommandHandler.Handle);
 
 
-            Patient testPatient = new Patient() { Name = "test", MedicalHistoryNumber = 000, 
+            Patient testPatient = new Patient() { Name = "test", Id = 000, 
                 Gender = Interfaces.GenderEnum.Female, Birthday = DateTime.Now };
             await rep.AddAsync(testPatient);
 
@@ -94,7 +94,7 @@ namespace PatientsResolver.API.UnitTests.Command
 
         private Patient GetTestCorrectPatient() => new Patient()
         {
-            MedicalHistoryNumber = new Random().Next(1,1000),
+            Id = new Random().Next(1,1000),
             Name = "Test name",
             Gender = Interfaces.GenderEnum.Female,
             Birthday = DateTime.Today
@@ -111,8 +111,8 @@ namespace PatientsResolver.API.UnitTests.Command
             // set delay time after which the CancellationToken will be canceled
             var cancellationTokenSource = new CancellationTokenSource(TimeSpan.FromMilliseconds(100));
             Patient emptyHistory = new Patient() { Name = "test", Gender = Interfaces.GenderEnum.Female, Birthday = DateTime.Now };
-            Patient emptyGender = new Patient() { Name = "test", Birthday = DateTime.Now, MedicalHistoryNumber = 000};
-            Patient emptyBirthday = new Patient() { Name = "test", Gender = Interfaces.GenderEnum.Female, MedicalHistoryNumber = 000 };
+            Patient emptyGender = new Patient() { Name = "test", Birthday = DateTime.Now, Id = 000};
+            Patient emptyBirthday = new Patient() { Name = "test", Gender = Interfaces.GenderEnum.Female, Id = 000 };
             
             PatientsRepository rep = new PatientsRepository(dbContextFactory.Object);
             AddPatientCommandHandler addPatientCommandHandler = new AddPatientCommandHandler(rep);
