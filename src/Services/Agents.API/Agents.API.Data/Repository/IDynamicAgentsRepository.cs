@@ -11,9 +11,9 @@ namespace Agents.API.Data.Repository
 {
     public interface IDynamicAgentsRepository
     {
-        public IDynamicAgent GetAgent(AgentKey key);
+        public IDynamicAgent GetAgent(IAgentKey key);
 
-        public IDynamicAgent InitAgent(AgentKey key, IDynamicAgentInitSettings settings);
+        public IDynamicAgent InitAgent(IAgentKey key, IDynamicAgentInitSettings settings);
 
         public void Clear();
     }

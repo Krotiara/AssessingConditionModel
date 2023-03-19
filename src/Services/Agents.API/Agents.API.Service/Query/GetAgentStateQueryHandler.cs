@@ -39,8 +39,7 @@ namespace Agents.API.Service.Query
         {
 #warning Пока id пациента запит как int, но будет string
             IDynamicAgent agent = _dynamicAgentsRepository.GetAgent(request.AgentKey);
-            if (agent == null)
-                return null;
+            if (agent == null) return null;
             agent.Settings.ActionsArgsReplaceDict[CommonArgs.EndDateTime] = request.Timestamp;
             agent.Settings.ActionsArgsReplaceDict[CommonArgs.StartDateTime] = DateTime.MinValue;
             await agent.UpdateState();

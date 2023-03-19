@@ -69,7 +69,8 @@ builder.Services
     .AddTransient<IWebRequester, HttpClientWebRequester>();
 builder.Services
     .AddTransient<IAgingDynamics<AgingState>, AgingDynamics>()
-    .AddSingleton<IAgentInitSettingsProvider, AgentInitSettingsProvider>();
+    .AddSingleton<IAgentInitSettingsProvider, AgentInitSettingsProvider>()
+    .AddSingleton<IAgentsService, AgentsService>();
 
 builder.Services
     .AddTransient<IRequestHandler<GetAgentStateQuery, IAgentState>, GetAgentStateQueryHandler>();

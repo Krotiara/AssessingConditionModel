@@ -10,8 +10,6 @@ namespace Interfaces
     {
         public int ObservedId { get; set; }
 
-        public AgentType AgentType { get; set; }
-
         public string ObservedObjectAffilation { get; set; }
     }
 }
