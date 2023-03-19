@@ -18,6 +18,7 @@ namespace Interfaces
 
     public enum AgentType
     {
+        Custom,
         AgingPatient
     }
 

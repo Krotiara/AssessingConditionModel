@@ -12,11 +12,9 @@ namespace Agents.API.Entities.DynamicAgent
     public class DynamicAgentInitSettings : IDynamicAgentInitSettings
     {
 
-        private readonly string actionsWithoutArgsPlacement;
-
-        public DynamicAgentInitSettings(string actionsWithoutArgsPlacement, AgentType agentType)
+        public DynamicAgentInitSettings(string actionsWithoutArgsPlacement, AgentType agentType = AgentType.Custom)
         {
-            this.actionsWithoutArgsPlacement = actionsWithoutArgsPlacement;
+            InitialActions = actionsWithoutArgsPlacement;
             AgentType = agentType;
         }
 
@@ -26,20 +24,13 @@ namespace Agents.API.Entities.DynamicAgent
 
         public Dictionary<CommonArgs, object> ActionsArgsReplaceDict { get; set; }
 
-        public string DetermineAgentPropertiesActions { get
-            {
-                StringBuilder sb = new StringBuilder(actionsWithoutArgsPlacement);
-                foreach(KeyValuePair<CommonArgs, object> pair in ActionsArgsReplaceDict)
-                    if(pair.Value != null) //Мини костыль на наличие дефолтных значений.
-                        sb.Replace(pair.Key.ToString(), pair.Value.ToString());
-                return sb.ToString();
-            }
-        }
+        public string InitialActions { get; }
 
         public IStateDiagram StateDiagram { get; set; }
 
+
         public T GetPropertyValue<T>(string propertyName)
-        {
+        {       
             if (!typeof(T).Equals(Properties[propertyName].Type) && !typeof(T).IsEnum)
                 throw new GetAgentPropertyValueException($"Несоответсвие типов переданного типа и типа параметра");
             try

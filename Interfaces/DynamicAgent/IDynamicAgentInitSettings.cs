@@ -18,7 +18,19 @@ namespace Interfaces.DynamicAgent
 
         public IStateDiagram StateDiagram { get; set; }
 
-        public string DetermineAgentPropertiesActions { get;}
+        public string InitialActions { get; }
+
+        public string DetermineAgentPropertiesActions
+        {
+            get
+            {
+                StringBuilder sb = new StringBuilder(InitialActions);
+                foreach (KeyValuePair<CommonArgs, object> pair in ActionsArgsReplaceDict)
+                    if (pair.Value != null) //Мини костыль на наличие дефолтных значений.
+                        sb.Replace(pair.Key.ToString(), pair.Value.ToString());
+                return sb.ToString();
+            }
+        }
 
         public Dictionary<CommonArgs, object> ActionsArgsReplaceDict { get; set; }
 
