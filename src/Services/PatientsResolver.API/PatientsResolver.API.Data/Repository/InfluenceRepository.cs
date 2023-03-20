@@ -86,7 +86,7 @@ namespace PatientsResolver.API.Data.Repository
            && inf.MedicineName != ""
            && inf.InfluenceType != InfluenceTypes.None
            && inf.PatientId > 0
-           && inf.StartTimestamp != default(DateTime)
+           //&& inf.StartTimestamp != default(DateTime) fix for data inserting
            && inf.EndTimestamp != default(DateTime)
            && inf.StartParameters != null
            && inf.DynamicParameters != null
