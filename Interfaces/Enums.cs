@@ -288,7 +288,7 @@ namespace Interfaces
         [ParamValueType(ValueType = typeof(double))]
         FirstMolarsNarrowing,
         [Display(Name = "Сумма баллов")]
-        [ParamDescription(Descriptions = new string[] { "cумма баллов" })]
+        [ParamDescription(Descriptions = new string[] { "сумма баллов" })]
         [ParamValueType(ValueType = typeof(double))]
         DentistPointsSum,
         [Display(Name = "Сагиттальная щель")]
