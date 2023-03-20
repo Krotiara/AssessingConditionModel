@@ -83,7 +83,7 @@ namespace PatientsResolver.API.Data.Repository
 
         private bool IsCorrectInfluence(Influence inf) => inf != null
            && inf.MedicineName != null
-           && inf.MedicineName != ""
+           //&& inf.MedicineName != "" fix for data inserting
            && inf.InfluenceType != InfluenceTypes.None
            && inf.PatientId > 0
            //&& inf.StartTimestamp != default(DateTime) fix for data inserting
