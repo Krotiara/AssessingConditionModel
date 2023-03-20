@@ -334,5 +334,10 @@ namespace Interfaces
         [ParamValueType(ValueType = typeof(DateTime))]
         [NoAllowToSelect]
         Birthdate,
+        [Display(Name = "фио")]
+        [ParamDescription(Descriptions = new string[] { "фио" })]
+        [ParamValueType(ValueType = typeof(string))]
+        [NoAllowToSelect]
+        FullName
     }
 }
