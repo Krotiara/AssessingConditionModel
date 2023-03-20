@@ -22,7 +22,7 @@ namespace Agents.API.Controllers
         }
 
 
-        [HttpPost]
+        [HttpPost("agents/init")]
         public async Task<ActionResult> InitAgents([FromBody]InitAgentsRequest request)
         {
             foreach (var pair in request.AgentsToInit)
