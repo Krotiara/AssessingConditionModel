@@ -51,7 +51,6 @@ namespace PatientsResolver.API.Service.Command
             return patient != null
                 //&& patient.Birthday != default(DateTime)  пока убрал, а то в входных данных нет.
                 && patient.Id > 0 
-                && patient.Gender != Interfaces.GenderEnum.None
                 && patient.MedicalOrganization != null;
         }
     }
