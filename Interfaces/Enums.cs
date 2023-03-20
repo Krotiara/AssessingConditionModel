@@ -93,7 +93,7 @@ namespace Interfaces
     {
         None = 0,
         [Display(Name = "Id")]
-        [ParamDescription(Descriptions = new string[] { "id", "номер", "номер истории болезни" })]
+        [ParamDescription(Descriptions = new string[] { "id", "номер", "номер истории болезни", "№"})]
         [NoAllowToSelect]
         Id,
         [Display(Name = "Возраст")]
@@ -109,7 +109,7 @@ namespace Interfaces
         [ParamValueType(ValueType = typeof(DateTime))]
         HospitalizationDate,
         [Display(Name = "Дата внесения")]
-        [ParamDescription(Descriptions = new string[] { "дата внесения" })]
+        [ParamDescription(Descriptions = new string[] { "дата внесения", "дата последнего посещения" })]
         [ParamValueType(ValueType = typeof(DateTime))]
         ParameterTimestamp,
         [Display(Name = "Анамнез")]
@@ -275,6 +275,64 @@ namespace Interfaces
         [Display(Name = "Стат.балансировка")]
         [ParamDescription(Descriptions = new string[] { "стат.балансировка" })]
         [ParamValueType(ValueType = typeof(double))]
-        StaticBalancing
+        StaticBalancing,
+        [Display(Name = "Обратная сагиттальная щель")]
+        [ParamDescription(Descriptions = new string[] { "обратная сагиттальная щель" })]
+        [ParamValueType(ValueType = typeof(double))]
+        ReverseSagittalGap,
+        [Display(Name = "Сужение верхнего зубного ряда в области первых моляров")]
+        [ParamDescription(Descriptions = 
+            new string[] { "сужение верхнего зубного ряда в области первых моляров" })]
+        [ParamValueType(ValueType = typeof(double))]
+        FirstMolarsNarrowing,
+        [Display(Name = "Сумма баллов")]
+        [ParamDescription(Descriptions = new string[] { "cумма баллов" })]
+        [ParamValueType(ValueType = typeof(double))]
+        DentistPointsSum,
+        [Display(Name = "Сагиттальная щель")]
+        [ParamDescription(Descriptions = new string[] { "cагиттальная щель" })]
+        [ParamValueType(ValueType = typeof(double))]
+        SagittalSlit,
+        [Display(Name = "вертикальная дизокклюзия во фронтальном/боковом участке")]
+        [ParamDescription(Descriptions = 
+            new string[] { "вертикальная дизокклюзия во фронтальном/боковом участке" })]
+        [ParamValueType(ValueType = typeof(double))]
+        VerticalDysocclusion,
+        [Display(Name = "Резцовое перекрытие менее 3,5 мм")]
+        [ParamDescription(Descriptions = new string[] { "резцовое перекрытие менее 3,5 мм" })]
+        [ParamValueType(ValueType = typeof(double))]
+        LessIncisorOverlap,
+        [Display(Name = "Резцовое перекрытие до контакта с десной/нёбом, без травмы")]
+        [ParamDescription(Descriptions = 
+            new string[] { "резцовое перекрытие до контакта с десной/нёбом, без травмы" })]
+        [ParamValueType(ValueType = typeof(double))]
+        ContactIncisorOverlapWithoutInjury,
+        [Display(Name = "Резцовое перекрытие с травмой десны или неба")]
+        [ParamDescription(Descriptions = new string[] { "резцовое перекрытие с травмой десны или неба" })]
+        [ParamValueType(ValueType = typeof(double))]
+        ContactIncisorOverlapWithInjury,
+        [Display(Name = "Смещение нижней челюсти вперед, мм")]
+        [ParamDescription(Descriptions = new string[] { "смещение нижней челюсти вперед, мм" })]
+        [ParamValueType(ValueType = typeof(double))]
+        LowerJawBackwardDisplacement,
+        [Display(Name = "Смещение нижней челюсти назад, мм")]
+        [ParamDescription(Descriptions = new string[] { "смещение нижней челюсти назад, мм" })]
+        [ParamValueType(ValueType = typeof(double))]
+        LowerJawSideDisplacement,
+        [Display(Name = "Уменьшение общей длины зубного ряда (ретенция) на 1 зуб")]
+        [ParamDescription(Descriptions = 
+            new string[] { "уменьшение общей длины зубного ряда (ретенция) на 1 зуб" })]
+        [ParamValueType(ValueType = typeof(double))]
+        DentitionLengthReductionByTooth,
+        [Display(Name = "Уменьшение общей длины зубного ряда (ретенция) на 2 зуба и более")]
+        [ParamDescription(Descriptions = 
+            new string[] { "уменьшение общей длины зубного ряда (ретенция) на 2 зуба и более" })]
+        [ParamValueType(ValueType = typeof(double))]
+        DentitionLengthReductionByTooths,
+        [Display(Name = "Дата рождения")]
+        [ParamDescription(Descriptions = new string[] { "дата рождения" })]
+        [ParamValueType(ValueType = typeof(DateTime))]
+        [NoAllowToSelect]
+        Birthdate,
     }
 }
