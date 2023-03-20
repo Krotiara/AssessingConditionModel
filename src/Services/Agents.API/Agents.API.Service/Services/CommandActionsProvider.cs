@@ -97,6 +97,7 @@ namespace Agents.API.Service.Services
                     pDict[ParameterNames.LessIncisorOverlap].ConvertValue<float>(),
                     pDict[ParameterNames.ContactIncisorOverlapWithoutInjury].ConvertValue<float>(),
                     pDict[ParameterNames.ContactIncisorOverlapWithInjury].ConvertValue<float>(),
+                    pDict[ParameterNames.LowerJawForwardDisplacement].ConvertValue<float>(),
                     pDict[ParameterNames.LowerJawBackwardDisplacement].ConvertValue<float>(),
                     pDict[ParameterNames.LowerJawSideDisplacement].ConvertValue<float>(),
                     pDict[ParameterNames.DentitionLengthReductionByTooth].ConvertValue<float>(),

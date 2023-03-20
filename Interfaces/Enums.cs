@@ -313,14 +313,18 @@ namespace Interfaces
         [ParamDescription(Descriptions = new string[] { "резцовое перекрытие с травмой десны или неба" })]
         [ParamValueType(ValueType = typeof(double))]
         ContactIncisorOverlapWithInjury,
-        [Display(Name = "Смещение нижней челюсти вперед, мм")]
-        [ParamDescription(Descriptions = new string[] { "смещение нижней челюсти вперед, мм" })]
-        [ParamValueType(ValueType = typeof(double))]
-        LowerJawBackwardDisplacement,
         [Display(Name = "Смещение нижней челюсти назад, мм")]
         [ParamDescription(Descriptions = new string[] { "смещение нижней челюсти назад, мм" })]
         [ParamValueType(ValueType = typeof(double))]
+        LowerJawBackwardDisplacement,
+        [Display(Name = "Смещение нижней челюсти в сторону, мм")]
+        [ParamDescription(Descriptions = new string[] { "смещение нижней челюсти в сторону, мм" })]
+        [ParamValueType(ValueType = typeof(double))]
         LowerJawSideDisplacement,
+        [Display(Name = "Смещение нижней челюсти вперед, мм")]
+        [ParamDescription(Descriptions = new string[] { "смещение нижней челюсти вперед, мм" })]
+        [ParamValueType(ValueType = typeof(double))]
+        LowerJawForwardDisplacement,
         [Display(Name = "Уменьшение общей длины зубного ряда (ретенция) на 1 зуб")]
         [ParamDescription(Descriptions = 
             new string[] { "уменьшение общей длины зубного ряда (ретенция) на 1 зуб" })]
