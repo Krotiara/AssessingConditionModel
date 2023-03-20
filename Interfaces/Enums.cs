@@ -292,7 +292,7 @@ namespace Interfaces
         [ParamValueType(ValueType = typeof(double))]
         DentistPointsSum,
         [Display(Name = "Сагиттальная щель")]
-        [ParamDescription(Descriptions = new string[] { "cагиттальная щель" })]
+        [ParamDescription(Descriptions = new string[] { "сагиттальная щель" })]
         [ParamValueType(ValueType = typeof(double))]
         SagittalSlit,
         [Display(Name = "вертикальная дизокклюзия во фронтальном/боковом участке")]
