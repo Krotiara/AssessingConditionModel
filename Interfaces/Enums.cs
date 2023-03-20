@@ -19,7 +19,8 @@ namespace Interfaces
     public enum AgentType
     {
         Custom,
-        AgingPatient
+        AgingPatient,
+        DentistPatient
     }
 
     public enum SystemCommands
@@ -31,7 +32,8 @@ namespace Interfaces
         GetInfluences,
         GetAgingDynamics,
         GetAgingState,
-        GetInfluencesWithoutParameters
+        GetInfluencesWithoutParameters,
+        GetDentistSum
     }
 
 

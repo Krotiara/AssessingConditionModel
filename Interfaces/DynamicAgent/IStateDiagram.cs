@@ -8,7 +8,7 @@ namespace Interfaces.DynamicAgent
 {
     public interface IStateDiagram
     {
-        public Dictionary<string, IAgentState> States { get; }
+        public ConcurrentDictionary<string, IAgentState> States { get; }
 
         public IAgentState CurrentState { get; set; }
 
