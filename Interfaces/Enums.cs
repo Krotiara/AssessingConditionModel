@@ -99,7 +99,7 @@ namespace Interfaces
         [NoAllowToSelect]
         Id,
         [Display(Name = "Возраст")]
-        [ParamDescription(Descriptions = new string[] { "возраст" })]
+        [ParamDescription(Descriptions = new string[] { "возраст", "age" })]
         [ParamValueType(ValueType = typeof(int))]
         Age,
         [Display(Name = "Пол")]
@@ -340,6 +340,26 @@ namespace Interfaces
         [ParamDescription(Descriptions = new string[] { "фио" })]
         [ParamValueType(ValueType = typeof(string))]
         [NoAllowToSelect]
-        FullName
+        FullName,
+        [Display(Name = "Баллы после лечения")]
+        [ParamDescription(Descriptions = new string[] { "balls_after_treatment" })]
+        [ParamValueType(ValueType = typeof(double))]
+        [NoAllowToSelect]
+        ScoreAfterTreatment,
+        [Display(Name = "Продолжительность лечения (в месяцах)")]
+        [ParamDescription(Descriptions = new string[] { "duration_treatment" })]
+        [ParamValueType(ValueType = typeof(double))]
+        [NoAllowToSelect]
+        TreatmentDuration,
+        [Display(Name = "Количество шагов лечения")]
+        [ParamDescription(Descriptions = new string[] { "steps" })]
+        [ParamValueType(ValueType = typeof(double))]
+        [NoAllowToSelect]
+        TreatmentSteps,
+        [Display(Name = "Apparatues")]
+        [ParamDescription(Descriptions = new string[] { "apparatues" })]
+        [ParamValueType(ValueType = typeof(double))]
+        [NoAllowToSelect]
+        TreatmentApparatuesCount
     }
 }
