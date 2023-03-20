@@ -45,8 +45,7 @@ namespace PatientsResolver.API.Service.Command
                     try
                     {
 #warning По идее лучше сделать правилами при заполнении, а то выглядит костыльно.
-                        if (patient.Id <= 0 || 
-                            patient.Gender == Interfaces.GenderEnum.None
+                        if (patient.Id <= 0
                             /*patient.Birthday == default(DateTime)*/) //Пока убрал, так как в входных данных нет. 14.12.2022
                                 throw new AddPatientException($"Some requied values is empty for patient with history number = {patient.Id}");
 
