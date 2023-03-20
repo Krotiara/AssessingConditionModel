@@ -40,7 +40,7 @@ namespace PatientsResolver.API.Data.Repository
 
                         Patient patient = await dbContext
                             .Patients
-                            .FirstOrDefaultAsync(x => x.Id == influence.PatientId);
+                            .FirstOrDefaultAsync(x => x.Id == influence.PatientId && x.MedicalOrganization == influence.MedicalOrganization);
 
 #warning В данной реализации не добавляется пациент, если здесь не был найден. Просто пробрасывается ошибка.
                         if (patient == null)
