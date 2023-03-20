@@ -346,17 +346,17 @@ namespace Interfaces
         [NoAllowToSelect]
         FullName,
         [Display(Name = "Баллы после лечения")]
-        [ParamDescription(Descriptions = new string[] { "balls_after_treatment" })]
+        [ParamDescription(Descriptions = new string[] { "balls_after_treatment", "баллы после лечения" })]
         [ParamValueType(ValueType = typeof(double))]
         [NoAllowToSelect]
         ScoreAfterTreatment,
         [Display(Name = "Продолжительность лечения (в месяцах)")]
-        [ParamDescription(Descriptions = new string[] { "duration_treatment" })]
+        [ParamDescription(Descriptions = new string[] { "duration_treatment", "продолжительность лечения (в месяцах)" })]
         [ParamValueType(ValueType = typeof(double))]
         [NoAllowToSelect]
         TreatmentDuration,
         [Display(Name = "Количество шагов лечения")]
-        [ParamDescription(Descriptions = new string[] { "steps" })]
+        [ParamDescription(Descriptions = new string[] { "steps", "количество шагов лечения" })]
         [ParamValueType(ValueType = typeof(double))]
         [NoAllowToSelect]
         TreatmentSteps,
