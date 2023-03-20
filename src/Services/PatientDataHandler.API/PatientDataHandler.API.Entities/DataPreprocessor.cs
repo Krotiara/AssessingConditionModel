@@ -23,23 +23,27 @@ namespace PatientDataHandler.API.Entities
         {
             data[0] = data[0].Select(x => x.Trim().ToLower()).ToList();
 
-            int genderIndex = data[0]
+            var genderIndexVal = data[0]
                 .Select(x=> x.Trim().ToLower())
                 .Select((Value, Index) => new { Value, Index })
-                .Single(p => p.Value == "пол" || p.Value == "gender").Index;
+                .FirstOrDefault(p => p.Value == "пол" || p.Value == "gender");
+            int genderIndex = genderIndexVal == null ? -1 : genderIndexVal.Index;
 
-            int ageIndex = data[0]
+            var ageIndexVal = data[0]
                 .Select(x => x.Trim().ToLower())
                 .Select((Value, Index) => new { Value, Index })
-                .Single(p => p.Value == "возраст" || p.Value == "age").Index;
+                .FirstOrDefault(p => p.Value == "возраст" || p.Value == "age");
+            int ageIndex = ageIndexVal == null ? -1 : ageIndexVal.Index;
 
             for (int i = 1; i < data.Count; i++)
             {
                 List<string> row = data[i].Select(x=>x.Trim().ToLower()).ToList();
                 //FillEmptyCells(ref row);
                 AdjustRowDelimeters(ref row);
-                AdjustGender(ref row, genderIndex);
-                AdjustAge(ref row, ageIndex);
+                if(genderIndex != -1)
+                    AdjustGender(ref row, genderIndex);
+                if(ageIndex != -1)
+                    AdjustAge(ref row, ageIndex);
                 data[i] = row;
             }
 
