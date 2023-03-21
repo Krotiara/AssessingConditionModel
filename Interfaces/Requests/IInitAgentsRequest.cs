@@ -8,6 +8,9 @@ namespace Interfaces.Requests
 {
     public interface IInitAgentsRequest
     {
-        public List<(IAgentKey, AgentType)> AgentsToInit { get; }
+
+        public AgentType AgentType { get; }
+
+        public List<IAgentKey> AgentsToInit { get; }
     }
 }

@@ -25,8 +25,8 @@ namespace Agents.API.Controllers
         [HttpPost("agents/init")]
         public async Task<ActionResult> InitAgents([FromBody]InitAgentsRequest request)
         {
-            foreach (var pair in request.AgentsToInit)
-                _agentsService.InitAgentBy(pair.Item1, pair.Item2);
+            foreach (var key in request.AgentsToInit)
+                _agentsService.InitAgentBy(key, request.AgentType);
             return Ok();
         }
 
