@@ -14,17 +14,20 @@ namespace Agents.API.Controllers
 
         private readonly IMediator _mediator;
         private readonly IAgentsService _agentsService;
+        private readonly ILogger<PatientController> _logger;
 
-        public PatientController(IMediator mediator, IAgentsService agentsService)
+        public PatientController(IMediator mediator, IAgentsService agentsService, ILogger<PatientController> logger)
         {
             _mediator = mediator;
             _agentsService = agentsService;
+            _logger = logger;
         }
 
 
         [HttpPost("agents/init")]
         public async Task<ActionResult> InitAgents([FromBody]InitAgentsRequest request)
         {
+            _logger.LogInformation("Init agents");
             foreach (var key in request.AgentsToInit)
                 _agentsService.InitAgentBy(key, request.AgentType);
             return Ok();
@@ -40,6 +43,7 @@ namespace Agents.API.Controllers
         {
             try
             {
+                _logger.LogInformation($"Predict state for agent {agentKey.ObservedId} in {agentKey.ObservedObjectAffilation}");
                 return Ok(await _mediator.Send(new GetAgentStateQuery(agentKey, timeStamp)));
             }
             catch (GetAgingStateException ex)

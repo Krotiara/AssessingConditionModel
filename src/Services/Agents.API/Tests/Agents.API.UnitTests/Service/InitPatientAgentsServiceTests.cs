@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Moq;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -35,8 +36,10 @@ namespace Agents.API.UnitTests.Service
 
 
         private IDynamicAgentInitSettings GetTestSettings()
-        {           
-            Dictionary<string, IAgentState> states = new() { {"Test1", new AgentState("Test1") }, { "Test2", new AgentState("Test2")}};
+        {
+            ConcurrentDictionary<string, IAgentState> states = new();
+            states["Test1"] = new AgentState("Test1");
+            states["Test2"] = new AgentState("Test2");
           
             var sets = new DynamicAgentInitSettings(
                         $"CurrentTest1 = 1\n" +
