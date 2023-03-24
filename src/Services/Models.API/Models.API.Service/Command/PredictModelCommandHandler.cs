@@ -1,45 +1,14 @@
 ﻿using MediatR;
 using Models.API.Data;
 using Models.API.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Razorvine.Pickle;
-using NumSharp;
-using NumSharp.Extensions;
-using Numpy;
 using Microsoft.ML.OnnxRuntime;
 using Microsoft.ML.OnnxRuntime.Tensors;
+using Microsoft.ML;
+using Models.API.Service.Service;
 
 namespace Models.API.Service.Command
 {
-    public class NumpyArrayConstructor : IObjectConstructor
-    {
-        public object construct(object[] args)
-        {
-            // Extract the typecode, shape, and dtype from the arguments
-            string typecode = (string)args[0];
-            int[] shape = (int[])args[1];
-            string dtype = (string)args[2];
-
-            // Create a new NumSharp array with the specified typecode, shape, and dtype
-            return new NDArray(Array.CreateInstance(Type.GetType(dtype), shape), shape);
-        }
-    }
-
-
-    class NumpyReconstructConstructor : IObjectConstructor
-    {
-        public object construct(object[] args)
-        {
-            // Construct the object using the provided arguments
-            return new NDArray(Array.CreateInstance(Type.GetType((string)args[2]), (int)args[1], (int)args[1]));
-            //return new Numpy.np.core.multiarray._reconstruct((string)args[0], (int)args[1], (string)args[2]);
-        }
-    }
-
     public class PredictModelCommand: IRequest<float[]>
     {
         public ModelMeta ModelMeta { get; set; }
@@ -50,27 +19,28 @@ namespace Models.API.Service.Command
     public class PredictModelCommandHandler : IRequestHandler<PredictModelCommand, float[]>
     {
         private readonly ModelsStore _modelsStore;
-        private readonly Unpickler _unpickler;
-   
+        private readonly MLContext _mlContext;
+
         public PredictModelCommandHandler(ModelsStore modelsStore)
         {
             _modelsStore = modelsStore;
-            _unpickler = new Unpickler();
+            _mlContext = new MLContext();
         }
 
         public async Task<float[]> Handle(PredictModelCommand request, CancellationToken cancellationToken)
         {
-            MemoryStream model = await _modelsStore.Get(request.ModelMeta.Name);
-            var session = new InferenceSession(model.ToArray());
-            Tensor<float> t1 = new DenseTensor<float>(request.InputArgs, new int[] { request.ModelMeta.OutputParamsCount, request.ModelMeta.InputParamsCount });
-            try
-            {
-                return Predict(t1, session, "float_input");
-            }
-            catch(OnnxRuntimeException ex)
-            {
-                return Predict(t1, session, "X");
-            }
+            MemoryStream model = await _modelsStore.Get(request.ModelMeta.File);
+            DataViewSchema modelSchema;
+            ITransformer trainedModel = _mlContext.Model.Load(model, out modelSchema);
+
+            var runtimeType = new ClassFactory().CreateType(modelSchema);
+            dynamic dynamicPredictionEngine;
+            var genericPredictionMethod = _mlContext.Model.GetType().GetMethod("CreatePredictionEngine", new[] { typeof(ITransformer), typeof(DataViewSchema) });
+            var predictionMethod = genericPredictionMethod.MakeGenericMethod(runtimeType, typeof(Prediction));
+            dynamicPredictionEngine = predictionMethod.Invoke(_mlContext.Model, new object[] { trainedModel, modelSchema });
+            var predictMethod = dynamicPredictionEngine.GetType().GetMethod("Predict", new[] { runtimeType });
+            var predict = predictMethod.Invoke(dynamicPredictionEngine, new[] { request.InputArgs });
+            return ((Prediction)predict).Predictions;
         }
 
 
