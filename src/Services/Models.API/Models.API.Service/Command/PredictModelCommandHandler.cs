@@ -68,12 +68,25 @@ namespace Models.API.Service.Command
             MemoryStream model = await _modelsStore.Get(request.ModelMeta.Name);
             var session = new InferenceSession(model.ToArray());
             Tensor<float> t1 = new DenseTensor<float>(request.InputArgs, new int[] { request.ModelMeta.OutputParamsCount, request.ModelMeta.InputParamsCount });
-            NamedOnnxValue t1Value = NamedOnnxValue.CreateFromTensor("float_input", t1); //float_input - всегда один и тот же?
+            try
+            {
+                return Predict(t1, session, "float_input");
+            }
+            catch(OnnxRuntimeException ex)
+            {
+                return Predict(t1, session, "X");
+            }
+        }
+
+
+        private float[] Predict(Tensor<float> t1, InferenceSession session, string inputArgsTitle)
+        {
+            NamedOnnxValue t1Value = NamedOnnxValue.CreateFromTensor(inputArgsTitle, t1); //float_input - всегда один и тот же?
             using (var outPut = session.Run(new List<NamedOnnxValue> { t1Value }))
             {
                 DisposableNamedOnnxValue val = outPut.First();
                 DenseTensor<float> value = val.Value as DenseTensor<float>;
-                return value.Buffer.ToArray();           
+                return value.Buffer.ToArray();
             }
         }
     }

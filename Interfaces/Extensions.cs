@@ -107,12 +107,14 @@ namespace Interfaces
         }
 
 
+        private static readonly IEnumerable<ParameterNames> paramNames = 
+            Enum.GetValues(typeof(ParameterNames)).Cast<ParameterNames>();
+
         public static ParameterNames GetParameterByDescription(this string description)
         {
             description = description.ToLower();
-            ParameterNames p = Enum.GetValues(typeof(ParameterNames))
-                .Cast<ParameterNames>()
-                .FirstOrDefault(x =>
+#warning Присутствует баг, что если в DescriptionsSet нет DisplayAttrubute.Value, то матчится на None.
+            ParameterNames p = paramNames.FirstOrDefault(x =>
                 {
                     try
                     {

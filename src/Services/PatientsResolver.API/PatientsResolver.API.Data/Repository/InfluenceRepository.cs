@@ -40,7 +40,7 @@ namespace PatientsResolver.API.Data.Repository
 
                         Patient patient = await dbContext
                             .Patients
-                            .FirstOrDefaultAsync(x => x.Id == influence.PatientId);
+                            .FirstOrDefaultAsync(x => x.Id == influence.PatientId && x.MedicalOrganization == influence.MedicalOrganization);
 
 #warning В данной реализации не добавляется пациент, если здесь не был найден. Просто пробрасывается ошибка.
                         if (patient == null)
@@ -83,10 +83,10 @@ namespace PatientsResolver.API.Data.Repository
 
         private bool IsCorrectInfluence(Influence inf) => inf != null
            && inf.MedicineName != null
-           && inf.MedicineName != ""
-           && inf.InfluenceType != InfluenceTypes.None
+           //&& inf.MedicineName != "" fix for data inserting
+           //&& inf.InfluenceType != InfluenceTypes.None fix for data inserting
            && inf.PatientId > 0
-           && inf.StartTimestamp != default(DateTime)
+           //&& inf.StartTimestamp != default(DateTime) fix for data inserting
            && inf.EndTimestamp != default(DateTime)
            && inf.StartParameters != null
            && inf.DynamicParameters != null

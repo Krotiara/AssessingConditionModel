@@ -72,7 +72,7 @@ namespace PatientDataHandler.API.Service.Services
 
                     DateTime parameterTimestamp = parameterTimestampIndex == -1 || row[parameterTimestampIndex] =="" ? 
                         DateTime.MinValue : DateTime.Parse(row[parameterTimestampIndex]);
-                    string influenceName = data[rowNum][groupIndex];
+                    string influenceName = groupIndex == -1 ? "" : data[rowNum][groupIndex];
                     
                     if (row[0] == "динамика")
                     {
@@ -88,6 +88,7 @@ namespace PatientDataHandler.API.Service.Services
                     {
                         influenceData = new Influence()
                         {
+#warning Костыль с InfluenceType
                             InfluenceType = InfluenceTypes.BiologicallyActiveAdditive,
                             MedicineName = influenceName,
                             StartTimestamp = DateTime.MinValue, //TODO указывать во входных данных,

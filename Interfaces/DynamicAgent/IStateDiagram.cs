@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,7 +9,7 @@ namespace Interfaces.DynamicAgent
 {
     public interface IStateDiagram
     {
-        public Dictionary<string, IAgentState> States { get; }
+        public ConcurrentDictionary<string, IAgentState> States { get; }
 
         public IAgentState CurrentState { get; set; }
 

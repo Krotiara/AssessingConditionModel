@@ -11,7 +11,7 @@ namespace Models.API.Service.Service
 {
     public class OnnxPredictor : IPredictor
     {
-        public double[] Predict(string modelPath, double[] args, int[] dimensions)
+        public double[] Predict(string modelPath, double[] args, int[] dimensions, string inputArgsName)
         {
             var session = new InferenceSession(modelPath);
             Tensor<float> t1 = new DenseTensor<float>(args.Cast<float>().ToArray(), dimensions);
