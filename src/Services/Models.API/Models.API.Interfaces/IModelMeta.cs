@@ -8,13 +8,13 @@ namespace Models.API.Interfaces
 {
     public interface IModelMeta
     {
-        public string StorageId { get; set; }
+        public string Id { get; set; }
 
-        public string Name { get; set; }
+        public string File { get; set; }
 
         public double Accuracy { get; set; }
 
-        public double Version { get; set; }
+        public string Version { get; set; }
 
         public int InputParamsCount { get; set; }
 

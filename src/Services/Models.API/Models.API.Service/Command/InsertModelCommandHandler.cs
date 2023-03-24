@@ -34,8 +34,8 @@ namespace Models.API.Service.Command
             request.Model.Seek(0, SeekOrigin.Begin);
             await _modelsMetaStore.Insert(new ModelMeta()
             {
-                StorageId = request.ModelMeta.StorageId,
-                Name = request.ModelMeta.Name,
+                Id = request.ModelMeta.Id,
+                File = request.ModelMeta.File,
                 Accuracy = request.ModelMeta.Accuracy,
                 InputParamsCount = request.ModelMeta.InputParamsCount,
                 OutputParamsCount = request.ModelMeta.OutputParamsCount,

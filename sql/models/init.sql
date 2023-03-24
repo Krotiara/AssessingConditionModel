@@ -10,14 +10,14 @@
 
 CREATE TABLE "Models"
 (
-    "StorageId" text COLLATE pg_catalog."default" NOT NULL,
+    "Id" text COLLATE pg_catalog."default" NOT NULL,
     "FileName" text COLLATE pg_catalog."default" NOT NULL,
     "Accuracy" double precision,
-    "Version" double precision NOT NULL,
+    "Version" text precision NOT NULL,
     "InputParamsCount" integer NOT NULL,
     "OutputParamsCount" integer NOT NULL,
     "ParamsNames" text[] COLLATE pg_catalog."default" NOT NULL,
-    CONSTRAINT "Models_pkey" PRIMARY KEY ("StorageId")
+    CONSTRAINT "Models_pkey" PRIMARY KEY ("Id", "Version")
 )
 
 

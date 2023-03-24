@@ -51,9 +51,7 @@ namespace Models.API.Service.Command
     {
         private readonly ModelsStore _modelsStore;
         private readonly Unpickler _unpickler;
-
-        private bool IsSupportExtension(string path) => Path.GetExtension(path) == ".onnx";
-
+   
         public PredictModelCommandHandler(ModelsStore modelsStore)
         {
             _modelsStore = modelsStore;
@@ -62,9 +60,6 @@ namespace Models.API.Service.Command
 
         public async Task<float[]> Handle(PredictModelCommand request, CancellationToken cancellationToken)
         {
-            if (!IsSupportExtension(request.ModelMeta.Name))
-                return null;
-
             MemoryStream model = await _modelsStore.Get(request.ModelMeta.Name);
             var session = new InferenceSession(model.ToArray());
             Tensor<float> t1 = new DenseTensor<float>(request.InputArgs, new int[] { request.ModelMeta.OutputParamsCount, request.ModelMeta.InputParamsCount });

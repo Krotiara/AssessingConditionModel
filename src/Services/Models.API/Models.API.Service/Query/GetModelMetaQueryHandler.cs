@@ -12,6 +12,8 @@ namespace Models.API.Service.Query
     public class GetModelMetaQuery: IRequest<ModelMeta>
     {
         public string ModelId { get; set; }
+
+        public string Version { get; set; }
     }
 
     public class GetModelMetaQueryHandler : IRequestHandler<GetModelMetaQuery, ModelMeta>
@@ -25,7 +27,7 @@ namespace Models.API.Service.Query
 
         public async Task<ModelMeta> Handle(GetModelMetaQuery request, CancellationToken cancellationToken)
         {
-            return await _modelsMetaStore.Get(request.ModelId);
+            return await _modelsMetaStore.Get(request.ModelId, request.Version);
         }
     }
 }

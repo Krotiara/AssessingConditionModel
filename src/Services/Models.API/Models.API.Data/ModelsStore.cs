@@ -33,7 +33,7 @@ namespace Models.API.Data
            
             PutObjectArgs args = new Minio.PutObjectArgs()
                 .WithBucket(_s3Client.Bucket)
-                .WithObject(meta.Name)
+                .WithObject(meta.File)
                 .WithStreamData(model)
                 .WithObjectSize(model.Length)
                 .WithRequestBody(null)
