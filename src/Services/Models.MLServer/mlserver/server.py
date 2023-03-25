@@ -72,3 +72,9 @@ def predict(model_id, version):
     meta = ModelMeta(meta[0])
     model = model_provider.get_model_from_s3(meta)
     print(model)
+
+
+if __name__ == '__main__':
+    metas = db_connection.session.query(ModelMeta).all()
+    model_provider.load_models(metas)
+    app.run(port=80, host='0.0.0.0')

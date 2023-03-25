@@ -1,15 +1,15 @@
-from sqlalchemy import JSON, Column, Float, String, Boolean, ARRAY
+from sqlalchemy import JSON, Column, Float, String, Boolean, ARRAY, Integer
 from sqlalchemy.orm import relationship
 from db_connection import DeclarativeBase
 
 class ModelMeta(DeclarativeBase):
     __tablename__ = 'Models'
-    storage_Id = Column('StorageId', String, primary_key=True)
+    storage_Id = Column('Id', String, primary_key=True)
     version = Column('Version', String, primary_key=True)
-    file_name = Column('Name', String)
-    accuracy = Column('Accuracy', Float)
-    input_count = Column('InputParamsCount', int)
-    output_count = Column('OutputParamsCount', int)
+    file_name = Column('FileName', String)
+    accuracy = Column('Accuracy', Integer)
+    input_count = Column('InputParamsCount', Integer)
+    output_count = Column('OutputParamsCount', Integer)
     params_names = Column("ParamsNames", ARRAY(String))
 
     def to_dict(self):

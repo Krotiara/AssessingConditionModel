@@ -12,8 +12,8 @@ CREATE TABLE "Models"
 (
     "Id" text COLLATE pg_catalog."default" NOT NULL,
     "FileName" text COLLATE pg_catalog."default" NOT NULL,
-    "Accuracy" double precision,
-    "Version" text precision NOT NULL,
+    "Accuracy" integer NOT NULL,
+    "Version" text NOT NULL,
     "InputParamsCount" integer NOT NULL,
     "OutputParamsCount" integer NOT NULL,
     "ParamsNames" text[] COLLATE pg_catalog."default" NOT NULL,
