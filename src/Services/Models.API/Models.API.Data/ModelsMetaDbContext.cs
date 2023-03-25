@@ -15,5 +15,11 @@ namespace Models.API.Data
         public ModelsMetaDbContext() : base() { }
 
         public ModelsMetaDbContext(DbContextOptions<ModelsMetaDbContext> options) : base(options) {}
+
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<ModelMeta>().HasKey(x => new { x.Id, x.Version });
+        }
     }
 }

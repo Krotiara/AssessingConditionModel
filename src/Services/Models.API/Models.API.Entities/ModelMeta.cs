@@ -15,18 +15,17 @@ namespace Models.API.Entities
 
         public ModelMeta() { }
 
-        [Key]
-        [Column("StorageId")]
-        public string StorageId { get; set; }
+        [Column("Id")]
+        public string Id { get; set; }
+
+        [Column("Version")]
+        public string Version { get; set; }
 
         [Column("FileName")]
-        public string Name { get; set; }
+        public string File { get; set; }
 
         [Column("Accuracy")]
         public double Accuracy { get; set; }
-
-        [Column("Version")]
-        public double Version { get; set; }
 
         [Column("InputParamsCount")]
         public int InputParamsCount { get; set; }

@@ -19,7 +19,8 @@ namespace Models.API.Data
         }
 
 
-        public async Task<ModelMeta> Get(string id) => _dbContext.ModelMetas.FirstOrDefault(x => x.StorageId == id);
+        public async Task<ModelMeta> Get(string id, string version) => 
+            _dbContext.ModelMetas.FirstOrDefault(x => x.Id == id && x.Version == version);
 
 
 

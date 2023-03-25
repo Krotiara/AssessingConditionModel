@@ -5,6 +5,7 @@ using Models.API.Interfaces;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.IO.Compression;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
@@ -33,7 +34,7 @@ namespace Models.API.Data
            
             PutObjectArgs args = new Minio.PutObjectArgs()
                 .WithBucket(_s3Client.Bucket)
-                .WithObject(meta.Name)
+                .WithObject(meta.File)
                 .WithStreamData(model)
                 .WithObjectSize(model.Length)
                 .WithRequestBody(null)

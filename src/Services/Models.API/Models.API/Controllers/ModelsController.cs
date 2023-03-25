@@ -6,7 +6,8 @@ using Models.API.Service.Query;
 
 namespace Models.API.Controllers
 {
-    public class ModelsController : Controller
+    [ApiController]
+    public class ModelsController : ControllerBase
     {
         private readonly IMediator _mediator;
 
@@ -20,17 +21,21 @@ namespace Models.API.Controllers
         public async Task<IActionResult> InsertModel([FromForm] UploadModel uploadModel)
         {
             MemoryStream ms = new MemoryStream();
-            using (FileStream file = new FileStream(uploadModel.File, FileMode.Open, FileAccess.Read))
+            using (FileStream file = new FileStream(uploadModel.FilePath, FileMode.Open, FileAccess.Read))
                 file.CopyTo(ms);
             await _mediator.Send(new InsertModelCommand(uploadModel, ms));
             return Ok();
         }
 
 
-        [HttpGet("models/{id}")]
-        public async Task<IActionResult> GetModelMeta(string id)
+        [HttpPost("models/{id}")]
+        public async Task<IActionResult> GetModelMeta(ModelMetaRequest request)
         {
-            ModelMeta meta = await _mediator.Send(new GetModelMetaQuery() { ModelId = id });
+            ModelMeta meta = await _mediator.Send(new GetModelMetaQuery()
+            {
+                ModelId = request.Id,
+                Version = request.Version
+            });
             if (meta == null)
                 return NotFound();
             else return Ok(meta);
