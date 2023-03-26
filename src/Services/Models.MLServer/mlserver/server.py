@@ -1,10 +1,15 @@
 import json
 from flask import Flask, jsonify, request
 from flask_cors import CORS, cross_origin
+from apispec import APISpec
+from apispec.ext.marshmallow import MarshmallowPlugin
 import numpy as np
+from models.upload_model import UploadModel
 from model_provider import ModelProvider
 from models.model_meta import ModelMeta
+from models.model_key import ModelKey
 import db_connection
+import json
 
 
 class NpEncoder(json.JSONEncoder):
@@ -39,7 +44,10 @@ app = Flask(__name__)
 app.json_encoder = NpEncoder
 CORS(app, origins='*')
 app.config["CORS_SUPPORTS_CREDENTIALS"] = "true"
-
+app.config.update({
+    'APISPEC_SWAGGER_URL': '/swagger/',  # URI to access API Doc JSON
+    'APISPEC_SWAGGER_UI_URL': '/swagger-ui/'  # URI to access UI of API Doc
+})
 
 @app.route('/models/<model_id>==<version>', methods=['GET'])
 @cross_origin()
@@ -55,26 +63,38 @@ def get_model_meta_by_key(model_id, version):
         return "", 404
 
 
-@app.route('/models/insert', methods=['POST'])
+@app.route('/models/insert', methods=['POST'], endpoint='upload_model')
 @cross_origin()
-def upload_model(model_meta, file_name):
-    json_data = request.get_json()
-    print(json_data)
+@convert_input_to(UploadModel)
+def upload_model(upload_model):
+    meta = ModelMeta(upload_model.Meta)
+    data = bytes(upload_model.DataBytes, 'utf-8')
+    print(type(data))
+    print(meta)
+    print(meta.FileName)
+    model_provider.upload_model(data, meta.FileName)
+    db_connection.session.add(meta)
+    db_connection.session.commit()
 
 
-@app.route('/models/predict', methods=['POST'])
+@app.route('/models/predict', methods=['POST'], endpoint='predict')
 @cross_origin()
-def predict(model_id, version):
-    input_args = np.array(request.json).reshape(1, -1)
-    meta = get_model_meta_by_key(model_id, version)
+@convert_input_to(ModelKey)
+def predict(key):
+    meta = get_model_meta_by_key(key.id, key.version)
     if meta[1] == 404:
         return "", 404
     meta = ModelMeta(meta[0])
     model = model_provider.get_model_from_s3(meta)
     print(model)
 
+@app.route('/')
+def index():
+    print('fuck')
+    return 'App Works!'
+
 
 if __name__ == '__main__':
     metas = db_connection.session.query(ModelMeta).all()
     model_provider.load_models(metas)
-    app.run(port=80, host='0.0.0.0')
+    app.run(port=5000, host='0.0.0.0', debug=True)
