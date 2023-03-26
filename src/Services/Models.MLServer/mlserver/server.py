@@ -1,16 +1,15 @@
 import json
 from flask import Flask, jsonify, request
 from flask_cors import CORS, cross_origin
-from apispec import APISpec
-from apispec.ext.marshmallow import MarshmallowPlugin
 import numpy as np
 from models.upload_model import UploadModel
 from model_provider import ModelProvider
 from models.model_meta import ModelMeta
-from models.model_key import ModelKey
+from models.model_key import ModelPredictRequest
 import db_connection
 import json
 from base64 import b64decode
+import h2o
 
 
 class NpEncoder(json.JSONEncoder):
@@ -78,14 +77,23 @@ def upload_model(upload_model):
 
 @app.route('/models/predict', methods=['POST'], endpoint='predict')
 @cross_origin()
-@convert_input_to(ModelKey)
-def predict(key):
-    meta = get_model_meta_by_key(key.id, key.version)
-    if meta[1] == 404:
+@convert_input_to(ModelPredictRequest)
+def predict(request):
+    #only for h2o for now
+    responce = get_model_meta_by_key(request.Id, request.Version)
+    if responce.status == 404:
         return "", 404
-    meta = ModelMeta(meta[0])
-    model = model_provider.get_model_from_s3(meta)
-    print(model)
+    meta = ModelMeta(responce.get_json())
+    model_provider.load_model_from_s3(meta)
+    model = model_provider.get_model(meta.FileName)
+    input_data = np.array(request.Input).reshape(1, -1)
+    input_data =  h2o.H2OFrame(input_data)
+    input_data.col_names = meta.ParamsNames
+    with open('files/test.txt',"w") as f:
+        f.write(str(input_data))
+    res = model.predict(input_data)
+    print(res)
+    return "", 200
 
 @app.route('/')
 def index():
@@ -95,5 +103,4 @@ def index():
 
 if __name__ == '__main__':
     metas = db_connection.session.query(ModelMeta).all()
-    model_provider.load_models(metas)
     app.run(port=5000, host='0.0.0.0', debug=True)

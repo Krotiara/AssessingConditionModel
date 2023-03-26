@@ -2,6 +2,10 @@ from io import BytesIO
 import dill
 import boto3
 import numpy as np
+import os
+import random
+import string
+import h2o
 
 from predictor import Predictor
 
@@ -19,30 +23,32 @@ class ModelProvider:
             region_name=region
         )
         self._s3_bucket = self.s3_res.Bucket(s3_bucket)
+        self.h2o = h2o.init()
+        print(self.h2o)
 
     def get_model(self, name):
         return self._active_models[name]
+    
 
-    def load_model(self, model_meta):
-        pass
-      #  model = self.get_model_from_s3(model_meta)
-
-    def load_models(self, model_metas):
-        pass
-       # for meta in model_metas:
-      #      self.load_model(meta)
-
-    def get_model_from_s3(self, model_meta):
-        pass
-       # model_key = self._get_key(model_meta, "model")
-       # model = None
-       # with BytesIO() as data:
-       #     self._s3_bucket.download_fileobj(model_key, data)
-       #     data.seek(0)
-       #     model = dill.load(data)
-       # return Predictor(model)
+    def load_model_from_s3(self, model_meta):
+        #for mojo only for now
+        with BytesIO() as data:
+            self._s3_bucket.download_fileobj(model_meta.FileName, data)
+            data.seek(0)
+            file = "files/{}.zip".format(self._get_random_string(16))
+            with open(file, "wb") as f:
+                f.write(data.getbuffer().tobytes())
+            model = h2o.import_mojo(file)
+            #TODO delete temp file
+            self._active_models[model_meta.FileName] = model
+        
     
     def upload_model(self, bytes, filename):
-        print('upload start')
         object = self.s3_res.Object(self.s3_bucket_name, filename)
         object.put(Body=bytes)
+
+
+    def _get_random_string(self, length):
+    # With combination of lower and upper case
+        result_str = ''.join(random.choice(string.ascii_letters) for i in range(length))
+        return result_str
