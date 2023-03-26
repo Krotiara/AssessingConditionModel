@@ -55,8 +55,8 @@ app.config.update({
 def get_model_meta_by_key(model_id, version):
     meta = db_connection.session \
         .query(ModelMeta) \
-        .filter_by(storage_Id=model_id) \
-        .filter_by(version=version) \
+        .filter_by(StorageId=model_id) \
+        .filter_by(Version=version) \
         .one_or_none()
     if meta is not None:
         return jsonify(meta.to_dict()), 200
