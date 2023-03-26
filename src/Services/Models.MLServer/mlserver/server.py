@@ -10,6 +10,7 @@ from models.model_meta import ModelMeta
 from models.model_key import ModelKey
 import db_connection
 import json
+from base64 import b64decode
 
 
 class NpEncoder(json.JSONEncoder):
@@ -68,13 +69,11 @@ def get_model_meta_by_key(model_id, version):
 @convert_input_to(UploadModel)
 def upload_model(upload_model):
     meta = ModelMeta(upload_model.Meta)
-    data = bytes(upload_model.DataBytes, 'utf-8')
-    print(type(data))
-    print(meta)
-    print(meta.FileName)
+    data = b64decode(upload_model.DataBytes) #base 64
     model_provider.upload_model(data, meta.FileName)
     db_connection.session.add(meta)
     db_connection.session.commit()
+    return "", 200
 
 
 @app.route('/models/predict', methods=['POST'], endpoint='predict')
