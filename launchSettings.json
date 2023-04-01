@@ -7,16 +7,12 @@
       "composeLaunchUrl": "{Scheme}://localhost:{ServicePort}",
       "commandVersion": "1.0",
       "serviceActions": {
-        //"influencecalculator.api": "StartDebugging",
         "patientdatahandler.api": "StartDebugging",
         "patientsresolver.api": "StartDebugging",
-        //"containerregister.api": "StartDebugging",
-        //"pgadmin": "StartWithoutDebugging",
         "postgres_image": "StartWithoutDebugging",
         "rabbitmq": "StartWithoutDebugging",
         "agents.api": "StartDebugging",
-        "models.api": "StartDebugging",
-        //"tempgateway": "StartDebugging",
+       // "models.api": "StartDebugging",
         "web": "StartDebugging",
         "envoygateway": "StartDebugging"
       }

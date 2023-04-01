@@ -29,7 +29,7 @@ namespace WebMVC.Models
             }
         }
 
-        public Task SendRequest(string requestUriStr, string method, string? jsonBody = null)
+        public async Task SendRequest(string requestUriStr, string method, string? jsonBody = null)
         {
             await GetResponce(requestUriStr, method, jsonBody);
         }
