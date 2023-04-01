@@ -1,16 +1,19 @@
-FROM python:3.8-slim
+FROM python:3.9
 
+WORKDIR /app
+EXPOSE 5000
+
+WORKDIR /src/Services/Models.MLServer
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
-RUN pip install -U pip \
-    && apt-get update \
-    && apt install -y curl netcat \
-    && curl -sSL  https://install.python-poetry.org | python -
-
-ENV PATH="${PATH}:/root/.local/bin"
-
-COPY . .
+RUN pip install --upgrade pip
+RUN pip install poetry
+RUN pip install -U apispec
+RUN pip install apispec-webframeworks
+RUN pip install -U apispec[marshmallow]
+ENV PATH="${PATH}:/root/.poetry/bin"
+COPY /src/Services/Models.MLServer .
 RUN pip install -r requirements.txt
 RUN poetry config virtualenvs.create false \
   && poetry install --no-interaction --no-ansi

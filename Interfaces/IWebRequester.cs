@@ -12,6 +12,8 @@ namespace Interfaces
     {
         public Task<T> GetResponse<T>(string requestUriStr, string method, string? jsonBody = null);
 
+        public Task SendRequest(string requestUriStr, string method, string? jsonBody = null);
+
        
     }
 }
