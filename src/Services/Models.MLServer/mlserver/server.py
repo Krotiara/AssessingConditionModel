@@ -89,7 +89,6 @@ def predict(request):
     input_data = np.array(request.Input).reshape(1, -1)
     input_data =  h2o.H2OFrame(input_data)
     input_data.col_names = meta.ParamsNames
-    print(input_data)
     with open('files/test.txt',"w") as f:
         f.write(str(input_data))
     res = model.predict(input_data)

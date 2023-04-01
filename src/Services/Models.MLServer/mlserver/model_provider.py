@@ -2,11 +2,9 @@ from io import BytesIO
 import dill
 import boto3
 import numpy as np
-import os
 import random
 import string
 import h2o
-
 from predictor import Predictor
 
 
@@ -31,6 +29,9 @@ class ModelProvider:
     
 
     def load_model_from_s3(self, model_meta):
+        if model_meta.FileName in self._active_models:
+            print('model already loaded')
+            return
         #for mojo only for now
         with BytesIO() as data:
             self._s3_bucket.download_fileobj(model_meta.FileName, data)
