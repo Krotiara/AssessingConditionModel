@@ -12,9 +12,12 @@ namespace Agents.API.Service.AgentCommand
     public class GetInfluencesCommand : IAgentCommand
     {
         private readonly IWebRequester _webRequester;
-        public GetInfluencesCommand(IWebRequester webRequester)
+        private readonly string _patientsResolverApiUrl;
+
+        public GetInfluencesCommand(IWebRequester webRequester, EnvSettings envSettings)
         {
             _webRequester = webRequester;
+            _patientsResolverApiUrl = envSettings.PatientsResolverApiUrl;
         }
 
         public Delegate Command => async (DateTime startTimestamp, DateTime endTimestamp, int patientId, string medOrganization) =>

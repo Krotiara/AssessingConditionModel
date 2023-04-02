@@ -13,6 +13,7 @@ namespace Agents.API.Service.Services
     {
         private Dictionary<SystemCommands, ICommandArgsTypesMeta> commandTypesMeta { get; }
 
+        //todo в бд
         public InternalMetaStorageService()
         {
             commandTypesMeta = new Dictionary<SystemCommands, ICommandArgsTypesMeta>()

@@ -12,9 +12,12 @@ namespace Agents.API.Service.AgentCommand
     public class GetLatestPatientParametersCommand : IAgentCommand
     {
         private readonly IWebRequester _webRequester;
-        public GetLatestPatientParametersCommand(IWebRequester webRequester)
+        private readonly string _patientsResolverApiUrl;
+
+        public GetLatestPatientParametersCommand(IWebRequester webRequester, EnvSettings settings)
         {
             _webRequester = webRequester;
+            _patientsResolverApiUrl = settings.PatientsResolverApiUrl;
         }
 
         public Delegate Command => async (DateTime startTimestamp, DateTime endTimestamp, int patientId, string medOrganization) =>

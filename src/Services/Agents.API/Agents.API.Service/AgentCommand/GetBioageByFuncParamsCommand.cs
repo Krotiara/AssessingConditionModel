@@ -11,9 +11,12 @@ namespace Agents.API.Service.AgentCommand
     public class GetBioageByFuncParamsCommand : IAgentCommand
     {
         private readonly IWebRequester _webRequester;
-        public GetBioageByFuncParamsCommand(IWebRequester webRequester)
+        private readonly string _modelsServerUrl;
+
+        public GetBioageByFuncParamsCommand(IWebRequester webRequester, EnvSettings settings)
         {
             _webRequester = webRequester;
+            _modelsServerUrl = settings.ModelsApiUrl;
         }
 
         public Delegate Command => async (Dictionary<ParameterNames, PatientParameter> pDict) =>
@@ -33,7 +36,7 @@ namespace Agents.API.Service.AgentCommand
             };
             IPredictRequest request = new PredictRequest() { ModelId = "bioAgeFuncModel", InputArgs = inputArgs };
             string requestBody = Newtonsoft.Json.JsonConvert.SerializeObject(request);
-            string url = $"{_modelsApiUrl}/models/predict/";
+            string url = $"{_modelsServerUrl}/models/predict/";
             float[] res = (await _webRequester.GetResponse<float[]>(url, "POST", requestBody));
             return (int)Math.Ceiling(res.First());
         };

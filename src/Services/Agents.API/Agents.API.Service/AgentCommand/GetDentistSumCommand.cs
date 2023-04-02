@@ -12,9 +12,12 @@ namespace Agents.API.Service.AgentCommand
     {
 
         private readonly IWebRequester _webRequester;
-        public GetDentistSumCommand(IWebRequester webRequester)
+        private readonly string _modelsServerUrl;
+
+        public GetDentistSumCommand(IWebRequester webRequester, EnvSettings settings)
         {
             _webRequester = webRequester;
+            _modelsServerUrl = settings.ModelsApiUrl;
         }
 
         public Delegate Command => async (Dictionary<ParameterNames, PatientParameter> pDict) =>
@@ -42,7 +45,7 @@ namespace Agents.API.Service.AgentCommand
             };
 
             IPredictRequest request = new PredictRequest() { ModelId = "rf_children_3_5_treatment", InputArgs = inputArgs };
-            float[] res = (await _webRequester.GetResponse<float[]>($"{_modelsApiUrl}/models/predict/",
+            float[] res = (await _webRequester.GetResponse<float[]>($"{_modelsServerUrl}/models/predict/",
                 "POST", Newtonsoft.Json.JsonConvert.SerializeObject(request)));
             return (int)res.First();
 
