@@ -5,7 +5,8 @@ class H2OPredictor(Predictor):
     def __init__(self, model, params_names):
         self._model = model
         self._params_names = params_names
-   
+        h2o.init(ip="h2o", port=54321)
+
     def predict(self, x):
         print('predict h2o')
         input_data =  h2o.H2OFrame(x)

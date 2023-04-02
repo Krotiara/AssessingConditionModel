@@ -1,9 +1,3 @@
-future==0.18.3; python_version >= "3.6"\
-    --hash=sha256:34a17436ed1e96697a86f9de3d15a3b0be01d8bc8de9c1dffd59fb8234ed5307
-tabulate==0.9.0; python_version >= "3.6"\
-    --hash=sha256:024ca478df22e9340661486f85298cff5f6dcdba14f3813e8830015b9ed1948f
-h2o==3.38.0.2; python_version >= "3.6"\
-    --hash=sha256:29940d5fc48f22983ab65fc34247b1a59712302e5bb1381fd9364782227660ff
 boto3==1.22.0; python_version >= "3.6" \
     --hash=sha256:75310f5bb2af8f51f15f790d95dc4a4725bcec286f83458980ee2c3286cc0a03 \
     --hash=sha256:733a651e76b37b10c1f7ccba53deae43e47ada8ae64128042632373c5d266cf7
