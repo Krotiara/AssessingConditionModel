@@ -1,5 +1,6 @@
 ﻿using Agents.API.Entities;
 using Agents.API.Interfaces;
+using Agents.API.Service.AgentCommand;
 using Agents.API.Service.Command;
 using Interfaces;
 using Interfaces.DynamicAgent;
@@ -15,9 +16,9 @@ namespace Agents.API.Service.Services
     public class CodeExecutorService: ICodeExecutor
     {
         private readonly IMediator _mediator;
-        private readonly ICommandActionsProvider _commandActionsProvider;
+        private readonly CommandServiceResolver _commandActionsProvider;
 
-        public CodeExecutorService(IMediator mediator, ICommandActionsProvider commandActionsProvider)
+        public CodeExecutorService(IMediator mediator, CommandServiceResolver commandActionsProvider)
         {
             this._mediator = mediator;
             this._commandActionsProvider = commandActionsProvider;
@@ -42,15 +43,14 @@ namespace Agents.API.Service.Services
 
         public async Task<object> ExecuteCommand(SystemCommands command, object[] commandArgs, CancellationToken cancellationToken = default)
         {
-            Delegate? del = _commandActionsProvider.GetDelegateByCommandNameWithoutParams(command);
-            if (del == null)
-                throw new ResolveCommandActionException($"Не найден делегат для команды {command}");
-
+            IAgentCommand c = _commandActionsProvider.Invoke(command);
+            if(c == null)
+                throw new ResolveCommandActionException($"Не найдена команда для {command}");       
             object[] args = await _mediator.Send(new ConvertArgsCommand(command, commandArgs));
 
 #warning TODO Нужна мета информация о параметрах - получить по аналогии с GetCommandArgsValuesQueueHandler (сразу преобразованные аргументы).
 
-            object res = del.DynamicInvoke(args);
+            object res = c.Command.DynamicInvoke(args);
             if (res is Task)
             {
                 await (Task)res;

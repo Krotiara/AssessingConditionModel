@@ -1,5 +1,6 @@
 ﻿using Agents.API.Entities;
 using Agents.API.Interfaces;
+using Agents.API.Service.AgentCommand;
 using Agents.API.Service.Command;
 using Agents.API.Service.Query;
 using Interfaces;
@@ -18,18 +19,18 @@ namespace Agents.API.Service.Services
     public class CodeResolveService : ICodeResolveService
     {
 
-        private readonly IMediator mediator;
-        private readonly ICommandActionsProvider commandActionProvider;
+        private readonly IMediator _mediator;
+        private readonly CommandServiceResolver _commandActionProvider;
 
-        public CodeResolveService(IMediator mediator, ICommandActionsProvider commandActionProvider)
+        public CodeResolveService(IMediator mediator, CommandServiceResolver commandActionProvider)
         {
-            this.mediator = mediator;
-            this.commandActionProvider = commandActionProvider;
+            this._mediator = mediator;
+            this._commandActionProvider = commandActionProvider;
         }
 
         public async Task<(ICommandArgsTypesMeta, Delegate)> ResolveCommandAction(ICommand command, CancellationToken cancellationToken)
         {
-            string commandName = await mediator.Send(new GetCommandNameCommand(command), cancellationToken);
+            string commandName = await _mediator.Send(new GetCommandNameCommand(command), cancellationToken);
             SystemCommands apiCommand;
             try
             {
@@ -50,12 +51,12 @@ namespace Agents.API.Service.Services
             else
             {
 #warning В тесте не вызывается метод, а взовращается делегат метода-теста. WAT
-                Delegate? del = commandActionProvider.GetDelegateByCommandNameWithoutParams(apiCommand);
-                if(del == null)
+                IAgentCommand c = _commandActionProvider.Invoke(apiCommand);
+                if(c == null)
                     throw new ResolveCommandActionException($"Не удалось разрешить действие для команды {commandName}");
 #warning Может вернуться null.
-                ICommandArgsTypesMeta meta = await mediator.Send(new GetCommandTypesMetaQueue(apiCommand), cancellationToken);
-                return (meta, del);
+                ICommandArgsTypesMeta meta = await _mediator.Send(new GetCommandTypesMetaQueue(apiCommand), cancellationToken);
+                return (meta, c.Command);
             }
         }
     }

@@ -13,6 +13,7 @@ using Agents.API.Interfaces;
 using Interfaces.DynamicAgent;
 using Agents.API.Service.Command;
 using Agents.API.Entities.DynamicAgent;
+using Agents.API;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -43,6 +44,13 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
+builder.Services.AddTransient<EnvSettings>(x => new EnvSettings()
+{
+    ModelsApiUrl = Environment.GetEnvironmentVariable("MODELS_API_URL"),
+    PatientsResolverApiUrl = Environment.GetEnvironmentVariable("PATIENTRESOLVER_API_URL")
+});
+
+CommandsDependensyRegistrator.RegisterDependencies(builder.Services);
 
 /*Теперь вы можете выполнять ваши запросы. Для этого вам потребуется получить экземпляр интерфейса IMediator. Он регистрируется в вашем контейнере зависимостей той же командой AddMediatR.*/
 builder.Services.AddMediatR(Assembly.GetExecutingAssembly());
@@ -88,9 +96,7 @@ builder.Services
     .AddTransient<IRequestHandler<ConvertArgsCommand, object[]>, ConvertArgsCommandHandler>()
     .AddTransient<IWebRequester, HttpClientWebRequester>()
     .AddTransient<IMetaStorageService, InternalMetaStorageService>()
-    .AddTransient<ICodeResolveService, CodeResolveService>()
-    .AddSingleton<ICommandActionsProvider, CommandActionsProvider>();
-
+    .AddTransient<ICodeResolveService, CodeResolveService>();
 
 var app = builder.Build();
 
