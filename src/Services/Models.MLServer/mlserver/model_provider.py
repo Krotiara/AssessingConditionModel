@@ -43,7 +43,7 @@ class ModelProvider:
                 with open(file, "wb") as f:
                     f.write(data.getbuffer().tobytes())
                 model = h2o.import_mojo(file)
-                model = H2OPredictor(model)
+                model = H2OPredictor(model, model_meta.ParamsNames)
                 self._active_models[model_meta.FileName] = model
                 #TODO delete temp file
             elif file_extension == ".pkl":
@@ -55,7 +55,6 @@ class ModelProvider:
     def upload_model(self, bytes, filename):
         object = self.s3_res.Object(self.s3_bucket_name, filename)
         object.put(Body=bytes)
-
 
     def _get_random_string(self, length):
     # With combination of lower and upper case

@@ -5,4 +5,5 @@ class PkLPredictor(Predictor):
         self._model = model
 
     def predict(self, x):
-        pass
+        prediction = self._model.predict(x)
+        return prediction
