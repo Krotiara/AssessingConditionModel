@@ -3,9 +3,6 @@ using Interfaces;
 
 namespace Agents.API
 {
-
-    public delegate IAgentCommand CommandServiceResolver(SystemCommands command);
-
     public static class CommandsDependensyRegistrator
     {
         public static void RegisterDependencies(this IServiceCollection services)
