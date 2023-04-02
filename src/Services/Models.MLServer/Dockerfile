@@ -1,7 +1,7 @@
 FROM python:3.9
 
 WORKDIR /app
-EXPOSE 5000
+EXPOSE 80
 
 WORKDIR /src/Services/Models.MLServer
 

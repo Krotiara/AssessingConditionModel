@@ -49,7 +49,7 @@ services:
       #- ASPNETCORE_Kestrel__Certificates__Default__Password=lisa2021
       #- ASPNETCORE_Kestrel__Certificates__Default__Path=/https/localhost.pfx
     ports:
-      - 5000:5000
+      - 5000:80
     networks:
         - aModelNetwork
     volumes:
@@ -130,7 +130,7 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:80
       - PATIENTRESOLVER_API_URL=http://patientsresolver.api:80
-      - MODELS_API_URL=http://models.api:80
+      - MODELS_API_URL=http://models.mlserver:5000
       #- ASPNETCORE_URLS=https://+:443;http://+:80
       #- ASPNETCORE_HTTPS_PORT=8012
       #- ASPNETCORE_Kestrel__Certificates__Default__Password=lisa2021
