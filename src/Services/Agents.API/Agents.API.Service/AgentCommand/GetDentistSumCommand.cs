@@ -22,6 +22,10 @@ namespace Agents.API.Service.AgentCommand
 
         public Delegate Command => async (Dictionary<ParameterNames, PatientParameter> pDict) =>
         {
+            float age = pDict[ParameterNames.Age].ConvertValue<float>();
+            string modelId = GetModelIdByAge(age);
+            if (modelId == null)
+                throw new NotImplementedException(); //TODo
             float[] inputArgs = new float[]
             {
                     pDict[ParameterNames.ReverseSagittalGap].ConvertValue<float>(),
@@ -37,18 +41,28 @@ namespace Agents.API.Service.AgentCommand
                     pDict[ParameterNames.LowerJawSideDisplacement].ConvertValue<float>(),
                     pDict[ParameterNames.DentitionLengthReductionByTooth].ConvertValue<float>(),
                     pDict[ParameterNames.DentitionLengthReductionByTooths].ConvertValue<float>(),
-                    pDict[ParameterNames.Age].ConvertValue<float>(),
+                    age,
                     pDict[ParameterNames.ScoreAfterTreatment].ConvertValue<float>(),
                     pDict[ParameterNames.TreatmentDuration].ConvertValue<float>(),
                     pDict[ParameterNames.TreatmentSteps].ConvertValue<float>(),
                     pDict[ParameterNames.TreatmentApparatuesCount].ConvertValue<float>(),
             };
 
-            IPredictRequest request = new PredictRequest() { ModelId = "rf_children_3_5_treatment", InputArgs = inputArgs };
+            IPredictRequest request = new PredictRequest() { ModelId = modelId, InputArgs = inputArgs };
             float[] res = (await _webRequester.GetResponse<float[]>($"{_modelsServerUrl}/models/predict/",
                 "POST", Newtonsoft.Json.JsonConvert.SerializeObject(request)));
             return (int)res.First();
-
         };
+
+
+        private string GetModelIdByAge(float age)
+        {
+            //TODO id моделей вынести в настройки наружу
+            if (age >= 6 && age <= 9)
+                return "dantist_6_9_years";
+            else if (age >= 9 && age <= 12)
+                return "dantist_10_12_years";
+            else return null;
+        }
     }
 }
