@@ -88,8 +88,7 @@ builder.Services
     .AddTransient<IRequestHandler<ConvertArgsCommand, object[]>, ConvertArgsCommandHandler>()
     .AddTransient<IWebRequester, HttpClientWebRequester>()
     .AddTransient<IMetaStorageService, InternalMetaStorageService>()
-    .AddTransient<ICodeResolveService, CodeResolveService>()
-    .AddSingleton<ICommandActionsProvider, CommandActionsProvider>();
+    .AddTransient<ICodeResolveService, CodeResolveService>();
 
 
 var app = builder.Build();
