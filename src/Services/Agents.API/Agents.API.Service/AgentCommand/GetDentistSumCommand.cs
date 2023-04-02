@@ -26,8 +26,34 @@ namespace Agents.API.Service.AgentCommand
             string modelId = GetModelIdByAge(age);
             if (modelId == null)
                 throw new NotImplementedException(); //TODo
-            float[] inputArgs = new float[]
+            float[] inputArgs = null;
+            if (age <= 5)
             {
+                inputArgs = new float[]
+                {
+                    pDict[ParameterNames.ReverseSagittalGap].ConvertValue<float>(),
+                    pDict[ParameterNames.FirstMolarsNarrowing].ConvertValue<float>(),
+                    pDict[ParameterNames.DentistPointsSum].ConvertValue<float>(),
+                    pDict[ParameterNames.SagittalSlit].ConvertValue<float>(),
+                    pDict[ParameterNames.VerticalDysocclusion].ConvertValue<float>(),
+                    pDict[ParameterNames.LessIncisorOverlap].ConvertValue<float>(),
+                    pDict[ParameterNames.ContactIncisorOverlapWithoutInjury].ConvertValue<float>(),
+                    pDict[ParameterNames.ContactIncisorOverlapWithInjury].ConvertValue<float>(),
+                    pDict[ParameterNames.LowerJawForwardDisplacement].ConvertValue<float>(),
+                    pDict[ParameterNames.LowerJawBackwardDisplacement].ConvertValue<float>(),
+                    pDict[ParameterNames.LowerJawSideDisplacement].ConvertValue<float>(),
+                    pDict[ParameterNames.DentitionLengthReductionByTooth].ConvertValue<float>(),
+                    pDict[ParameterNames.DentitionLengthReductionByTooths].ConvertValue<float>(),
+                    age,
+                    pDict[ParameterNames.TreatmentDuration].ConvertValue<float>(),
+                    pDict[ParameterNames.TreatmentSteps].ConvertValue<float>(),
+                    pDict[ParameterNames.TreatmentApparatuesCount].ConvertValue<float>()
+                };
+            }
+            else
+            {
+                inputArgs = new float[]
+                {
                     pDict[ParameterNames.ReverseSagittalGap].ConvertValue<float>(),
                     pDict[ParameterNames.FirstMolarsNarrowing].ConvertValue<float>(),
                     pDict[ParameterNames.DentistPointsSum].ConvertValue<float>(),
@@ -46,9 +72,10 @@ namespace Agents.API.Service.AgentCommand
                     pDict[ParameterNames.TreatmentDuration].ConvertValue<float>(),
                     pDict[ParameterNames.TreatmentSteps].ConvertValue<float>(),
                     pDict[ParameterNames.TreatmentApparatuesCount].ConvertValue<float>(),
-            };
+                };
+            }
 
-            IPredictRequest request = new PredictRequest() { ModelId = modelId, InputArgs = inputArgs };
+            IPredictRequest request = new PredictRequest() { ModelId = modelId, InputArgs = inputArgs};
             float[] res = (await _webRequester.GetResponse<float[]>($"{_modelsServerUrl}/models/predict/",
                 "POST", Newtonsoft.Json.JsonConvert.SerializeObject(request)));
             return (int)res.First();
@@ -58,6 +85,8 @@ namespace Agents.API.Service.AgentCommand
         private string GetModelIdByAge(float age)
         {
             //TODO id моделей вынести в настройки наружу
+            if (age >= 3 && age <= 5)
+                return "dantist_3_5_years";
             if (age >= 6 && age <= 9)
                 return "dantist_6_9_years";
             else if (age >= 9 && age <= 12)
