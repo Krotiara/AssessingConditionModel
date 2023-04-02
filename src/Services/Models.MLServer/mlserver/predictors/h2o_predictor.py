@@ -1,5 +1,5 @@
 import h2o
-from mlserver.predictor import Predictor
+from predictors.predictor import Predictor
 
 class H2OPredictor(Predictor):
     def __init__(self, model, params_names):

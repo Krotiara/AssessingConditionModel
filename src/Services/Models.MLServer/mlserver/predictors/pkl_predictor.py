@@ -1,4 +1,4 @@
-from mlserver.predictor import Predictor
+from predictors.predictor import Predictor
 
 class PkLPredictor(Predictor):
     def __init__(self, model):

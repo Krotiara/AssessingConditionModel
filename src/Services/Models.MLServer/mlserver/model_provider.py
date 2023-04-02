@@ -5,10 +5,9 @@ import numpy as np
 import random
 import string
 import h2o
-from mlserver.predictors.h2o_predictor import H2OPredictor
-from mlserver.predictors.pkl_predictor import PkLPredictor
-from predictor import Predictor
 import os.path
+from predictors.h2o_predictor import H2OPredictor
+from predictors.pkl_predictor import PkLPredictor
 
 
 class ModelProvider:
