@@ -1,7 +1,9 @@
-class Predictor:
-    def __init__(self, model):
-        self._model = model
+from abc import ABC, abstractmethod
 
+class Predictor(ABC):
+    
+    @abstractmethod
     def predict(self, x):
-        predicted = self._model.predict(x)
-        return predicted
+        pass
+        #predicted = self._model.predict(x)
+        #return predicted

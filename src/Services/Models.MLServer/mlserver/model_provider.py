@@ -5,7 +5,10 @@ import numpy as np
 import random
 import string
 import h2o
+from mlserver.predictors.h2o_predictor import H2OPredictor
+from mlserver.predictors.pkl_predictor import PkLPredictor
 from predictor import Predictor
+import os.path
 
 
 class ModelProvider:
@@ -22,26 +25,31 @@ class ModelProvider:
         )
         self._s3_bucket = self.s3_res.Bucket(s3_bucket)
         self.h2o = h2o.init()
-        print(self.h2o)
 
     def get_model(self, name):
         return self._active_models[name]
     
-
     def load_model_from_s3(self, model_meta):
         if model_meta.FileName in self._active_models:
             print('model already loaded')
             return
+        file_extension = s.path.splitext(model_meta.FileName)[1]
         #for mojo only for now
         with BytesIO() as data:
             self._s3_bucket.download_fileobj(model_meta.FileName, data)
             data.seek(0)
-            file = "files/{}.zip".format(self._get_random_string(16))
-            with open(file, "wb") as f:
-                f.write(data.getbuffer().tobytes())
-            model = h2o.import_mojo(file)
-            #TODO delete temp file
-            self._active_models[model_meta.FileName] = model
+            if file_extension == '.zip':
+                file = "files/{}.zip".format(self._get_random_string(16))
+                with open(file, "wb") as f:
+                    f.write(data.getbuffer().tobytes())
+                model = h2o.import_mojo(file)
+                model = H2OPredictor(model)
+                self._active_models[model_meta.FileName] = model
+                #TODO delete temp file
+            elif file_extension == ".pkl":
+                model = dill.load(data)
+                model = PkLPredictor(model)
+                self._active_models[model_meta.FileName] = model           
         
     
     def upload_model(self, bytes, filename):
