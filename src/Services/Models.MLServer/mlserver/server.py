@@ -9,7 +9,6 @@ from models.model_key import ModelPredictRequest
 import db_connection
 import json
 from base64 import b64decode
-import h2o
 
 
 class NpEncoder(json.JSONEncoder):
@@ -87,20 +86,13 @@ def predict(request):
     model_provider.load_model_from_s3(meta)
     model = model_provider.get_model(meta.FileName)
     input_data = np.array(request.Input).reshape(1, -1)
-    input_data =  h2o.H2OFrame(input_data)
-    input_data.col_names = meta.ParamsNames
-    with open('files/test.txt',"w") as f:
-        f.write(str(input_data))
-    res = model.predict(input_data)
-    res = h2o.as_list(res)
-    res = res.to_dict('list')
-    return res, 200
+    prediction = model.predict(input_data)
+    return jsonify(list(prediction))
+
 
 @app.route('/')
 def index():
-    print('fuck')
     return 'App Works!'
-
 
 if __name__ == '__main__':
     metas = db_connection.session.query(ModelMeta).all()
