@@ -39,7 +39,8 @@ namespace Agents.API.Service.Services
                     new CommandArgsTypesMeta(new List<(Type, string)> {(typeof(DateTime),"start"),
                         (typeof(DateTime),"end"),
                         (typeof(int),"observedId"),
-                        (typeof(string), "medicalOrganization")}, typeof(List<Influence>))}                  
+                        (typeof(string), "medicalOrganization")}, typeof(List<Influence>))},
+                {SystemCommands.GetDentistSum,new CommandArgsTypesMeta(new List<(Type, string)> {(typeof(Dictionary<ParameterNames, PatientParameter>),"parameters") }, typeof(int)) }
             };
         }
 
