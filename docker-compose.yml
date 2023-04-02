@@ -55,17 +55,6 @@ services:
     volumes:
         - "C:/TestData:/data"
     restart: on-failure
-
-
-  h2o:
-    container_name: h2o
-    image: h2oai/h2o-open-source-k8s:latest
-    ports:
-        - "54321:54321"
-    restart: always
-    volumes:
-        - "C:/TestData:/data"
-
   
   web:
     image: ${DOCKER_REGISTRY-}web
