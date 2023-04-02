@@ -8,8 +8,10 @@ namespace Interfaces
 {
     public interface IPredictRequest
     {
-        public string ModelId { get; set; }
+        public string Id { get; set; }
 
-        public float[] InputArgs { get; set; }
+        public string Version { get; set; }
+
+        public float[] Input { get; set; }
     }
 }

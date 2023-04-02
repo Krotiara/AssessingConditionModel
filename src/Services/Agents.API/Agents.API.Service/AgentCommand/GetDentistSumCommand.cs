@@ -23,7 +23,9 @@ namespace Agents.API.Service.AgentCommand
         public Delegate Command => async (Dictionary<ParameterNames, PatientParameter> pDict) =>
         {
             float age = pDict[ParameterNames.Age].ConvertValue<float>();
+#warning Костыльное получение версии и Id.
             string modelId = GetModelIdByAge(age);
+            string version = "1";
             if (modelId == null)
                 throw new NotImplementedException(); //TODo
             float[] inputArgs = null;
@@ -75,7 +77,7 @@ namespace Agents.API.Service.AgentCommand
                 };
             }
 
-            IPredictRequest request = new PredictRequest() { ModelId = modelId, InputArgs = inputArgs};
+            IPredictRequest request = new PredictRequest() { Id = modelId, Version = version, Input = inputArgs};
             float[] res = (await _webRequester.GetResponse<float[]>($"{_modelsServerUrl}/models/predict/",
                 "POST", Newtonsoft.Json.JsonConvert.SerializeObject(request)));
             return (int)res.First();

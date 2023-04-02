@@ -9,7 +9,10 @@ namespace Agents.API.Entities
 {
     public class PredictRequest : IPredictRequest
     {
-        public string ModelId { get; set; }
-        public float[] InputArgs { get; set; }
+        public string Id { get; set; }
+
+        public string Version { get; set; }
+
+        public float[] Input { get; set; }
     }
 }

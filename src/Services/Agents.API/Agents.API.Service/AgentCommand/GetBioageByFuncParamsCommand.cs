@@ -34,7 +34,8 @@ namespace Agents.API.Service.AgentCommand
                 pDict[ParameterNames.HearingAcuity].ConvertValue<float>(),
                 pDict[ParameterNames.StaticBalancing].ConvertValue<float>()
             };
-            IPredictRequest request = new PredictRequest() { ModelId = "bioAgeFuncModel", InputArgs = inputArgs };
+#warning Костыльное получение версии и id.
+            IPredictRequest request = new PredictRequest() { Id = "bioAgeFuncModel", Version = "1", Input = inputArgs };
             string requestBody = Newtonsoft.Json.JsonConvert.SerializeObject(request);
             string url = $"{_modelsServerUrl}/models/predict/";
             float[] res = (await _webRequester.GetResponse<float[]>(url, "POST", requestBody));
