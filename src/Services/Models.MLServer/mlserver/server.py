@@ -9,7 +9,6 @@ from models.model_key import ModelPredictRequest
 import db_connection
 import json
 from base64 import b64decode
-import h2o
 
 
 class NpEncoder(json.JSONEncoder):
