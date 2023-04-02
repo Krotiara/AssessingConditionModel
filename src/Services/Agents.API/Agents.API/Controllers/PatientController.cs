@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Agents.API.Controllers
 {
-    public class PatientController: Controller
+    public class PatientController: ControllerBase
     {
 
         private readonly IMediator _mediator;
