@@ -32,8 +32,7 @@ class ModelProvider:
         if model_meta.FileName in self._active_models:
             print('model already loaded')
             return
-        file_extension = s.path.splitext(model_meta.FileName)[1]
-        #for mojo only for now
+        file_extension = os.path.splitext(model_meta.FileName)[1]
         with BytesIO() as data:
             self._s3_bucket.download_fileobj(model_meta.FileName, data)
             data.seek(0)
