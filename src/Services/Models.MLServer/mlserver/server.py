@@ -90,11 +90,10 @@ def predict(request):
     prediction = model.predict(input_data)
     return jsonify(list(prediction))
 
+
 @app.route('/')
 def index():
-    print('fuck')
     return 'App Works!'
-
 
 if __name__ == '__main__':
     metas = db_connection.session.query(ModelMeta).all()
