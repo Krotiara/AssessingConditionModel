@@ -23,7 +23,6 @@ class ModelProvider:
             region_name=region
         )
         self._s3_bucket = self.s3_res.Bucket(s3_bucket)
-        self.h2o = h2o.init()
 
     def get_model(self, name):
         return self._active_models[name]
