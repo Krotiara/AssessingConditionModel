@@ -2,6 +2,7 @@ import json
 from flask import Flask, jsonify, request
 from flask_cors import CORS, cross_origin
 import numpy as np
+from mlserver.models.update_model import UpdateModel
 from models.upload_model import UploadModel
 from model_provider import ModelProvider
 from models.model_meta import ModelMeta
@@ -72,6 +73,38 @@ def upload_model(upload_model):
     db_connection.session.add(meta)
     db_connection.session.commit()
     return "", 200
+
+
+@app.route("/models/updateMeta", methods=['PATCH'], endpoint='update_meta')
+@cross_origin()
+@convert_input_to(ModelMeta)
+def update_meta(update_meta):
+    meta = db_connection.session \
+        .query(ModelMeta) \
+        .filter_by(StorageId=update_meta.StorageId) \
+        .filter_by(Version=update_meta.Version) \
+        .one_or_none()
+    if meta is not None:
+        meta.FileName = update_meta.FileName
+        meta.Accuracy = update_meta.Accuracy
+        meta.InputCount = update_meta.InputCount
+        meta.OutputCount = update_meta.OutputCount
+        meta.ParamsNames = update_meta.ParamsNames
+        db_connection.session.commit()
+    
+
+
+@app.route("/models/updateFile", methods=['PATCH'], endpoint='update_model')
+@cross_origin()
+@convert_input_to(UpdateModel)
+def update_model(update_model):
+    meta = db_connection.session \
+        .query(ModelMeta) \
+        .filter_by(StorageId=update_model.Id) \
+        .filter_by(Version=update_model.Version) \
+        .one_or_none()
+    if meta is not None:
+        model_provider.upload_model(update_model.DataBytes, meta.FileName)
 
 
 @app.route('/models/predict', methods=['POST'], endpoint='predict')
