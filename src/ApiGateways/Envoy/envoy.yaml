@@ -47,6 +47,14 @@ static_resources:
                   prefix_rewrite: "/influences/"
                   cluster: patients_service
                   timeout: 30s
+              - name: "models"
+                match:
+                  prefix: "/models/"
+                route:
+                  auto_host_rewrite: true
+                  prefix_rewrite: "/models/"
+                  cluster: models_service
+                  timeout: 30s
 
           http_filters:
           - name: envoy.router
@@ -67,6 +75,15 @@ static_resources:
     - socket_address:
         address: agents.api
         port_value: 80
+  - name: models_service
+    connect_timeout: 0.25s
+    type: strict_dns
+    lb_policy: round_robin
+    hosts:
+    - socket_address:
+        address: models.mlserver
+        port_value: 80
+    
   #- name: catalog
   #  connect_timeout: 0.25s
   #  type: strict_dns
