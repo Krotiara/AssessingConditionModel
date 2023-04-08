@@ -49,6 +49,14 @@ app.config.update({
     'APISPEC_SWAGGER_UI_URL': '/swagger-ui/'  # URI to access UI of API Doc
 })
 
+
+@app.route('/models', methods=['GET'], endpoint='get_models_metas')
+@cross_origin()
+def get_models_metas():
+    metas = db_connection.session.query(ModelMeta)
+    return jsonify([meta.to_dict() for meta in metas]), 200
+
+
 @app.route('/models/<model_id>==<version>', methods=['GET'])
 @cross_origin()
 def get_model_meta_by_key(model_id, version):
