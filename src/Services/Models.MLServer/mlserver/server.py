@@ -2,7 +2,7 @@ import json
 from flask import Flask, jsonify, request
 from flask_cors import CORS, cross_origin
 import numpy as np
-from mlserver.models.update_model import UpdateModel
+from models.update_model import UpdateModel
 from models.upload_model import UploadModel
 from model_provider import ModelProvider
 from models.model_meta import ModelMeta
