@@ -172,32 +172,6 @@ services:
     networks:
         - aModelNetwork
 
-  h2o:
-    container_name: h2o
-    image: h2oai/h2o-open-source-k8s:latest
-    ports:
-        - "54321:54321"
-    restart: always
-
-
-  #pgadmin:
-  #   container_name: pgadmin_container
-  #   image: dpage/pgadmin4:5.7
-  #   environment:
-  #       PGADMIN_DEFAULT_EMAIL: "70dog@mail.ru"
-  #       PGADMIN_DEFAULT_PASSWORD: "password"
-  #       PGADMIN_CONFIG_SERVER_MODE: "False"
-  #   volumes:
-  #    - ./pgadmin:/var/lib/pgadmin
-  #    #- ./sql:/tmp
-  #   depends_on:
-  #    - postgres_image
-  #   #ports:
-  #    #- "5051:80"
-  #   restart: unless-stopped
-  #   #networks:
-  #   # - postgres
-
 volumes:
    db_volume:
    pgadmin:
