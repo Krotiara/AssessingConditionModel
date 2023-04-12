@@ -2,6 +2,7 @@ import json
 from flask import Flask, jsonify, request
 from flask_cors import CORS, cross_origin
 import numpy as np
+from models.requests.update_meta_request import UpdateMetaRequest
 from models.requests.delete_request import DeleteRequest
 from models.update_model import UpdateModel
 from models.upload_model import UploadModel
@@ -86,12 +87,12 @@ def upload_model(upload_model):
 
 @app.route("/models/updateMeta", methods=['PATCH'], endpoint='update_meta')
 @cross_origin()
-@convert_input_to(ModelMeta)
+@convert_input_to(UpdateMetaRequest)
 def update_meta(update_meta):
     meta = db_connection.session \
         .query(ModelMeta) \
-        .filter_by(StorageId=update_meta.StorageId) \
-        .filter_by(Version=update_meta.Version) \
+        .filter_by(StorageId=update_meta.Meta.StorageId) \
+        .filter_by(Version=update_meta.Meta.Version) \
         .one_or_none()
     if meta is not None:
         meta.FileName = update_meta.FileName
