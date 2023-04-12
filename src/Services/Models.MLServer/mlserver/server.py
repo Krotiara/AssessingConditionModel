@@ -2,6 +2,7 @@ import json
 from flask import Flask, jsonify, request
 from flask_cors import CORS, cross_origin
 import numpy as np
+from models.requests.delete_request import DeleteRequest
 from models.update_model import UpdateModel
 from models.upload_model import UploadModel
 from model_provider import ModelProvider
@@ -99,13 +100,15 @@ def update_meta(update_meta):
         meta.OutputCount = update_meta.OutputCount
         meta.ParamsNames = update_meta.ParamsNames
         db_connection.session.commit()
+        return "", 200
+    return "Meta not found.", 400
     
 
 
-@app.route("/models/updateFile", methods=['PATCH'], endpoint='update_model')
+@app.route("/models/updateFile", methods=['PATCH'], endpoint='update_file')
 @cross_origin()
 @convert_input_to(UpdateModel)
-def update_model(update_model):
+def update_file(update_model):
     meta = db_connection.session \
         .query(ModelMeta) \
         .filter_by(StorageId=update_model.Id) \
@@ -113,8 +116,32 @@ def update_model(update_model):
         .one_or_none()
     if meta is not None:
         model_provider.upload_model(update_model.DataBytes, meta.FileName)
+        return "", 200
+    else:
+        return "Model not found.", 404
 
 
+@app.route("/models/delete", methods=['DELETE'], endpoint='delete_model')
+@cross_origin()
+@convert_input_to(DeleteRequest)
+def delete_model(delete_request):
+    meta = db_connection.session \
+        .query(ModelMeta) \
+        .filter_by(StorageId=delete_request.Id) \
+        .filter_by(Version=delete_request.Version) \
+        .one_or_none()
+    if meta is None:
+        return "Not found.", 404
+    db_connection.session \
+        .query(ModelMeta) \
+        .filter_by(StorageId=delete_request.Id) \
+        .filter_by(Version=delete_request.Version) \
+        .delete()
+    model_provider.delete_model(meta.FileName)
+    db_connection.session.commit()
+    return "", 200
+    
+    
 @app.route('/models/predict', methods=['POST'], endpoint='predict')
 @cross_origin()
 @convert_input_to(ModelPredictRequest)

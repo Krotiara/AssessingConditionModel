@@ -53,6 +53,10 @@ class ModelProvider:
         object = self.s3_res.Object(self.s3_bucket_name, filename)
         object.put(Body=bytes)
 
+    def delete_model(self, filename):
+        object = self.s3_res.Object(self.s3_bucket_name, filename)
+        object.delete()
+
     def _get_random_string(self, length):
     # With combination of lower and upper case
         result_str = ''.join(random.choice(string.ascii_letters) for i in range(length))
