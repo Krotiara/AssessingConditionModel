@@ -89,20 +89,28 @@ def upload_model(upload_model):
 @cross_origin()
 @convert_input_to(UpdateMetaRequest)
 def update_meta(update_meta):
-    meta = db_connection.session \
-        .query(ModelMeta) \
-        .filter_by(StorageId=update_meta.Meta.StorageId) \
-        .filter_by(Version=update_meta.Meta.Version) \
-        .one_or_none()
-    if meta is not None:
-        meta.FileName = update_meta.FileName
-        meta.Accuracy = update_meta.Accuracy
-        meta.InputCount = update_meta.InputCount
-        meta.OutputCount = update_meta.OutputCount
-        meta.ParamsNames = update_meta.ParamsNames
-        db_connection.session.commit()
-        return "", 200
-    return "Meta not found.", 400
+    try:
+        update_source = ModelMeta(update_meta.Meta)
+        print(update_source)
+        meta = db_connection.session \
+            .query(ModelMeta) \
+            .filter_by(StorageId=update_source.StorageId) \
+            .filter_by(Version=update_source.Version) \
+            .one_or_none()
+        if meta is not None:
+            meta.FileName = update_source.FileName
+            meta.Accuracy = update_source.Accuracy
+            meta.InputCount = update_source.InputCount
+            meta.OutputCount = update_source.OutputCount
+            meta.ParamsNames = update_source.ParamsNames
+            print('update meta')
+            db_connection.session.commit()
+            print('update commit')
+            return "", 200
+        return "Meta not found.", 400
+    except Exception as e:
+        db_connection.session.rollback()
+        return str(e), 500
     
 
 
