@@ -28,6 +28,7 @@ class NpEncoder(json.JSONEncoder):
 def convert_input_to(class_):
     def wrap(f):
         def decorator(*args):
+            print(request.get_json())
             obj = class_(**request.get_json())
             return f(obj)
 
@@ -89,6 +90,7 @@ def upload_model(upload_model):
 @cross_origin()
 @convert_input_to(UpdateMetaRequest)
 def update_meta(update_meta):
+    print('updateMeta')
     try:
         update_source = ModelMeta(update_meta.Meta)
         print(update_source)
@@ -130,21 +132,21 @@ def update_file(update_model):
         return "Model not found.", 404
 
 
-@app.route("/models/delete", methods=['DELETE'], endpoint='delete_model')
+@app.route("/models/delete/<model_id>==<version>", methods=['DELETE'], endpoint='delete_model')
 @cross_origin()
-@convert_input_to(DeleteRequest)
-def delete_model(delete_request):
+def delete_model(model_id, version):
+    print('delete model')
     meta = db_connection.session \
         .query(ModelMeta) \
-        .filter_by(StorageId=delete_request.Id) \
-        .filter_by(Version=delete_request.Version) \
+        .filter_by(StorageId=model_id) \
+        .filter_by(Version=version) \
         .one_or_none()
     if meta is None:
         return "Not found.", 404
     db_connection.session \
         .query(ModelMeta) \
-        .filter_by(StorageId=delete_request.Id) \
-        .filter_by(Version=delete_request.Version) \
+        .filter_by(StorageId=model_id) \
+        .filter_by(Version=version) \
         .delete()
     model_provider.delete_model(meta.FileName)
     db_connection.session.commit()
