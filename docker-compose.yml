@@ -13,27 +13,6 @@ services:
       - ./src/ApiGateways/Envoy/envoy.yaml:/etc/envoy/envoy.yaml
     networks:
         - aModelNetwork
-
-  models.mlserver:
-    image: ${DOCKER_REGISTRY-}modelsmlserver
-    container_name: models.mlserver
-    build:
-      context: .
-      dockerfile: src/Services/Models.MLServer/Dockerfile
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_URLS=http://+:80
-      #- ASPNETCORE_URLS=https://+:443;http://+:80
-      #- ASPNETCORE_HTTPS_PORT=8004
-      #- ASPNETCORE_Kestrel__Certificates__Default__Password=lisa2021
-      #- ASPNETCORE_Kestrel__Certificates__Default__Path=/https/localhost.pfx
-    ports:
-      - 5000:80
-    networks:
-        - aModelNetwork
-    volumes:
-        - "C:/TestData:/data"
-    restart: on-failure
   
   web:
     image: ${DOCKER_REGISTRY-}web
@@ -156,28 +135,10 @@ services:
     networks:
         - aModelNetwork
 
-  postgres_image_models:
-    container_name: postgres_image_models
-    image: postgres:latest
-    ports:
-        - "5433:5432"
-    restart: always
-    volumes:
-        - postgresModelsData:/var/lib/postgresql/data
-        - ./sql/models:/docker-entrypoint-initdb.d
-    environment:
-        POSTGRES_USER: "postgres"
-        POSTGRES_PASSWORD: "lisa2021"
-        POSTGRES_DB: "Models_db"
-    networks:
-        - aModelNetwork
-
 volumes:
    db_volume:
    pgadmin:
    postgresData:
-       external: true
-   postgresModelsData:
        external: true
 
 networks:
