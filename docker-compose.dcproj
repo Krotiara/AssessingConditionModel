@@ -16,7 +16,6 @@
     <None Include="https\localhost.crt" />
     <None Include="https\localhost.key" />
     <None Include="https\localhost.pfx" />
-    <None Include="sql\models\init.sql" />
     <None Include="sql\patientsDb\init.sql" />
   </ItemGroup>
 </Project>

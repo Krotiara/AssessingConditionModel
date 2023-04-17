@@ -13,48 +13,6 @@ services:
       - ./src/ApiGateways/Envoy/envoy.yaml:/etc/envoy/envoy.yaml
     networks:
         - aModelNetwork
-
-  #models.api:
-  #  image: ${DOCKER_REGISTRY-}modelsapi
-  #  container_name: models.api
-  #  build:
-  #    context: .
-  #    dockerfile: src/Services/Models.API/Models.API/Dockerfile
-  #  environment:
-  #    - ASPNETCORE_ENVIRONMENT=Development
-  #    - ASPNETCORE_URLS=http://+:80
-  #    #- ASPNETCORE_URLS=https://+:443;http://+:80
-  #    #- ASPNETCORE_HTTPS_PORT=8004
-  #    #- ASPNETCORE_Kestrel__Certificates__Default__Password=lisa2021
-  #    #- ASPNETCORE_Kestrel__Certificates__Default__Path=/https/localhost.pfx
-  #  ports:
-  #    - 8035:80
-  #  networks:
-  #      - aModelNetwork
-  #  volumes:
-  #      - "C:/TestData:/data"
-  #  restart: on-failure
-
-  models.mlserver:
-    image: ${DOCKER_REGISTRY-}modelsmlserver
-    container_name: models.mlserver
-    build:
-      context: .
-      dockerfile: src/Services/Models.MLServer/Dockerfile
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_URLS=http://+:80
-      #- ASPNETCORE_URLS=https://+:443;http://+:80
-      #- ASPNETCORE_HTTPS_PORT=8004
-      #- ASPNETCORE_Kestrel__Certificates__Default__Password=lisa2021
-      #- ASPNETCORE_Kestrel__Certificates__Default__Path=/https/localhost.pfx
-    ports:
-      - 5000:80
-    networks:
-        - aModelNetwork
-    volumes:
-        - "C:/TestData:/data"
-    restart: on-failure
   
   web:
     image: ${DOCKER_REGISTRY-}web
@@ -177,54 +135,10 @@ services:
     networks:
         - aModelNetwork
 
-  postgres_image_models:
-    container_name: postgres_image_models
-    image: postgres:latest
-    ports:
-        - "5433:5432"
-    restart: always
-    volumes:
-        - postgresModelsData:/var/lib/postgresql/data
-        - ./sql/models:/docker-entrypoint-initdb.d
-    environment:
-        POSTGRES_USER: "postgres"
-        POSTGRES_PASSWORD: "lisa2021"
-        POSTGRES_DB: "Models_db"
-    networks:
-        - aModelNetwork
-
-  h2o:
-    container_name: h2o
-    image: h2oai/h2o-open-source-k8s:latest
-    ports:
-        - "54321:54321"
-    restart: always
-
-
-  #pgadmin:
-  #   container_name: pgadmin_container
-  #   image: dpage/pgadmin4:5.7
-  #   environment:
-  #       PGADMIN_DEFAULT_EMAIL: "70dog@mail.ru"
-  #       PGADMIN_DEFAULT_PASSWORD: "password"
-  #       PGADMIN_CONFIG_SERVER_MODE: "False"
-  #   volumes:
-  #    - ./pgadmin:/var/lib/pgadmin
-  #    #- ./sql:/tmp
-  #   depends_on:
-  #    - postgres_image
-  #   #ports:
-  #    #- "5051:80"
-  #   restart: unless-stopped
-  #   #networks:
-  #   # - postgres
-
 volumes:
    db_volume:
    pgadmin:
    postgresData:
-       external: true
-   postgresModelsData:
        external: true
 
 networks:
