@@ -86,14 +86,12 @@ def upload_model(upload_model):
     return "", 200
 
 
-@app.route("/models/updateMeta", methods=['PATCH'], endpoint='update_meta')
-@cross_origin()
-@convert_input_to(UpdateMetaRequest)
-def update_meta(update_meta):
-    print('updateMeta')
+@app.route("/models/update", methods=['PATCH'], endpoint='update_meta')
+def update_meta():
+    dict = json.loads(request.data)
+    update_source = ModelMeta(dict['Meta'])
+    print(update_source)
     try:
-        update_source = ModelMeta(update_meta.Meta)
-        print(update_source)
         meta = db_connection.session \
             .query(ModelMeta) \
             .filter_by(StorageId=update_source.StorageId) \
@@ -114,7 +112,6 @@ def update_meta(update_meta):
         db_connection.session.rollback()
         return str(e), 500
     
-
 
 @app.route("/models/updateFile", methods=['PATCH'], endpoint='update_file')
 @cross_origin()
