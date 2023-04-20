@@ -74,7 +74,7 @@ AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
 builder.Services
     .AddSingleton<ICodeExecutor, CodeExecutorService>()
-    .AddTransient<IWebRequester, HttpClientWebRequester>();
+    .AddTransient<IWebRequester, HttpWebRequester>();
 builder.Services
     .AddTransient<IAgingDynamics<AgingState>, AgingDynamics>()
     .AddSingleton<IAgentInitSettingsProvider, AgentInitSettingsProvider>()
@@ -94,7 +94,6 @@ builder.Services
     .AddTransient<IRequestHandler<GetCommandNameCommand, string>, GetCommandNameCommandHandler>()
     .AddTransient<IRequestHandler<ExecuteCodeLineCommand, Unit>, ExecuteCodeLineCommandHandler>()
     .AddTransient<IRequestHandler<ConvertArgsCommand, object[]>, ConvertArgsCommandHandler>()
-    .AddTransient<IWebRequester, HttpClientWebRequester>()
     .AddTransient<IMetaStorageService, InternalMetaStorageService>()
     .AddTransient<ICodeResolveService, CodeResolveService>();
 

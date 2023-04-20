@@ -30,7 +30,15 @@ namespace Agents.API.Service.AgentCommand
             };
             string body = Newtonsoft.Json.JsonConvert.SerializeObject(request);
             string url = $"{_patientsResolverApiUrl}/patientsApi/influencesWithoutParams";
-            return await _webRequester.GetResponse<IList<Influence>>(url, "POST", body);
+
+            var responce = await _webRequester.SendRequest(url, "POST", body);
+            if (!responce.IsSuccessStatusCode)
+                throw new ExecuteCommandException($"{responce.StatusCode}:{responce.ReasonPhrase}");
+            else
+            {
+                var res = await _webRequester.DeserializeBody<IList<Influence>>(responce);
+                return res;
+            }
         };
     }
 }

@@ -78,9 +78,15 @@ namespace Agents.API.Service.AgentCommand
             }
 
             IPredictRequest request = new PredictRequest() { Id = modelId, Version = version, Input = inputArgs};
-            float[] res = (await _webRequester.GetResponse<float[]>($"{_modelsServerUrl}/models/predict/",
-                "POST", Newtonsoft.Json.JsonConvert.SerializeObject(request)));
-            return (int)res.First();
+
+            var responce = await _webRequester.SendRequest($"{_modelsServerUrl}/models/predict/", "POST", Newtonsoft.Json.JsonConvert.SerializeObject(request));
+            if (!responce.IsSuccessStatusCode)
+                throw new ExecuteCommandException($"{responce.StatusCode}:{responce.ReasonPhrase}");
+            else
+            {
+                var res = await _webRequester.DeserializeBody<float[]>(responce);
+                return (int)res.First();
+            }
         };
 
 

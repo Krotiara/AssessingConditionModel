@@ -31,8 +31,15 @@ namespace Agents.API.Service.AgentCommand
             };
             string body = Newtonsoft.Json.JsonConvert.SerializeObject(request);
             string url = $"{_patientsResolverApiUrl}/patientsApi/latestPatientParameters";
-            IList<PatientParameter> parameters = await _webRequester.GetResponse<IList<PatientParameter>>(url, "POST", body);
-            return parameters.ToDictionary(x => x.ParameterName, x => x);
+
+            var responce = await _webRequester.SendRequest(url, "POST", body);
+            if (!responce.IsSuccessStatusCode)
+                throw new ExecuteCommandException($"{responce.StatusCode}:{responce.ReasonPhrase}");
+            else
+            {
+                var res = await _webRequester.DeserializeBody<IList<PatientParameter>>(responce);
+                return res.ToDictionary(x => x.ParameterName, x => x);
+            }
         };
     }
 }

@@ -38,8 +38,15 @@ namespace Agents.API.Service.AgentCommand
             IPredictRequest request = new PredictRequest() { Id = "bioAgeFuncModel", Version = "1", Input = inputArgs };
             string requestBody = Newtonsoft.Json.JsonConvert.SerializeObject(request);
             string url = $"{_modelsServerUrl}/models/predict/";
-            float[] res = (await _webRequester.GetResponse<float[]>(url, "POST", requestBody));
-            return (int)Math.Ceiling(res.First());
+
+            var responce = await _webRequester.SendRequest(url, "POST", requestBody);
+            if (!responce.IsSuccessStatusCode)
+                throw new ExecuteCommandException($"{responce.StatusCode}:{responce.ReasonPhrase}");
+            else
+            {
+                var res = await _webRequester.DeserializeBody<float[]>(responce);
+                return (int)Math.Ceiling(res.First());
+            }
         };
     }
 }
