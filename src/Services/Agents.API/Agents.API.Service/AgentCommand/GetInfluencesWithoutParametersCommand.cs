@@ -1,6 +1,7 @@
 ﻿using Agents.API.Entities;
 using Agents.API.Entities.Requests;
 using Interfaces;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,10 +14,10 @@ namespace Agents.API.Service.AgentCommand
     {
         private readonly IWebRequester _webRequester;
         private readonly string _patientsResolverApiUrl;
-        public GetInfluencesWithoutParametersCommand(IWebRequester webRequester, EnvSettings envSettings)
+        public GetInfluencesWithoutParametersCommand(IWebRequester webRequester, IOptions<EnvSettings> settings)
         {
             _webRequester = webRequester;
-            _patientsResolverApiUrl = envSettings.PatientsResolverApiUrl;
+            _patientsResolverApiUrl = settings.Value.PatientsResolverApiUrl;
         }
 
         public Delegate Command => async (DateTime startTimestamp, DateTime endTimestamp, int patientId, string medOrganization) =>

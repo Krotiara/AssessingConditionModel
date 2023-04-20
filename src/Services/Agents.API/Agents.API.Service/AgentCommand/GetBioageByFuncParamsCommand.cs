@@ -1,5 +1,6 @@
 ﻿using Agents.API.Entities;
 using Interfaces;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,10 +14,10 @@ namespace Agents.API.Service.AgentCommand
         private readonly IWebRequester _webRequester;
         private readonly string _modelsServerUrl;
 
-        public GetBioageByFuncParamsCommand(IWebRequester webRequester, EnvSettings settings)
+        public GetBioageByFuncParamsCommand(IWebRequester webRequester, IOptions<EnvSettings> settings)
         {
             _webRequester = webRequester;
-            _modelsServerUrl = settings.ModelsApiUrl;
+            _modelsServerUrl = settings.Value.ModelsApiUrl;
         }
 
         public Delegate Command => async (Dictionary<ParameterNames, PatientParameter> pDict) =>

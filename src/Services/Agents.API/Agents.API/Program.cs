@@ -44,12 +44,8 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
-builder.Services.AddTransient<EnvSettings>(x => new EnvSettings()
-{
-    ModelsApiUrl = Environment.GetEnvironmentVariable("MODELS_API_URL"),
-    PatientsResolverApiUrl = Environment.GetEnvironmentVariable("PATIENTRESOLVER_API_URL")
-});
-
+builder.Services.Configure<TempModelSettings>(builder.Configuration.GetSection("Models"));
+builder.Services.Configure<EnvSettings>(builder.Configuration.GetSection("EnvSettings"));
 CommandsDependensyRegistrator.RegisterDependencies(builder.Services);
 
 /*Теперь вы можете выполнять ваши запросы. Для этого вам потребуется получить экземпляр интерфейса IMediator. Он регистрируется в вашем контейнере зависимостей той же командой AddMediatR.*/
