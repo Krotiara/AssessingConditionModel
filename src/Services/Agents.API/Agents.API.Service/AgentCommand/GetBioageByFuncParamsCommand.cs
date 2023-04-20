@@ -14,10 +14,13 @@ namespace Agents.API.Service.AgentCommand
         private readonly IWebRequester _webRequester;
         private readonly string _modelsServerUrl;
 
+        private readonly ModelKey _modelKey;
+
         public GetBioageByFuncParamsCommand(IWebRequester webRequester, IOptions<EnvSettings> settings)
         {
             _webRequester = webRequester;
             _modelsServerUrl = settings.Value.ModelsApiUrl;
+            _modelKey = settings.Value.TempModelSettings.BioAge;
         }
 
         public Delegate Command => async (Dictionary<ParameterNames, PatientParameter> pDict) =>
@@ -35,8 +38,8 @@ namespace Agents.API.Service.AgentCommand
                 pDict[ParameterNames.HearingAcuity].ConvertValue<float>(),
                 pDict[ParameterNames.StaticBalancing].ConvertValue<float>()
             };
-#warning Костыльное получение версии и id.
-            IPredictRequest request = new PredictRequest() { Id = "bioAgeFuncModel", Version = "1", Input = inputArgs };
+
+            IPredictRequest request = new PredictRequest() { Id = _modelKey.Id, Version = _modelKey.Version, Input = inputArgs };
             string requestBody = Newtonsoft.Json.JsonConvert.SerializeObject(request);
             string url = $"{_modelsServerUrl}/models/predict/";
 

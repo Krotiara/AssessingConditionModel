@@ -14,22 +14,24 @@ namespace Agents.API.Service.AgentCommand
 
         private readonly IWebRequester _webRequester;
         private readonly string _modelsServerUrl;
+        private readonly EnvSettings _settings;
 
         public GetDentistSumCommand(IWebRequester webRequester, IOptions<EnvSettings> settings)
         {
             _webRequester = webRequester;
             _modelsServerUrl = settings.Value.ModelsApiUrl;
+            _settings = settings.Value;
         }
 
         public Delegate Command => async (Dictionary<ParameterNames, PatientParameter> pDict) =>
         {
             float age = pDict[ParameterNames.Age].ConvertValue<float>();
 #warning Костыльное получение версии и Id.
-            string modelId = GetModelIdByAge(age);
-            string version = "1";
-            if (modelId == null)
+            ModelKey model = GetModelByAge(age);
+            if (model == null)
                 throw new NotImplementedException(); //TODo
             float[] inputArgs = null;
+            //Костыли.
             if (age <= 5)
             {
                 inputArgs = new float[]
@@ -78,7 +80,7 @@ namespace Agents.API.Service.AgentCommand
                 };
             }
 
-            IPredictRequest request = new PredictRequest() { Id = modelId, Version = version, Input = inputArgs};
+            IPredictRequest request = new PredictRequest() { Id = model.Id, Version = model.Version, Input = inputArgs};
 
             var responce = await _webRequester.SendRequest($"{_modelsServerUrl}/models/predict/", "POST", Newtonsoft.Json.JsonConvert.SerializeObject(request));
             if (!responce.IsSuccessStatusCode)
@@ -91,15 +93,14 @@ namespace Agents.API.Service.AgentCommand
         };
 
 
-        private string GetModelIdByAge(float age)
+        private ModelKey GetModelByAge(float age)
         {
-            //TODO id моделей вынести в настройки наружу
             if (age >= 3 && age <= 5)
-                return "dantist_3_5_years";
+                return _settings.TempModelSettings.Dentist_3_5;
             if (age >= 6 && age <= 9)
-                return "dantist_6_9_years";
+                return _settings.TempModelSettings.Dentist_6_9;
             else if (age >= 9 && age <= 12)
-                return "dantist_10_12_years";
+                return _settings.TempModelSettings.Dentist_10_12;
             else return null;
         }
     }
