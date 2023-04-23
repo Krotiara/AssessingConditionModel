@@ -44,12 +44,8 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
-builder.Services.AddTransient<EnvSettings>(x => new EnvSettings()
-{
-    ModelsApiUrl = Environment.GetEnvironmentVariable("MODELS_API_URL"),
-    PatientsResolverApiUrl = Environment.GetEnvironmentVariable("PATIENTRESOLVER_API_URL")
-});
-
+builder.Services.Configure<TempModelSettings>(builder.Configuration.GetSection("Models"));
+builder.Services.Configure<EnvSettings>(builder.Configuration.GetSection("EnvSettings"));
 CommandsDependensyRegistrator.RegisterDependencies(builder.Services);
 
 /*Теперь вы можете выполнять ваши запросы. Для этого вам потребуется получить экземпляр интерфейса IMediator. Он регистрируется в вашем контейнере зависимостей той же командой AddMediatR.*/
@@ -74,7 +70,7 @@ AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
 builder.Services
     .AddSingleton<ICodeExecutor, CodeExecutorService>()
-    .AddTransient<IWebRequester, HttpClientWebRequester>();
+    .AddTransient<IWebRequester, HttpWebRequester>();
 builder.Services
     .AddTransient<IAgingDynamics<AgingState>, AgingDynamics>()
     .AddSingleton<IAgentInitSettingsProvider, AgentInitSettingsProvider>()
@@ -94,7 +90,6 @@ builder.Services
     .AddTransient<IRequestHandler<GetCommandNameCommand, string>, GetCommandNameCommandHandler>()
     .AddTransient<IRequestHandler<ExecuteCodeLineCommand, Unit>, ExecuteCodeLineCommandHandler>()
     .AddTransient<IRequestHandler<ConvertArgsCommand, object[]>, ConvertArgsCommandHandler>()
-    .AddTransient<IWebRequester, HttpClientWebRequester>()
     .AddTransient<IMetaStorageService, InternalMetaStorageService>()
     .AddTransient<ICodeResolveService, CodeResolveService>();
 

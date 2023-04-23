@@ -1,6 +1,7 @@
 ﻿using Agents.API.Entities;
 using Agents.API.Entities.Requests;
 using Interfaces;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,15 +15,15 @@ namespace Agents.API.Service.AgentCommand
         private readonly IWebRequester _webRequester;
         private readonly string _patientsResolverApiUrl;
 
-        public GetInfluencesCommand(IWebRequester webRequester, EnvSettings envSettings)
+        public GetInfluencesCommand(IWebRequester webRequester, IOptions<EnvSettings> settings)
         {
             _webRequester = webRequester;
-            _patientsResolverApiUrl = envSettings.PatientsResolverApiUrl;
+            _patientsResolverApiUrl = settings.Value.PatientsResolverApiUrl;
         }
 
         public Delegate Command => async (DateTime startTimestamp, DateTime endTimestamp, int patientId, string medOrganization) =>
         {
-            PatientInfluencesRequest request = new PatientInfluencesRequest()
+            PatientInfluencesRequest request = new()
             {
                 PatientId = patientId,
                 MedicalOrganization = medOrganization,
@@ -31,7 +32,14 @@ namespace Agents.API.Service.AgentCommand
             };
             string body = Newtonsoft.Json.JsonConvert.SerializeObject(request);
             string url = $"{_patientsResolverApiUrl}/patientsApi/influences";
-            return await _webRequester.GetResponse<IList<Influence>>(url, "POST", body);
+            var responce = await _webRequester.SendRequest(url, "POST", body);
+            if (!responce.IsSuccessStatusCode)
+                throw new ExecuteCommandException($"{responce.StatusCode}:{responce.ReasonPhrase}");
+            else
+            {
+                var res = await _webRequester.DeserializeBody<IList<Influence>>(responce);
+                return res;
+            }
         };
     }
 }

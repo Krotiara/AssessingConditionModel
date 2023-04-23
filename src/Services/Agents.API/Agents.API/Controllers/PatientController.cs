@@ -43,12 +43,12 @@ namespace Agents.API.Controllers
         {
             try
             {
-                _logger.LogInformation($"Predict state for agent {agentKey.ObservedId} in {agentKey.ObservedObjectAffilation}");
-                return Ok(await _mediator.Send(new GetAgentStateQuery(agentKey, timeStamp)));
+                var state = await _mediator.Send(new GetAgentStateQuery(agentKey, timeStamp));
+                return Ok(state);
             }
             catch (GetAgingStateException ex)
             {
-                return NotFound(ex.Message);
+                return BadRequest(ex.Message);
             }
         }
     }

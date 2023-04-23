@@ -43,7 +43,9 @@ namespace Agents.API.Entities.DynamicAgent
         public async Task UpdateState()
         {
 #warning подразумевается, что settings уже актуализированы и вообще всегда в актуальном состоянии.  
-            Dictionary<string, IProperty> calculatedArgs = await _codeExecutor.ExecuteCode(Settings.DetermineAgentPropertiesActions); 
+            
+            Dictionary<string, IProperty> calculatedArgs = await _codeExecutor.ExecuteCode(Settings.DetermineAgentPropertiesActions);
+           
             foreach (KeyValuePair<string, IProperty> entry in calculatedArgs)
             {
                 Settings.Properties[entry.Key] = entry.Value;

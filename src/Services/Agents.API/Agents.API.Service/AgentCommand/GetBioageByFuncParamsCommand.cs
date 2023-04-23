@@ -1,5 +1,6 @@
 ﻿using Agents.API.Entities;
 using Interfaces;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,10 +14,13 @@ namespace Agents.API.Service.AgentCommand
         private readonly IWebRequester _webRequester;
         private readonly string _modelsServerUrl;
 
-        public GetBioageByFuncParamsCommand(IWebRequester webRequester, EnvSettings settings)
+        private readonly ModelKey _modelKey;
+
+        public GetBioageByFuncParamsCommand(IWebRequester webRequester, IOptions<EnvSettings> settings)
         {
             _webRequester = webRequester;
-            _modelsServerUrl = settings.ModelsApiUrl;
+            _modelsServerUrl = settings.Value.ModelsApiUrl;
+            _modelKey = settings.Value.TempModelSettings.BioAge;
         }
 
         public Delegate Command => async (Dictionary<ParameterNames, PatientParameter> pDict) =>
@@ -34,12 +38,19 @@ namespace Agents.API.Service.AgentCommand
                 pDict[ParameterNames.HearingAcuity].ConvertValue<float>(),
                 pDict[ParameterNames.StaticBalancing].ConvertValue<float>()
             };
-#warning Костыльное получение версии и id.
-            IPredictRequest request = new PredictRequest() { Id = "bioAgeFuncModel", Version = "1", Input = inputArgs };
+
+            IPredictRequest request = new PredictRequest() { Id = _modelKey.Id, Version = _modelKey.Version, Input = inputArgs };
             string requestBody = Newtonsoft.Json.JsonConvert.SerializeObject(request);
             string url = $"{_modelsServerUrl}/models/predict/";
-            float[] res = (await _webRequester.GetResponse<float[]>(url, "POST", requestBody));
-            return (int)Math.Ceiling(res.First());
+
+            var responce = await _webRequester.SendRequest(url, "POST", requestBody);
+            if (!responce.IsSuccessStatusCode)
+                throw new ExecuteCommandException($"{responce.StatusCode}:{responce.ReasonPhrase}");
+            else
+            {
+                var res = await _webRequester.DeserializeBody<float[]>(responce);
+                return (int)Math.Ceiling(res.First());
+            }
         };
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Agents.API.Entities;
 using Agents.API.Entities.Requests;
 using Interfaces;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,10 +15,10 @@ namespace Agents.API.Service.AgentCommand
         private readonly IWebRequester _webRequester;
         private readonly string _patientsResolverApiUrl;
 
-        public GetLatestPatientParametersCommand(IWebRequester webRequester, EnvSettings settings)
+        public GetLatestPatientParametersCommand(IWebRequester webRequester, IOptions<EnvSettings> settings)
         {
             _webRequester = webRequester;
-            _patientsResolverApiUrl = settings.PatientsResolverApiUrl;
+            _patientsResolverApiUrl = settings.Value.PatientsResolverApiUrl;
         }
 
         public Delegate Command => async (DateTime startTimestamp, DateTime endTimestamp, int patientId, string medOrganization) =>
@@ -31,8 +32,15 @@ namespace Agents.API.Service.AgentCommand
             };
             string body = Newtonsoft.Json.JsonConvert.SerializeObject(request);
             string url = $"{_patientsResolverApiUrl}/patientsApi/latestPatientParameters";
-            IList<PatientParameter> parameters = await _webRequester.GetResponse<IList<PatientParameter>>(url, "POST", body);
-            return parameters.ToDictionary(x => x.ParameterName, x => x);
+
+            var responce = await _webRequester.SendRequest(url, "POST", body);
+            if (!responce.IsSuccessStatusCode)
+                throw new ExecuteCommandException($"{responce.StatusCode}:{responce.ReasonPhrase}");
+            else
+            {
+                var res = await _webRequester.DeserializeBody<IList<PatientParameter>>(responce);
+                return res.ToDictionary(x => x.ParameterName, x => x);
+            }
         };
     }
 }
