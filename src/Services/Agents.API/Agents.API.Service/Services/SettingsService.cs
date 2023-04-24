@@ -1,5 +1,5 @@
-﻿using Agents.API.Entities.AgentsSettings;
-using Agents.API.Service.Store;
+﻿using Agents.API.Data.Store;
+using Agents.API.Entities.AgentsSettings;
 using System;
 using System.Collections.Generic;
 using System.Linq;

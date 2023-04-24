@@ -8,13 +8,12 @@ using Microsoft.EntityFrameworkCore;
 using Agents.API.Service.Services;
 using Agents.API.Messaging.Receive.Configs;
 using Agents.API.Service.Query;
-using Agents.API.Data.Repository;
+using Agents.API.Data.Store;
 using Agents.API.Interfaces;
 using Interfaces.DynamicAgent;
 using Agents.API.Service.Command;
 using Agents.API;
 using Agents.API.Entities.AgentsSettings;
-using Agents.API.Service.Store;
 
 var builder = WebApplication.CreateBuilder(args);
 

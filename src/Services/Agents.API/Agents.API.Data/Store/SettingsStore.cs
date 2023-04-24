@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Agents.API.Service.Store
+namespace Agents.API.Data.Store
 {
     public class SettingsStore
     {

@@ -10,7 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Agents.API.Data.Repository
+namespace Agents.API.Data.Store
 {
 #warning Репозиторий только для одного вида агентов или для разных? Если для разных, то будет конфликт ключей observableId.
     public class AgentsStore : IAgentsStore

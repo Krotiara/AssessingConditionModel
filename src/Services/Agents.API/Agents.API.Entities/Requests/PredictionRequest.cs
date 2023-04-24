@@ -14,7 +14,5 @@ namespace Agents.API.Entities.Requests
         public string Affiliation { get; set; }
 
         public List<PredictionSettings> Settings { get; set; }
-
-
     }
 }
