@@ -13,7 +13,6 @@
         "rabbitmq": "StartWithoutDebugging",
         "agents.api": "StartDebugging",
        // "models.api": "StartDebugging",
-        "web": "StartDebugging",
         "envoygateway": "StartDebugging"
       }
     }

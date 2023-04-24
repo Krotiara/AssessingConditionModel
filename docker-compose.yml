@@ -13,26 +13,7 @@ services:
       - ./src/ApiGateways/Envoy/envoy.yaml:/etc/envoy/envoy.yaml
     networks:
         - aModelNetwork
-  
-  web:
-    image: ${DOCKER_REGISTRY-}web
-    build:
-      context: .
-      dockerfile: src/Web/WebMVC/Dockerfile
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_URLS=https://+:443;http://+:80
-      - ASPNETCORE_HTTPS_PORT=8010
-      - ASPNETCORE_Kestrel__Certificates__Default__Password=lisa2021
-      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/localhost.pfx
-      - API_URl=http://envoygateway:10000
-    ports:
-      - 8011:80
-      - 8010:443
-    volumes:
-      - ./https:/https:ro
-    networks:
-        - aModelNetwork
+ 
 
   patientsresolver.api:
     image: ${DOCKER_REGISTRY-}patientsresolverapi
