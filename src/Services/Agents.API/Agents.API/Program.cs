@@ -12,8 +12,8 @@ using Agents.API.Data.Repository;
 using Agents.API.Interfaces;
 using Interfaces.DynamicAgent;
 using Agents.API.Service.Command;
-using Agents.API.Entities.DynamicAgent;
 using Agents.API;
+using Agents.API.Entities.AgentsSettings;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -81,8 +81,7 @@ builder.Services
 
 builder.Services.AddSingleton<IDynamicAgentsRepository, DynamicAgentsRepository>();
 
-builder.Services.AddTransient<IProperty, AgentProperty>();
-builder.Services.AddTransient<IExecutableAgentCodeSettings, ExecutableAgentCodeSettings>();
+builder.Services.AddTransient<IProperty, Property>();
 builder.Services
     .AddTransient<IRequestHandler<GetCommandTypesMetaQueue, ICommandArgsTypesMeta>, GetCommandTypesMetaQueueHandler>()
     .AddTransient<IRequestHandler<GetCommandArgsValuesQueue, List<object>>, GetCommandArgsValuesQueueHandler>()

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Agents.API.Interfaces
+namespace Interfaces.DynamicAgent
 {
     public interface IProperty
     {

@@ -11,10 +11,10 @@ namespace Agents.API.Interfaces
 { 
     public interface ICodeExecutor
     {
-        public Task<Dictionary<string, IProperty>> ExecuteCode(string codeLines, 
+        public Task<ConcurrentDictionary<string, IProperty>> ExecuteCode(string codeLines, 
             ConcurrentDictionary<string, IProperty> variables, CancellationToken cancellationToken=default);
 
 
-        public Task<object> ExecuteCommand(SystemCommands command, object[] args, CancellationToken cancellationToken=default);
+        //public Task<object> ExecuteCommand(SystemCommands command, object[] args, CancellationToken cancellationToken=default);
     }
 }

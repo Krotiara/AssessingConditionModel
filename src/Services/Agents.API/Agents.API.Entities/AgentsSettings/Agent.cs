@@ -1,5 +1,6 @@
 ﻿using Agents.API.Interfaces;
 using Interfaces;
+using Interfaces.DynamicAgent;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -9,13 +10,11 @@ using System.Threading.Tasks;
 
 namespace Agents.API.Entities.AgentsSettings
 {
-    public class Agent
+    public class Agent : IAgent
     {
         private readonly ICodeExecutor _codeExecutor;
 
         private readonly string _stateResolveCode;
-
-        private readonly string _codeStateName = "State";
 
         public string Id { get; set; }
 
@@ -23,13 +22,13 @@ namespace Agents.API.Entities.AgentsSettings
 
         public AgentType AgentType { get;} 
 
-        public AgentState CurrentState { get; set; }
+        public IAgentState CurrentState { get; set; }
 
-        public ConcurrentDictionary<string, Property> Properties { get; private set; }
+        public ConcurrentDictionary<string, IProperty> Properties { get;}
 
-        public ConcurrentDictionary<string, Property> Variables { get; private set; }
+        public ConcurrentDictionary<string, IProperty> Variables { get;}
 
-        public ConcurrentDictionary<string, AgentState> States { get; private set; }
+        public ConcurrentDictionary<string, IAgentState> States { get;}
 
         public Agent(string id, string organization, AgentsSettings settings, ICodeExecutor codeExecutor)
         {
@@ -38,34 +37,35 @@ namespace Agents.API.Entities.AgentsSettings
             Id = id;
             Organization = organization;
             AgentType = settings.AgentType;
+            Properties = new();
+            Variables = new();
+            States = new();
             InitDicts(settings);
         }
 
 
         public async Task UpdateState()
         {
-            Dictionary<string, Property> calculatedArgs = await _codeExecutor.ExecuteCode(_stateResolveCode, Variables);
-            foreach(var pair in calculatedArgs)
+            try
             {
-                if (pair.Key.Equals(_codeStateName) && pair.Value.Value != null)
-                {
-                    string stateName = pair.Value.Value as string;
-                    if (States.ContainsKey(stateName))
-                        CurrentState = States[stateName];
-                    else
-                        return; //TODO log
-                }
-                else
-                    return; //TODO log
-                if (Properties.ContainsKey(pair.Key))
-                    Properties[pair.Key] = pair.Value;
+                ConcurrentDictionary<string, IProperty> calculatedArgs = await _codeExecutor.ExecuteCode(_stateResolveCode, Variables);
+                string state = await UpdateStateBy(calculatedArgs);
+                CurrentState = States[state];
+                //TODO - set numeric characteristic. - сделать через указываемый через фронт параметр.
+                foreach (var pair in calculatedArgs)
+                    if (Properties.ContainsKey(pair.Key))
+                        Properties[pair.Key] = pair.Value;
+            }
+            catch(DetermineStateException ex)
+            {
+                //TODO log
             }
         }
 
 
-        public void UpdateVariables(List<Property> vars)
+        public void UpdateVariables(List<IProperty> vars)
         {
-            foreach (Property p in vars)
+            foreach (IProperty p in vars)
                 Variables[p.Name] = p;
         }
 
@@ -92,15 +92,26 @@ namespace Agents.API.Entities.AgentsSettings
 
         private void InitDicts(AgentsSettings settings)
         {
-            Properties = new();
-            Variables = new();
-            States = new();
-            foreach (Property p in settings.StateProperties)
+            foreach (IProperty p in settings.StateProperties)
                 Properties[p.Name] = p;
-            foreach (Property p in settings.Variables)
+            foreach (IProperty p in settings.Variables)
                 Variables[p.Name] = p;
-            foreach (AgentState s in settings.States)
+            foreach (IAgentState s in settings.States)
                 States[s.Name] = s;
+        }
+
+
+        private async Task<string> UpdateStateBy(ConcurrentDictionary<string, IProperty> calcArgs)
+        {
+            string stateVar = "isState";
+            foreach(IAgentState state in States.Values)
+            {
+                string ifCondition = $"{stateVar}={state.DefinitionCode}";
+                var args = await _codeExecutor.ExecuteCode(ifCondition, Variables);
+                if ((bool)args[stateVar].Value)
+                    return state.Name;
+            }
+            throw new DetermineStateException($"Cannot define state by states conditions");
         }
     }
 }

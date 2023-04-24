@@ -1,4 +1,5 @@
 ﻿using Agents.API.Entities;
+using Agents.API.Entities.AgentsSettings;
 using Agents.API.Entities.DynamicAgent;
 using Agents.API.Interfaces;
 using Agents.API.Service.Query;
@@ -71,12 +72,17 @@ namespace Agents.API.Service.Command
                     res = typeConverter.ConvertTo(res, commandPair.Item1.OutputArgType);
                 }
                
-                if (request.Command.LocalVariables.ContainsKey(request.Command.AssigningParamOriginalName))
-                    request.Command.LocalVariables[request.Command.AssigningParamOriginalName].Value = res;
+                if (request.Command.LocalVariables.ContainsKey(request.Command.AssigningParameter))
+                    request.Command.LocalVariables[request.Command.AssigningParameter].Value = res;
                 else
                 {
-                    request.Command.LocalVariables[request.Command.AssigningParamOriginalName] =
-                        new AgentProperty(commandPair.Item1.OutputArgType, res, request.Command.AssigningParamOriginalName, request.Command.AssigningParameter);
+                    request.Command.LocalVariables[request.Command.AssigningParameter] =
+                        new Property()
+                        {
+                            Name = request.Command.AssigningParameter,
+                            Type = commandPair.Item1.OutputArgType,
+                            Value = res
+                        };
                 }
             }
             else
@@ -123,11 +129,16 @@ namespace Agents.API.Service.Command
             var scriptState = await CSharpScript.RunAsync(executableStr); //TODO - Тесты
             if (scriptState.ReturnValue != null && !string.IsNullOrEmpty(scriptState.ReturnValue.ToString()))
             {
-                if (request.Command.LocalVariables.ContainsKey(request.Command.AssigningParamOriginalName))
-                    request.Command.LocalVariables[request.Command.AssigningParamOriginalName].Value = scriptState.ReturnValue;
+                if (request.Command.LocalVariables.ContainsKey(request.Command.AssigningParameter))
+                    request.Command.LocalVariables[request.Command.AssigningParameter].Value = scriptState.ReturnValue;
                 else
-                    request.Command.LocalVariables[request.Command.AssigningParamOriginalName] = 
-                        new AgentProperty(outputType, scriptState.ReturnValue, request.Command.AssigningParamOriginalName, request.Command.AssigningParameter);
+                    request.Command.LocalVariables[request.Command.AssigningParameter] = 
+                        new Property()
+                        {
+                            Type = outputType,
+                            Name = request.Command.AssigningParameter,
+                            Value = scriptState.ReturnValue
+                        };
             }
         }
 

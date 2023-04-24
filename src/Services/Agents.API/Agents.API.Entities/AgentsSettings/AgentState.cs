@@ -19,5 +19,7 @@ namespace Agents.API.Entities.AgentsSettings
         public double NumericCharacteristic { get; set; }
 
         public DateTime Timestamp { get; set; }
+
+        public string DefinitionCode { get; set; }
     }
 }

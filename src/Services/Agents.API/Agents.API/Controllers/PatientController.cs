@@ -55,5 +55,8 @@ namespace Agents.API.Controllers
 
         [HttpPost("agents/getInfo")]
         public async Task<ActionResult> GetPatientInfo()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Interfaces;
 using Interfaces.DynamicAgent;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -17,14 +18,12 @@ namespace Agents.API.Interfaces
 
     public interface ICommand
     {
-        public ParameterNames AssigningParameter { get; }
-
-        public string AssigningParamOriginalName { get; }
+        public string AssigningParameter { get; }
 
         public string OriginCommand { get; }
 
         CommandType CommandType { get; }
 
-        public Dictionary<string, IProperty> LocalVariables { get; }
+        public ConcurrentDictionary<string, IProperty> LocalVariables { get; }
     }
 }
