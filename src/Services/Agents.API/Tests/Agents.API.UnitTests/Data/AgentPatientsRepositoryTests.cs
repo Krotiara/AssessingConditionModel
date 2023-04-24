@@ -1,4 +1,4 @@
-﻿using Agents.API.Data.Repository;
+﻿using Agents.API.Data.Store;
 using Agents.API.Entities;
 using Agents.API.Service.Services;
 using Interfaces;
