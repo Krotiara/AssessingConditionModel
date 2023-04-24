@@ -1,6 +1,5 @@
 ﻿using Agents.API.Entities;
 using Agents.API.Entities.AgentsSettings;
-using Agents.API.Entities.DynamicAgent;
 using Agents.API.Interfaces;
 using Agents.API.Service.Query;
 using Interfaces;

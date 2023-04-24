@@ -1,5 +1,4 @@
-﻿using Agents.API.Entities.DynamicAgent;
-using Interfaces;
+﻿using Interfaces;
 using Interfaces.DynamicAgent;
 using System;
 using System.Collections.Generic;
@@ -9,11 +8,11 @@ using System.Threading.Tasks;
 
 namespace Agents.API.Data.Repository
 {
-    public interface IDynamicAgentsRepository
+    public interface IAgentsStore
     {
-        public IDynamicAgent GetAgent(IAgentKey key);
+        public IAgent GetAgent(IAgentKey key);
 
-        public IDynamicAgent InitAgent(IAgentKey key, IDynamicAgentInitSettings settings);
+        public IAgent InitAgent(IAgentKey key, IAgentsSettings settings);
 
         public void Clear();
     }

@@ -12,26 +12,18 @@ namespace Agents.API.Service.Services
 {
     public class AgentsService : IAgentsService
     {
-        private readonly IAgentInitSettingsProvider _agentInitSettingsProvider;
-        private readonly IDynamicAgentsRepository _dynamicAgentsRepository;
+        private readonly IAgentsStore _agentsStore;
 
-        public AgentsService(IAgentInitSettingsProvider agentInitSettingsProvider, IDynamicAgentsRepository dynamicAgentsRepository)
+        public AgentsService(IAgentsStore agentsStore)
         {
-            _agentInitSettingsProvider = agentInitSettingsProvider;
-            _dynamicAgentsRepository = dynamicAgentsRepository;
+            _agentsStore = agentsStore;
         }
 
-        public IDynamicAgent InitAgentBy(IAgentKey key, AgentType agentType)
-        {
-            IDynamicAgentInitSettings initSets = _agentInitSettingsProvider.GetSettingsBy(agentType);
-            return _dynamicAgentsRepository.InitAgent(key, initSets);
-        }
-
-
+        
         //TODO - на будущее - инициализация по кастомным агентам.
-        public IDynamicAgent InitAgentBy(IAgentKey key, IDynamicAgentInitSettings settings)
+        public IAgent InitAgentBy(IAgentKey key, IAgentsSettings settings)
         {
-            return _dynamicAgentsRepository.InitAgent(key, settings);
+            return _agentsStore.InitAgent(key, settings);
         }
     }
 }

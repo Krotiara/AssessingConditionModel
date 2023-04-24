@@ -73,15 +73,15 @@ builder.Services
     .AddTransient<IWebRequester, HttpWebRequester>();
 builder.Services
     .AddTransient<IAgingDynamics<AgingState>, AgingDynamics>()
-    .AddSingleton<IAgentInitSettingsProvider, AgentInitSettingsProvider>()
     .AddSingleton<IAgentsService, AgentsService>();
 
 builder.Services
     .AddTransient<IRequestHandler<GetAgentStateQuery, IAgentState>, GetAgentStateQueryHandler>();
 
-builder.Services.AddSingleton<IDynamicAgentsRepository, DynamicAgentsRepository>();
+builder.Services.AddSingleton<IAgentsStore, AgentsStore>();
 
 builder.Services.AddTransient<IProperty, Property>();
+builder.Services.AddTransient<IAgentState, AgentState>();
 builder.Services
     .AddTransient<IRequestHandler<GetCommandTypesMetaQueue, ICommandArgsTypesMeta>, GetCommandTypesMetaQueueHandler>()
     .AddTransient<IRequestHandler<GetCommandArgsValuesQueue, List<object>>, GetCommandArgsValuesQueueHandler>()

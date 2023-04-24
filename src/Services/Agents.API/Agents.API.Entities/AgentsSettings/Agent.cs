@@ -30,12 +30,12 @@ namespace Agents.API.Entities.AgentsSettings
 
         public ConcurrentDictionary<string, IAgentState> States { get;}
 
-        public Agent(string id, string organization, AgentsSettings settings, ICodeExecutor codeExecutor)
+        public Agent(IAgentKey key, IAgentsSettings settings, ICodeExecutor codeExecutor)
         {
             _codeExecutor = codeExecutor;
             _stateResolveCode = settings.StateResolveCode;
-            Id = id;
-            Organization = organization;
+            Id = key.ObservedId;
+            Organization = key.ObservedObjectAffilation;
             AgentType = settings.AgentType;
             Properties = new();
             Variables = new();
@@ -90,7 +90,7 @@ namespace Agents.API.Entities.AgentsSettings
         }
 
 
-        private void InitDicts(AgentsSettings settings)
+        private void InitDicts(IAgentsSettings settings)
         {
             foreach (IProperty p in settings.StateProperties)
                 Properties[p.Name] = p;

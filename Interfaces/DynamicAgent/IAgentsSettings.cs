@@ -1,22 +1,13 @@
-﻿using Interfaces;
-using Interfaces.DynamicAgent;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Agents.API.Entities.AgentsSettings
+namespace Interfaces.DynamicAgent
 {
-    public class AgentsSettings : IAgentsSettings
+    public interface IAgentsSettings
     {
-        public AgentsSettings()
-        {
-            StateProperties = new();
-            Variables = new();
-            States = new();
-        }
-
         public AgentType AgentType { get; set; }
 
         public List<IProperty> StateProperties { get; set; }
@@ -28,4 +19,3 @@ namespace Agents.API.Entities.AgentsSettings
         public List<IAgentState> States { get; set; }
     }
 }
-

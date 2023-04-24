@@ -8,7 +8,7 @@ namespace Interfaces
 {
     public interface IAgentKey
     {
-        public int ObservedId { get; set; }
+        public string ObservedId { get; set; }
 
         public string ObservedObjectAffilation { get; set; }
     }

@@ -9,7 +9,7 @@ namespace Agents.API.Entities.AgentsSettings
 {
     public class AgentKey : IAgentKey
     {
-        public int ObservedId { get; set; }
+        public string ObservedId { get; set; }
 
         public string ObservedObjectAffilation { get; set; }
 

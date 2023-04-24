@@ -12,8 +12,8 @@ namespace Interfaces
     {
         ObservedId,
         MedicalOrganization,
-        StartDateTime,
-        EndDateTime
+        StartTimestamp,
+        EndTimestamp
     }
 
     public enum AgentType
