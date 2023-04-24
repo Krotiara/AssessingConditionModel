@@ -51,5 +51,9 @@ namespace Agents.API.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+
+        [HttpPost("agents/getInfo")]
+        public async Task<ActionResult> GetPatientInfo()
     }
 }
