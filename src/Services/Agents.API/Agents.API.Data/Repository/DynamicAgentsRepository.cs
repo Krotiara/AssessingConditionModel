@@ -25,18 +25,11 @@ namespace Agents.API.Data.Repository
         }
 
 
-        public IAgent InitAgent(IAgentKey key, IAgentsSettings settings)
+        public IAgent GetAgent(IAgentKey key, IAgentsSettings settings)
         {
             if (!_agents.ContainsKey(key))
                 _agents[key] = new Agent(key, settings, _codeExecutor);
             return _agents[key];
-        }
-
-
-        public IAgent GetAgent(IAgentKey key)
-        {
-            if (!_agents.ContainsKey(key)) return null; 
-            else return _agents[key];
         }
 
         public void Clear() => _agents.Clear();

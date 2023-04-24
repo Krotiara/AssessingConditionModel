@@ -7,10 +7,14 @@ using System.Threading.Tasks;
 
 namespace Agents.API.Entities.Requests
 {
-    public class PatientRequest
+    public class PredictionRequest
     {
         public string Id { get; set; }
 
-        public PredictionModel Model { get; set; }
+        public string Affiliation { get; set; }
+
+        public List<PredictionSettings> Settings { get; set; }
+
+
     }
 }

@@ -16,5 +16,9 @@ namespace Agents.API.Service.Store
         {
             _settings = new ConcurrentDictionary<string, PredictionModel>();
         }
+
+        public void Insert(PredictionModel predictionModel) => _settings[predictionModel.Organization] = predictionModel;
+
+        public PredictionModel? Get(string organization) => _settings.GetValueOrDefault(organization);
     }
 }

@@ -19,11 +19,7 @@ namespace Agents.API.Service.Services
             _agentsStore = agentsStore;
         }
 
-        
-        //TODO - на будущее - инициализация по кастомным агентам.
-        public IAgent InitAgentBy(IAgentKey key, IAgentsSettings settings)
-        {
-            return _agentsStore.InitAgent(key, settings);
-        }
+
+        public IAgent GetAgent(IAgentKey key, IAgentsSettings settings) => _agentsStore.GetAgent(key, settings);
     }
 }

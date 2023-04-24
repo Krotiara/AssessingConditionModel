@@ -10,6 +10,6 @@ namespace Agents.API.Interfaces
 {
     public interface IAgentsService
     {
-        public IAgent InitAgentBy(IAgentKey key, IAgentsSettings settings);
+        public IAgent GetAgent(IAgentKey key, IAgentsSettings settings);
     }
 }

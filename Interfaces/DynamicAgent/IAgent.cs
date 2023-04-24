@@ -25,7 +25,7 @@ namespace Interfaces.DynamicAgent
 
         public Task UpdateState();
 
-        public void UpdateVariables(List<IProperty> vars);
+        public void UpdateVariables(IEnumerable<IProperty> vars);
 
         public T GetPropertyValue<T>(string propertyName);
     }

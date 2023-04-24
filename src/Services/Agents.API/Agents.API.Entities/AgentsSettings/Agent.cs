@@ -63,7 +63,7 @@ namespace Agents.API.Entities.AgentsSettings
         }
 
 
-        public void UpdateVariables(List<IProperty> vars)
+        public void UpdateVariables(IEnumerable<IProperty> vars)
         {
             foreach (IProperty p in vars)
                 Variables[p.Name] = p;

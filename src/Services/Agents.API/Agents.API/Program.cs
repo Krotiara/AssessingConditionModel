@@ -14,6 +14,7 @@ using Interfaces.DynamicAgent;
 using Agents.API.Service.Command;
 using Agents.API;
 using Agents.API.Entities.AgentsSettings;
+using Agents.API.Service.Store;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -91,6 +92,9 @@ builder.Services
     .AddTransient<IRequestHandler<ConvertArgsCommand, object[]>, ConvertArgsCommandHandler>()
     .AddTransient<IMetaStorageService, InternalMetaStorageService>()
     .AddTransient<ICodeResolveService, CodeResolveService>();
+
+builder.Services.AddSingleton<SettingsStore>();
+builder.Services.AddSingleton<SettingsService>();
 
 var app = builder.Build();
 
