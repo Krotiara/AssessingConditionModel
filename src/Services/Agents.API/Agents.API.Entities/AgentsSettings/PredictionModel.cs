@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,7 +11,7 @@ namespace Agents.API.Entities.AgentsSettings
     {
         public PredictionModel() { }
 
-        public string Organization { get; set; } = "";
+        public string Organization { get; set; }
 
         public AgentsSettings Settings { get; set; }
     }
