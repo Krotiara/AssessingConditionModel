@@ -6,6 +6,7 @@ using Interfaces;
 using Interfaces.DynamicAgent;
 using MediatR;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -24,7 +25,8 @@ namespace Agents.API.Service.Services
             this._commandActionsProvider = commandActionsProvider;
         }
 
-        public async Task<Dictionary<string, IProperty>> ExecuteCode(string codeLines, CancellationToken cancellationToken = default)
+        public Task<Dictionary<string, IProperty>> ExecuteCode(string codeLines,
+            ConcurrentDictionary<string, IProperty> variables, CancellationToken cancellationToken = default)
         {
             //TODO нужно возвращать не весь словарь, а только те значения, которые относятся к параметрам агентов.
             List<string> lines = codeLines.Split("\n").ToList();

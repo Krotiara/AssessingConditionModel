@@ -1,6 +1,6 @@
 ﻿using Agents.API.Data.Repository;
 using Agents.API.Entities;
-using Agents.API.Entities.DynamicAgent;
+using Agents.API.Entities.AgentsSettings;
 using Interfaces;
 using Interfaces.DynamicAgent;
 using MediatR;

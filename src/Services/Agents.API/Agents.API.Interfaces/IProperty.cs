@@ -6,10 +6,12 @@ using System.Threading.Tasks;
 
 namespace Agents.API.Interfaces
 {
-    public interface IAgentDetermineStateProperties
+    public interface IProperty
     {
-        public DateTime Timestamp { get; set; }
+        public string Name { get; set; }
 
-        public bool IsNeedRecalculation { get; set; }
+        public Type Type { get; set; }
+
+        public object Value { get; set; }
     }
 }
