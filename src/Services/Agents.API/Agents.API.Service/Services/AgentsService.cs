@@ -1,4 +1,5 @@
 ﻿using Agents.API.Data.Store;
+using Agents.API.Entities.AgentsSettings;
 using Agents.API.Interfaces;
 using Interfaces;
 using Interfaces.DynamicAgent;
@@ -10,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Agents.API.Service.Services
 {
-    public class AgentsService : IAgentsService
+    public class AgentsService
     {
         private readonly IAgentsStore _agentsStore;
 
@@ -20,6 +21,6 @@ namespace Agents.API.Service.Services
         }
 
 
-        public IAgent GetAgent(IAgentKey key, IAgentsSettings settings) => _agentsStore.GetAgent(key, settings);
+        public IAgent GetAgent(IAgentKey key, AgentsSettings settings) => _agentsStore.GetAgent(key, settings);
     }
 }

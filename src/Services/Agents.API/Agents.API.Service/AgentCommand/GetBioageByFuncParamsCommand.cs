@@ -16,11 +16,12 @@ namespace Agents.API.Service.AgentCommand
 
         private readonly ModelKey _modelKey;
 
-        public GetBioageByFuncParamsCommand(IWebRequester webRequester, IOptions<EnvSettings> settings)
+        public GetBioageByFuncParamsCommand(IWebRequester webRequester, 
+            IOptions<EnvSettings> settings, IOptions<TempModelSettings> modelSets)
         {
             _webRequester = webRequester;
             _modelsServerUrl = settings.Value.ModelsApiUrl;
-            _modelKey = settings.Value.TempModelSettings.BioAge;
+            _modelKey = modelSets.Value.BioAge;
         }
 
         public Delegate Command => async (Dictionary<ParameterNames, PatientParameter> pDict) =>

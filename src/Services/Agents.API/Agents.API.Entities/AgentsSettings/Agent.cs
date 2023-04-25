@@ -30,7 +30,7 @@ namespace Agents.API.Entities.AgentsSettings
 
         public ConcurrentDictionary<string, IAgentState> States { get;}
 
-        public Agent(IAgentKey key, IAgentsSettings settings, ICodeExecutor codeExecutor)
+        public Agent(IAgentKey key, AgentsSettings settings, ICodeExecutor codeExecutor)
         {
             _codeExecutor = codeExecutor;
             _stateResolveCode = settings.StateResolveCode;
@@ -48,7 +48,7 @@ namespace Agents.API.Entities.AgentsSettings
         {
             try
             {
-                ConcurrentDictionary<string, IProperty> calculatedArgs = await _codeExecutor.ExecuteCode(_stateResolveCode, Variables);
+                ConcurrentDictionary<string, IProperty> calculatedArgs = await _codeExecutor.ExecuteCode(_stateResolveCode, Variables, Properties);
                 string state = await UpdateStateBy(calculatedArgs);
                 CurrentState = States[state];
                 //TODO - set numeric characteristic. - сделать через указываемый через фронт параметр.
@@ -90,7 +90,7 @@ namespace Agents.API.Entities.AgentsSettings
         }
 
 
-        private void InitDicts(IAgentsSettings settings)
+        private void InitDicts(AgentsSettings settings)
         {
             foreach (IProperty p in settings.StateProperties)
                 Properties[p.Name] = p;
@@ -107,7 +107,7 @@ namespace Agents.API.Entities.AgentsSettings
             foreach(IAgentState state in States.Values)
             {
                 string ifCondition = $"{stateVar}={state.DefinitionCode}";
-                var args = await _codeExecutor.ExecuteCode(ifCondition, Variables);
+                var args = await _codeExecutor.ExecuteCode(ifCondition, Variables, Properties);
                 if ((bool)args[stateVar].Value)
                     return state.Name;
             }

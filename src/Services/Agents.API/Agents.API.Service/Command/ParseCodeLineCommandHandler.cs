@@ -19,10 +19,15 @@ namespace Agents.API.Service.Command
 
         public ConcurrentDictionary<string, IProperty> LocalVariables { get; }
 
-        public ParseCodeLineCommand(string codeLine, ConcurrentDictionary<string, IProperty> localVariables)
+        public ConcurrentDictionary<string, IProperty> LocalProperties { get; }
+
+        public ParseCodeLineCommand(string codeLine, 
+            ConcurrentDictionary<string, IProperty> localVariables, 
+            ConcurrentDictionary<string, IProperty> localProperties)
         {
             CodeLine = codeLine;
             LocalVariables = localVariables;
+            LocalProperties = localProperties;
         }
     }
 
@@ -34,10 +39,10 @@ namespace Agents.API.Service.Command
             if (isAssigning)
             {
                 string param = request.CodeLine.Split('=').First().Trim();
-                return new ExecutableCommand(request.CodeLine, CommandType.Assigning, request.LocalVariables, param);
+                return new ExecutableCommand(request.CodeLine, CommandType.Assigning, request.LocalVariables, request.LocalProperties, param);
             }
             else
-                return new ExecutableCommand(request.CodeLine, CommandType.VoidCall, request.LocalVariables);
+                return new ExecutableCommand(request.CodeLine, CommandType.VoidCall, request.LocalVariables, request.LocalProperties);
         }
     }
 }

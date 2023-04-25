@@ -19,7 +19,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 
 // Add services to the container.
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllers().AddNewtonsoftJson();
 
 //builder.Services.AddHttpsRedirection(options =>
 //{
@@ -47,7 +47,6 @@ builder.Services.AddSwaggerGen(c =>
 builder.Services.Configure<TempModelSettings>(builder.Configuration.GetSection("Models"));
 builder.Services.Configure<EnvSettings>(builder.Configuration.GetSection("EnvSettings"));
 CommandsDependensyRegistrator.RegisterDependencies(builder.Services);
-
 /*Теперь вы можете выполнять ваши запросы. Для этого вам потребуется получить экземпляр интерфейса IMediator. Он регистрируется в вашем контейнере зависимостей той же командой AddMediatR.*/
 builder.Services.AddMediatR(Assembly.GetExecutingAssembly());
 
@@ -73,7 +72,7 @@ builder.Services
     .AddTransient<IWebRequester, HttpWebRequester>();
 builder.Services
     .AddTransient<IAgingDynamics<AgingState>, AgingDynamics>()
-    .AddSingleton<IAgentsService, AgentsService>();
+    .AddSingleton<AgentsService>();
 
 builder.Services
     .AddTransient<IRequestHandler<GetAgentStateQuery, IAgentState>, GetAgentStateQueryHandler>();
@@ -96,6 +95,7 @@ builder.Services.AddSingleton<SettingsStore>();
 builder.Services.AddSingleton<SettingsService>();
 
 var app = builder.Build();
+
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

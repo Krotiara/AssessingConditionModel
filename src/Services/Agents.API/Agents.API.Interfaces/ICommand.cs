@@ -25,5 +25,7 @@ namespace Agents.API.Interfaces
         CommandType CommandType { get; }
 
         public ConcurrentDictionary<string, IProperty> LocalVariables { get; }
+
+        public ConcurrentDictionary<string, IProperty> LocalProperties { get; }
     }
 }

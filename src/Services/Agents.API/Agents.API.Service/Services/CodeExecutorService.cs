@@ -27,19 +27,25 @@ namespace Agents.API.Service.Services
 
         //TODO прокинуть vars через ref? А если нужно будет сохранить vars исходным?
         public async Task<ConcurrentDictionary<string, IProperty>> ExecuteCode(string codeLines,
-            ConcurrentDictionary<string, IProperty> variables, CancellationToken cancellationToken = default)
+            ConcurrentDictionary<string, IProperty> variables, 
+            ConcurrentDictionary<string, IProperty> properties, 
+            CancellationToken cancellationToken = default)
         {
             List<string> lines = codeLines
                 .Split("\r\n")
                 .Select(x=>x.Replace(";",""))
                 .ToList();
-            ConcurrentDictionary<string, IProperty> localVars = new ConcurrentDictionary<string, IProperty>();
+            ConcurrentDictionary<string, IProperty> localVars = new();
             foreach (var pair in variables)
                 localVars[pair.Key] = pair.Value;
 
+            ConcurrentDictionary<string, IProperty> localProperties = new();
+            foreach(var pair in properties)
+                localProperties[pair.Key] = pair.Value;
+
             foreach (string codeLine in lines)
             {
-                ICommand command = await _mediator.Send(new ParseCodeLineCommand(codeLine, localVars), cancellationToken);
+                ICommand command = await _mediator.Send(new ParseCodeLineCommand(codeLine, localVars, localProperties), cancellationToken);
                 await _mediator.Send(new ExecuteCodeLineCommand(command), cancellationToken);
             }
 

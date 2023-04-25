@@ -25,7 +25,7 @@ namespace Agents.API.Data.Store
         }
 
 
-        public IAgent GetAgent(IAgentKey key, IAgentsSettings settings)
+        public IAgent GetAgent(IAgentKey key, AgentsSettings settings)
         {
             if (!_agents.ContainsKey(key))
                 _agents[key] = new Agent(key, settings, _codeExecutor);
