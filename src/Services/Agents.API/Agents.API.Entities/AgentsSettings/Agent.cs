@@ -30,6 +30,8 @@ namespace Agents.API.Entities.AgentsSettings
 
         public ConcurrentDictionary<string, IAgentState> States { get;}
 
+        private readonly ConcurrentDictionary<string, IProperty> _commonProperties;
+
         public Agent(IAgentKey key, AgentsSettings settings, ICodeExecutor codeExecutor)
         {
             _codeExecutor = codeExecutor;
@@ -40,7 +42,9 @@ namespace Agents.API.Entities.AgentsSettings
             Properties = new();
             Variables = new();
             States = new();
+            _commonProperties = new();
             InitDicts(settings);
+            InitCommonProperties(key);
         }
 
 
@@ -48,7 +52,7 @@ namespace Agents.API.Entities.AgentsSettings
         {
             try
             {
-                ConcurrentDictionary<string, IProperty> calculatedArgs = await _codeExecutor.ExecuteCode(_stateResolveCode, Variables, Properties);
+                ConcurrentDictionary<string, IProperty> calculatedArgs = await _codeExecutor.ExecuteCode(_stateResolveCode, Variables, _commonProperties);
                 string state = await UpdateStateBy(calculatedArgs);
                 CurrentState = States[state];
                 //TODO - set numeric characteristic. - сделать через указываемый через фронт параметр.
@@ -101,13 +105,23 @@ namespace Agents.API.Entities.AgentsSettings
         }
 
 
+        private void InitCommonProperties(IAgentKey key)
+        {
+            _commonProperties[CommonProperties.Id.ToString()] = 
+                new Property() { Name = CommonProperties.Id.ToString(), Type = typeof(string), Value = key.ObservedId };
+            _commonProperties[CommonProperties.Organization.ToString()] =
+                new Property() { Name = CommonProperties.Organization.ToString(), Type = typeof(string), Value = key.ObservedObjectAffilation};
+
+        }
+
+
         private async Task<string> UpdateStateBy(ConcurrentDictionary<string, IProperty> calcArgs)
         {
             string stateVar = "isState";
             foreach(IAgentState state in States.Values)
             {
                 string ifCondition = $"{stateVar}={state.DefinitionCode}";
-                var args = await _codeExecutor.ExecuteCode(ifCondition, Variables, Properties);
+                var args = await _codeExecutor.ExecuteCode(ifCondition, Variables, _commonProperties);
                 if ((bool)args[stateVar].Value)
                     return state.Name;
             }

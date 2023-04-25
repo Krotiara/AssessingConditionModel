@@ -1,4 +1,5 @@
 ﻿using Agents.API.Entities;
+using Agents.API.Entities.AgentsSettings;
 using Agents.API.Interfaces;
 using Agents.API.Service.AgentCommand;
 using Agents.API.Service.Command;
@@ -27,8 +28,8 @@ namespace Agents.API.Service.Services
 
         //TODO прокинуть vars через ref? А если нужно будет сохранить vars исходным?
         public async Task<ConcurrentDictionary<string, IProperty>> ExecuteCode(string codeLines,
-            ConcurrentDictionary<string, IProperty> variables, 
-            ConcurrentDictionary<string, IProperty> properties, 
+            ConcurrentDictionary<string, IProperty> variables,
+            ConcurrentDictionary<string, IProperty> properties,
             CancellationToken cancellationToken = default)
         {
             List<string> lines = codeLines
@@ -40,7 +41,7 @@ namespace Agents.API.Service.Services
                 localVars[pair.Key] = pair.Value;
 
             ConcurrentDictionary<string, IProperty> localProperties = new();
-            foreach(var pair in properties)
+            foreach (var pair in properties)
                 localProperties[pair.Key] = pair.Value;
 
             foreach (string codeLine in lines)

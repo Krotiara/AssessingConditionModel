@@ -8,12 +8,10 @@ using System.Threading.Tasks;
 namespace Interfaces
 {
 
-    public enum CommonArgs
+    public enum CommonProperties
     {
-        ObservedId,
-        MedicalOrganization,
-        StartTimestamp,
-        EndTimestamp
+        Id = 0,
+        Organization = 1
     }
 
     public enum AgentType

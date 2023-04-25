@@ -3,6 +3,7 @@ using Agents.API.Entities.AgentsSettings;
 using Agents.API.Interfaces;
 using Agents.API.Service.Query;
 using Interfaces;
+using Interfaces.DynamicAgent;
 using MediatR;
 using Microsoft.CodeAnalysis.CSharp.Scripting;
 using Microsoft.CodeAnalysis.Scripting;
@@ -46,7 +47,7 @@ namespace Agents.API.Service.Command
             //Случай простых команд присвоения или расчета без вызова функции.
             if(request.Command.CommandType == CommandType.Assigning && !IsContainsCommandCall(request.Command.OriginCommand))
             {
-                ExecuteCommandWithoutCommandCall(request);
+                await ExecuteCommandWithoutCommandCall(request);
                 return await Unit.Task;
             }
 
@@ -99,7 +100,7 @@ namespace Agents.API.Service.Command
         }
 
 
-        private async void ExecuteCommandWithoutCommandCall(ExecuteCodeLineCommand request)
+        private async Task ExecuteCommandWithoutCommandCall(ExecuteCodeLineCommand request)
         {
             Regex varRegex = new(@"(?!"")[a-zA-Z]+(?!"")");
             IEnumerable<string> vars = varRegex.Matches(request.Command.OriginCommand
@@ -114,25 +115,28 @@ namespace Agents.API.Service.Command
 
             foreach (string var in vars)
             {
+                IDictionary<string, IProperty> source;
                 if (request.Command.LocalVariables.ContainsKey(var))
-                {
-                    if (outputType != null && request.Command.LocalVariables[var].Type != outputType)
-                        throw new ExecuteCodeLineException($"Несоответсвие типов переменных в выражении {request.Command.OriginCommand}"); //TODO - Тесты
-                    executableStr = executableStr.Replace(var, request.Command.LocalVariables[var].Value.ToString());
-                    outputType = request.Command.LocalVariables[var].Type;
-                }
+                    source = request.Command.LocalVariables;
+                else if (request.Command.LocalProperties.ContainsKey(var))
+                    source = request.Command.LocalProperties;
                 else
                     throw new ExecuteCodeLineException($"Передана переменная {var}, которой не присвоено значение.");
+                if (outputType != null && source[var].Type != outputType)
+                    throw new ExecuteCodeLineException($"Несоответсвие типов переменных в выражении {request.Command.OriginCommand}"); //TODO - Тесты
+
+                executableStr = executableStr.Replace(var, source[var].Value.ToString());
+                outputType = source[var].Type;      
             }
 
             var scriptState = await CSharpScript.RunAsync(executableStr); //TODO - Тесты
+            var varsSource = request.Command.LocalVariables;
             if (scriptState.ReturnValue != null && !string.IsNullOrEmpty(scriptState.ReturnValue.ToString()))
             {
-                if (request.Command.LocalVariables.ContainsKey(request.Command.AssigningParameter))
-                    request.Command.LocalVariables[request.Command.AssigningParameter].Value = scriptState.ReturnValue;
+                if (varsSource.ContainsKey(request.Command.AssigningParameter))
+                    varsSource[request.Command.AssigningParameter].Value = scriptState.ReturnValue;
                 else
-                    request.Command.LocalVariables[request.Command.AssigningParameter] = 
-                        new Property()
+                    varsSource[request.Command.AssigningParameter] = new Property()
                         {
                             Type = outputType,
                             Name = request.Command.AssigningParameter,
