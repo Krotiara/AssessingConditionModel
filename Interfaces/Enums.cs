@@ -7,13 +7,6 @@ using System.Threading.Tasks;
 
 namespace Interfaces
 {
-
-    public enum CommonProperties
-    {
-        Id = 0,
-        Organization = 1
-    }
-
     public enum AgentType
     {
         Custom,

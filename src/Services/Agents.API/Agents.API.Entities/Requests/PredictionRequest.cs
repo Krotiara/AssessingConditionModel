@@ -14,8 +14,6 @@ namespace Agents.API.Entities.Requests
 
         public string Affiliation { get; set; }
 
-        public Dictionary<CommonProperties, Property> CommonProperties { get; set; }
-
         public List<PredictionSettings> Settings { get; set; }
     }
 }

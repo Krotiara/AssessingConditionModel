@@ -28,6 +28,8 @@ namespace Agents.API.Entities.AgentsSettings
         public string StateResolveCode { get; set; }
 
         public List<AgentState> States { get; set; }
+
+        public AgentPropertiesNamesSettings CommonNamesSettings { get; set; }
     }
 }
 

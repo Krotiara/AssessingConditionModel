@@ -32,6 +32,8 @@ namespace Agents.API.Entities.AgentsSettings
 
         private readonly ConcurrentDictionary<string, IProperty> _commonProperties;
 
+        private readonly string _stateNumberArg;
+
         public Agent(IAgentKey key, AgentsSettings settings, ICodeExecutor codeExecutor)
         {
             _codeExecutor = codeExecutor;
@@ -43,8 +45,9 @@ namespace Agents.API.Entities.AgentsSettings
             Variables = new();
             States = new();
             _commonProperties = new();
+            _stateNumberArg = settings.CommonNamesSettings.StateNumber;
             InitDicts(settings);
-            InitCommonProperties(key);
+            InitCommonProperties(key, settings.CommonNamesSettings);
         }
 
 
@@ -105,20 +108,18 @@ namespace Agents.API.Entities.AgentsSettings
         }
 
 
-        private void InitCommonProperties(IAgentKey key)
+        private void InitCommonProperties(IAgentKey key, AgentPropertiesNamesSettings settings)
         {
-            _commonProperties[CommonProperties.Id.ToString()] = 
-                new Property() { Name = CommonProperties.Id.ToString(), Type = typeof(string), Value = key.ObservedId };
-            _commonProperties[CommonProperties.Organization.ToString()] =
-                new Property() { Name = CommonProperties.Organization.ToString(), Type = typeof(string), Value = key.ObservedObjectAffilation};
-
+            _commonProperties[settings.Id] = 
+                new Property() { Name = settings.Id, Type = typeof(string), Value = key.ObservedId };
+            _commonProperties[settings.Affiliation] =
+                new Property() { Name = settings.Affiliation, Type = typeof(string), Value = key.ObservedObjectAffilation};
         }
 
 
         private async Task<string> UpdateStateBy(ConcurrentDictionary<string, IProperty> calcArgs)
         {
             string stateVar = "isState";
-            string stateNumberVar = "stateNumber";
             foreach(IAgentState state in States.Values)
             {
                 string ifCondition = $"{stateVar}={state.DefinitionCode}";
@@ -126,8 +127,8 @@ namespace Agents.API.Entities.AgentsSettings
                 if ((bool)args[stateVar].Value)
                 {
                     //TODO обработка ошибки, если stateNumberVar не число.
-                    if (calcArgs.ContainsKey(stateNumberVar))
-                        state.NumericCharacteristic = Convert.ToDouble(calcArgs[stateNumberVar].Value);
+                    if (calcArgs.ContainsKey(_stateNumberArg))
+                        state.NumericCharacteristic = Convert.ToDouble(calcArgs[_stateNumberArg].Value);
                     return state.Name;
                 }
             }
