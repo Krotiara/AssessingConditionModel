@@ -118,12 +118,18 @@ namespace Agents.API.Entities.AgentsSettings
         private async Task<string> UpdateStateBy(ConcurrentDictionary<string, IProperty> calcArgs)
         {
             string stateVar = "isState";
+            string stateNumberVar = "stateNumber";
             foreach(IAgentState state in States.Values)
             {
                 string ifCondition = $"{stateVar}={state.DefinitionCode}";
                 var args = await _codeExecutor.ExecuteCode(ifCondition, calcArgs, _commonProperties);
                 if ((bool)args[stateVar].Value)
+                {
+                    //TODO обработка ошибки, если stateNumberVar не число.
+                    if (calcArgs.ContainsKey(stateNumberVar))
+                        state.NumericCharacteristic = Convert.ToDouble(calcArgs[stateNumberVar].Value);
                     return state.Name;
+                }
             }
             throw new DetermineStateException($"Cannot define state by states conditions");
         }
