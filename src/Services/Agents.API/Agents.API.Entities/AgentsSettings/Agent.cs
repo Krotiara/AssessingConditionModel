@@ -121,7 +121,7 @@ namespace Agents.API.Entities.AgentsSettings
             foreach(IAgentState state in States.Values)
             {
                 string ifCondition = $"{stateVar}={state.DefinitionCode}";
-                var args = await _codeExecutor.ExecuteCode(ifCondition, Variables, _commonProperties);
+                var args = await _codeExecutor.ExecuteCode(ifCondition, calcArgs, _commonProperties);
                 if ((bool)args[stateVar].Value)
                     return state.Name;
             }

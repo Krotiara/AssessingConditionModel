@@ -42,7 +42,7 @@ namespace Agents.API.Service.AgentCommand
 
             IPredictRequest request = new PredictRequest() { Id = _modelKey.Id, Version = _modelKey.Version, Input = inputArgs };
             string requestBody = Newtonsoft.Json.JsonConvert.SerializeObject(request);
-            string url = $"{_modelsServerUrl}/models/predict/";
+            string url = $"{_modelsServerUrl}/models/predict";
 
             var responce = await _webRequester.SendRequest(url, "POST", requestBody);
             if (!responce.IsSuccessStatusCode)

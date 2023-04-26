@@ -102,14 +102,12 @@ namespace Agents.API.Service.Command
 
         private async Task ExecuteCommandWithoutCommandCall(ExecuteCodeLineCommand request)
         {
+            int index = request.Command.OriginCommand.IndexOf("=");
+            string executableStr = request.Command.OriginCommand.Substring(index + 1);
             Regex varRegex = new(@"(?!"")[a-zA-Z]+(?!"")");
-            IEnumerable<string> vars = varRegex.Matches(request.Command.OriginCommand
-                .Split("=").Last()
-                .Trim())
+            IEnumerable<string> vars = varRegex.Matches(executableStr)
                 .Select(x => x.Value.Trim())
                 .OrderByDescending(x => x.Length); //Сортировка дял последующей замены от наибольших по длине переменных до наименьших.
-
-            string executableStr = request.Command.OriginCommand.Split("=").Last();
 
             Type? outputType = null;
 
