@@ -1,5 +1,6 @@
 ﻿using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Interfaces.Service
@@ -20,7 +21,7 @@ namespace Interfaces.Service
         public async Task Insert(IEnumerable<Parameter> parameters)
         {
             if (!isInit)
-                await InitDict();
+                await Init();
 
             foreach (var param in parameters)
                 if (!_currentParams.ContainsKey(param.Name))
@@ -31,7 +32,7 @@ namespace Interfaces.Service
         }
 
 
-        private async Task InitDict()
+        public async Task Init()
         {
             var ps = await _paramsStore.All();
             foreach (var p in ps)
@@ -40,10 +41,27 @@ namespace Interfaces.Service
         }
 
 
+        public async Task<Parameter> Get(string name)
+        {
+            if (!isInit)
+                await Init();
+
+            return _currentParams.GetValueOrDefault(name);
+        }
+
+        public async Task<Parameter> GetByDescription(string description)
+        {
+            if (!isInit)
+                await Init();
+
+            return _currentParams.Values.FirstOrDefault(x => x.Description == description);
+        }
+
+
         public async Task<IEnumerable<Parameter>> GetAll()
         {
             if (!isInit)
-                await InitDict();
+                await Init();
             return _currentParams.Values;
         }
     }
