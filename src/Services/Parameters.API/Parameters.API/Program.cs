@@ -1,4 +1,5 @@
 using Parameters.API;
+using Parameters.API.Services;
 using Parameters.API.Services.Store;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,9 +14,12 @@ services.AddSwaggerGen(c =>
     c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo() { });
 });
 
-//store
+//stores
 services.AddMongoService(builder.Configuration);
 services.AddSingleton<ParametersStore>();
+
+//services
+services.AddSingleton<ParametersService>();
 
 var app = builder.Build();
 
