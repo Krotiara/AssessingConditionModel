@@ -58,11 +58,8 @@ namespace PatientDataHandler.API.Service.Services
 #warning Узкое место в названии препарата.
             int groupIndex = headers.IndexOf("группа");
 
-            IList<ParameterNames> headerParamsNames = headers
-                .Select(x => x.GetParameterByDescription())
-                .ToList();
-
-            int parameterTimestampIndex = headerParamsNames.IndexOf(ParameterNames.ParameterTimestamp);
+            //TODO вынести в settings и в парсинг данных добавить сопоставление описания и имени параметра.
+            int parameterTimestampIndex = headers.IndexOf("дата внесения");
 
             for (int rowNum = 0; rowNum < data.Count; rowNum++) //select starting row here
             {
@@ -121,7 +118,6 @@ namespace PatientDataHandler.API.Service.Services
                                 {
                                     Timestamp = parameterTimestamp,
                                     PatientId = id,
-                                    PositiveDynamicCoef = 1, //TODO нужно указывать во входных данных.
                                     IsDynamic = isDynamicRows,
                                     Value = row[j]
                                 };

@@ -37,9 +37,9 @@ namespace PatientDataHandler.API.Service.Command
                 inf.MedicalOrganization = fileData.MedicalOrganization;
                 inf.Patient.MedicalOrganization = fileData.MedicalOrganization;
                 foreach (var p in inf.StartParameters)
-                    p.Value.MedicalOrganization = fileData.MedicalOrganization;
+                    p.Value.PatientAffiliation = fileData.MedicalOrganization;
                 foreach (var p in inf.DynamicParameters)
-                    p.Value.MedicalOrganization = fileData.MedicalOrganization;
+                    p.Value.PatientAffiliation = fileData.MedicalOrganization;
             }
 
             patientsDataSender.SendPatientsData(patientDatas);

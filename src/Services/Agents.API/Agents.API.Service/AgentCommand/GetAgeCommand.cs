@@ -8,9 +8,10 @@ using System.Threading.Tasks;
 
 namespace Agents.API.Service.AgentCommand
 {
+    //TODO преобразовать в получение по дате рождения и переданному времени.
     public class GetAgeCommand : IAgentCommand
     {
-        public Delegate Command => async (Dictionary<ParameterNames, PatientParameter> parameters) =>
+        public Delegate Command => async (Dictionary<string, PatientParameter> parameters) =>
         {
             if (!parameters.ContainsKey(ParameterNames.Age))
                 throw new NotImplementedException(); //TODO - обработка такого случая.
