@@ -2,6 +2,7 @@
 using Interfaces;
 using Interfaces.DynamicAgent;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,23 +12,25 @@ namespace Agents.API.Entities
 {
     public class ExecutableCommand : ICommand
     {
-        public ExecutableCommand(string originCommand, CommandType commandType, Dictionary<string, IProperty> localVariables, string assigningParamOriginalName = null, ParameterNames assigningParameter = ParameterNames.None)
+        public ExecutableCommand(string originCommand, CommandType commandType, 
+            ConcurrentDictionary<string, IProperty> localVariables, 
+            ConcurrentDictionary<string, IProperty> localProperties, string assigningParamOriginalName = null)
         {
             OriginCommand = originCommand;
             CommandType = commandType;
-            AssigningParameter = assigningParameter;
-            AssigningParamOriginalName = assigningParamOriginalName;
+            AssigningParameter = assigningParamOriginalName;
             LocalVariables = localVariables;
+            LocalProperties = localProperties;
         }
 
         public string OriginCommand { get; }
 
         public CommandType CommandType { get; }
 
-        public ParameterNames AssigningParameter { get; }
+        public string AssigningParameter { get; }
 
-        public string AssigningParamOriginalName { get; }
+        public ConcurrentDictionary<string, IProperty> LocalVariables { get; }
 
-        public Dictionary<string, IProperty> LocalVariables { get; }
+        public ConcurrentDictionary<string, IProperty> LocalProperties { get; }
     }
 }

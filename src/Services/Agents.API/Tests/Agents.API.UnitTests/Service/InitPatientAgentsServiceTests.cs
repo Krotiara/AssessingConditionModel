@@ -1,6 +1,5 @@
-﻿using Agents.API.Data.Repository;
+﻿using Agents.API.Data.Store;
 using Agents.API.Entities;
-using Agents.API.Entities.DynamicAgent;
 using Agents.API.Interfaces;
 using Agents.API.Service.Services;
 using Interfaces;
@@ -22,7 +21,6 @@ namespace Agents.API.UnitTests.Service
     {       
         CancellationToken token;
         IWebRequester webRequester;
-        Mock<IAgentInitSettingsProvider> agentInitSettingsProvider;
 
         public InitPatientAgentsServiceTests()
         {         
@@ -30,39 +28,6 @@ namespace Agents.API.UnitTests.Service
             token = tokenSource.Token;
             var webRequesterMock = new Mock<IWebRequester>();        
             webRequester = webRequesterMock.Object;
-            agentInitSettingsProvider = new Mock<IAgentInitSettingsProvider>();
-            agentInitSettingsProvider.Setup(x => x.GetSettingsBy(It.IsAny<AgentType>())).Returns(() => GetTestSettings());
-        }
-
-
-        private IDynamicAgentInitSettings GetTestSettings()
-        {
-            ConcurrentDictionary<string, IAgentState> states = new();
-            states["Test1"] = new AgentState("Test1");
-            states["Test2"] = new AgentState("Test2");
-          
-            var sets = new DynamicAgentInitSettings(
-                        $"CurrentTest1 = 1\n" +
-                        $"CurrentTest2 = 2\n", AgentType.AgingPatient)
-            {
-                ActionsArgsReplaceDict = new Dictionary<CommonArgs, object>
-                        {
-                            { CommonArgs.StartDateTime, null },
-                            { CommonArgs.EndDateTime, null },
-                            { CommonArgs.ObservedId, null }
-                        },
-                Properties = new Dictionary<string, IProperty>
-                        {
-                            { "CurrentTest1", new AgentProperty("CurrentTest1", typeof(double)) },
-                            { "CurrentTest2", new AgentProperty("CurrentTest2", typeof(double)) }
-                        },
-                StateDiagram = new StateDiagram(states, async x =>
-                {
-                    return states["Test1"];
-                })
-            };
-            return sets;
-            
         }
 
 

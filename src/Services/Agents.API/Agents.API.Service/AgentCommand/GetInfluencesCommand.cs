@@ -21,11 +21,12 @@ namespace Agents.API.Service.AgentCommand
             _patientsResolverApiUrl = settings.Value.PatientsResolverApiUrl;
         }
 
-        public Delegate Command => async (DateTime startTimestamp, DateTime endTimestamp, int patientId, string medOrganization) =>
+        public Delegate Command => async (DateTime startTimestamp, DateTime endTimestamp, string patientId, string medOrganization) =>
         {
+#warning patientId нужно полность преобразовать в string на бэкэ
             PatientInfluencesRequest request = new()
             {
-                PatientId = patientId,
+                PatientId = int.Parse(patientId),
                 MedicalOrganization = medOrganization,
                 StartTimestamp = startTimestamp,
                 EndTimestamp = endTimestamp

@@ -8,18 +8,18 @@ using Microsoft.EntityFrameworkCore;
 using Agents.API.Service.Services;
 using Agents.API.Messaging.Receive.Configs;
 using Agents.API.Service.Query;
-using Agents.API.Data.Repository;
+using Agents.API.Data.Store;
 using Agents.API.Interfaces;
 using Interfaces.DynamicAgent;
 using Agents.API.Service.Command;
-using Agents.API.Entities.DynamicAgent;
 using Agents.API;
+using Agents.API.Entities.AgentsSettings;
 
 var builder = WebApplication.CreateBuilder(args);
 
 
 // Add services to the container.
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllers().AddNewtonsoftJson();
 
 //builder.Services.AddHttpsRedirection(options =>
 //{
@@ -47,7 +47,6 @@ builder.Services.AddSwaggerGen(c =>
 builder.Services.Configure<TempModelSettings>(builder.Configuration.GetSection("Models"));
 builder.Services.Configure<EnvSettings>(builder.Configuration.GetSection("EnvSettings"));
 CommandsDependensyRegistrator.RegisterDependencies(builder.Services);
-
 /*Теперь вы можете выполнять ваши запросы. Для этого вам потребуется получить экземпляр интерфейса IMediator. Он регистрируется в вашем контейнере зависимостей той же командой AddMediatR.*/
 builder.Services.AddMediatR(Assembly.GetExecutingAssembly());
 
@@ -73,16 +72,15 @@ builder.Services
     .AddTransient<IWebRequester, HttpWebRequester>();
 builder.Services
     .AddTransient<IAgingDynamics<AgingState>, AgingDynamics>()
-    .AddSingleton<IAgentInitSettingsProvider, AgentInitSettingsProvider>()
-    .AddSingleton<IAgentsService, AgentsService>();
+    .AddSingleton<AgentsService>();
 
 builder.Services
     .AddTransient<IRequestHandler<GetAgentStateQuery, IAgentState>, GetAgentStateQueryHandler>();
 
-builder.Services.AddSingleton<IDynamicAgentsRepository, DynamicAgentsRepository>();
+builder.Services.AddSingleton<IAgentsStore, AgentsStore>();
 
-builder.Services.AddTransient<IProperty, AgentProperty>();
-builder.Services.AddTransient<IExecutableAgentCodeSettings, ExecutableAgentCodeSettings>();
+builder.Services.AddTransient<IProperty, Property>();
+builder.Services.AddTransient<IAgentState, AgentState>();
 builder.Services
     .AddTransient<IRequestHandler<GetCommandTypesMetaQueue, ICommandArgsTypesMeta>, GetCommandTypesMetaQueueHandler>()
     .AddTransient<IRequestHandler<GetCommandArgsValuesQueue, List<object>>, GetCommandArgsValuesQueueHandler>()
@@ -93,7 +91,11 @@ builder.Services
     .AddTransient<IMetaStorageService, InternalMetaStorageService>()
     .AddTransient<ICodeResolveService, CodeResolveService>();
 
+builder.Services.AddSingleton<SettingsStore>();
+builder.Services.AddSingleton<SettingsService>();
+
 var app = builder.Build();
+
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

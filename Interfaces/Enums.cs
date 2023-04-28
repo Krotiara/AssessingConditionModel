@@ -7,15 +7,6 @@ using System.Threading.Tasks;
 
 namespace Interfaces
 {
-
-    public enum CommonArgs
-    {
-        ObservedId,
-        MedicalOrganization,
-        StartDateTime,
-        EndDateTime
-    }
-
     public enum AgentType
     {
         Custom,

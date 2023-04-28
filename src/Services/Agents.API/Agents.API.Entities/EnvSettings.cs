@@ -4,9 +4,9 @@ namespace Agents.API.Entities
 {
     public class EnvSettings
     {
-        public EnvSettings(IOptions<TempModelSettings> opts)
+        public EnvSettings()
         {
-            TempModelSettings = opts.Value;
+            //TempModelSettings = opts.Value;
         }
 
 
@@ -14,6 +14,6 @@ namespace Agents.API.Entities
 
         public string PatientsResolverApiUrl { get; set; }
 
-        public TempModelSettings TempModelSettings { get; set; }
+        //public TempModelSettings TempModelSettings { get; set; }
     }
 }

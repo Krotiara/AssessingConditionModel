@@ -1,4 +1,4 @@
-﻿using Agents.API.Entities.DynamicAgent;
+﻿using Agents.API.Entities.AgentsSettings;
 using Interfaces;
 using Interfaces.Requests;
 using System;

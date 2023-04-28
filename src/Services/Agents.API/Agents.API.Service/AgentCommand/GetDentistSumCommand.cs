@@ -15,12 +15,14 @@ namespace Agents.API.Service.AgentCommand
         private readonly IWebRequester _webRequester;
         private readonly string _modelsServerUrl;
         private readonly EnvSettings _settings;
+        private readonly TempModelSettings _modelSets;
 
-        public GetDentistSumCommand(IWebRequester webRequester, IOptions<EnvSettings> settings)
+        public GetDentistSumCommand(IWebRequester webRequester, IOptions<EnvSettings> settings, IOptions<TempModelSettings> modelSets)
         {
             _webRequester = webRequester;
             _modelsServerUrl = settings.Value.ModelsApiUrl;
             _settings = settings.Value;
+            _modelSets = modelSets.Value;
         }
 
         public Delegate Command => async (Dictionary<ParameterNames, PatientParameter> pDict) =>
@@ -96,11 +98,11 @@ namespace Agents.API.Service.AgentCommand
         private ModelKey GetModelByAge(float age)
         {
             if (age >= 3 && age <= 5)
-                return _settings.TempModelSettings.Dentist_3_5;
+                return _modelSets.Dentist_3_5;
             if (age >= 6 && age <= 9)
-                return _settings.TempModelSettings.Dentist_6_9;
+                return _modelSets.Dentist_6_9;
             else if (age >= 9 && age <= 12)
-                return _settings.TempModelSettings.Dentist_10_12;
+                return _modelSets.Dentist_10_12;
             else return null;
         }
     }

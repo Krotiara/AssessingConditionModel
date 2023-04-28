@@ -5,11 +5,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Agents.API.Entities.DynamicAgent
+namespace Agents.API.Entities.AgentsSettings
 {
-    public class AgentKey: IAgentKey
+    public class AgentKey : IAgentKey
     {
-        public int ObservedId { get; set; }
+        public string ObservedId { get; set; }
 
         public string ObservedObjectAffilation { get; set; }
 
@@ -18,7 +18,7 @@ namespace Agents.API.Entities.DynamicAgent
             if (obj == null)
                 return false;
             AgentKey key = obj as AgentKey;
-            return ObservedId == key.ObservedId 
+            return ObservedId == key.ObservedId
                 && ObservedObjectAffilation == key.ObservedObjectAffilation;
         }
 

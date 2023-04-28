@@ -1,8 +1,9 @@
 ﻿using Agents.API.Entities;
-using Agents.API.Entities.DynamicAgent;
+using Agents.API.Entities.AgentsSettings;
 using Agents.API.Interfaces;
 using Agents.API.Service.Query;
 using Interfaces;
+using Interfaces.DynamicAgent;
 using MediatR;
 using Microsoft.CodeAnalysis.CSharp.Scripting;
 using Microsoft.CodeAnalysis.Scripting;
@@ -46,7 +47,7 @@ namespace Agents.API.Service.Command
             //Случай простых команд присвоения или расчета без вызова функции.
             if(request.Command.CommandType == CommandType.Assigning && !IsContainsCommandCall(request.Command.OriginCommand))
             {
-                ExecuteCommandWithoutCommandCall(request);
+                await ExecuteCommandWithoutCommandCall(request);
                 return await Unit.Task;
             }
 
@@ -71,12 +72,17 @@ namespace Agents.API.Service.Command
                     res = typeConverter.ConvertTo(res, commandPair.Item1.OutputArgType);
                 }
                
-                if (request.Command.LocalVariables.ContainsKey(request.Command.AssigningParamOriginalName))
-                    request.Command.LocalVariables[request.Command.AssigningParamOriginalName].Value = res;
+                if (request.Command.LocalVariables.ContainsKey(request.Command.AssigningParameter))
+                    request.Command.LocalVariables[request.Command.AssigningParameter].Value = res;
                 else
                 {
-                    request.Command.LocalVariables[request.Command.AssigningParamOriginalName] =
-                        new AgentProperty(commandPair.Item1.OutputArgType, res, request.Command.AssigningParamOriginalName, request.Command.AssigningParameter);
+                    request.Command.LocalVariables[request.Command.AssigningParameter] =
+                        new Property()
+                        {
+                            Name = request.Command.AssigningParameter,
+                            Type = commandPair.Item1.OutputArgType,
+                            Value = res
+                        };
                 }
             }
             else
@@ -94,40 +100,46 @@ namespace Agents.API.Service.Command
         }
 
 
-        private async void ExecuteCommandWithoutCommandCall(ExecuteCodeLineCommand request)
+        private async Task ExecuteCommandWithoutCommandCall(ExecuteCodeLineCommand request)
         {
+            int index = request.Command.OriginCommand.IndexOf("=");
+            string executableStr = request.Command.OriginCommand.Substring(index + 1);
             Regex varRegex = new(@"(?!"")[a-zA-Z]+(?!"")");
-            IEnumerable<string> vars = varRegex.Matches(request.Command.OriginCommand
-                .Split("=").Last()
-                .Trim())
+            IEnumerable<string> vars = varRegex.Matches(executableStr)
                 .Select(x => x.Value.Trim())
                 .OrderByDescending(x => x.Length); //Сортировка дял последующей замены от наибольших по длине переменных до наименьших.
-
-            string executableStr = request.Command.OriginCommand.Split("=").Last();
 
             Type? outputType = null;
 
             foreach (string var in vars)
             {
+                IDictionary<string, IProperty> source;
                 if (request.Command.LocalVariables.ContainsKey(var))
-                {
-                    if (outputType != null && request.Command.LocalVariables[var].Type != outputType)
-                        throw new ExecuteCodeLineException($"Несоответсвие типов переменных в выражении {request.Command.OriginCommand}"); //TODO - Тесты
-                    executableStr = executableStr.Replace(var, request.Command.LocalVariables[var].Value.ToString());
-                    outputType = request.Command.LocalVariables[var].Type;
-                }
+                    source = request.Command.LocalVariables;
+                else if (request.Command.LocalProperties.ContainsKey(var))
+                    source = request.Command.LocalProperties;
                 else
                     throw new ExecuteCodeLineException($"Передана переменная {var}, которой не присвоено значение.");
+                if (outputType != null && source[var].Type != outputType)
+                    throw new ExecuteCodeLineException($"Несоответсвие типов переменных в выражении {request.Command.OriginCommand}"); //TODO - Тесты
+
+                executableStr = executableStr.Replace(var, source[var].Value.ToString());
+                outputType = source[var].Type;      
             }
 
             var scriptState = await CSharpScript.RunAsync(executableStr); //TODO - Тесты
+            var varsSource = request.Command.LocalVariables;
             if (scriptState.ReturnValue != null && !string.IsNullOrEmpty(scriptState.ReturnValue.ToString()))
             {
-                if (request.Command.LocalVariables.ContainsKey(request.Command.AssigningParamOriginalName))
-                    request.Command.LocalVariables[request.Command.AssigningParamOriginalName].Value = scriptState.ReturnValue;
+                if (varsSource.ContainsKey(request.Command.AssigningParameter))
+                    varsSource[request.Command.AssigningParameter].Value = scriptState.ReturnValue;
                 else
-                    request.Command.LocalVariables[request.Command.AssigningParamOriginalName] = 
-                        new AgentProperty(outputType, scriptState.ReturnValue, request.Command.AssigningParamOriginalName, request.Command.AssigningParameter);
+                    varsSource[request.Command.AssigningParameter] = new Property()
+                        {
+                            Type = outputType,
+                            Name = request.Command.AssigningParameter,
+                            Value = scriptState.ReturnValue
+                        };
             }
         }
 

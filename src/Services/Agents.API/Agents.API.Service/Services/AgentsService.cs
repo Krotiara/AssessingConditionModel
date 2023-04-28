@@ -1,4 +1,5 @@
-﻿using Agents.API.Data.Repository;
+﻿using Agents.API.Data.Store;
+using Agents.API.Entities.AgentsSettings;
 using Agents.API.Interfaces;
 using Interfaces;
 using Interfaces.DynamicAgent;
@@ -10,28 +11,16 @@ using System.Threading.Tasks;
 
 namespace Agents.API.Service.Services
 {
-    public class AgentsService : IAgentsService
+    public class AgentsService
     {
-        private readonly IAgentInitSettingsProvider _agentInitSettingsProvider;
-        private readonly IDynamicAgentsRepository _dynamicAgentsRepository;
+        private readonly IAgentsStore _agentsStore;
 
-        public AgentsService(IAgentInitSettingsProvider agentInitSettingsProvider, IDynamicAgentsRepository dynamicAgentsRepository)
+        public AgentsService(IAgentsStore agentsStore)
         {
-            _agentInitSettingsProvider = agentInitSettingsProvider;
-            _dynamicAgentsRepository = dynamicAgentsRepository;
-        }
-
-        public IDynamicAgent InitAgentBy(IAgentKey key, AgentType agentType)
-        {
-            IDynamicAgentInitSettings initSets = _agentInitSettingsProvider.GetSettingsBy(agentType);
-            return _dynamicAgentsRepository.InitAgent(key, initSets);
+            _agentsStore = agentsStore;
         }
 
 
-        //TODO - на будущее - инициализация по кастомным агентам.
-        public IDynamicAgent InitAgentBy(IAgentKey key, IDynamicAgentInitSettings settings)
-        {
-            return _dynamicAgentsRepository.InitAgent(key, settings);
-        }
+        public IAgent GetAgent(IAgentKey key, AgentsSettings settings) => _agentsStore.GetAgent(key, settings);
     }
 }

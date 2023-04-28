@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Agents.API.Entities.DynamicAgent
+namespace Agents.API.Entities.AgentsSettings
 {
     public class AgentState : IAgentState
     {
@@ -19,5 +19,7 @@ namespace Agents.API.Entities.DynamicAgent
         public double NumericCharacteristic { get; set; }
 
         public DateTime Timestamp { get; set; }
+
+        public string DefinitionCode { get; set; }
     }
 }

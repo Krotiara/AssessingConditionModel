@@ -51,6 +51,8 @@ namespace Agents.API.Service.Query
             {
                 if (request.Command.LocalVariables != null && request.Command.LocalVariables.ContainsKey(args[i]))
                     results.Add(request.Command.LocalVariables[args[i]].Value);
+                else if(request.Command.LocalProperties != null && request.Command.LocalProperties.ContainsKey(args[i]))
+                    results.Add(request.Command.LocalProperties[args[i]].Value);
                 else
                 {
                     string arg = args[i];
