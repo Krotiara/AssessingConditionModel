@@ -4,7 +4,7 @@ using MongoDB.Driver.Core.Configuration;
 using MongoDB.Driver.Core.Events;
 using Parameters.API.Models.Mongo;
 
-namespace Parameters.API.Services.Mongo
+namespace Interfaces.Mongo
 {
     public class MongoService
     {

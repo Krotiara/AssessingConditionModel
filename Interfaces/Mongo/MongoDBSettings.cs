@@ -1,4 +1,4 @@
-﻿namespace Parameters.API.Models.Mongo
+﻿namespace Interfaces.Mongo
 {
     public class MongoDBSettings
     {

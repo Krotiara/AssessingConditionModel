@@ -1,7 +1,7 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
-namespace Parameters.API.Models.Documents
+namespace Interfaces.Service
 {
     [BsonIgnoreExtraElements(Inherited = true)]
     public abstract class Document

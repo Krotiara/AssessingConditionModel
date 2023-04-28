@@ -1,8 +1,8 @@
-﻿using Parameters.API.Models.Documents;
-using Parameters.API.Services.Store;
-using System.Collections.Concurrent;
+﻿using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
-namespace Parameters.API.Services
+namespace Interfaces.Service
 {
     public class ParametersService
     {

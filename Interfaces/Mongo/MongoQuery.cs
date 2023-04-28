@@ -1,7 +1,7 @@
 ﻿using MongoDB.Driver;
 using System.Linq.Expressions;
 
-namespace Parameters.API.Services.Mongo
+namespace Interfaces.Mongo
 {
     public class MongoQuery<T>
     {

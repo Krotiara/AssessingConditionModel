@@ -1,7 +1,9 @@
 ﻿using MongoDB.Driver;
+using System;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 
-namespace Parameters.API.Services.Mongo
+namespace Interfaces.Mongo
 {
     public class MongoUpdater<T>
     {

@@ -1,7 +1,6 @@
-﻿using Parameters.API.Models.Documents;
-using Parameters.API.Services.Mongo;
+﻿using Interfaces.Mongo;
 
-namespace Parameters.API.Services.Store
+namespace Interfaces.Service
 {
     public class ParametersStore : MongoBaseService<Parameter>
     {

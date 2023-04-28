@@ -1,4 +1,4 @@
-﻿namespace Parameters.API.Models.Documents
+﻿namespace Interfaces.Service
 {
     public class Parameter : Document
     {

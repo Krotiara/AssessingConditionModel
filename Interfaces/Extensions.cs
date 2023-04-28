@@ -1,4 +1,8 @@
-﻿using System;
+﻿using Interfaces.Mongo;
+using Interfaces.Service;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
@@ -129,6 +133,21 @@ namespace Interfaces
                 });
             
             return p;
+        }
+
+
+        public static void AddMongoService(this IServiceCollection services, IConfiguration conf)
+        {
+            IConfigurationSection section = conf.GetSection("MongoDBSettings");
+            services.Configure<MongoDBSettings>(section);
+            services.AddSingleton<MongoService>();
+        }
+
+
+        public static void AddParametersService(this IServiceCollection services, IConfiguration conf)
+        {
+            services.AddSingleton<ParametersStore>();
+            services.AddSingleton<ParametersService>();
         }
     }
 }
