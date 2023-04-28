@@ -15,26 +15,14 @@ namespace Interfaces
 
         public int PatientId { get; set; }
 
-        public string MedicalOrganization { get; set; }
+        public string PatientAffiliation { get; set; }
 
         public DateTime Timestamp { get; set; }
 
-        public string ParameterName { get; set; }
-
-        public string NameTextDescription { get; set; }
+        public string Name { get; set; }
 
         public string Value { get;  set; }
 
         public bool IsDynamic { get; set; }
-
-        //public string DynamicValue { get; set; }
-
-        /// <summary>
-        /// Коэффициент направления улучшения показателя. 
-        /// Если улучшение показателя характеризуется его повышением, то значение должно быть = 1; 
-        /// Если в меньшую сторону, то значение должно быть = -1.
-        /// </summary>
-        public int PositiveDynamicCoef { get; set; }
-
     }
 }

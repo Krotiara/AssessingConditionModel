@@ -15,48 +15,18 @@ namespace PatientDataHandler.API.Entities
 
         }
 
-        public PatientParameter(string parameterName, string description)
+        public PatientParameter(string parameterName)
         {
-            ParameterName = parameterName;
-            NameTextDescription = description;
+            Name = parameterName;
         }
 
-        [NotNull]
-        [Column("Id")]
-        [Key]
         public int Id { get; set; }
-
-
-        [NotNull]
-        [Column("PatientDataId")]
-        public int InfluenceId { get; set; } 
-
-
-        [NotNull]
-        [Required]
-        public int PatientId { get ; set ; }
-
-        [NotNull]
-        [Required]
-        public DateTime Timestamp { get ; set ; }
-
-        [NotNull]
-        [Required]
-        public string NameTextDescription { get ; set ; }
-
-        [NotNull]
-        [Required]
-        public string Value { get ; set ; }
-
-
-        
-        [NotNull]
-        [Required]
-        public int PositiveDynamicCoef { get ; set ; }
-
-        public string ParameterName { get; set; }
-
+        public int InfluenceId { get; set; }
+        public int PatientId { get; set; }
+        public string PatientAffiliation { get; set; }
+        public DateTime Timestamp { get; set; }
+        public string Name { get; set; }
+        public string Value { get; set; }
         public bool IsDynamic { get; set; }
-        public string MedicalOrganization { get; set; }
     }
 }
