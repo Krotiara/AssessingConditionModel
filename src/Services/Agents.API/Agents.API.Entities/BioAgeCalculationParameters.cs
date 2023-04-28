@@ -10,6 +10,6 @@ namespace Agents.API.Entities
     public class BioAgeCalculationParameters : IBioAgeCalculationParameters<PatientParameter>
     {
         public BioAgeCalculationType CalculationType { get ; set ; }
-        public Dictionary<ParameterNames, PatientParameter> Parameters { get ; set ; }
+        public Dictionary<string, PatientParameter> Parameters { get ; set ; }
     }
 }

@@ -5,6 +5,8 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace PatientsResolver.API.Entities
 {
+    //TODO упростить в связи с введением Parameter в Interfaces.
+
     [Table("PatientParameters")]
     public class PatientParameter : IPatientParameter
     {
@@ -48,7 +50,7 @@ namespace PatientsResolver.API.Entities
         public int PositiveDynamicCoef { get ; set ; }
 
         [NotMapped]
-        public ParameterNames ParameterName { get; set ; }
+        public string ParameterName { get; set ; }
 
         public bool IsDynamic { get; set; }
 

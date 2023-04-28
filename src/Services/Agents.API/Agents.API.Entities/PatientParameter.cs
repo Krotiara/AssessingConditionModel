@@ -16,7 +16,7 @@ namespace Agents.API.Entities
         public int InfluenceId { get; set; }
         public int PatientId { get; set; }
         public DateTime Timestamp { get; set; }
-        public ParameterNames ParameterName { get; set; }
+        public string ParameterName { get; set; }
         public string NameTextDescription { get; set; }
         public string Value { get; set; }
 

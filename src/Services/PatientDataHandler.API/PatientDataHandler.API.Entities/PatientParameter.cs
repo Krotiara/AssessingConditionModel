@@ -5,6 +5,8 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace PatientDataHandler.API.Entities
 {
+    //TODO упростить в связи с введением Parameter в Interfaces.
+
     [Table("PatientParameters")]
     public class PatientParameter : IPatientParameter
     {
@@ -13,10 +15,10 @@ namespace PatientDataHandler.API.Entities
 
         }
 
-        public PatientParameter(ParameterNames parameterName)
+        public PatientParameter(string parameterName, string description)
         {
             ParameterName = parameterName;
-            NameTextDescription = parameterName.GetDisplayAttributeValue();
+            NameTextDescription = description;
         }
 
         [NotNull]
@@ -52,7 +54,7 @@ namespace PatientDataHandler.API.Entities
         [Required]
         public int PositiveDynamicCoef { get ; set ; }
 
-        public ParameterNames ParameterName { get; set; }
+        public string ParameterName { get; set; }
 
         public bool IsDynamic { get; set; }
         public string MedicalOrganization { get; set; }
