@@ -10,6 +10,6 @@ namespace Interfaces
     {
         public BioAgeCalculationType CalculationType { get; set; }
 
-        public Dictionary<ParameterNames, T> Parameters { get; set; }
+        public Dictionary<string, T> Parameters { get; set; }
     }
 }
