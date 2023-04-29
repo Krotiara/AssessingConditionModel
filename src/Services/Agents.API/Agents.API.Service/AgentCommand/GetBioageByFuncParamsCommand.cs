@@ -17,6 +17,13 @@ namespace Agents.API.Service.AgentCommand
         private readonly PredcitionModelsService _pMService;
         private readonly PatientParametersService _pPSerivce;
 
+        //TODO продумать, как избавиться от такого.
+        private readonly string _pressureDeltaParam = "PressureDelta";
+        private readonly string _systolicPressure = "SystolicPressure";
+        private readonly string _diastolicPressure = "DiastolicPressure";
+
+
+
         public GetBioageByFuncParamsCommand(PredcitionModelsService pMService, 
             PatientParametersService pPSerivce, IOptions<TempModelSettings> modelSets)
         {
@@ -45,6 +52,9 @@ namespace Agents.API.Service.AgentCommand
             });
             if(parameters == null)
                 throw new ExecuteCommandException($"Cannot get latest parameters for patient {patientId}:{patientAffiliation}. See logs.");
+
+            InitPressureDelta(parameters);
+
             float[] inputArgs = new float[names.Count];
             for(int i = 0; i < names.Count; i++)
             {
@@ -89,5 +99,20 @@ namespace Agents.API.Service.AgentCommand
             //    return (int)Math.Ceiling(res.First());
             //}
         };
+
+
+        //TODO придумать, как такое отслеживать.
+        private void InitPressureDelta(Dictionary<string, PatientParameter> dict)
+        {
+            if (dict[_pressureDeltaParam] != null)
+                return;
+            if (dict[_systolicPressure] == null || dict[_diastolicPressure] == null)
+                return;
+            dict[_pressureDeltaParam] = new PatientParameter()
+            {
+                Name = _pressureDeltaParam,
+                Value = (dict[_diastolicPressure].ConvertValue<float>() - dict[_systolicPressure].ConvertValue<float>()).ToString()
+            };
+        }
     }
 }
