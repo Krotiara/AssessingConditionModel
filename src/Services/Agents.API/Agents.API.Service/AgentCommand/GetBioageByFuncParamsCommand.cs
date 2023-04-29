@@ -27,6 +27,8 @@ namespace Agents.API.Service.AgentCommand
 
         public Delegate Command => async (string patientId, string patientAffiliation, DateTime endTimestamp) =>
         {
+            //TODO init delta parameter.
+
 #warning Нужно преобразовать везде int id to string id.
             int id = int.Parse(patientId);
 
