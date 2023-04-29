@@ -39,7 +39,7 @@ namespace Agents.API.Service.AgentCommand
             else
             {
                 var res = await _webRequester.DeserializeBody<IList<PatientParameter>>(responce);
-                return res.ToDictionary(x => x.ParameterName, x => x);
+                return res.ToDictionary(x => x.Name, x => x);
             }
         };
     }
