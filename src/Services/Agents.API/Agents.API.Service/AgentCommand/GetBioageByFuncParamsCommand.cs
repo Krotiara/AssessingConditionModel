@@ -30,7 +30,7 @@ namespace Agents.API.Service.AgentCommand
 #warning Нужно преобразовать везде int id to string id.
             int id = int.Parse(patientId);
 
-            var meta = _pMService.Get(_modelKey);
+            var meta = await _pMService.Get(_modelKey);
             if(meta == null)
                 throw new ExecuteCommandException($"No meta for model key {_modelKey.Id}:{_modelKey.Version}");
             List<string> names = meta.ParamsNamesList;
