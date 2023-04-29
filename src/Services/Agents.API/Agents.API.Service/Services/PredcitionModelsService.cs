@@ -40,7 +40,18 @@ namespace Agents.API.Service.Services
         }
 
 
-        public ModelMeta? Get(ModelKey key) => _metas.GetValueOrDefault(key);
+        public async Task<ModelMeta?> Get(ModelKey key)
+        {
+            if (_metas.ContainsKey(key))
+                return _metas[key];
+            var responce = await _webRequester.SendRequest($"{_modelsServerUrl}/models/{key.Id}=={key.Version}", "GET");
+            if(responce.IsSuccessStatusCode)
+            {
+                _metas[key] = await responce.DeserializeBody<ModelMeta>();
+                return _metas[key];
+            }
+            return null; //TODO log
+        }
 
 
         public async Task<HttpResponseMessage> Predict(ModelKey key, float[] input)
