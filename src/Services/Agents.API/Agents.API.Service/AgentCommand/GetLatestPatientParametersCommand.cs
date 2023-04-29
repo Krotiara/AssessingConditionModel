@@ -24,7 +24,7 @@ namespace Agents.API.Service.AgentCommand
         public Delegate Command => async (DateTime startTimestamp, DateTime endTimestamp, string patientId, string medOrganization) =>
         {
 #warning patientId нужно полность преобразовать в string на бэкэ
-            PatientParametersRequest request = new PatientParametersRequest()
+            LatestParametersRequest request = new LatestParametersRequest()
             {
                 PatientId = int.Parse(patientId),
                 MedicalOrganization = medOrganization,

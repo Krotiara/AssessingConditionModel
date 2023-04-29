@@ -25,7 +25,7 @@ namespace Agents.API.Service.AgentCommand
             _modelSets = modelSets.Value;
         }
 
-        public Delegate Command => async (Dictionary<ParameterNames, PatientParameter> pDict) =>
+        public Delegate Command => async (Dictionary<string, PatientParameter> pDict) =>
         {
             float age = pDict[ParameterNames.Age].ConvertValue<float>();
 #warning Костыльное получение версии и Id.

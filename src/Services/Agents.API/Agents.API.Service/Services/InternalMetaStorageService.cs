@@ -23,11 +23,13 @@ namespace Agents.API.Service.Services
                         (typeof(DateTime), "endTimestamp"),
                         (typeof(int), "patientId"),
                         (typeof(string), "medicalOrganization")}, 
-                        typeof(Dictionary<ParameterNames,PatientParameter>))},
+                        typeof(Dictionary<string,PatientParameter>))},
                 {SystemCommands.GetAge,
-                    new CommandArgsTypesMeta(new List<(Type, string)> {(typeof(Dictionary<ParameterNames,PatientParameter>),"parameters") }, typeof(int)) },
+                    new CommandArgsTypesMeta(new List<(Type, string)> {(typeof(Dictionary<string,PatientParameter>),"parameters") }, typeof(int)) },
                 {SystemCommands.GetBioageByFunctionalParameters,
-                    new CommandArgsTypesMeta(new List<(Type, string)> {(typeof(Dictionary<ParameterNames, PatientParameter>),"parameters") }, typeof(int)) },
+                    new CommandArgsTypesMeta(new List<(Type, string)> {(typeof(string),"patientId"),
+                        (typeof(string), "patientAffiliation"),
+                        (typeof(DateTime), "endTimestamp")}, typeof(int))},
                 {SystemCommands.GetAgeRangBy,
                     new CommandArgsTypesMeta(new List<(Type, string)> {(typeof(int),"age"),(typeof(int),"bioAge")}, typeof(int)) },
                 {SystemCommands.GetInfluences,
@@ -40,7 +42,7 @@ namespace Agents.API.Service.Services
                         (typeof(DateTime),"end"),
                         (typeof(int),"observedId"),
                         (typeof(string), "medicalOrganization")}, typeof(List<Influence>))},
-                {SystemCommands.GetDentistSum,new CommandArgsTypesMeta(new List<(Type, string)> {(typeof(Dictionary<ParameterNames, PatientParameter>),"parameters") }, typeof(int)) }
+                {SystemCommands.GetDentistSum,new CommandArgsTypesMeta(new List<(Type, string)> {(typeof(Dictionary<string, PatientParameter>),"parameters") }, typeof(int)) }
             };
         }
 
