@@ -13,7 +13,6 @@ namespace Agents.API.Service.AgentCommand
     //TODO преобразовать в получение по дате рождения и переданному времени.
     public class GetAgeCommand : IAgentCommand
     {
-        private readonly string _ageParameter = "Age"; //TODO вынести во внешние настройки.
         private readonly IMediator _mediator;
 
         public GetAgeCommand(IMediator mediator)
