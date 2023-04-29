@@ -23,7 +23,6 @@ namespace Agents.API.Service.AgentCommand
         private readonly string _diastolicPressure = "DiastolicPressure";
 
 
-
         public GetBioageByFuncParamsCommand(PredcitionModelsService pMService, 
             PatientParametersService pPSerivce, IOptions<TempModelSettings> modelSets)
         {
