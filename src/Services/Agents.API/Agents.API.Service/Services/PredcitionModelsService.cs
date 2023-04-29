@@ -42,6 +42,7 @@ namespace Agents.API.Service.Services
 
         public async Task<ModelMeta?> Get(ModelKey key)
         {
+#warning Если обновилась мета, то здесь не будет обновленной.
             if (_metas.ContainsKey(key))
                 return _metas[key];
             var responce = await _webRequester.SendRequest($"{_modelsServerUrl}/models/{key.Id}=={key.Version}", "GET");
