@@ -8,7 +8,6 @@ namespace Agents.API
         public static void RegisterDependencies(this IServiceCollection services)
         {
             services.AddTransient<GetAgeCommand>();
-            services.AddTransient<GetAgeRangCommand>();
             services.AddTransient<GetBioageByFuncParamsCommand>();
             services.AddTransient<GetDentistSumCommand>();
             services.AddTransient<GetInfluencesCommand>();
@@ -20,7 +19,6 @@ namespace Agents.API
                 return command switch
                 {
                     SystemCommands.GetAge => serviceProvider.GetService<GetAgeCommand>(),
-                    SystemCommands.GetAgeRangBy => serviceProvider.GetService<GetAgeRangCommand>(),
                     SystemCommands.GetBioageByFunctionalParameters => serviceProvider.GetService<GetBioageByFuncParamsCommand>(),
                     SystemCommands.GetDentistSum => serviceProvider.GetService<GetDentistSumCommand>(),
                     SystemCommands.GetInfluences => serviceProvider.GetService<GetInfluencesCommand>(),

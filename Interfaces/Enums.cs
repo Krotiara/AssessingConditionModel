@@ -19,7 +19,6 @@ namespace Interfaces
         GetLatestPatientParameters,
         GetAge,
         GetBioageByFunctionalParameters,
-        GetAgeRangBy,
         GetInfluences,
         GetAgingDynamics,
         GetAgingState,
