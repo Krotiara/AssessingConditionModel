@@ -1,5 +1,7 @@
 ﻿using ExcelDataReader;
 using Interfaces;
+using Interfaces.Service;
+using Microsoft.Extensions.Options;
 using OfficeOpenXml;
 using PatientDataHandler.API.Entities;
 using System.Collections.Concurrent;
@@ -8,31 +10,21 @@ using System.Linq;
 
 namespace PatientDataHandler.API.Service.Services
 {
+    //TODO переделать под универсальный формат с проверкой наличия параметров из бд.
+
     /// <summary>
     /// Парсер тестового формата данных.
     /// </summary>
     public class ExcelDataProvider : IDataProvider
     {
+        private readonly ParseDataSettings _settings; //Временное решение.
 
-       
-        public ExcelDataProvider()
+        public ExcelDataProvider(IOptions<ParseDataSettings> settings)
         {
-
+            _settings = settings.Value;
         }
  
-
-        public IList<Influence> ParseData(string filePath)
-        {
-            //TODO add try catch
-            Stream stream = File.Open(filePath, FileMode.Open, FileAccess.Read);
-            using (MemoryStream ms = new MemoryStream())
-            {
-                stream.CopyTo(ms);
-                return ParseData(ms.ToArray());
-            }
-        }
-
-
+   
         public IList<Influence> ParseData(byte[] bytesData)
         {
             try
@@ -56,10 +48,10 @@ namespace PatientDataHandler.API.Service.Services
             bool isDynamicRows = false;
 
 #warning Узкое место в названии препарата.
-            int groupIndex = headers.IndexOf("группа");
+            int groupIndex = headers.IndexOf(_settings.Group);
 
             //TODO вынести в settings и в парсинг данных добавить сопоставление описания и имени параметра.
-            int parameterTimestampIndex = headers.IndexOf("дата внесения");
+            int parameterTimestampIndex = headers.IndexOf(_settings.Timestamp);
 
             for (int rowNum = 0; rowNum < data.Count; rowNum++) //select starting row here
             {
@@ -71,7 +63,7 @@ namespace PatientDataHandler.API.Service.Services
                         DateTime.MinValue : DateTime.Parse(row[parameterTimestampIndex]);
                     string influenceName = groupIndex == -1 ? "" : data[rowNum][groupIndex];
                     
-                    if (row[0] == "динамика")
+                    if (row[0] == _settings.Dynamic)
                     {
                         isDynamicRows = true;
                         continue;
@@ -105,11 +97,11 @@ namespace PatientDataHandler.API.Service.Services
                     {
                         try
                         {
-                            if (headerParamsNames[j] == ParameterNames.None)
-                                return;
-                            ParameterNames parameterName = headerParamsNames[j]; //Доступ к общему листу problem
+                            //if (headerParamsNames[j] == ParameterNames.None) В новой реализации будет заноситься и Id.
+                            //    return;
+                            string parameterName = headers[j]; //Доступ к общему листу problem
 
-                            ConcurrentDictionary<ParameterNames, PatientParameter> curDict = isDynamicRows ? 
+                            ConcurrentDictionary<string, PatientParameter> curDict = isDynamicRows ? 
                             influenceData.DynamicParameters : influenceData.StartParameters;
 
                             if (!curDict.ContainsKey(parameterName) && row[j] != "") //Не добавлять пустые значения параметров
@@ -135,8 +127,8 @@ namespace PatientDataHandler.API.Service.Services
                         }
                     });
 
-                    influenceData.Patient.Gender = influenceData.StartParameters.ContainsKey(ParameterNames.Gender) ? 
-                        GetPatientGender(influenceData.StartParameters[ParameterNames.Gender]) : GenderEnum.None;
+                    influenceData.Patient.Gender = influenceData.StartParameters.ContainsKey(_settings.Gender) ? 
+                        GetPatientGender(influenceData.StartParameters[_settings.Gender]) : GenderEnum.None;
                     
                 }
                 catch(Exception ex)
@@ -168,7 +160,7 @@ namespace PatientDataHandler.API.Service.Services
 #warning Временное решение.
         private GenderEnum GetPatientGender(PatientParameter genderParameter)
         {
-            if (genderParameter.ParameterName != ParameterNames.Gender)
+            if (genderParameter.Name != _settings.Gender)
                 throw new NotImplementedException(); //TODO
             string val = genderParameter.Value;
             if (val == "ж" || val.Contains("жен"))

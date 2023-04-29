@@ -7,37 +7,16 @@ using PatientDataHandler.API.Service.Services;
 
 namespace PatientDataHandler.API.Controllers
 {
-    public class DataHandlerController: Controller
+    public class DataHandlerController: ControllerBase
     {
-        Func<DataParserTypes, IDataProvider> dataParserResolver;
+        Func<DataParserTypes, IDataProvider> _dataParserResolver;
 
 
         public DataHandlerController(Func<DataParserTypes, IDataProvider> dataParserResolver)
         {
-            this.dataParserResolver = dataParserResolver;
+            this._dataParserResolver = dataParserResolver;
         }
 
-
-        [HttpGet("parseData/{pathToFile}")]
-        public ActionResult<IList<Influence>> ParsePatientData(string pathToFile)
-        {
-            try
-            {
-                // TODO try catch
-                //TODO определение типа данных
-                IDataProvider dataProvider = dataParserResolver.Invoke(DataParserTypes.TestVahitova);
-                var patientDatas = dataProvider.ParseData(pathToFile);
-                return Ok(patientDatas);
-            }
-            catch (ParseInfluenceDataException ex)
-            {
-                return BadRequest(ex.Message);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest($"Unexpected error:{ex.Message}");
-            }
-        }
 
 
         [HttpPost("parseInfluences/")]
@@ -47,7 +26,7 @@ namespace PatientDataHandler.API.Controllers
             {
                 // TODO try catch
                 //TODO определение типа данных
-                IDataProvider dataProvider = dataParserResolver.Invoke(DataParserTypes.TestVahitova);
+                IDataProvider dataProvider = _dataParserResolver.Invoke(DataParserTypes.TestVahitova);
                 IList<Influence> influences = dataProvider.ParseData(buffer);
                 return Ok(influences);
             }
