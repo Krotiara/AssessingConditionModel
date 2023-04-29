@@ -25,7 +25,7 @@ namespace Agents.API.Service.Services
                         (typeof(string), "medicalOrganization")}, 
                         typeof(Dictionary<string,PatientParameter>))},
                 {SystemCommands.GetAge,
-                    new CommandArgsTypesMeta(new List<(Type, string)> {(typeof(Dictionary<string,PatientParameter>),"parameters") }, typeof(int)) },
+                    new CommandArgsTypesMeta(new List<(Type, string)> {(typeof(string), "patientId"), (typeof(string), "patientAffiliation"), (typeof(DateTime), "timestamp") }, typeof(int)) },
                 {SystemCommands.GetBioageByFunctionalParameters,
                     new CommandArgsTypesMeta(new List<(Type, string)> {(typeof(string),"patientId"),
                         (typeof(string), "patientAffiliation"),
@@ -40,7 +40,7 @@ namespace Agents.API.Service.Services
                         (typeof(DateTime),"end"),
                         (typeof(int),"observedId"),
                         (typeof(string), "medicalOrganization")}, typeof(List<Influence>))},
-                {SystemCommands.GetDentistSum,new CommandArgsTypesMeta(new List<(Type, string)> {(typeof(Dictionary<string, PatientParameter>),"parameters") }, typeof(int)) }
+                {SystemCommands.GetDentistSum,new CommandArgsTypesMeta(new List<(Type, string)> {(typeof(string), "patientId"), (typeof(string), "patientAffiliation"), (typeof(int), "age"), (typeof(DateTime), "endTimestamp") }, typeof(int)) }
             };
         }
 
