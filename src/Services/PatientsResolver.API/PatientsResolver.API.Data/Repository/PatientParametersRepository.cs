@@ -18,14 +18,13 @@ namespace PatientsResolver.API.Data.Repository
         }
 
 
-        public async Task<List<PatientParameter>> GetLatestParameters(int patientId, string patientAffiliation, DateTime startTimestamp, DateTime endTimestamp)
+        public async Task<List<PatientParameter>> GetLatestParameters(int patientId, string patientAffiliation, DateTime endTimestamp)
         {
             
             List<PatientParameter> parameters =
                 dbContext.PatientsParameters
                 .Where(x => x.PatientId == patientId 
                          && x.PatientAffiliation == patientAffiliation 
-                         && x.Timestamp >= startTimestamp 
                          && x.Timestamp <= endTimestamp)
                 .ToList();
 

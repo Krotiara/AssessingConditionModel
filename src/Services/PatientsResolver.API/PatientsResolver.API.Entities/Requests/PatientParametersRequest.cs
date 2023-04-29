@@ -11,7 +11,7 @@ namespace PatientsResolver.API.Entities.Requests
     {
         public string MedicalOrganization { get; set; }
         public int PatientId { get; set; }
-        public DateTime StartTimestamp { get; set; }
         public DateTime EndTimestamp { get; set; }
+        public List<string> Names { get; set; }
     }
 }
