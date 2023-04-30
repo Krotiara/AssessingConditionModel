@@ -7,6 +7,7 @@ using PatientDataHandler.API.Entities;
 using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.Linq;
+using System.Text;
 
 namespace PatientDataHandler.API.Service.Services
 {
@@ -29,11 +30,17 @@ namespace PatientDataHandler.API.Service.Services
         {
             try
             {
-                IList<IList<string>> rawData = LoadData(bytesData);
+                string data = Encoding.UTF8.GetString(bytesData);
+                var rows = data.Split("\r\n");
+                IList<string[]> rawData = new List<string[]> { };
+                foreach (string row in rows)
+                    rawData.Add(row.Split(";"));
+
+                //IList<IList<string>> rawData = LoadData(bytesData);
                 DataPreprocessor dataPreprocessor = new DataPreprocessor();
                 rawData = dataPreprocessor.PreProcessData(rawData);
-                IList<Influence> data = ParseExcelData(rawData[0], rawData.Skip(1).ToList());
-                return data;
+                IList<Influence> res = ParseData(rawData[0], rawData.Skip(1).ToList());
+                return res;
             }
             catch(Exception ex)
             {
@@ -42,7 +49,7 @@ namespace PatientDataHandler.API.Service.Services
         }
 
 
-        private IList<Influence> ParseExcelData(IList<string> headers, IList<IList<string>> data)
+        private IList<Influence> ParseData(IList<string> headers, IList<string[]> data)
         {
             Dictionary<int, Influence> patientsInfluences  = new Dictionary<int, Influence>();
             bool isDynamicRows = false;
@@ -171,29 +178,29 @@ namespace PatientDataHandler.API.Service.Services
         }
 
 
-        private IList<IList<string>> LoadData(byte[] bytesData)
-        {
-            //TODO try catch
-            IList<IList<string>> data = new List<IList<string>>();
-            System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
-            using (MemoryStream stream = new MemoryStream(bytesData))
-            {
-                using (var reader = ExcelReaderFactory.CreateReader(stream))
-                {
-                    while (reader.Read()) //Each ROW
-                    {
-                        IList<string> row = new List<string>();
-                        for (int column = 0; column < reader.FieldCount; column++)
-                        {
-                            object value = reader.GetValue(column);
-                            row.Add(value == null ? "" : value.ToString());
-                        }
-                        data.Add(row);
-                    }
-                }
-            }
-            return data;
-        }
+        //private IList<IList<string>> LoadData(byte[] bytesData)
+        //{
+        //    //TODO try catch
+        //    IList<IList<string>> data = new List<IList<string>>();
+        //    System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
+        //    using (MemoryStream stream = new MemoryStream(bytesData))
+        //    {
+        //        using (var reader = ExcelReaderFactory.CreateReader(stream))
+        //        {
+        //            while (reader.Read()) //Each ROW
+        //            {
+        //                IList<string> row = new List<string>();
+        //                for (int column = 0; column < reader.FieldCount; column++)
+        //                {
+        //                    object value = reader.GetValue(column);
+        //                    row.Add(value == null ? "" : value.ToString());
+        //                }
+        //                data.Add(row);
+        //            }
+        //        }
+        //    }
+        //    return data;
+        //}
 
        
     }

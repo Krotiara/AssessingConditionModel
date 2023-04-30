@@ -19,9 +19,9 @@ namespace PatientDataHandler.API.Entities
         /// </summary>
         /// <param name="data"></param>
         /// <returns></returns>
-        public IList<IList<string>> PreProcessData(IList<IList<string>> data)
+        public IList<string[]> PreProcessData(IList<string[]> data)
         {
-            data[0] = data[0].Select(x => x.Trim().ToLower()).ToList();
+            data[0] = data[0].Select(x => x.Trim().ToLower()).ToArray();
 
             var genderIndexVal = data[0]
                 .Select(x=> x.Trim().ToLower())
@@ -44,11 +44,11 @@ namespace PatientDataHandler.API.Entities
                     AdjustGender(ref row, genderIndex);
                 if(ageIndex != -1)
                     AdjustAge(ref row, ageIndex);
-                data[i] = row;
+                data[i] = row.ToArray();
             }
 
             return data
-                .Where(x=>!x.All(s=>s == null || s == "")).ToList();
+                .Where(x=>!x.All(s=>s == null || s == "")).ToArray();
         }
 
 
