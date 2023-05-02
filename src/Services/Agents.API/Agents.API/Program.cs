@@ -64,6 +64,7 @@ services
     .AddTransient<IAgentState, AgentState>();
 
 services
+    .AddTransient<IRequestHandler<GetPatientInfoQuery, HttpResponseMessage>, GetPatientInfoQueryHandler>()
     .AddTransient<IRequestHandler<GetAgentStateQuery, IAgentState>, GetAgentStateQueryHandler>()
     .AddTransient<IRequestHandler<GetCommandTypesMetaQueue, ICommandArgsTypesMeta>, GetCommandTypesMetaQueueHandler>()
     .AddTransient<IRequestHandler<GetCommandArgsValuesQueue, List<object>>, GetCommandArgsValuesQueueHandler>()
