@@ -19,7 +19,7 @@ namespace Agents.API.Entities
         public int PatientId { get ; set ; }
         public DateTime StartTimestamp { get ; set ; }
         public DateTime EndTimestamp { get ; set ; }
-        public InfluenceTypes InfluenceType { get ; set ; }
+        public string InfluenceType { get ; set ; }
         public string MedicineName { get ; set ; }
         public Patient Patient { get ; set ; }
         public ConcurrentDictionary<string, PatientParameter> StartParameters { get ; set ; }

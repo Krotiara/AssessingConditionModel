@@ -39,7 +39,7 @@ CREATE TABLE "Influences"
     "MedicalOrganization" text NOT NULL,
     "StartTimestamp" date NOT NULL,
     "EndTimestamp" date NOT NULL,
-    "InfluenceType" int NOT NULL,
+    "InfluenceType" text NOT NULL,
     "MedicineName" text COLLATE pg_catalog."default" NOT NULL,
     CONSTRAINT "Influences_pkey" PRIMARY KEY ("Id")
 );

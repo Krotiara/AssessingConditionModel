@@ -14,10 +14,10 @@ namespace PatientDataHandler.API.Service.Command
     public class SendPatientsDataFileCommandHandler :
         IRequestHandler<SendPatientsDataFileCommand, Unit>
     {
-        Func<DataParserTypes, IDataProvider> dataParserResolver;
+        Func<InputFileType, IDataProvider> dataParserResolver;
         IPatientsDataSender patientsDataSender;
 
-        public SendPatientsDataFileCommandHandler(Func<DataParserTypes, IDataProvider> dataParserResolver,
+        public SendPatientsDataFileCommandHandler(Func<InputFileType, IDataProvider> dataParserResolver,
             IPatientsDataSender patientsDataSender)
         {
             this.dataParserResolver = dataParserResolver;
@@ -27,9 +27,8 @@ namespace PatientDataHandler.API.Service.Command
 
         public Task<Unit> Handle(SendPatientsDataFileCommand request, CancellationToken cancellationToken)
         {
-            var req = request.Request;
-            IDataProvider dataProvider = dataParserResolver.Invoke(DataParserTypes.TestVahitova);
-            IList<Influence> patientDatas = dataProvider.ParseData(req);
+            IDataProvider dataProvider = dataParserResolver.Invoke(request.Request.InputFileType);
+            IList<Influence> patientDatas = dataProvider.ParseData(request.Request);
             patientsDataSender.SendPatientsData(patientDatas);
             return Unit.Task;
         }

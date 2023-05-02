@@ -33,9 +33,5 @@ namespace Agents.API.Entities
         [Required]
         [Column("BioAge")]
         public double BioAge { get; set; }
-        [NotNull]
-        [Required]
-        [Column("State")]
-        public AgentBioAgeStates BioAgeState { get; set; }
     }
 }

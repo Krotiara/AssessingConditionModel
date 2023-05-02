@@ -36,7 +36,7 @@ namespace PatientsResolver.API.Entities
 
         [NotNull]
         [Column("InfluenceType")]
-        public InfluenceTypes InfluenceType { get ; set ; }
+        public string InfluenceType { get ; set ; }
 
         [NotNull]
         [Column("MedicineName")]

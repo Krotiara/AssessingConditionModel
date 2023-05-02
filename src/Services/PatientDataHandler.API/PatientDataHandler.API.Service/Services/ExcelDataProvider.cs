@@ -89,6 +89,7 @@ namespace PatientDataHandler.API.Service.Services
                                 Birthday = DateTime.MinValue,
                                 MedicalOrganization = addDataRequest.Affiliation
                             },
+                            InfluenceType = addDataRequest.InfluenceType,
                             MedicineName = addDataRequest.MedicineName,
                             MedicalOrganization = addDataRequest.Affiliation,
                             StartTimestamp = addDataRequest.StartTimestamp,

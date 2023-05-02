@@ -19,7 +19,7 @@ namespace Interfaces
    
         public DateTime EndTimestamp { get; set; }
 
-        public InfluenceTypes InfluenceType { get; set; }
+        public string InfluenceType { get; set; }
 
         /// <summary>
         /// Название препарата.

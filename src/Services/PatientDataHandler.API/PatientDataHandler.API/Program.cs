@@ -37,11 +37,11 @@ builder.Services.AddScoped<IInfluence<Patient, PatientParameter>, Influence>();
 
 builder.Services.AddSingleton<ExcelDataProvider>();
 
-builder.Services.AddTransient<Func<DataParserTypes, IDataProvider>>(serviceProvider => serviceTypeName =>
+builder.Services.AddTransient<Func<InputFileType, IDataProvider>>(serviceProvider => serviceTypeName =>
 {
     switch (serviceTypeName)
     {
-        case DataParserTypes.TestVahitova:
+        case InputFileType.Test:
             return serviceProvider.GetService<ExcelDataProvider>();
         default:
             return null;

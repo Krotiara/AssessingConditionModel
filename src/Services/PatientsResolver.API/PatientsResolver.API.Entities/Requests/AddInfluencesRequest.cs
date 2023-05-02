@@ -1,4 +1,5 @@
-﻿using Interfaces.Requests;
+﻿using Interfaces;
+using Interfaces.Requests;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,5 +19,7 @@ namespace PatientsResolver.API.Entities.Requests
         public string Affiliation { get; set; }
 
         public byte[] Content { get; set; }
+        public InputFileType InputFileType { get; set; }
+        public string InfluenceType { get; set; }
     }
 }

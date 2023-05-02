@@ -17,5 +17,9 @@ namespace Interfaces.Requests
         public string Affiliation { get; set; }
 
         public byte[] Content { get; set; }
+
+        public InputFileType InputFileType { get; set; }
+
+        public string InfluenceType { get; set; }  
     }
 }
