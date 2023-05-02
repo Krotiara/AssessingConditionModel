@@ -32,7 +32,6 @@ namespace PatientDataHandler.API.Service.Command
             IList<Influence> patientDatas = dataProvider.ParseData(req);
             patientsDataSender.SendPatientsData(patientDatas);
             return Unit.Task;
-
         }
     }
 }
