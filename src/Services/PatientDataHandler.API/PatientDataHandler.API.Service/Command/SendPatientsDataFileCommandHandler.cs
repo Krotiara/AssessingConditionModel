@@ -27,21 +27,9 @@ namespace PatientDataHandler.API.Service.Command
 
         public Task<Unit> Handle(SendPatientsDataFileCommand request, CancellationToken cancellationToken)
         {
-            FileData fileData = request.Data; //TODO по FileData определение DataParserTypes
+            var req = request.Request;
             IDataProvider dataProvider = dataParserResolver.Invoke(DataParserTypes.TestVahitova);
-            IList<Influence> patientDatas = dataProvider.ParseData(fileData.RawData);
-
-            //Очень кривое прокидывание MedicalOrganization
-            foreach (Influence inf in patientDatas)
-            {
-                inf.MedicalOrganization = fileData.MedicalOrganization;
-                inf.Patient.MedicalOrganization = fileData.MedicalOrganization;
-                foreach (var p in inf.StartParameters)
-                    p.Value.PatientAffiliation = fileData.MedicalOrganization;
-                foreach (var p in inf.DynamicParameters)
-                    p.Value.PatientAffiliation = fileData.MedicalOrganization;
-            }
-
+            IList<Influence> patientDatas = dataProvider.ParseData(req);
             patientsDataSender.SendPatientsData(patientDatas);
             return Unit.Task;
 

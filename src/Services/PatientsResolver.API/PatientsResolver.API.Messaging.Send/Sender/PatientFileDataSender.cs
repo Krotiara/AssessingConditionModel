@@ -1,6 +1,8 @@
-﻿using Microsoft.Extensions.Options;
+﻿using Interfaces.Requests;
+using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using PatientsResolver.API.Entities;
+using PatientsResolver.API.Entities.Requests;
 using PatientsResolver.API.Messaging.Send.Configurations;
 using RabbitMQ.Client;
 using System;
@@ -32,7 +34,7 @@ namespace PatientsResolver.API.Messaging.Send.Sender
             CreateConnection();
         }
 
-        public bool SendPatientsFileData(FileData data)
+        public bool SendPatientsFileData(IAddInfluencesRequest request)
         {
             try
             {
@@ -42,7 +44,7 @@ namespace PatientsResolver.API.Messaging.Send.Sender
                 {
                     QueueDeclareOk status = channel
                         .QueueDeclare(queue: queueName, durable: false, exclusive: false, autoDelete: false, arguments: null);
-                    string jsonString = JsonConvert.SerializeObject(data);
+                    string jsonString = JsonConvert.SerializeObject(request);
                     byte[] body = Encoding.UTF8.GetBytes(jsonString);
                     channel.BasicPublish(exchange: "", routingKey: queueName, body: body);
                     return true;

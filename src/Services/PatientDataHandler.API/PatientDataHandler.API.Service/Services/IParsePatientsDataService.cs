@@ -1,4 +1,5 @@
-﻿using PatientDataHandler.API.Entities;
+﻿using Interfaces.Requests;
+using PatientDataHandler.API.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,6 @@ namespace PatientDataHandler.API.Service.Services
 {
     public interface IParsePatientsDataService
     {
-        void ParsePatients(FileData fileData);
+        void ParsePatients(IAddInfluencesRequest fileData);
     }
 }

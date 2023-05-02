@@ -1,5 +1,6 @@
 ﻿using ExcelDataReader;
 using Interfaces;
+using Interfaces.Requests;
 using Interfaces.Service;
 using Microsoft.Extensions.Options;
 using OfficeOpenXml;
@@ -26,20 +27,19 @@ namespace PatientDataHandler.API.Service.Services
         }
  
    
-        public IList<Influence> ParseData(byte[] bytesData)
+        public IList<Influence> ParseData(IAddInfluencesRequest addDataRequest)
         {
             try
             {
-                string data = Encoding.UTF8.GetString(bytesData);
+                string data = Encoding.UTF8.GetString(addDataRequest.Content);
                 var rows = data.Split("\r\n");
                 IList<string[]> rawData = new List<string[]> { };
                 foreach (string row in rows)
                     rawData.Add(row.Split(";"));
 
-                //IList<IList<string>> rawData = LoadData(bytesData);
                 DataPreprocessor dataPreprocessor = new DataPreprocessor();
                 rawData = dataPreprocessor.PreProcessData(rawData);
-                IList<Influence> res = ParseData(rawData[0], rawData.Skip(1).ToList());
+                IList<Influence> res = ParseData(addDataRequest, rawData[0], rawData.Skip(1).ToList());
                 return res;
             }
             catch(Exception ex)
@@ -49,13 +49,10 @@ namespace PatientDataHandler.API.Service.Services
         }
 
 
-        private IList<Influence> ParseData(IList<string> headers, IList<string[]> data)
+        private IList<Influence> ParseData(IAddInfluencesRequest addDataRequest, IList<string> headers, IList<string[]> data)
         {
             Dictionary<int, Influence> patientsInfluences  = new Dictionary<int, Influence>();
             bool isDynamicRows = false;
-
-#warning Узкое место в названии препарата.
-            int groupIndex = headers.IndexOf(_settings.Group);
 
             //TODO вынести в settings и в парсинг данных добавить сопоставление описания и имени параметра.
             int parameterTimestampIndex = headers.IndexOf(_settings.Timestamp);
@@ -68,8 +65,7 @@ namespace PatientDataHandler.API.Service.Services
 
                     DateTime parameterTimestamp = parameterTimestampIndex == -1 || row[parameterTimestampIndex] =="" ? 
                         DateTime.MinValue : DateTime.Parse(row[parameterTimestampIndex]);
-                    string influenceName = groupIndex == -1 ? "" : data[rowNum][groupIndex];
-                    
+
                     if (row[0] == _settings.Dynamic)
                     {
                         isDynamicRows = true;
@@ -84,18 +80,19 @@ namespace PatientDataHandler.API.Service.Services
                     {
                         influenceData = new Influence()
                         {
-#warning Костыль с InfluenceType
-                            InfluenceType = InfluenceTypes.BiologicallyActiveAdditive,
-                            MedicineName = influenceName,
-                            StartTimestamp = DateTime.MinValue, //TODO указывать во входных данных,
-                            EndTimestamp = DateTime.MinValue, //TODO указывать во входных данных
+#warning убрать Birthday = DateTime.MinValue
                             PatientId = id,
                             Patient = new Patient()
                             {
                                 Id = id,
                                 Name = "",
-                                Birthday = DateTime.MinValue
-                            }
+                                Birthday = DateTime.MinValue,
+                                MedicalOrganization = addDataRequest.Affiliation
+                            },
+                            MedicineName = addDataRequest.MedicineName,
+                            MedicalOrganization = addDataRequest.Affiliation,
+                            StartTimestamp = addDataRequest.StartTimestamp,
+                            EndTimestamp = (DateTime)addDataRequest.EndTimestamp //TODO убрать явное приведение, везде заменить на Nullable
                         };
                         patientsInfluences[id] = influenceData;
                     }
@@ -104,8 +101,6 @@ namespace PatientDataHandler.API.Service.Services
                     {
                         try
                         {
-                            //if (headerParamsNames[j] == ParameterNames.None) В новой реализации будет заноситься и Id.
-                            //    return;
                             string parameterName = headers[j]; //Доступ к общему листу problem
 
                             ConcurrentDictionary<string, PatientParameter> curDict = isDynamicRows ? 
@@ -118,7 +113,8 @@ namespace PatientDataHandler.API.Service.Services
                                     Timestamp = parameterTimestamp,
                                     PatientId = id,
                                     IsDynamic = isDynamicRows,
-                                    Value = row[j]
+                                    Value = row[j],
+                                    PatientAffiliation = addDataRequest.Affiliation
                                 };
                             };
                         }
@@ -145,23 +141,9 @@ namespace PatientDataHandler.API.Service.Services
                 }
             }
 
-            foreach(KeyValuePair<int, Influence> inf in patientsInfluences)
-                SetInfluenceTimeByParamsTime(inf.Value);
-
             return patientsInfluences
                 .Values
                 .ToList();
-        }
-
-
-#warning Временное решение для указания даты воздействия.
-        private void SetInfluenceTimeByParamsTime(Influence influence)
-        {
-            DateTime start = influence.StartParameters.Values.OrderBy(x => x.Timestamp).First().Timestamp;
-            DateTime end = influence.DynamicParameters.Count > 0 ? 
-                influence.DynamicParameters.Values.OrderBy(x => x.Timestamp).Last().Timestamp : DateTime.MaxValue;
-            influence.StartTimestamp = start;
-            influence.EndTimestamp = end;
         }
 
 #warning Временное решение.
@@ -176,32 +158,5 @@ namespace PatientDataHandler.API.Service.Services
                 return GenderEnum.Male;
             else return GenderEnum.None;
         }
-
-
-        //private IList<IList<string>> LoadData(byte[] bytesData)
-        //{
-        //    //TODO try catch
-        //    IList<IList<string>> data = new List<IList<string>>();
-        //    System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
-        //    using (MemoryStream stream = new MemoryStream(bytesData))
-        //    {
-        //        using (var reader = ExcelReaderFactory.CreateReader(stream))
-        //        {
-        //            while (reader.Read()) //Each ROW
-        //            {
-        //                IList<string> row = new List<string>();
-        //                for (int column = 0; column < reader.FieldCount; column++)
-        //                {
-        //                    object value = reader.GetValue(column);
-        //                    row.Add(value == null ? "" : value.ToString());
-        //                }
-        //                data.Add(row);
-        //            }
-        //        }
-        //    }
-        //    return data;
-        //}
-
-       
     }
 }

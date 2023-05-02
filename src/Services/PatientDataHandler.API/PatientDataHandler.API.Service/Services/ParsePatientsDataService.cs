@@ -1,4 +1,5 @@
 ﻿using Interfaces;
+using Interfaces.Requests;
 using MediatR;
 using PatientDataHandler.API.Entities;
 using PatientDataHandler.API.Service.Command;
@@ -20,11 +21,11 @@ namespace PatientDataHandler.API.Service.Services
             this.mediator = mediator;
         }
 
-        public async void ParsePatients(FileData fileData)
+        public async void ParsePatients(IAddInfluencesRequest request)
         {
             try
             {
-                await mediator.Send(new SendPatientsDataFileCommand() { Data = fileData });
+                await mediator.Send(new SendPatientsDataFileCommand() { Request = request });
             }
             catch (Exception ex)
             {

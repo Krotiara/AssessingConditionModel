@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using PatientDataHandler.API.Entities;
+using PatientDataHandler.API.Entities.Requests;
 using PatientDataHandler.API.Service.Services;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
@@ -96,7 +97,7 @@ namespace PatientDataHandler.API.Messaging.Receive.Receiver
                 try
                 {
                     string content = Encoding.UTF8.GetString(ea.Body.ToArray());
-                    FileData fileData = JsonConvert.DeserializeObject<FileData>(content);
+                    AddInfluencesRequest fileData = JsonConvert.DeserializeObject<AddInfluencesRequest>(content);
 #warning Гарантируется ли, что здесь всегда приходит только дата пациентов, а не все сообщения?
                     //Stream s = GenerateStreamFromString(content);
                     parsePatientsDataService.ParsePatients(fileData);
