@@ -35,14 +35,14 @@ builder.Services.AddSwaggerGen(c =>
 builder.Services.AddScoped<IPatientParameter, PatientParameter>();
 builder.Services.AddScoped<IInfluence<Patient, PatientParameter>, Influence>();
 
-builder.Services.AddSingleton<ExcelDataProvider>();
+builder.Services.AddSingleton<TestDataProvider>();
 
 builder.Services.AddTransient<Func<InputFileType, IDataProvider>>(serviceProvider => serviceTypeName =>
 {
     switch (serviceTypeName)
     {
         case InputFileType.Test:
-            return serviceProvider.GetService<ExcelDataProvider>();
+            return serviceProvider.GetService<TestDataProvider>();
         default:
             return null;
     }

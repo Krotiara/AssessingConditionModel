@@ -17,11 +17,11 @@ namespace PatientDataHandler.API.Service.Services
     /// <summary>
     /// Парсер тестового формата данных.
     /// </summary>
-    public class ExcelDataProvider : IDataProvider
+    public class TestDataProvider : IDataProvider
     {
         private readonly ParseDataSettings _settings; //Временное решение.
 
-        public ExcelDataProvider(IOptions<ParseDataSettings> settings)
+        public TestDataProvider(IOptions<ParseDataSettings> settings)
         {
             _settings = settings.Value;
         }
@@ -63,8 +63,8 @@ namespace PatientDataHandler.API.Service.Services
                 {
                     IList<string> row = data[rowNum];
 
-                    DateTime parameterTimestamp = parameterTimestampIndex == -1 || row[parameterTimestampIndex] =="" ? 
-                        DateTime.MinValue : DateTime.Parse(row[parameterTimestampIndex]);
+                    DateTime parameterTimestamp = parameterTimestampIndex == -1 || row[parameterTimestampIndex] =="" ?
+                        addDataRequest.StartTimestamp : DateTime.Parse(row[parameterTimestampIndex]);
 
                     if (row[0] == _settings.Dynamic)
                     {
@@ -85,8 +85,6 @@ namespace PatientDataHandler.API.Service.Services
                             Patient = new Patient()
                             {
                                 Id = id,
-                                Name = "",
-                                Birthday = DateTime.MinValue,
                                 MedicalOrganization = addDataRequest.Affiliation
                             },
                             InfluenceType = addDataRequest.InfluenceType,
@@ -115,7 +113,8 @@ namespace PatientDataHandler.API.Service.Services
                                     PatientId = id,
                                     IsDynamic = isDynamicRows,
                                     Value = row[j],
-                                    PatientAffiliation = addDataRequest.Affiliation
+                                    PatientAffiliation = addDataRequest.Affiliation,
+                                    Name = parameterName
                                 };
                             };
                         }

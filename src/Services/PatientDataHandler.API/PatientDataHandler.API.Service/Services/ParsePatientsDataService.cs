@@ -21,16 +21,7 @@ namespace PatientDataHandler.API.Service.Services
             this.mediator = mediator;
         }
 
-        public async void ParsePatients(IAddInfluencesRequest request)
-        {
-            try
-            {
-                await mediator.Send(new SendPatientsDataFileCommand() { Request = request });
-            }
-            catch (Exception ex)
-            {
-                //TODO log
-            }
-        }
+        public async void ParsePatients(IAddInfluencesRequest request) 
+            => await mediator.Send(new SendPatientsDataFileCommand() { Request = request });   
     }
 }
