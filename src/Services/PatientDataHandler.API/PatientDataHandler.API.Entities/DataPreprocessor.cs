@@ -8,10 +8,16 @@ namespace PatientDataHandler.API.Entities
 {
     public class DataPreprocessor
     {
-        private readonly Regex ageYearRegex = new Regex(@"\d+г");
-        private readonly Regex ageMonthRegex = new Regex(@"\d+мес");
+        //private readonly Regex ageYearRegex = new Regex(@"\d+г");
+        //private readonly Regex ageMonthRegex = new Regex(@"\d+мес");
         private readonly Regex dateRegex = new Regex(@"\d{1,2}.\d{1,2}.\d{4}");
-        private readonly Regex idRegex = new Regex(@"\d+");
+        //private readonly Regex idRegex = new Regex(@"\d+");
+        private readonly ParseDataSettings _settings; //Временное решение.
+
+        public DataPreprocessor(ParseDataSettings settings)
+        {
+            _settings = settings;
+        }
 
 
         /// <summary>
@@ -21,20 +27,11 @@ namespace PatientDataHandler.API.Entities
         /// <returns></returns>
         public IList<string[]> PreProcessData(IList<string[]> data)
         {
-            data[0] = data[0].Select(x => x.Trim().ToLower()).ToArray();
-
             var genderIndexVal = data[0]
-                .Select(x=> x.Trim().ToLower())
                 .Select((Value, Index) => new { Value, Index })
-                .FirstOrDefault(p => p.Value == "пол" || p.Value == "gender");
+                .FirstOrDefault(p => p.Value == _settings.Gender);
             int genderIndex = genderIndexVal == null ? -1 : genderIndexVal.Index;
-
-            var ageIndexVal = data[0]
-                .Select(x => x.Trim().ToLower())
-                .Select((Value, Index) => new { Value, Index })
-                .FirstOrDefault(p => p.Value == "возраст" || p.Value == "age");
-            int ageIndex = ageIndexVal == null ? -1 : ageIndexVal.Index;
-
+ 
             for (int i = 1; i < data.Count; i++)
             {
                 List<string> row = data[i].Select(x=>x.Trim().ToLower()).ToList();
@@ -42,8 +39,6 @@ namespace PatientDataHandler.API.Entities
                 AdjustRowDelimeters(ref row);
                 if(genderIndex != -1)
                     AdjustGender(ref row, genderIndex);
-                if(ageIndex != -1)
-                    AdjustAge(ref row, ageIndex);
                 data[i] = row.ToArray();
             }
 
@@ -75,24 +70,24 @@ namespace PatientDataHandler.API.Entities
         }
 
 
-        private void AdjustAge(ref List<string> rawRow, int ageIndex)
-        {    
-            string rawAge = rawRow[ageIndex].Replace(" ", ""); //Во входных данных могут встретиться пробелы, поэтому убираем их.
-            if (rawAge.Equals("")) return; //TODO понадежнее обработку
+        //private void AdjustAge(ref List<string> rawRow, int ageIndex)
+        //{    
+        //    string rawAge = rawRow[ageIndex].Replace(" ", ""); //Во входных данных могут встретиться пробелы, поэтому убираем их.
+        //    if (rawAge.Equals("")) return; //TODO понадежнее обработку
            
-            double age;
-            bool isParseCorrect = double.TryParse(rawAge, out age);
-            if (!isParseCorrect)
-            {
-                string yearString = ageYearRegex.Match(rawAge).Value;
-                string monthString = ageMonthRegex.Match(rawAge).Value;
-                double rAge = double.Parse(Regex.Match(yearString, @"\d").Value);
-                double rMonth = double.Parse(Regex.Match(monthString, @"\d").Value);
-                rawRow[ageIndex] = $"{rAge},{rMonth}";
-            }
-            else
-                rawRow[ageIndex] = age.ToString();
-        }
+        //    double age;
+        //    bool isParseCorrect = double.TryParse(rawAge, out age);
+        //    if (!isParseCorrect)
+        //    {
+        //        string yearString = ageYearRegex.Match(rawAge).Value;
+        //        string monthString = ageMonthRegex.Match(rawAge).Value;
+        //        double rAge = double.Parse(Regex.Match(yearString, @"\d").Value);
+        //        double rMonth = double.Parse(Regex.Match(monthString, @"\d").Value);
+        //        rawRow[ageIndex] = $"{rAge},{rMonth}";
+        //    }
+        //    else
+        //        rawRow[ageIndex] = age.ToString();
+        //}
 
 
         private void AdjustGender(ref List<string> rawRow, int genderColumnIndex)

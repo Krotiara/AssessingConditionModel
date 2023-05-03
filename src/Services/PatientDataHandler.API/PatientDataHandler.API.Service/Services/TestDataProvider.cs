@@ -37,7 +37,7 @@ namespace PatientDataHandler.API.Service.Services
                 foreach (string row in rows)
                     rawData.Add(row.Split(";"));
 
-                DataPreprocessor dataPreprocessor = new DataPreprocessor();
+                DataPreprocessor dataPreprocessor = new DataPreprocessor(_settings);
                 rawData = dataPreprocessor.PreProcessData(rawData);
                 IList<Influence> res = ParseData(addDataRequest, rawData[0], rawData.Skip(1).ToList());
                 return res;
@@ -132,6 +132,9 @@ namespace PatientDataHandler.API.Service.Services
 
                     influenceData.Patient.Gender = influenceData.StartParameters.ContainsKey(_settings.Gender) ? 
                         GetPatientGender(influenceData.StartParameters[_settings.Gender]) : GenderEnum.None;
+
+                    influenceData.Patient.Birthday = influenceData.StartParameters.ContainsKey(_settings.Birthday) ?
+                        DateTime.Parse(influenceData.StartParameters[_settings.Birthday].Value) : default;
                     
                 }
                 catch(Exception ex)

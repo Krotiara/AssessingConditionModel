@@ -15,5 +15,7 @@ namespace PatientDataHandler.API.Entities
         public string Dynamic { get; set; }
 
         public string Gender { get; set; }
+
+        public string Birthday { get; set; }
     }
 }
