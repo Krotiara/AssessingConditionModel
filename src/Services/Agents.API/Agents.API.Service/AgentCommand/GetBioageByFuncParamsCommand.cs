@@ -18,7 +18,7 @@ namespace Agents.API.Service.AgentCommand
         private readonly PatientParametersService _pPSerivce;
 
         //TODO продумать, как избавиться от такого.
-        private readonly string _pressureDeltaParam = "PressureDelta";
+        private readonly string _pressureDeltaParam = "PulsePressure";
         private readonly string _systolicPressure = "SystolicPressure";
         private readonly string _diastolicPressure = "DiastolicPressure";
 
@@ -55,7 +55,7 @@ namespace Agents.API.Service.AgentCommand
             float[] inputArgs = new float[names.Count];
             for(int i = 0; i < names.Count; i++)
             {
-                if (parameters[names[i]] == null)
+                if (!parameters.ContainsKey(names[i]))
                     throw new ExecuteCommandException($"One of the required parameters is null: {names[i]}");
                 inputArgs[i] = parameters[names[i]].ConvertValue<float>();
             }
@@ -68,42 +68,15 @@ namespace Agents.API.Service.AgentCommand
                 var res = await responce.DeserializeBody<float[]>();
                 return (int)Math.Ceiling(res.First());
             }
-
-            //float[] inputArgs = new float[]
-            //{
-            //    pDict[ParameterNames.SystolicPressure].ConvertValue<float>(),
-            //    pDict[ParameterNames.DiastolicPressure].ConvertValue<float>(),
-            //    pDict[ParameterNames.SystolicPressure].ConvertValue<float>() - pDict[ParameterNames.DiastolicPressure].ConvertValue<float>(),
-            //    pDict[ParameterNames.InhaleBreathHolding].ConvertValue<float>(),
-            //    pDict[ParameterNames.OuthaleBreathHolding].ConvertValue<float>(),
-            //    pDict[ParameterNames.LungCapacity].ConvertValue<float>(),
-            //    pDict[ParameterNames.Weight].ConvertValue<float>(),
-            //    pDict[ParameterNames.Accommodation].ConvertValue<float>(),
-            //    pDict[ParameterNames.HearingAcuity].ConvertValue<float>(),
-            //    pDict[ParameterNames.StaticBalancing].ConvertValue<float>()
-            //};
-
-            //IPredictRequest request = new PredictRequest() { Id = _modelKey.Id, Version = _modelKey.Version, Input = inputArgs };
-            //string requestBody = Newtonsoft.Json.JsonConvert.SerializeObject(request);
-            //string url = $"{_modelsServerUrl}/models/predict";
-
-            //var responce = await _webRequester.SendRequest(url, "POST", requestBody);
-            //if (!responce.IsSuccessStatusCode)
-            //    throw new ExecuteCommandException($"{responce.StatusCode}:{responce.ReasonPhrase}");
-            //else
-            //{
-            //    var res = await _webRequester.DeserializeBody<float[]>(responce);
-            //    return (int)Math.Ceiling(res.First());
-            //}
         };
 
 
         //TODO придумать, как такое отслеживать.
         private void InitPressureDelta(Dictionary<string, PatientParameter> dict)
         {
-            if (dict[_pressureDeltaParam] != null)
+            if (dict.ContainsKey(_pressureDeltaParam))
                 return;
-            if (dict[_systolicPressure] == null || dict[_diastolicPressure] == null)
+            if (!dict.ContainsKey(_systolicPressure) || !dict.ContainsKey(_diastolicPressure))
                 return;
             dict[_pressureDeltaParam] = new PatientParameter()
             {

@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace Agents.API.Service.Services
 {
@@ -29,15 +30,15 @@ namespace Agents.API.Service.Services
         {
             string body = Newtonsoft.Json.JsonConvert.SerializeObject(request);
             //TODO Запрос latestParameters
-            string url = $"{_patientsResolverApiUrl}/patientsApi/latestParameters";
+            string url = $"{_patientsResolverApiUrl}/patientsApi/latestPatientParameters";
             var responce = await _webRequester.SendRequest(url, "POST", body);
             if(!responce.IsSuccessStatusCode)
             {
                 _logger.LogError($"Cannot get latest parameters by request: {responce.StatusCode}.");
                 return null;
             }
-            Dictionary<string, PatientParameter> res = await responce.DeserializeBody<Dictionary<string, PatientParameter>>();
-            return res;
+            var res = await responce.DeserializeBody<List<PatientParameter>>();
+            return res.ToDictionary(x=>x.Name, x=>x);
         }
     }
 }
