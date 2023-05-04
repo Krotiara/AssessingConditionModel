@@ -73,34 +73,29 @@ namespace Agents.API.Service.AgentCommand
             float[] inputArgs = new float[names.Count];
             for (int i = 0; i < names.Count; i++)
             {
-                if (Variables.ContainsKey(names[i]))
+                if (Variables.ContainsKey(names[i]) && Variables[names[i]].Value is float)
                 {
-                    if (Variables[names[i]].Value is float)
-                        inputArgs[i] = (float)Variables[names[i]].Value;
-                    else
-                        throw new ExecuteCommandException($"Variable {names[i]} is not float");
+                    inputArgs[i] = (float)Variables[names[i]].Value;
+                    continue;
                 }
 
-                else if (Properties.ContainsKey(names[i]))
+                if (Properties.ContainsKey(names[i]) && Properties[names[i]].Value is float)
                 {
-                    if (Properties[names[i]].Value is float)
-                        inputArgs[i] = (float)Properties[names[i]].Value;
-                    else
-                        throw new ExecuteCommandException($"Property {names[i]} is not float");
+                    inputArgs[i] = (float)Properties[names[i]].Value;
+                    continue;
                 }
 
-                else if (names[i] == _ageParameter)
+                if (names[i] == _ageParameter)
                 {
                     inputArgs[i] = age;
                     continue;
                 }
 
-                else
-                {
-                    if (!parameters.ContainsKey(names[i]))
-                        throw new ExecuteCommandException($"One of the required parameters is null: {names[i]}");
-                    inputArgs[i] = parameters[names[i]].ConvertValue<float>();
-                } 
+                
+                if (!parameters.ContainsKey(names[i]))
+                    throw new ExecuteCommandException($"One of the required parameters is not found: {names[i]}");
+                inputArgs[i] = parameters[names[i]].ConvertValue<float>();
+                
             }
 
             var responce = await _pMService.Predict(model, inputArgs);
