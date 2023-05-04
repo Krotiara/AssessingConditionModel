@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Interfaces.DynamicAgent;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -17,6 +19,12 @@ namespace Agents.API.Service
                 T desRes = Newtonsoft.Json.JsonConvert.DeserializeObject<T>(res);
                 return desRes;
             }
+        }
+
+
+        public static T ConvertValue<T>(this IProperty property)
+        {
+            return (T)TypeDescriptor.GetConverter(typeof(T)).ConvertFrom(property.Value);
         }
     }
 }

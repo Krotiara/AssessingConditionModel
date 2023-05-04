@@ -64,19 +64,18 @@ namespace Agents.API.Service.AgentCommand
             float[] inputArgs = new float[names.Count];
             for(int i = 0; i < names.Count; i++)
             {
-                if (Variables.ContainsKey(names[i]) && Variables[names[i]].Value is float)
+                if (Variables.ContainsKey(names[i]) && Variables[names[i]].Value != null)
                 {
-                    inputArgs[i] = (float)Variables[names[i]].Value;
+                    inputArgs[i] = Variables[names[i]].ConvertValue<float>();
                     continue;
                 }
 
-                if (Properties.ContainsKey(names[i]) && Properties[names[i]].Value is float)
+                if (Properties.ContainsKey(names[i]) && Properties[names[i]].Value != null)
                 {
-                    inputArgs[i] = (float)Properties[names[i]].Value;
+                    inputArgs[i] = Properties[names[i]].ConvertValue<float>();
                     continue;
                 }
 
-                
                 if (!parameters.ContainsKey(names[i]))
                     throw new ExecuteCommandException($"One of the required parameters is not found: {names[i]}");
                 inputArgs[i] = parameters[names[i]].ConvertValue<float>();      
