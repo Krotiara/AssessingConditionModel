@@ -49,7 +49,8 @@ namespace PatientsResolver.API.Controllers
             }
         }
 
-       
+
+        //TODO Изменить Controller на ControllerBase и на возврат ActionResult без указания типа.
         [HttpPut("patientsApi/updatePatient")]
         public async Task<ActionResult<bool>> UpdatePatient([FromBody]Patient patient)
         {

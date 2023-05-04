@@ -15,14 +15,11 @@ namespace Agents.API.Entities
         public int Id { get; set; }
         public int InfluenceId { get; set; }
         public int PatientId { get; set; }
+        public string PatientAffiliation { get; set; }
         public DateTime Timestamp { get; set; }
-        public ParameterNames ParameterName { get; set; }
-        public string NameTextDescription { get; set; }
+        public string Name { get; set; }
         public string Value { get; set; }
-
-        public int PositiveDynamicCoef { get; set; }
         public bool IsDynamic { get; set; }
-        public string MedicalOrganization { get; set; }
 
 
 #warning Опасно менят ьвообще дял всех типов запятые на точки.

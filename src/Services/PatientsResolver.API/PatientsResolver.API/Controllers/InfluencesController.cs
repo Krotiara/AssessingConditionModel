@@ -111,12 +111,12 @@ namespace PatientsResolver.API.Controllers
        
 
         [HttpPost("patientsApi/addInfluenceData/")]
-        public async Task<ActionResult<bool>> AddData([FromBody] FileData fileData)
+        public async Task<ActionResult<bool>> AddData([FromBody] AddInfluencesRequest request)
         {
             //TODO Добавить статус отсылки
             try
             {
-                bool isSuccessSendRequest = await mediator.Send(new SendPatientDataFileSourceCommand() { Data = fileData });
+                bool isSuccessSendRequest = await mediator.Send(new SendPatientDataFileSourceCommand() { Request = request });
                 return Ok(isSuccessSendRequest);
             }
             catch (Exception ex)

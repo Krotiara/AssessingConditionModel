@@ -35,14 +35,14 @@ builder.Services.AddSwaggerGen(c =>
 builder.Services.AddScoped<IPatientParameter, PatientParameter>();
 builder.Services.AddScoped<IInfluence<Patient, PatientParameter>, Influence>();
 
-builder.Services.AddSingleton<ExcelDataProvider>();
+builder.Services.AddSingleton<TestDataProvider>();
 
-builder.Services.AddTransient<Func<DataParserTypes, IDataProvider>>(serviceProvider => serviceTypeName =>
+builder.Services.AddTransient<Func<InputFileType, IDataProvider>>(serviceProvider => serviceTypeName =>
 {
     switch (serviceTypeName)
     {
-        case DataParserTypes.TestVahitova:
-            return serviceProvider.GetService<ExcelDataProvider>();
+        case InputFileType.Test:
+            return serviceProvider.GetService<TestDataProvider>();
         default:
             return null;
     }
@@ -55,6 +55,7 @@ var serviceClientSettings = serviceClientSettingsConfigFile.Get<PatientDataHandl
 
 builder.Services.Configure<PatientDataHandler.API.Messaging.Receive.RabbitMqConfiguration>(serviceClientSettingsConfigFile);
 builder.Services.Configure<PatientDataHandler.API.Messaging.Send.RabbitMqConfiguration>(serviceClientSettingsConfigData);
+builder.Services.Configure<ParseDataSettings>(builder.Configuration.GetSection("ParseDataSettings"));
 
 builder.Services.AddMediatR(Assembly.GetExecutingAssembly(), typeof(IParsePatientsDataService).Assembly);
 builder.Services.AddTransient<IRequestHandler<SendPatientsDataFileCommand, Unit>, SendPatientsDataFileCommandHandler>();

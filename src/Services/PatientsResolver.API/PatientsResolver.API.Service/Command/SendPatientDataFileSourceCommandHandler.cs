@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using PatientsResolver.API.Entities;
+using PatientsResolver.API.Entities.Requests;
 using PatientsResolver.API.Messaging.Send.Sender;
 using System;
 using System.Collections.Generic;
@@ -12,7 +13,7 @@ namespace PatientsResolver.API.Service.Command
 
     public class SendPatientDataFileSourceCommand : IRequest<bool>
     {
-        public FileData Data { get; set; }
+        public AddInfluencesRequest Request { get; set; }
     }
 
     public class SendPatientDataFileSourceCommandHandler : IRequestHandler<SendPatientDataFileSourceCommand, bool>
@@ -26,7 +27,7 @@ namespace PatientsResolver.API.Service.Command
 
         public async Task<bool> Handle(SendPatientDataFileSourceCommand request, CancellationToken cancellationToken)
         {
-            bool isSuccess = patientFileDataSender.SendPatientsFileData(request.Data);
+            bool isSuccess = patientFileDataSender.SendPatientsFileData(request.Request);
             return isSuccess;
         }
     }

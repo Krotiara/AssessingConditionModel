@@ -14,10 +14,10 @@ namespace PatientDataHandler.API.Service.Command
     public class SendPatientsDataFileCommandHandler :
         IRequestHandler<SendPatientsDataFileCommand, Unit>
     {
-        Func<DataParserTypes, IDataProvider> dataParserResolver;
+        Func<InputFileType, IDataProvider> dataParserResolver;
         IPatientsDataSender patientsDataSender;
 
-        public SendPatientsDataFileCommandHandler(Func<DataParserTypes, IDataProvider> dataParserResolver,
+        public SendPatientsDataFileCommandHandler(Func<InputFileType, IDataProvider> dataParserResolver,
             IPatientsDataSender patientsDataSender)
         {
             this.dataParserResolver = dataParserResolver;
@@ -27,24 +27,10 @@ namespace PatientDataHandler.API.Service.Command
 
         public Task<Unit> Handle(SendPatientsDataFileCommand request, CancellationToken cancellationToken)
         {
-            FileData fileData = request.Data; //TODO по FileData определение DataParserTypes
-            IDataProvider dataProvider = dataParserResolver.Invoke(DataParserTypes.TestVahitova);
-            IList<Influence> patientDatas = dataProvider.ParseData(fileData.RawData);
-
-            //Очень кривое прокидывание MedicalOrganization
-            foreach (Influence inf in patientDatas)
-            {
-                inf.MedicalOrganization = fileData.MedicalOrganization;
-                inf.Patient.MedicalOrganization = fileData.MedicalOrganization;
-                foreach (var p in inf.StartParameters)
-                    p.Value.MedicalOrganization = fileData.MedicalOrganization;
-                foreach (var p in inf.DynamicParameters)
-                    p.Value.MedicalOrganization = fileData.MedicalOrganization;
-            }
-
+            IDataProvider dataProvider = dataParserResolver.Invoke(request.Request.InputFileType);
+            IList<Influence> patientDatas = dataProvider.ParseData(request.Request);
             patientsDataSender.SendPatientsData(patientDatas);
             return Unit.Task;
-
         }
     }
 }

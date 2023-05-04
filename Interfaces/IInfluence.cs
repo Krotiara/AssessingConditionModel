@@ -19,7 +19,7 @@ namespace Interfaces
    
         public DateTime EndTimestamp { get; set; }
 
-        public InfluenceTypes InfluenceType { get; set; }
+        public string InfluenceType { get; set; }
 
         /// <summary>
         /// Название препарата.
@@ -28,9 +28,9 @@ namespace Interfaces
 
         public string MedicalOrganization { get; set; }
 
-        public ConcurrentDictionary<ParameterNames, T2> StartParameters { get; set; }
+        public ConcurrentDictionary<string, T2> StartParameters { get; set; }
 
-        public ConcurrentDictionary<ParameterNames, T2> DynamicParameters { get; set; }
+        public ConcurrentDictionary<string, T2> DynamicParameters { get; set; }
 
 
 

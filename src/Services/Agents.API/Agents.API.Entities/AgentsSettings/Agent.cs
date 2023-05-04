@@ -34,6 +34,8 @@ namespace Agents.API.Entities.AgentsSettings
 
         private readonly string _stateNumberArg;
 
+        private readonly AgentPropertiesNamesSettings _commonPropertiesNames;
+
         public Agent(IAgentKey key, AgentsSettings settings, ICodeExecutor codeExecutor)
         {
             _codeExecutor = codeExecutor;
@@ -48,6 +50,7 @@ namespace Agents.API.Entities.AgentsSettings
             _stateNumberArg = settings.CommonNamesSettings.StateNumber;
             InitDicts(settings);
             InitCommonProperties(key, settings.CommonNamesSettings);
+            _commonPropertiesNames = settings.CommonNamesSettings; //TODO инициализация нового экземпляра, чтобы не продлевать время жизни settings
         }
 
 
@@ -55,7 +58,8 @@ namespace Agents.API.Entities.AgentsSettings
         {
             try
             {
-                ConcurrentDictionary<string, IProperty> calculatedArgs = await _codeExecutor.ExecuteCode(_stateResolveCode, Variables, _commonProperties);
+                ConcurrentDictionary<string, IProperty> calculatedArgs = await _codeExecutor
+                    .ExecuteCode(_stateResolveCode, Variables, _commonProperties, _commonPropertiesNames);
                 string state = await UpdateStateBy(calculatedArgs);
                 CurrentState = States[state];
                 //TODO - set numeric characteristic. - сделать через указываемый через фронт параметр.
@@ -123,7 +127,7 @@ namespace Agents.API.Entities.AgentsSettings
             foreach(IAgentState state in States.Values)
             {
                 string ifCondition = $"{stateVar}={state.DefinitionCode}";
-                var args = await _codeExecutor.ExecuteCode(ifCondition, calcArgs, _commonProperties);
+                var args = await _codeExecutor.ExecuteCode(ifCondition, calcArgs, _commonProperties, _commonPropertiesNames);
                 if ((bool)args[stateVar].Value)
                 {
                     //TODO обработка ошибки, если stateNumberVar не число.

@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 
 namespace PatientsResolver.API.Entities.Requests
 {
-    public class PatientParametersRequest : IPatientParametersRequest
+    public class PatientParametersRequest : ILatestParametersrequest
     {
         public string MedicalOrganization { get; set; }
         public int PatientId { get; set; }
-        public DateTime StartTimestamp { get; set; }
         public DateTime EndTimestamp { get; set; }
+        public List<string> Names { get; set; }
     }
 }

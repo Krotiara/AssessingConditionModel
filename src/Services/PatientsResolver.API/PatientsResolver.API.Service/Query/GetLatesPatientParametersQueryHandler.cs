@@ -32,8 +32,7 @@ namespace PatientsResolver.API.Service.Query
 
         public async Task<List<PatientParameter>> Handle(GetLatesPatientParametersQuery request, CancellationToken cancellationToken)
         {
-            return await repository.GetLatestParameters(request.Request.PatientId, request.Request.MedicalOrganization, 
-                request.Request.StartTimestamp, request.Request.EndTimestamp);
+            return await repository.GetLatestParameters(request.Request.PatientId, request.Request.MedicalOrganization, request.Request.EndTimestamp);
         }
     }
 }

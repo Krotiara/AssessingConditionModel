@@ -5,6 +5,8 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace PatientsResolver.API.Entities
 {
+    //TODO упростить в связи с введением Parameter в Interfaces.
+
     [Table("PatientParameters")]
     public class PatientParameter : IPatientParameter
     {
@@ -19,40 +21,38 @@ namespace PatientsResolver.API.Entities
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
-
         [NotNull]
-        [Column("PatientDataId")]
-        public int InfluenceId { get; set; } 
-
+        [Column("InfluenceId")]
+        public int InfluenceId { get; set; }
 
         [NotNull]
         [Required]
-        public int PatientId { get ; set ; }
+        [Column("PatientId")]
+        public int PatientId { get; set; }
 
         [NotNull]
         [Required]
-        public DateTime Timestamp { get ; set ; }
+        [Column("PatientAffiliation")]
+        public string PatientAffiliation { get; set; }
+
+        [NotNull]
+        [Required]
+        [Column("Timestamp")]
+        public DateTime Timestamp { get; set; }
 
         [NotNull]
         [Required]
         [Column("Name")]
-        public string NameTextDescription { get ; set ; }
+        public string Name { get; set; }
 
         [NotNull]
         [Required]
-        public string Value { get ; set ; }
-       
-        
+        [Column("Value")]
+        public string Value { get; set; }
+
         [NotNull]
         [Required]
-        public int PositiveDynamicCoef { get ; set ; }
-
-        [NotMapped]
-        public ParameterNames ParameterName { get; set ; }
-
+        [Column("IsDynamic")]
         public bool IsDynamic { get; set; }
-
-        [Column("MedicalOrganization")]
-        public string MedicalOrganization { get; set; }
     }
 }

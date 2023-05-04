@@ -13,7 +13,8 @@ namespace Agents.API.Interfaces
     {
         public Task<ConcurrentDictionary<string, IProperty>> ExecuteCode(string codeLines, 
             ConcurrentDictionary<string, IProperty> variables,
-             ConcurrentDictionary<string, IProperty> properties,
+            ConcurrentDictionary<string, IProperty> properties,
+            IAgentPropertiesNamesSettings commonPropertiesNames,
             CancellationToken cancellationToken=default);
 
 

@@ -36,8 +36,6 @@ namespace PatientsResolver.API.Data.Repository
                         if (await IsInluenceExistAsync(dbContext, influence))
                             return false;
 
-                        CheckParametersValues(influence);
-
                         Patient patient = await dbContext
                             .Patients
                             .FirstOrDefaultAsync(x => x.Id == influence.PatientId && x.MedicalOrganization == influence.MedicalOrganization);
@@ -66,18 +64,6 @@ namespace PatientsResolver.API.Data.Repository
                     }
                 }
             });     
-        }
-
-
-        private void CheckParametersValues(Influence influence)
-        {
-#warning Выглядит костыльно
-            foreach (PatientParameter p in influence.StartParameters.Values)
-                if (p.NameTextDescription == null || p.NameTextDescription == string.Empty)
-                    p.NameTextDescription = p.ParameterName.GetDisplayAttributeValue();
-            foreach(PatientParameter p in influence.DynamicParameters.Values)
-                if (p.NameTextDescription == null || p.NameTextDescription == string.Empty)
-                    p.NameTextDescription = p.ParameterName.GetDisplayAttributeValue();
         }
 
 
@@ -203,15 +189,14 @@ namespace PatientsResolver.API.Data.Repository
         {
             IQueryable<PatientParameter> parameters = dbContext
                 .PatientsParameters
-                .Where(y => y.InfluenceId == influence.Id && y.MedicalOrganization == influence.MedicalOrganization);
+                .Where(y => y.InfluenceId == influence.Id && y.PatientAffiliation == influence.MedicalOrganization);
             foreach (PatientParameter p in parameters)
                 try
                 {
-                    p.ParameterName = p.NameTextDescription.GetParameterByDescription(); //TODO Может есть выход лучше?
                     if (p.IsDynamic)
-                        influence.DynamicParameters[p.ParameterName] = p;
+                        influence.DynamicParameters[p.Name] = p;
                     else
-                        influence.StartParameters[p.ParameterName] = p;
+                        influence.StartParameters[p.Name] = p;
                 }
                 catch (Exception ex)
                 {
@@ -267,6 +252,7 @@ namespace PatientsResolver.API.Data.Repository
         }
 
 
+#warning Это что за ужас?
         private async Task CopyFieldsToDbInfuence(Influence from, Influence dbInfluence, CancellationToken cancellationToken)
         {
             //TODO заменить на .Copy Без пересоздания элемента
@@ -300,9 +286,9 @@ namespace PatientsResolver.API.Data.Repository
                 await ProcessParametersAsync(dbContext, dbInfluence.Id, startParamsToAdd.Concat(dynamicParamsToAdd), cancellationToken);
 
             foreach (PatientParameter p in startParamsToUpdate)
-                CopyFieldsToDbParameter(dbContext, p, dbInfluence.StartParameters[p.ParameterName]);
+                CopyFieldsToDbParameter(dbContext, p, dbInfluence.StartParameters[p.Name]);
             foreach (PatientParameter p in dynamicParamsToUpdate)
-                CopyFieldsToDbParameter(dbContext, p, dbInfluence.DynamicParameters[p.ParameterName]);
+                CopyFieldsToDbParameter(dbContext, p, dbInfluence.DynamicParameters[p.Name]);
 
             foreach (PatientParameter p in paramsToDelete)
                 dbContext.Entry(p).State = EntityState.Deleted;
@@ -318,9 +304,7 @@ namespace PatientsResolver.API.Data.Repository
         {
             dbParameter.Value = from.Value;
             dbParameter.IsDynamic = from.IsDynamic;
-            dbParameter.IsDynamic = from.IsDynamic;
-            dbParameter.NameTextDescription = from.NameTextDescription;
-            dbParameter.PositiveDynamicCoef = from.PositiveDynamicCoef;
+            dbParameter.Name = from.Name;
             dbContext.Entry(dbParameter).State = EntityState.Modified;
         }
 

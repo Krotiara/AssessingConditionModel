@@ -7,11 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="MediatR" Version="10.0.1" />
+    <Compile Remove="Query\**" />
+    <EmbeddedResource Remove="Query\**" />
+    <None Remove="Query\**" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Query\" />
+    <PackageReference Include="MediatR" Version="10.0.1" />
   </ItemGroup>
 
   <ItemGroup>

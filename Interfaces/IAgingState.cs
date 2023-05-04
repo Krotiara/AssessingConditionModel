@@ -17,7 +17,5 @@ namespace Interfaces
         public double Age { get; set; }
 
         public double BioAge { get; set; }
-
-        public AgentBioAgeStates BioAgeState { get; set; }
     }
 }

@@ -24,9 +24,12 @@ namespace Agents.API.Service.Command
     {
         public ICommand Command { get; }
 
-        public ExecuteCodeLineCommand(ICommand command)
+        public IAgentPropertiesNamesSettings CommonPropertiesNames { get; }
+
+        public ExecuteCodeLineCommand(ICommand command, IAgentPropertiesNamesSettings commonPropertiesNames)
         {
             Command = command;
+            CommonPropertiesNames = commonPropertiesNames;
         }
     }
 
@@ -53,7 +56,8 @@ namespace Agents.API.Service.Command
 
 #warning Не учтен случай, когда есть и вызов функции, и простые слагаемые. Нужно доьавить обнаружение этого и эксепшн. Усложнять псевдо-выполнитель кода не надо.
 
-            (ICommandArgsTypesMeta, Delegate) commandPair = await _codeResolveService.ResolveCommandAction(request.Command, cancellationToken);
+            (ICommandArgsTypesMeta, Delegate) commandPair = 
+                await _codeResolveService.ResolveCommandAction(request.Command, request.CommonPropertiesNames, cancellationToken);
             List<object> variables = await _mediator.Send(new GetCommandArgsValuesQueue(request.Command, commandPair.Item1), cancellationToken);
 
             if (request.Command.CommandType == CommandType.Assigning)

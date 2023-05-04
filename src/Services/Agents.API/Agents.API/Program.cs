@@ -14,19 +14,16 @@ using Interfaces.DynamicAgent;
 using Agents.API.Service.Command;
 using Agents.API;
 using Agents.API.Entities.AgentsSettings;
+using Quartz;
+using Agents.API.Jobs;
 
 var builder = WebApplication.CreateBuilder(args);
-
+var services = builder.Services;
 
 // Add services to the container.
-builder.Services.AddControllers().AddNewtonsoftJson();
+services.AddControllers().AddNewtonsoftJson();
 
-//builder.Services.AddHttpsRedirection(options =>
-//{
-//    options.HttpsPort = 443;
-//});
-
-builder.Services.AddSwaggerGen(c =>
+services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo()
     {
@@ -44,21 +41,14 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
-builder.Services.Configure<TempModelSettings>(builder.Configuration.GetSection("Models"));
-builder.Services.Configure<EnvSettings>(builder.Configuration.GetSection("EnvSettings"));
-CommandsDependensyRegistrator.RegisterDependencies(builder.Services);
-/*Теперь вы можете выполнять ваши запросы. Для этого вам потребуется получить экземпляр интерфейса IMediator. Он регистрируется в вашем контейнере зависимостей той же командой AddMediatR.*/
-builder.Services.AddMediatR(Assembly.GetExecutingAssembly());
+services.Configure<TempModelSettings>(builder.Configuration.GetSection("Models"));
+services.Configure<EnvSettings>(builder.Configuration.GetSection("EnvSettings"));
+CommandsDependensyRegistrator.RegisterDependencies(services);
+services.AddMediatR(Assembly.GetExecutingAssembly());
 
 #region rabbitMQ
-//var configReceiveAddData = builder.Configuration.GetSection("RabbitMqAddData");
-builder.Services.Configure<RabbitMqConfiguration>(builder.Configuration.GetSection("RabbitMq"));
-builder.Services.Configure<AddDataConfig>(builder.Configuration.GetSection("RabbitMqAddInfo"));
-/*Теперь вы можете выполнять ваши запросы. Для этого вам потребуется получить экземпляр интерфейса IMediator. Он регистрируется в вашем контейнере зависимостей той же командой AddMediatR.*/
-//if (builder.Configuration.GetSection("RabbitMq").Get<RabbitMqConfiguration>().Enabled)
-//    builder.Services.AddHostedService<UpdatePatientsDataReceiver>();
-//if(builder.Configuration.GetSection("RabbitMqAddInfo").Get<AddDataConfig>().Enabled)
-//    builder.Services.AddHostedService<AddPatientsReceiver>();
+services.Configure<RabbitMqConfiguration>(builder.Configuration.GetSection("RabbitMq"));
+services.Configure<AddDataConfig>(builder.Configuration.GetSection("RabbitMqAddInfo"));
 #endregion
 
 string connectionString = builder.Configuration.GetConnectionString("PostgresConnection");
@@ -67,21 +57,15 @@ string connectionString = builder.Configuration.GetConnectionString("PostgresCon
 //Для избежания ошибки Cannot write DateTime with Kind=Local to PostgreSQL type 'timestamp with time zone', only UTC is supported.
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
-builder.Services
-    .AddSingleton<ICodeExecutor, CodeExecutorService>()
-    .AddTransient<IWebRequester, HttpWebRequester>();
-builder.Services
+services
+    .AddTransient<IWebRequester, HttpWebRequester>()
     .AddTransient<IAgingDynamics<AgingState>, AgingDynamics>()
-    .AddSingleton<AgentsService>();
+    .AddTransient<IProperty, Property>()
+    .AddTransient<IAgentState, AgentState>();
 
-builder.Services
-    .AddTransient<IRequestHandler<GetAgentStateQuery, IAgentState>, GetAgentStateQueryHandler>();
-
-builder.Services.AddSingleton<IAgentsStore, AgentsStore>();
-
-builder.Services.AddTransient<IProperty, Property>();
-builder.Services.AddTransient<IAgentState, AgentState>();
-builder.Services
+services
+    .AddTransient<IRequestHandler<GetPatientInfoQuery, HttpResponseMessage>, GetPatientInfoQueryHandler>()
+    .AddTransient<IRequestHandler<GetAgentStateQuery, IAgentState>, GetAgentStateQueryHandler>()
     .AddTransient<IRequestHandler<GetCommandTypesMetaQueue, ICommandArgsTypesMeta>, GetCommandTypesMetaQueueHandler>()
     .AddTransient<IRequestHandler<GetCommandArgsValuesQueue, List<object>>, GetCommandArgsValuesQueueHandler>()
     .AddTransient<IRequestHandler<ParseCodeLineCommand, ICommand>, ParseCodeLineCommandHandler>()
@@ -91,8 +75,29 @@ builder.Services
     .AddTransient<IMetaStorageService, InternalMetaStorageService>()
     .AddTransient<ICodeResolveService, CodeResolveService>();
 
-builder.Services.AddSingleton<SettingsStore>();
-builder.Services.AddSingleton<SettingsService>();
+services
+    .AddSingleton<SettingsStore>()
+    .AddSingleton<IAgentsStore, AgentsStore>();
+
+services
+    .AddSingleton<SettingsService>()
+    .AddSingleton<PredcitionModelsService>()
+    .AddSingleton<AgentsService>()
+    .AddSingleton<ICodeExecutor, CodeExecutorService>()
+    .AddSingleton<PredcitionModelsService>()
+    .AddSingleton<PatientParametersService>();
+
+services.AddQuartz(q =>
+{
+    q.SchedulerId = "Scheduler-Core";
+    q.UseMicrosoftDependencyInjectionJobFactory();
+
+    q.UseSimpleTypeLoader();
+    q.UseInMemoryStore();
+
+    InitPredictionModelsJob.Schedule(q);
+});
+services.AddQuartzHostedService();
 
 var app = builder.Build();
 

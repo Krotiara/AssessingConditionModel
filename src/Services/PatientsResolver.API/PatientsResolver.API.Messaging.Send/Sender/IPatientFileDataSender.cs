@@ -1,9 +1,10 @@
-﻿using PatientsResolver.API.Entities;
+﻿using Interfaces.Requests;
+using PatientsResolver.API.Entities;
 
 namespace PatientsResolver.API.Messaging.Send.Sender
 {
     public interface IPatientFileDataSender
     {
-        bool SendPatientsFileData(FileData data);
+        bool SendPatientsFileData(IAddInfluencesRequest request);
     }
 }

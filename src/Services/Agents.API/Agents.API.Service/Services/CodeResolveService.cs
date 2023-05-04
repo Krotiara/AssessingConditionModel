@@ -28,7 +28,8 @@ namespace Agents.API.Service.Services
             this._commandActionProvider = commandActionProvider;
         }
 
-        public async Task<(ICommandArgsTypesMeta, Delegate)> ResolveCommandAction(ICommand command, CancellationToken cancellationToken)
+        public async Task<(ICommandArgsTypesMeta, Delegate)> ResolveCommandAction(ICommand command, 
+            IAgentPropertiesNamesSettings commonPropertiesNames, CancellationToken cancellationToken)
         {
             string commandName = await _mediator.Send(new GetCommandNameCommand(command), cancellationToken);
             SystemCommands apiCommand;
@@ -51,7 +52,7 @@ namespace Agents.API.Service.Services
             else
             {
 #warning В тесте не вызывается метод, а взовращается делегат метода-теста. WAT
-                IAgentCommand c = _commandActionProvider.Invoke(apiCommand);
+                IAgentCommand c = _commandActionProvider.Invoke(apiCommand, command.LocalVariables, command.LocalProperties, commonPropertiesNames);
                 if(c == null)
                     throw new ResolveCommandActionException($"Не удалось разрешить действие для команды {commandName}");
 #warning Может вернуться null.

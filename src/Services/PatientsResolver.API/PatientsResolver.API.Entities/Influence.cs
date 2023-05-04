@@ -16,8 +16,8 @@ namespace PatientsResolver.API.Entities
 
         public Influence()
         {
-            StartParameters = new ConcurrentDictionary<ParameterNames, PatientParameter>();
-            DynamicParameters = new ConcurrentDictionary<ParameterNames, PatientParameter>();
+            StartParameters = new ConcurrentDictionary<string, PatientParameter>();
+            DynamicParameters = new ConcurrentDictionary<string, PatientParameter>();
         }
 
         [Key]
@@ -36,7 +36,7 @@ namespace PatientsResolver.API.Entities
 
         [NotNull]
         [Column("InfluenceType")]
-        public InfluenceTypes InfluenceType { get ; set ; }
+        public string InfluenceType { get ; set ; }
 
         [NotNull]
         [Column("MedicineName")]
@@ -55,10 +55,10 @@ namespace PatientsResolver.API.Entities
         public Patient Patient { get; set; }
 
         [NotMapped]
-        public ConcurrentDictionary<ParameterNames, PatientParameter> StartParameters { get; set; }
+        public ConcurrentDictionary<string, PatientParameter> StartParameters { get; set; }
 
         [NotMapped]
-        public ConcurrentDictionary<ParameterNames, PatientParameter> DynamicParameters { get; set; }
+        public ConcurrentDictionary<string, PatientParameter> DynamicParameters { get; set; }
        
     }
 }

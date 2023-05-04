@@ -111,31 +111,6 @@ namespace Interfaces
         }
 
 
-        private static readonly IEnumerable<ParameterNames> paramNames = 
-            Enum.GetValues(typeof(ParameterNames)).Cast<ParameterNames>();
-
-        public static ParameterNames GetParameterByDescription(this string description)
-        {
-            description = description.ToLower();
-#warning Присутствует баг, что если в DescriptionsSet нет DisplayAttrubute.Value, то матчится на None.
-            ParameterNames p = paramNames.FirstOrDefault(x =>
-                {
-                    try
-                    {
-                        return x.GetAttribute<ParamDescriptionAttribute>()
-                        .DescriptionsSet.Contains(description);
-                    }
-                    catch(Exception ex)
-                    {
-                        //TODO более аккуратный отлов ненахождения атрибута
-                        return false;
-                    }
-                });
-            
-            return p;
-        }
-
-
         public static void AddMongoService(this IServiceCollection services, IConfiguration conf)
         {
             IConfigurationSection section = conf.GetSection("MongoDBSettings");
