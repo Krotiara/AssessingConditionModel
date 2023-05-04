@@ -64,7 +64,10 @@ namespace Agents.API.Service.AgentCommand
             for (int i = 0; i < names.Count; i++)
             {
                 if (names[i] == _ageParameter)
+                {
                     inputArgs[i] = age;
+                    continue;
+                }
                 if (!parameters.ContainsKey(names[i]))
                     throw new ExecuteCommandException($"One of the required parameters is null: {names[i]}");
                 inputArgs[i] = parameters[names[i]].ConvertValue<float>();
