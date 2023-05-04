@@ -51,7 +51,7 @@ namespace Agents.API.Service.Services
             else
             {
 #warning В тесте не вызывается метод, а взовращается делегат метода-теста. WAT
-                IAgentCommand c = _commandActionProvider.Invoke(apiCommand, command.LocalVariables);
+                IAgentCommand c = _commandActionProvider.Invoke(apiCommand, command.LocalVariables, command.LocalProperties);
                 if(c == null)
                     throw new ResolveCommandActionException($"Не удалось разрешить действие для команды {commandName}");
 #warning Может вернуться null.

@@ -14,7 +14,7 @@ namespace Agents.API
             services.AddTransient<GetInfluencesWithoutParametersCommand>();
             services.AddTransient<GetLatestPatientParametersCommand>();
 
-            services.AddTransient<CommandServiceResolver>(serviceProvider => (command, vars) =>
+            services.AddTransient<CommandServiceResolver>(serviceProvider => (command, vars, properties) =>
             {
                 IAgentCommand res = command switch 
                 {
@@ -27,7 +27,10 @@ namespace Agents.API
                     _ => null
                 };
                 if (res != null)
+                {
                     res.Variables = vars;
+                    res.Properties = properties;
+                }
                 return res;
             });
 

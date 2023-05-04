@@ -13,5 +13,7 @@ namespace Agents.API.Service.AgentCommand
         public Delegate Command { get; }
 
         public ConcurrentDictionary<string, IProperty> Variables { get; set; }
+
+        public ConcurrentDictionary<string, IProperty> Properties { get; set; }
     }
 }
