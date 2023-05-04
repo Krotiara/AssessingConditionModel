@@ -11,12 +11,12 @@ namespace Agents.API.Service.Services
 {
     public class InternalMetaStorageService : IMetaStorageService
     {
-        private Dictionary<SystemCommands, ICommandArgsTypesMeta> commandTypesMeta { get; }
+        private Dictionary<SystemCommands, ICommandArgsTypesMeta> CommandTypesMeta { get; }
 
         //todo в бд
         public InternalMetaStorageService()
         {
-            commandTypesMeta = new Dictionary<SystemCommands, ICommandArgsTypesMeta>()
+            CommandTypesMeta = new Dictionary<SystemCommands, ICommandArgsTypesMeta>()
             {
                 {SystemCommands.GetLatestPatientParameters,
                     new CommandArgsTypesMeta( new List<(Type, string)> {}, typeof(Dictionary<string,PatientParameter>))},
@@ -34,7 +34,7 @@ namespace Agents.API.Service.Services
 
         public ICommandArgsTypesMeta? GetMetaByCommandName(SystemCommands commandName)
         {
-            return commandTypesMeta.ContainsKey(commandName) ? commandTypesMeta[commandName] : null;
+            return CommandTypesMeta.ContainsKey(commandName) ? CommandTypesMeta[commandName] : null;
         }
     }
 }
