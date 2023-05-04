@@ -26,7 +26,7 @@ namespace Agents.API.Service.Services
             this._commandActionsProvider = commandActionsProvider;
         }
 
-        //TODO прокинуть vars через ref? А если нужно будет сохранить vars исходным?
+
         public async Task<ConcurrentDictionary<string, IProperty>> ExecuteCode(string codeLines,
             ConcurrentDictionary<string, IProperty> variables,
             ConcurrentDictionary<string, IProperty> properties,

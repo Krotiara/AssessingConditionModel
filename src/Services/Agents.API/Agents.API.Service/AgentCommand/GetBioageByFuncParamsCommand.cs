@@ -2,6 +2,7 @@
 using Agents.API.Entities.Requests;
 using Agents.API.Service.Services;
 using Interfaces;
+using Interfaces.DynamicAgent;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
@@ -23,12 +24,16 @@ namespace Agents.API.Service.AgentCommand
         private readonly string _diastolicPressure = "DiastolicPressure";
 
 
+        public Dictionary<string, IProperty> Variables { get; }
+
+
         public GetBioageByFuncParamsCommand(PredcitionModelsService pMService, 
             PatientParametersService pPSerivce, IOptions<TempModelSettings> modelSets)
         {
             _pMService = pMService;
             _pPSerivce = pPSerivce;
             _modelKey = modelSets.Value.BioAge;
+            Variables = new();
         }
 
         public Delegate Command => async (string patientId, string patientAffiliation, DateTime endTimestamp) =>
@@ -55,6 +60,13 @@ namespace Agents.API.Service.AgentCommand
             float[] inputArgs = new float[names.Count];
             for(int i = 0; i < names.Count; i++)
             {
+                if (Variables.ContainsKey(names[i]))
+                {
+                    if (Variables[names[i]].Value is float)
+                        inputArgs[i] = (float)Variables[names[i]].Value;
+                    else
+                        throw new ExecuteCommandException($"Variable {names[i]} is not float");
+                }
                 if (!parameters.ContainsKey(names[i]))
                     throw new ExecuteCommandException($"One of the required parameters is null: {names[i]}");
                 inputArgs[i] = parameters[names[i]].ConvertValue<float>();
