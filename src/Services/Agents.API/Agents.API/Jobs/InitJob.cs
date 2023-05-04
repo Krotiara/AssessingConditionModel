@@ -1,12 +1,23 @@
-﻿using Quartz;
+﻿using Agents.API.Messaging.Send;
+using Quartz;
 
 namespace Agents.API.Jobs
 {
     public class InitJob : IJob
     {
-        public Task Execute(IJobExecutionContext context)
+        private readonly InitServiceSender _initServiceSender;
+
+        public InitJob(InitServiceSender initServiceSender)
         {
-            throw new NotImplementedException();
+            _initServiceSender = initServiceSender;
         }
+
+        public static void Schedule(IServiceCollectionQuartzConfigurator q)
+        {
+            q.ScheduleJob<InitJob>(j => j.StartNow());
+        }
+
+
+        public Task Execute(IJobExecutionContext context) => _initServiceSender.Send();
     }
 }

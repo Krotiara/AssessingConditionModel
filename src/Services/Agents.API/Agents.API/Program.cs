@@ -16,6 +16,7 @@ using Agents.API;
 using Agents.API.Entities.AgentsSettings;
 using Quartz;
 using Agents.API.Jobs;
+using Agents.API.Messaging.Send;
 
 var builder = WebApplication.CreateBuilder(args);
 var services = builder.Services;
@@ -49,6 +50,7 @@ services.AddMediatR(Assembly.GetExecutingAssembly());
 #region rabbitMQ
 services.Configure<RabbitMqConfiguration>(builder.Configuration.GetSection("RabbitMq"));
 services.Configure<AddDataConfig>(builder.Configuration.GetSection("RabbitMqAddInfo"));
+services.Configure<InitServiceRabbitConfig>(builder.Configuration.GetSection("InitServiceRabbitConfig"));
 #endregion
 
 string connectionString = builder.Configuration.GetConnectionString("PostgresConnection");
@@ -83,6 +85,7 @@ services
     .AddSingleton<SettingsService>()
     .AddSingleton<PredcitionModelsService>()
     .AddSingleton<AgentsService>()
+    .AddSingleton<InitServiceSender>()
     .AddSingleton<ICodeExecutor, CodeExecutorService>()
     .AddSingleton<PredcitionModelsService>()
     .AddSingleton<PatientParametersService>();
@@ -96,6 +99,7 @@ services.AddQuartz(q =>
     q.UseInMemoryStore();
 
     InitPredictionModelsJob.Schedule(q);
+    InitJob.Schedule(q);
 });
 services.AddQuartzHostedService();
 
