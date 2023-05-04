@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Agents.API.Service
+namespace Agents.API.Entities
 {
     public static class Extensions
     {
@@ -24,7 +24,15 @@ namespace Agents.API.Service
 
         public static T ConvertValue<T>(this IProperty property)
         {
-            return (T)TypeDescriptor.GetConverter(typeof(T)).ConvertFrom(property.Value);
+#warning Ненадежный каст.
+            try
+            {
+                return (T)TypeDescriptor.GetConverter(typeof(T)).ConvertFrom(property.Value);
+            }
+            catch(Exception ex)
+            {
+                return (T)property.Value;
+            }
         }
     }
 }

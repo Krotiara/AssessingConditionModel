@@ -32,8 +32,6 @@ namespace Agents.API.Entities.AgentsSettings
 
         private readonly ConcurrentDictionary<string, IProperty> _commonProperties;
 
-        private readonly string _stateNumberArg;
-
         private readonly AgentPropertiesNamesSettings _commonPropertiesNames;
 
         public Agent(IAgentKey key, AgentsSettings settings, ICodeExecutor codeExecutor)
@@ -47,7 +45,6 @@ namespace Agents.API.Entities.AgentsSettings
             Variables = new();
             States = new();
             _commonProperties = new();
-            _stateNumberArg = settings.CommonNamesSettings.StateNumber;
             InitDicts(settings);
             InitCommonProperties(key, settings.CommonNamesSettings);
             _commonPropertiesNames = settings.CommonNamesSettings; //TODO инициализация нового экземпляра, чтобы не продлевать время жизни settings
@@ -131,8 +128,10 @@ namespace Agents.API.Entities.AgentsSettings
                 if ((bool)args[stateVar].Value)
                 {
                     //TODO обработка ошибки, если stateNumberVar не число.
-                    if (calcArgs.ContainsKey(_stateNumberArg))
-                        state.NumericCharacteristic = Convert.ToDouble(calcArgs[_stateNumberArg].Value);
+                    if (calcArgs.ContainsKey(_commonPropertiesNames.StateNumber))
+                        state.NumericCharacteristic = Convert.ToDouble(calcArgs[_commonPropertiesNames.StateNumber].Value);
+                    if (calcArgs.ContainsKey(_commonPropertiesNames.EndTimestamp))
+                        state.Timestamp = calcArgs[_commonPropertiesNames.EndTimestamp].ConvertValue<DateTime>();
                     return state.Name;
                 }
             }
