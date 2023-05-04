@@ -24,6 +24,7 @@
     <ProjectReference Include="..\Agents.API.Data\Agents.API.Data.csproj" />
     <ProjectReference Include="..\Agents.API.Entities\Agents.API.Entities.csproj" />
     <ProjectReference Include="..\Agents.API.Messaging.Receive\Agents.API.Messaging.Receive.csproj" />
+    <ProjectReference Include="..\Agents.API.Messaging.Send\Agents.API.Messaging.Send.csproj" />
     <ProjectReference Include="..\Agents.API.Service\Agents.API.Service.csproj" />
   </ItemGroup>
 
