@@ -5,6 +5,7 @@ using Interfaces;
 using Interfaces.DynamicAgent;
 using Microsoft.Extensions.Options;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,9 +24,9 @@ namespace Agents.API.Service.AgentCommand
         private readonly string _systolicPressure = "SystolicPressure";
         private readonly string _diastolicPressure = "DiastolicPressure";
 
-
-        public Dictionary<string, IProperty> Variables { get; }
-
+        public ConcurrentDictionary<string, IProperty> Variables { get; set; }
+        public ConcurrentDictionary<string, IProperty> Properties { get; set; }
+        public IAgentPropertiesNamesSettings PropertiesNamesSettings { get; set; }
 
         public GetBioageByFuncParamsCommand(PredcitionModelsService pMService, 
             PatientParametersService pPSerivce, IOptions<TempModelSettings> modelSets)
@@ -33,11 +34,14 @@ namespace Agents.API.Service.AgentCommand
             _pMService = pMService;
             _pPSerivce = pPSerivce;
             _modelKey = modelSets.Value.BioAge;
-            Variables = new();
         }
 
-        public Delegate Command => async (string patientId, string patientAffiliation, DateTime endTimestamp) =>
+        public Delegate Command => async () =>
         {
+            string patientId = Properties[PropertiesNamesSettings.Id].Value as string;
+            string patientAffiliation = Properties[PropertiesNamesSettings.Affiliation].Value as string;
+            DateTime endTimestamp = (DateTime)Variables[PropertiesNamesSettings.EndTimestamp].Value;
+
 #warning Нужно преобразовать везде int id to string id.
             int id = int.Parse(patientId);
 
@@ -67,9 +71,21 @@ namespace Agents.API.Service.AgentCommand
                     else
                         throw new ExecuteCommandException($"Variable {names[i]} is not float");
                 }
-                if (!parameters.ContainsKey(names[i]))
-                    throw new ExecuteCommandException($"One of the required parameters is null: {names[i]}");
-                inputArgs[i] = parameters[names[i]].ConvertValue<float>();
+
+                else if (Properties.ContainsKey(names[i]))
+                {
+                    if (Properties[names[i]].Value is float)
+                        inputArgs[i] = (float)Properties[names[i]].Value;
+                    else
+                        throw new ExecuteCommandException($"Property {names[i]} is not float");
+                }
+
+                else
+                {
+                    if (!parameters.ContainsKey(names[i]))
+                        throw new ExecuteCommandException($"One of the required parameters is null: {names[i]}");
+                    inputArgs[i] = parameters[names[i]].ConvertValue<float>();
+                }
             }
 
             var responce = await _pMService.Predict(_modelKey, inputArgs);
@@ -82,6 +98,7 @@ namespace Agents.API.Service.AgentCommand
             }
         };
 
+       
 
         //TODO придумать, как такое отслеживать.
         private void InitPressureDelta(Dictionary<string, PatientParameter> dict)

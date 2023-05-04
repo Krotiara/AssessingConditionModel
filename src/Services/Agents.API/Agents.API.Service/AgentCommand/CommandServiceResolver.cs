@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 namespace Agents.API.Service.AgentCommand
 {
     public delegate IAgentCommand CommandServiceResolver(SystemCommands command, 
-        ConcurrentDictionary<string, IProperty> vars
-        ConcurrentDictionary<string, IProperty> properties);
+        ConcurrentDictionary<string, IProperty> vars,
+        ConcurrentDictionary<string, IProperty> properties,
+        IAgentPropertiesNamesSettings commonPropertiesNames);
 }

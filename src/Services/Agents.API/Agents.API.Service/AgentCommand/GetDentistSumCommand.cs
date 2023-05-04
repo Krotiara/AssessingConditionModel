@@ -2,8 +2,10 @@
 using Agents.API.Entities.Requests;
 using Agents.API.Service.Services;
 using Interfaces;
+using Interfaces.DynamicAgent;
 using Microsoft.Extensions.Options;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -21,6 +23,10 @@ namespace Agents.API.Service.AgentCommand
 
         private readonly string _ageParameter = "Age"; //TODO вынести в настройки. 
 
+        public ConcurrentDictionary<string, IProperty> Variables { get; set; }
+        public ConcurrentDictionary<string, IProperty> Properties { get; set; }
+        public IAgentPropertiesNamesSettings PropertiesNamesSettings { get; set; }
+
 
         public GetDentistSumCommand(PredcitionModelsService pMService,
             PatientParametersService pPSerivce, 
@@ -34,8 +40,12 @@ namespace Agents.API.Service.AgentCommand
             _modelSets = modelSets.Value;
         }
 
-        public Delegate Command => async (string patientId, string patientAffiliation, int age, DateTime endTimestamp) =>
+        public Delegate Command => async (int age) =>
         {
+            string patientId = Properties[PropertiesNamesSettings.Id].Value as string;
+            string patientAffiliation = Properties[PropertiesNamesSettings.Affiliation].Value as string;
+            DateTime endTimestamp = (DateTime)Variables[PropertiesNamesSettings.EndTimestamp].Value;
+
 #warning Нужно преобразовать везде int id to string id.
             int id = int.Parse(patientId);
 
@@ -63,14 +73,34 @@ namespace Agents.API.Service.AgentCommand
             float[] inputArgs = new float[names.Count];
             for (int i = 0; i < names.Count; i++)
             {
-                if (names[i] == _ageParameter)
+                if (Variables.ContainsKey(names[i]))
+                {
+                    if (Variables[names[i]].Value is float)
+                        inputArgs[i] = (float)Variables[names[i]].Value;
+                    else
+                        throw new ExecuteCommandException($"Variable {names[i]} is not float");
+                }
+
+                else if (Properties.ContainsKey(names[i]))
+                {
+                    if (Properties[names[i]].Value is float)
+                        inputArgs[i] = (float)Properties[names[i]].Value;
+                    else
+                        throw new ExecuteCommandException($"Property {names[i]} is not float");
+                }
+
+                else if (names[i] == _ageParameter)
                 {
                     inputArgs[i] = age;
                     continue;
                 }
-                if (!parameters.ContainsKey(names[i]))
-                    throw new ExecuteCommandException($"One of the required parameters is null: {names[i]}");
-                inputArgs[i] = parameters[names[i]].ConvertValue<float>();
+
+                else
+                {
+                    if (!parameters.ContainsKey(names[i]))
+                        throw new ExecuteCommandException($"One of the required parameters is null: {names[i]}");
+                    inputArgs[i] = parameters[names[i]].ConvertValue<float>();
+                } 
             }
 
             var responce = await _pMService.Predict(model, inputArgs);
@@ -143,7 +173,7 @@ namespace Agents.API.Service.AgentCommand
             //}
         };
 
-
+       
         private ModelKey GetModelByAge(float age)
         {
             if (age >= 3 && age <= 5)

@@ -1,4 +1,5 @@
-﻿using Interfaces.DynamicAgent;
+﻿using Interfaces;
+using Interfaces.DynamicAgent;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -15,5 +16,7 @@ namespace Agents.API.Service.AgentCommand
         public ConcurrentDictionary<string, IProperty> Variables { get; set; }
 
         public ConcurrentDictionary<string, IProperty> Properties { get; set; }
+
+        public IAgentPropertiesNamesSettings PropertiesNamesSettings { get; set; }
     }
 }

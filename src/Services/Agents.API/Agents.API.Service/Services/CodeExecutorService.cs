@@ -30,6 +30,7 @@ namespace Agents.API.Service.Services
         public async Task<ConcurrentDictionary<string, IProperty>> ExecuteCode(string codeLines,
             ConcurrentDictionary<string, IProperty> variables,
             ConcurrentDictionary<string, IProperty> properties,
+            IAgentPropertiesNamesSettings commonPropertiesNames,
             CancellationToken cancellationToken = default)
         {
             List<string> lines = codeLines
@@ -47,7 +48,7 @@ namespace Agents.API.Service.Services
             foreach (string codeLine in lines)
             {
                 ICommand command = await _mediator.Send(new ParseCodeLineCommand(codeLine, localVars, localProperties), cancellationToken);
-                await _mediator.Send(new ExecuteCodeLineCommand(command), cancellationToken);
+                await _mediator.Send(new ExecuteCodeLineCommand(command, commonPropertiesNames), cancellationToken);
             }
 
             return localVars;

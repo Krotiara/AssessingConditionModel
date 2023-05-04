@@ -1,8 +1,10 @@
 ﻿using Agents.API.Entities;
 using Agents.API.Service.Query;
 using Interfaces;
+using Interfaces.DynamicAgent;
 using MediatR;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,13 +17,23 @@ namespace Agents.API.Service.AgentCommand
     {
         private readonly IMediator _mediator;
 
+        
+        public ConcurrentDictionary<string, IProperty> Variables { get; set; }
+        public ConcurrentDictionary<string, IProperty> Properties { get; set; }
+
+        public IAgentPropertiesNamesSettings PropertiesNamesSettings { get; set; }
+
+
         public GetAgeCommand(IMediator mediator)
         {
             _mediator = mediator;
         }
 
-        public Delegate Command => async (string patientId, string patientAffiliation, DateTime timestamp) =>
+        public Delegate Command => async (DateTime timestamp) =>
         {
+            string patientId = Properties[PropertiesNamesSettings.Id].Value as string;
+            string patientAffiliation = Properties[PropertiesNamesSettings.Affiliation].Value as string;
+
             //TODO избавиться от запроса пациента.
             var responce = await _mediator.Send(new GetPatientInfoQuery() { Id = patientId, Organization = patientAffiliation });
             if (!responce.IsSuccessStatusCode)
@@ -39,7 +51,7 @@ namespace Agents.API.Service.AgentCommand
             return GetAge(patient.Birthday, timestamp);
         };
 
-
+       
         private int GetAge(DateTime dateOfBirth, DateTime dateOfMeasurement)
         {
             var a = ((dateOfMeasurement.Year * 100) + dateOfMeasurement.Month) * 100 + dateOfMeasurement.Day;

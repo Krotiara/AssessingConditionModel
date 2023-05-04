@@ -19,28 +19,16 @@ namespace Agents.API.Service.Services
             commandTypesMeta = new Dictionary<SystemCommands, ICommandArgsTypesMeta>()
             {
                 {SystemCommands.GetLatestPatientParameters,
-                    new CommandArgsTypesMeta( new List<(Type, string)> {
-                        (typeof(DateTime), "endTimestamp"),
-                        (typeof(int), "patientId"),
-                        (typeof(string), "medicalOrganization")}, 
-                        typeof(Dictionary<string,PatientParameter>))},
+                    new CommandArgsTypesMeta( new List<(Type, string)> {}, typeof(Dictionary<string,PatientParameter>))},
                 {SystemCommands.GetAge,
-                    new CommandArgsTypesMeta(new List<(Type, string)> {(typeof(string), "patientId"), (typeof(string), "patientAffiliation"), (typeof(DateTime), "timestamp") }, typeof(int)) },
+                    new CommandArgsTypesMeta(new List<(Type, string)> {(typeof(DateTime), "timestamp") }, typeof(int)) },
                 {SystemCommands.GetBioageByFunctionalParameters,
-                    new CommandArgsTypesMeta(new List<(Type, string)> {(typeof(string),"patientId"),
-                        (typeof(string), "patientAffiliation"),
-                        (typeof(DateTime), "endTimestamp")}, typeof(int))}, 
+                    new CommandArgsTypesMeta(new List<(Type, string)> {}, typeof(int))}, 
                 {SystemCommands.GetInfluences,
-                    new CommandArgsTypesMeta(new List<(Type, string)> {(typeof(DateTime),"start"),
-                        (typeof(DateTime),"end"),
-                        (typeof(int),"observedId"),
-                        (typeof(string), "medicalOrganization")}, typeof(List<Influence>))},
+                    new CommandArgsTypesMeta(new List<(Type, string)> {}, typeof(List<Influence>))},
                 {SystemCommands.GetInfluencesWithoutParameters,
-                    new CommandArgsTypesMeta(new List<(Type, string)> {(typeof(DateTime),"start"),
-                        (typeof(DateTime),"end"),
-                        (typeof(int),"observedId"),
-                        (typeof(string), "medicalOrganization")}, typeof(List<Influence>))},
-                {SystemCommands.GetDentistSum,new CommandArgsTypesMeta(new List<(Type, string)> {(typeof(string), "patientId"), (typeof(string), "patientAffiliation"), (typeof(int), "age"), (typeof(DateTime), "endTimestamp") }, typeof(int)) }
+                    new CommandArgsTypesMeta(new List<(Type, string)> {}, typeof(List<Influence>))},
+                {SystemCommands.GetDentistSum,new CommandArgsTypesMeta(new List<(Type, string)> {(typeof(int), "age")}, typeof(int)) }
             };
         }
 
