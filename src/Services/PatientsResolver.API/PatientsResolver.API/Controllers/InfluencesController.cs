@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using PatientsResolver.API.Entities.Mongo;
 using PatientsResolver.API.Entities.Requests;
+using PatientsResolver.API.Models.Requests;
 using PatientsResolver.API.Service.Command;
 using PatientsResolver.API.Service.Query;
 using PatientsResolver.API.Service.Services;
@@ -9,7 +10,8 @@ using System;
 
 namespace PatientsResolver.API.Controllers
 {
-    public class InfluencesController : Controller
+    [Route("patientsApi/[controller]")]
+    public class InfluencesController : ControllerBase
     {
         private readonly IMediator mediator;
         private readonly InfluencesDataService _influencesDataService;
@@ -20,6 +22,49 @@ namespace PatientsResolver.API.Controllers
             _influencesDataService = influencesDataService;
         }
 
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult> GetInfluenceById(string id)
+        {
+            throw new NotImplementedException();
+        }
+
+
+        [HttpPost("add")]
+        public async Task<ActionResult> AddPatientInfluence([FromBody] Influence influence)
+        {
+            throw new NotImplementedException();
+        }
+
+
+        [HttpPut("update")]
+        public async Task<ActionResult> UpdatePatientInfluence([FromBody] Influence influence)
+        {
+            throw new NotImplementedException();
+        }
+
+
+        [HttpDelete("delete/{id}")]
+        public async Task<AcceptedResult> DeleteInfluence(string id)
+        {
+            throw new NotImplementedException();
+        }
+
+
+        [HttpPost("influences")]
+        public async Task<ActionResult> GetInfluences([FromBody] GetInfluencesRequest request)
+        {
+            throw new NotImplementedException();
+        }
+
+
+        [HttpPost("addInfluenceData")]
+        public async Task<ActionResult> AddData([FromBody] AddInfluencesRequest request)
+        {
+            //TODO - заменить на сервис
+            bool isSuccessSendRequest = await mediator.Send(new SendPatientDataFileSourceCommand() { Request = request });
+            return Ok(isSuccessSendRequest);
+        }
 
         //[HttpGet("patientsApi/influence/{medOrganization}/{influenceId}")]
         //public async Task<ActionResult<Influence>> GetPatientInfluence(string medOrganization, int influenceId)
@@ -111,24 +156,9 @@ namespace PatientsResolver.API.Controllers
         //    }
         //}
 
-       
 
-        //[HttpPost("patientsApi/addInfluenceData/")]
-        //public async Task<ActionResult<bool>> AddData([FromBody] AddInfluencesRequest request)
-        //{
-        //    //TODO Добавить статус отсылки
-        //    try
-        //    {
-        //        bool isSuccessSendRequest = await mediator.Send(new SendPatientDataFileSourceCommand() { Request = request });
-        //        return Ok(isSuccessSendRequest);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        //TODO Отлов кастомных ошибок
-        //        return BadRequest(ex.Message);
-        //    }
 
-        //}
+
         //#endregion
     }
 }

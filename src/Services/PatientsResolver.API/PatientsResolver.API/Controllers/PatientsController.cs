@@ -52,8 +52,8 @@ namespace PatientsResolver.API.Controllers
         }
 
 
-        [HttpDelete("deletePatient")]
-        public async Task<ActionResult> DeletePatient(DeletePatientRequest request)
+        [HttpDelete("delete/{id}")]
+        public async Task<ActionResult> DeletePatient(string id)
         {
             throw new NotImplementedException();
         }
@@ -62,7 +62,8 @@ namespace PatientsResolver.API.Controllers
         [HttpPost("latestParameters")]
         public async Task<ActionResult> GetLatestPatientParameters([FromBody] PatientParametersRequest request)
         {
-            return Ok(await _mediator.Send(new GetLatesPatientParametersQuery(request)));
+            throw new NotImplementedException();
+            //return Ok(await _mediator.Send(new GetLatesPatientParametersQuery(request)));
         }
     }
 }
