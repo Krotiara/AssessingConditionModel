@@ -5,6 +5,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace PatientsResolver.API.Entities.Mongo
@@ -22,6 +23,8 @@ namespace PatientsResolver.API.Entities.Mongo
         public DateTime Birthday { get; set; }
         public GenderEnum Gender { get; set; }
         public TreatmentStatus TreatmentStatus { get; set; }
+
+        [JsonIgnore]
         public ConcurrentDictionary<(string, DateTime), double> Parameters { get; set; }
     }
 }
