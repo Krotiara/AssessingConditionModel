@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using PatientsResolver.API.Data;
 using PatientsResolver.API.Data.Repository;
 using PatientsResolver.API.Entities;
+using PatientsResolver.API.Entities.Mongo;
 using PatientsResolver.API.Messaging.Receive.Receiver;
 using PatientsResolver.API.Messaging.Send.Configurations;
 using PatientsResolver.API.Messaging.Send.Sender;
@@ -58,7 +59,7 @@ services.AddMongoService(builder.Configuration);
 services.AddScoped<IPatientParameter, PatientParameter>();
 services.AddScoped<IPatient, Patient>();
 services.AddScoped<IFileData, FileData>();
-services.AddScoped<IInfluence<Patient, PatientParameter>, Influence>();
+services.AddTransient<IInfluence, Influence>();
 
 
 services.AddTransient<IAddInfluencesDataFromSourceService, AddInfluencesDataFromSourceService>();
@@ -121,7 +122,9 @@ services.AddScoped<IRequestHandler<DeleteInfluenceCommand, bool>,
     DeleteInfluenceCommandHandler>();
 
 services.AddSingleton<PatientsStore>();
+services.AddSingleton<InfluencesStore>();
 services.AddSingleton<PatientsDataService>();
+services.AddSingleton<InfluencesDataService>();
 
 var app = builder.Build();
 

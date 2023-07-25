@@ -1,6 +1,6 @@
 ﻿using MediatR;
 using PatientsResolver.API.Data.Repository;
-using PatientsResolver.API.Entities;
+using PatientsResolver.API.Entities.Mongo;
 using PatientsResolver.API.Service.Exceptions;
 
 namespace PatientsResolver.API.Service.Command

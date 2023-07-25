@@ -1,5 +1,5 @@
 ﻿using Interfaces;
-using PatientsResolver.API.Entities;
+using PatientsResolver.API.Entities.Mongo;
 using System;
 using System.Collections.Generic;
 using System.Linq;

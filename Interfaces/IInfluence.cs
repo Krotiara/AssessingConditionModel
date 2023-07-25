@@ -7,13 +7,11 @@ using System.Threading.Tasks;
 
 namespace Interfaces
 {
-    public interface IInfluence<T1,T2> where T1: IPatient where T2: IPatientParameter
+    public interface IInfluence
     {
-        public int Id { get; set; }
+        public string PatientId { get; set; }
 
-        public int PatientId { get; set; }
-
-        public T1 Patient { get; set; }
+        public string Affiliation { get; set; }
 
         public DateTime StartTimestamp { get; set; }
    
@@ -25,15 +23,5 @@ namespace Interfaces
         /// Название препарата.
         /// </summary>
         public string MedicineName { get; set; }
-
-        public string MedicalOrganization { get; set; }
-
-        public ConcurrentDictionary<string, T2> StartParameters { get; set; }
-
-        public ConcurrentDictionary<string, T2> DynamicParameters { get; set; }
-
-
-
-
     }
 }

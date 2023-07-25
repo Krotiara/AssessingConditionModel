@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using PatientsResolver.API.Entities;
+using PatientsResolver.API.Entities.Mongo;
 using System;
 using System.Collections.Generic;
 using System.Data.Common;

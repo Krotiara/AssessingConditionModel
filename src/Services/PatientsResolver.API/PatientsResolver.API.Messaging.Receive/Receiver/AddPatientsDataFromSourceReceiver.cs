@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
-using PatientsResolver.API.Entities;
+using PatientsResolver.API.Entities.Mongo;
 using PatientsResolver.API.Service.Services;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;

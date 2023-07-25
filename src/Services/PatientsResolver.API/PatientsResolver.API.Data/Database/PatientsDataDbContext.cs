@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PatientsResolver.API.Entities;
+using PatientsResolver.API.Entities.Mongo;
 
 namespace PatientsResolver.API.Data
 {
