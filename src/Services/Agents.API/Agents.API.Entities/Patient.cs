@@ -19,7 +19,7 @@ namespace Agents.API.Entities
         public DateTime Birthday { get ; set ; }
 
         public GenderEnum Gender { get; set; }
-        public TreatmentType TreatmentType { get; set; }
+        public TreatmentStatus TreatmentStatus { get; set; }
         public string MedicalOrganization { get; set; }
     }
 }

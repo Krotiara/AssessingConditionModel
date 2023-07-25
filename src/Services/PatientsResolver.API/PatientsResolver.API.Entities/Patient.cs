@@ -47,7 +47,7 @@ namespace PatientsResolver.API.Entities
         [NotNull]
         [Required]
         [Column("TreatmentType")]
-        public TreatmentType TreatmentType { get; set; }
+        public TreatmentStatus TreatmentStatus { get; set; }
        
     }
 }

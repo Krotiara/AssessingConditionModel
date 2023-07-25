@@ -52,7 +52,7 @@ namespace Interfaces
     }
 
 
-    public enum TreatmentType
+    public enum TreatmentStatus
     {
         [Display(Name = "-")]
         None,

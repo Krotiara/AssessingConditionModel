@@ -1,28 +1,27 @@
-﻿using System;
+﻿using Interfaces;
+using Interfaces.Service;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Interfaces
+namespace PatientsResolver.API.Entities.Mongo
 {
-    public interface IPatient
+    public class Patient : Document, IPatient
     {
+        public Patient()
+        {
+            Parameters = new();
+        }
+
         public string PatientId { get; set; }
-
         public string Affiliation { get; set; }
-
         public string Name { get; set; }
-
         public DateTime Birthday { get; set; }
-
         public GenderEnum Gender { get; set; }
-
         public TreatmentStatus TreatmentStatus { get; set; }
-
         public ConcurrentDictionary<(string, DateTime), double> Parameters { get; set; }
-
-
     }
 }
