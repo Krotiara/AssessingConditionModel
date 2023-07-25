@@ -13,7 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\Interfaces\Interfaces.csproj" />
+    <ProjectReference Include="..\..\..\..\Interfaces\ASMLib.csproj" />
     <ProjectReference Include="..\PatientsResolver.API.Entities\PatientsResolver.API.Entities.csproj" />
   </ItemGroup>
 

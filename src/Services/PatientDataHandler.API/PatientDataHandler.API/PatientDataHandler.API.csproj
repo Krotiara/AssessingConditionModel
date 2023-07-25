@@ -20,7 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\Interfaces\Interfaces.csproj" />
+    <ProjectReference Include="..\..\..\..\Interfaces\ASMLib.csproj" />
     <ProjectReference Include="..\PatientDataHandler.API.Entities\PatientDataHandler.API.Entities.csproj" />
     <ProjectReference Include="..\PatientDataHandler.API.Messaging.Receive\PatientDataHandler.API.Messaging.Receive.csproj" />
     <ProjectReference Include="..\PatientDataHandler.API.Messaging.Send\PatientDataHandler.API.Messaging.Send.csproj" />
