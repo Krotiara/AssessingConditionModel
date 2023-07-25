@@ -11,14 +11,16 @@ using PatientsResolver.API.Models;
 using PatientsResolver.API.Service.Command;
 using PatientsResolver.API.Service.Query;
 using PatientsResolver.API.Service.Services;
+using PatientsResolver.API.Service.Store;
 using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
+var services = builder.Services;
 
 // Add services to the container.
-builder.Services.AddControllers();
+services.AddControllers();
 
-builder.Services.AddSwaggerGen(c =>
+services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo()
     {
@@ -33,14 +35,14 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
-//builder.Services.AddHttpsRedirection(options =>
+//services.AddHttpsRedirection(options =>
 //{
 //    options.HttpsPort = 443;
 //});
 
 string connectionString = builder.Configuration.GetConnectionString("PostgresConnection");
 
-builder.Services.AddDbContextFactory<PatientsDataDbContext>(options => options.UseNpgsql(connectionString, builder =>
+services.AddDbContextFactory<PatientsDataDbContext>(options => options.UseNpgsql(connectionString, builder =>
 {
     builder.EnableRetryOnFailure(5, TimeSpan.FromSeconds(2), null);
 }), ServiceLifetime.Scoped);
@@ -51,70 +53,75 @@ builder.Services.AddDbContextFactory<PatientsDataDbContext>(options => options.U
 builder.Host.ConfigureDefaults(args)
     .UseDefaultServiceProvider(options =>options.ValidateScopes = false); // needed for mediatr DI
 
-builder.Services.AddScoped<IPatientParameter, PatientParameter>();
-builder.Services.AddScoped<IPatient, Patient>();
-builder.Services.AddScoped<IFileData, FileData>();
-builder.Services.AddScoped<IInfluence<Patient, PatientParameter>, Influence>();
+services.AddMongoService(builder.Configuration);
+
+services.AddScoped<IPatientParameter, PatientParameter>();
+services.AddScoped<IPatient, Patient>();
+services.AddScoped<IFileData, FileData>();
+services.AddScoped<IInfluence<Patient, PatientParameter>, Influence>();
 
 
-builder.Services.AddTransient<IAddInfluencesDataFromSourceService, AddInfluencesDataFromSourceService>();
-builder.Services.AddSingleton<IPatientFileDataSender, PatientFileDataSender>();
+services.AddTransient<IAddInfluencesDataFromSourceService, AddInfluencesDataFromSourceService>();
+services.AddSingleton<IPatientFileDataSender, PatientFileDataSender>();
 
-builder.Services.AddScoped<IInfluenceRepository, InfluenceRepository>();
-builder.Services.AddScoped<InfluenceRepository>();
-builder.Services.AddScoped<PatientsRepository>(); //МБ это криво
-builder.Services.AddScoped<PatientParametersRepository>();
-builder.Services.AddOptions();
+services.AddScoped<IInfluenceRepository, InfluenceRepository>();
+services.AddScoped<InfluenceRepository>();
+services.AddScoped<PatientsRepository>(); //МБ это криво
+services.AddScoped<PatientParametersRepository>();
+services.AddOptions();
 
 #region rabbitMQ
 #warning Скорее всего плохоже решение с доп секцией.
 var serviceClientSettingsConfigData = builder.Configuration.GetSection("RabbitMq1");
-builder.Services.Configure<RabbitMqConfiguration>(builder.Configuration.GetSection("RabbitMq"));
-builder.Services.Configure<PatientsResolver.API.Messaging.Receive.RabbitMqConfiguration>(serviceClientSettingsConfigData);
-builder.Services.Configure<RabbitMqUpdateInfoConfig>(builder.Configuration.GetSection("RabbitMqSendUpdateInfo"));
-builder.Services.Configure<RabbitMqAddInfoConfig>(builder.Configuration.GetSection("RabbitMqSendAddInfo"));
+services.Configure<RabbitMqConfiguration>(builder.Configuration.GetSection("RabbitMq"));
+services.Configure<PatientsResolver.API.Messaging.Receive.RabbitMqConfiguration>(serviceClientSettingsConfigData);
+services.Configure<RabbitMqUpdateInfoConfig>(builder.Configuration.GetSection("RabbitMqSendUpdateInfo"));
+services.Configure<RabbitMqAddInfoConfig>(builder.Configuration.GetSection("RabbitMqSendAddInfo"));
 
 
 var serviceClientSettings = serviceClientSettingsConfigData.Get<PatientsResolver.API.Messaging.Send.Configurations.RabbitMqConfiguration>();
 if (serviceClientSettings.Enabled)
 {
-    builder.Services.AddHostedService<AddPatientsDataFromSourceReceiver>();
+    services.AddHostedService<AddPatientsDataFromSourceReceiver>();
 }
 #endregion
 
 /*Теперь вы можете выполнять ваши запросы. Для этого вам потребуется получить экземпляр интерфейса IMediator. Он регистрируется в вашем контейнере зависимостей той же командой AddMediatR.*/
-builder.Services.AddMediatR(Assembly.GetExecutingAssembly());
+services.AddMediatR(Assembly.GetExecutingAssembly());
 
-builder.Services.AddScoped<IRequestHandler<GetPatientQuery, Patient>,
+services.AddScoped<IRequestHandler<GetPatientQuery, Patient>,
     GetPatientQueryHandler>();
-builder.Services.AddScoped<IRequestHandler<AddInfluenceDataCommand, List<Influence>>,
+services.AddScoped<IRequestHandler<AddInfluenceDataCommand, List<Influence>>,
     AddInfluenceDataCommandHandler>();
-builder.Services.AddScoped<IRequestHandler<SendPatientDataFileSourceCommand, bool>,
+services.AddScoped<IRequestHandler<SendPatientDataFileSourceCommand, bool>,
     SendPatientDataFileSourceCommandHandler>();
-builder.Services.AddScoped<IRequestHandler<AddNotExistedPatientsCommand, IList<Patient>>,
+services.AddScoped<IRequestHandler<AddNotExistedPatientsCommand, IList<Patient>>,
     AddNotExistedPatientsCommandHandler>();
-builder.Services.AddScoped<IRequestHandler<AddPatientCommand, bool>,
+services.AddScoped<IRequestHandler<AddPatientCommand, bool>,
     AddPatientCommandHandler>();
-builder.Services.AddScoped<IRequestHandler<AddInfluenceDataCommand, List<Influence>>,
+services.AddScoped<IRequestHandler<AddInfluenceDataCommand, List<Influence>>,
     AddInfluenceDataCommandHandler>();
-builder.Services.AddScoped<IRequestHandler<GetPatientInfluencesQuery, List<Influence>>,
+services.AddScoped<IRequestHandler<GetPatientInfluencesQuery, List<Influence>>,
     GetPatientInfluencesQueryHandler>();
-builder.Services.AddScoped<IRequestHandler<GetLatesPatientParametersQuery, List<PatientParameter>>,
+services.AddScoped<IRequestHandler<GetLatesPatientParametersQuery, List<PatientParameter>>,
     GetLatesPatientParametersQueryHandler>();
-builder.Services.AddScoped<IRequestHandler<GetInfluencesQuery, List<Influence>>,
+services.AddScoped<IRequestHandler<GetInfluencesQuery, List<Influence>>,
     GetInfluencesQueryHandler>();
-builder.Services.AddScoped<IRequestHandler<UpdatePatientCommand, Patient>,
+services.AddScoped<IRequestHandler<UpdatePatientCommand, Patient>,
     UpdatePatientCommandHandler>();
-builder.Services.AddScoped<IRequestHandler<DeletePatientCommand, bool>,
+services.AddScoped<IRequestHandler<DeletePatientCommand, bool>,
     DeletePatientCommandHandler>();
-builder.Services.AddScoped<IRequestHandler<GetPatientInfluenceByIdQueue, Influence>,
+services.AddScoped<IRequestHandler<GetPatientInfluenceByIdQueue, Influence>,
     GetPatientInfluenceByIdQueueHandler>();
-builder.Services.AddScoped<IRequestHandler<AddPatientInfluenceCommand, bool>,
+services.AddScoped<IRequestHandler<AddPatientInfluenceCommand, bool>,
     AddPatientInfluenceCommandHandler>();
-builder.Services.AddScoped<IRequestHandler<UpdateInfluenceCommand, Influence>, 
+services.AddScoped<IRequestHandler<UpdateInfluenceCommand, Influence>, 
     UpdateInfluenceCommandHandler>();
-builder.Services.AddScoped<IRequestHandler<DeleteInfluenceCommand, bool>, 
+services.AddScoped<IRequestHandler<DeleteInfluenceCommand, bool>, 
     DeleteInfluenceCommandHandler>();
+
+services.AddSingleton<PatientsStore>();
+services.AddSingleton<PatientsDataService>();
 
 var app = builder.Build();
 

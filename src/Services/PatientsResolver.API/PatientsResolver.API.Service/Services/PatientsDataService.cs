@@ -1,4 +1,5 @@
 ﻿using PatientsResolver.API.Entities;
+using PatientsResolver.API.Service.Store;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,13 @@ namespace PatientsResolver.API.Service.Services
 {
     public class PatientsDataService
     {
+        private readonly PatientsStore _patientsStore;
+
+        public PatientsDataService(PatientsStore patientsStore)
+        {
+            _patientsStore = patientsStore;
+        }
+
         public async Task Insert(IEnumerable<Influence> influences)
         {
             throw new NotImplementedException();
