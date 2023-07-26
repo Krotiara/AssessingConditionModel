@@ -26,7 +26,10 @@ namespace PatientsResolver.API.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult> GetInfluenceById(string id)
         {
-            throw new NotImplementedException();
+            var inf = await _influencesDataService.Get(id);
+            if (inf == null)
+                return Ok();
+            return Ok(inf);
         }
 
 
@@ -40,14 +43,16 @@ namespace PatientsResolver.API.Controllers
         [HttpPut("update")]
         public async Task<ActionResult> UpdatePatientInfluence([FromBody] Influence influence)
         {
-            throw new NotImplementedException();
+            await _influencesDataService.Update(influence.Id, influence);
+            return Ok();
         }
 
 
         [HttpDelete("delete/{id}")]
-        public async Task<AcceptedResult> DeleteInfluence(string id)
+        public async Task<ActionResult> DeleteInfluence(string id)
         {
-            throw new NotImplementedException();
+            await _influencesDataService.Delete(id);
+            return Ok();
         }
 
 
