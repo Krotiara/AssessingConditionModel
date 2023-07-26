@@ -54,7 +54,5 @@ namespace PatientsResolver.API.Service.Services
             foreach (var inf in influences)
                 await _store.Insert(inf);
         }
-
-
     }
 }
