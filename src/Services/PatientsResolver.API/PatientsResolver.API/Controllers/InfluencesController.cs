@@ -36,7 +36,8 @@ namespace PatientsResolver.API.Controllers
         [HttpPost("add")]
         public async Task<ActionResult> AddPatientInfluence([FromBody] Influence influence)
         {
-            throw new NotImplementedException();
+            await _influencesDataService.Insert(influence);
+            return Ok();
         }
 
 
@@ -59,7 +60,10 @@ namespace PatientsResolver.API.Controllers
         [HttpPost("influences")]
         public async Task<ActionResult> GetInfluences([FromBody] GetInfluencesRequest request)
         {
-            throw new NotImplementedException();
+            DateTime start = request.StartTimestamp == null ? DateTime.MinValue : (DateTime)request.StartTimestamp;
+            DateTime end = request.EndTimestamp == null ? DateTime.MaxValue : (DateTime)request.EndTimestamp;
+            var influences = await _influencesDataService.Query(request.PatientId, request.Affiliation, start, end);
+            return Ok(influences);
         }
 
 
@@ -70,100 +74,5 @@ namespace PatientsResolver.API.Controllers
             bool isSuccessSendRequest = await mediator.Send(new SendPatientDataFileSourceCommand() { Request = request });
             return Ok(isSuccessSendRequest);
         }
-
-        //[HttpGet("patientsApi/influence/{medOrganization}/{influenceId}")]
-        //public async Task<ActionResult<Influence>> GetPatientInfluence(string medOrganization, int influenceId)
-        //{
-        //    try
-        //    {
-        //        return await mediator.Send(new GetPatientInfluenceByIdQueue(influenceId, medOrganization));
-        //    }
-        //    catch(Exception ex)
-        //    {
-        //        return BadRequest(ex.Message);
-        //    }
-        //}
-
-
-        //[HttpPost("patientsApi/influence/add")]
-        //public async Task<ActionResult<bool>> AddPatientInfluence([FromBody] Influence influence)
-        //{
-        //    try
-        //    {
-        //        return await mediator.Send(new AddPatientInfluenceCommand(influence));
-        //    }
-        //    catch(Exception ex)
-        //    {
-        //        return BadRequest(ex.Message);
-        //    }
-        //}
-
-
-        //[HttpPut("patientsApi/influence/update")]
-        //public async Task<ActionResult<Influence>> UpdatePatientInfluence([FromBody] Influence influence)
-        //{
-        //    //TODO тесты
-        //    try
-        //    {
-        //        return await mediator.Send(new UpdateInfluenceCommand(influence));
-        //    }
-        //    catch(Exception ex)
-        //    {
-        //        return BadRequest(ex.Message);
-        //    }
-        //}
-
-
-        //[HttpDelete("patientsApi/influence/delete/{medOrganization}/{influenceId}")]
-        //public async Task<ActionResult<bool>> DeletePatientInfluence(string medOrganization, int influenceId) 
-        //{
-        //    try
-        //    {
-        //        return await mediator.Send(new DeleteInfluenceCommand(influenceId, medOrganization));
-        //    }
-        //    catch(Exception ex)
-        //    {
-        //        return BadRequest(ex.Message);
-        //    }
-        //}
-
-
-        //#region influences routes
-        //[HttpPost("patientsApi/influences")]
-        //public async Task<ActionResult<List<Influence>>> GetPatientInfluences([FromBody]PatientInfluencesRequest request)
-        //{
-        //    try
-        //    {
-        //        DateTime start = request.StartTimestamp == null? DateTime.MinValue: (DateTime)request.StartTimestamp;
-        //        DateTime end = request.EndTimestamp == null ? DateTime.MaxValue : (DateTime)request.EndTimestamp;
-
-        //        return Ok(await mediator.Send(new GetPatientInfluencesQuery(request.PatientId, request.MedicalOrganization, start, end)));
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return BadRequest(ex.Message);
-        //    }
-        //}
-
-        //[HttpPost("patientsApi/influencesWithoutParams")]
-        //public async Task<ActionResult<List<Influence>>> GetPatientInfluencesWithoutParams([FromBody] PatientInfluencesRequest request)
-        //{
-        //    try
-        //    {
-        //        DateTime start = request.StartTimestamp == null ? DateTime.MinValue : (DateTime)request.StartTimestamp;
-        //        DateTime end = request.EndTimestamp == null ? DateTime.MaxValue : (DateTime)request.EndTimestamp;
-
-        //        return Ok(await mediator.Send(new GetPatientInfluencesQuery(request.PatientId, request.MedicalOrganization, start, end, false)));
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return BadRequest(ex.Message);
-        //    }
-        //}
-
-
-
-
-        //#endregion
     }
 }

@@ -35,5 +35,19 @@ namespace PatientsResolver.API.Service.Services
 
 
         public async Task Delete(string id) => await _store.Delete(x => x.Id == id);
+
+
+        public async Task Insert(Influence inf) => await _store.Insert(inf);
+
+
+        public async Task<IEnumerable<Influence>> Query(string patientId, string affiliation, DateTime start, DateTime end)
+        {
+            return await _store.Query(x => x.PatientId == patientId 
+                                        && x.Affiliation == affiliation 
+                                        && x.StartTimestamp <= end 
+                                        && x.EndTimestamp >= start);
+        }
+
+
     }
 }
