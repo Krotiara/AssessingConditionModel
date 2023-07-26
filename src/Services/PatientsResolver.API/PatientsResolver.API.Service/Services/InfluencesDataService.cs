@@ -47,5 +47,14 @@ namespace PatientsResolver.API.Service.Services
                                         && x.StartTimestamp <= end
                                         && x.EndTimestamp >= start);
         }
+
+
+        public async Task Insert(IEnumerable<Influence> influences)
+        {
+            foreach (var inf in influences)
+                await _store.Insert(inf);
+        }
+
+
     }
 }
