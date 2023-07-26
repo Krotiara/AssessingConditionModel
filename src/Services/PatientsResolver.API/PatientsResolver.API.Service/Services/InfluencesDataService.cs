@@ -42,12 +42,10 @@ namespace PatientsResolver.API.Service.Services
 
         public async Task<IEnumerable<Influence>> Query(string patientId, string affiliation, DateTime start, DateTime end)
         {
-            return await _store.Query(x => x.PatientId == patientId 
-                                        && x.Affiliation == affiliation 
-                                        && x.StartTimestamp <= end 
+            return await _store.Query(x => x.PatientId == patientId
+                                        && x.Affiliation == affiliation
+                                        && x.StartTimestamp <= end
                                         && x.EndTimestamp >= start);
         }
-
-
     }
 }
