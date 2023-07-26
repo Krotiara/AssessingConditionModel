@@ -10,6 +10,8 @@ namespace PatientsResolver.API.Entities
     {
         public string Name { get; set; }
 
+        public DateTime Timestamp { get; set; }
+
         public double Value { get; set; }
     }
 }

@@ -13,13 +13,11 @@ namespace PatientsResolver.API.Controllers
     public class PatientsController : ControllerBase
     {
         private readonly PatientsDataService _patientsDataService;
-        private readonly IMediator _mediator;
 
 
-        public PatientsController(PatientsDataService patientsDataService, IMediator mediator)
+        public PatientsController(PatientsDataService patientsDataService)
         {
             _patientsDataService = patientsDataService;
-            _mediator = mediator;
         }
 
 
@@ -36,37 +34,36 @@ namespace PatientsResolver.API.Controllers
         [HttpPost("parameters")]
         public async Task<ActionResult> GetPatientParameters(GetPatientParametersRequest request)
         {
-            throw new NotImplementedException();
+            DateTime start = request.StartTimestamp == null ? DateTime.MinValue : (DateTime)request.StartTimestamp;
+            DateTime end = request.EndTimestamp == null ? DateTime.MaxValue : (DateTime)request.EndTimestamp;
+            var parameters = await _patientsDataService.GetPatientParameters(request.PatientId, request.Affiliation, start, end);
+            return Ok(parameters);
         }
 
 
         [HttpPost("addPatient")]
         public async Task<ActionResult> AddPatient([FromBody] Patient patient)
         {
-            throw new NotImplementedException();
+            await _patientsDataService.Insert(patient);
+            return Ok();
         }
 
 
-        //TODO Изменить Controller на ControllerBase и на возврат ActionResult без указания типа.
         [HttpPut("updatePatient")]
         public async Task<ActionResult> UpdatePatient([FromBody] Patient patient)
         {
-            throw new NotImplementedException();
+            if (patient.Id == null)
+                return Ok();
+            await _patientsDataService.Update(patient.Id, patient);
+            return Ok();
         }
 
 
         [HttpDelete("delete/{id}")]
         public async Task<ActionResult> DeletePatient(string id)
         {
-            throw new NotImplementedException();
-        }
-
-
-        [HttpPost("latestParameters")]
-        public async Task<ActionResult> GetLatestPatientParameters([FromBody] PatientParametersRequest request)
-        {
-            throw new NotImplementedException();
-            //return Ok(await _mediator.Send(new GetLatesPatientParametersQuery(request)));
+            await _patientsDataService.Delete(id);
+            return Ok();
         }
     }
 }

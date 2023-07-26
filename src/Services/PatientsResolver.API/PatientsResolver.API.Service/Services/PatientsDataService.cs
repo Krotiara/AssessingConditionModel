@@ -61,10 +61,17 @@ namespace PatientsResolver.API.Service.Services
         }
 
 
+        public async Task Insert(Patient p)
+        {
+            await _patientsStore.Insert(p);
+            _patients[(p.PatientId, p.Affiliation)] = p;
+        }
+
+
         public async Task Insert(IEnumerable<Patient> patients)
         {
             foreach (var patient in patients)
-                await _patientsStore.Insert(patient);
+                await Insert(patient);
         }
 
 
@@ -74,6 +81,12 @@ namespace PatientsResolver.API.Service.Services
             if(patient == null)
                 return Enumerable.Empty<Parameter>();
 
+            return patient.Parameters.Where(x => x.Key.Item2 <= end && x.Key.Item2 >= start).Select(x => new Parameter()
+            {
+                Name = x.Key.Item1,
+                Timestamp = x.Key.Item2,
+                Value = x.Value
+            });
         }
     }
 }
