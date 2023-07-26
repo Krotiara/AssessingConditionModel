@@ -26,7 +26,10 @@ namespace PatientsResolver.API.Controllers
         [HttpPost("patient")]
         public async Task<ActionResult> GetPatient(GetPatientRequest request)
         {
-            throw new NotImplementedException();
+            var patient = await _patientsDataService.Get(request.PatientId, request.Affiliation);
+            if (patient == null)
+                return Ok();
+            return Ok(patient);
         }
 
 
