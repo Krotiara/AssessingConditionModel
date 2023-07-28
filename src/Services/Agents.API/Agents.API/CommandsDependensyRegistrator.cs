@@ -11,8 +11,6 @@ namespace Agents.API
             services.AddTransient<GetBioageByFuncParamsCommand>();
             services.AddTransient<GetDentistSumCommand>();
             services.AddTransient<GetInfluencesCommand>();
-            services.AddTransient<GetInfluencesWithoutParametersCommand>();
-            services.AddTransient<GetLatestPatientParametersCommand>();
 
             services.AddTransient<CommandServiceResolver>(serviceProvider => (command, vars, properties, commonPropsNames) =>
             {
@@ -22,8 +20,6 @@ namespace Agents.API
                     SystemCommands.GetBioageByFunctionalParameters => serviceProvider.GetService<GetBioageByFuncParamsCommand>(),
                     SystemCommands.GetDentistSum => serviceProvider.GetService<GetDentistSumCommand>(),
                     SystemCommands.GetInfluences => serviceProvider.GetService<GetInfluencesCommand>(),
-                    SystemCommands.GetInfluencesWithoutParameters => serviceProvider.GetService<GetInfluencesWithoutParametersCommand>(),
-                    SystemCommands.GetLatestPatientParameters => serviceProvider.GetService<GetLatestPatientParametersCommand>(),
                     _ => null
                 };
                 if (res != null)

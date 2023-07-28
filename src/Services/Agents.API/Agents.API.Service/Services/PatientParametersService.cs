@@ -26,11 +26,11 @@ namespace Agents.API.Service.Services
         }
 
 
-        public async Task<Dictionary<string, PatientParameter>> GetLatestParameters(LatestParametersRequest request)
+        public async Task<Dictionary<string, PatientParameter>> GetPatientParameters(PatientParametersRequest request)
         {
             string body = Newtonsoft.Json.JsonConvert.SerializeObject(request);
             //TODO Запрос latestParameters
-            string url = $"{_patientsResolverApiUrl}/patientsApi/latestPatientParameters";
+            string url = $"{_patientsResolverApiUrl}/patientsApi/Patients/parameters";
             var responce = await _webRequester.SendRequest(url, "POST", body);
             if(!responce.IsSuccessStatusCode)
             {

@@ -57,7 +57,7 @@ namespace PatientsResolver.API.Service.Services
             if (patient == null)
                 return;
             await _patientsStore.Delete(x => x.Id == id);
-            _patients.TryRemove((patient.PatientId, patient.Affiliation), out _);  
+            _patients.TryRemove((patient.PatientId, patient.Affiliation), out _);
         }
 
 
@@ -75,18 +75,22 @@ namespace PatientsResolver.API.Service.Services
         }
 
 
-        public async Task<IEnumerable<Parameter>> GetPatientParameters(string patientId, string affiliation, DateTime start, DateTime end)
+        public async Task<IEnumerable<Parameter>> GetPatientParameters(string patientId, string affiliation, DateTime start, DateTime end, List<string> names)
         {
+            var namesHashes = new HashSet<string>(names);
             var patient = await Get(patientId, affiliation);
-            if(patient == null)
+            if (patient == null)
                 return Enumerable.Empty<Parameter>();
 
-            return patient.Parameters.Where(x => x.Key.Item2 <= end && x.Key.Item2 >= start).Select(x => new Parameter()
-            {
-                Name = x.Key.Item1,
-                Timestamp = x.Key.Item2,
-                Value = x.Value
-            });
+            return patient.Parameters.Where(x => namesHashes.Contains(x.Key.Item1)
+                                                && x.Key.Item2 <= end
+                                                && x.Key.Item2 >= start)
+                                     .Select(x => new Parameter()
+                                     {
+                                         Name = x.Key.Item1,
+                                         Timestamp = x.Key.Item2,
+                                         Value = x.Value
+                                     });
         }
     }
 }

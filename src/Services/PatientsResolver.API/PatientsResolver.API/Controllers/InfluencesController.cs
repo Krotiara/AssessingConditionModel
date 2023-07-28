@@ -1,7 +1,6 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using PatientsResolver.API.Entities.Mongo;
-using PatientsResolver.API.Entities.Requests;
 using PatientsResolver.API.Models.Requests;
 using PatientsResolver.API.Service.Services;
 using System;
@@ -60,7 +59,7 @@ namespace PatientsResolver.API.Controllers
         [HttpPost("add")]
         public async Task<ActionResult> AddInfluences([FromBody] List<Influence> influences)
         {
-            foreach(Influence influence in influences)
+            foreach (Influence influence in influences)
                 await _influencesDataService.Insert(influence);
             return Ok();
         }

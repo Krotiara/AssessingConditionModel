@@ -1,7 +1,6 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using PatientsResolver.API.Entities.Mongo;
-using PatientsResolver.API.Entities.Requests;
 using PatientsResolver.API.Models.Requests;
 using PatientsResolver.API.Service.Services;
 
@@ -35,7 +34,7 @@ namespace PatientsResolver.API.Controllers
         {
             DateTime start = request.StartTimestamp == null ? DateTime.MinValue : (DateTime)request.StartTimestamp;
             DateTime end = request.EndTimestamp == null ? DateTime.MaxValue : (DateTime)request.EndTimestamp;
-            var parameters = await _patientsDataService.GetPatientParameters(request.PatientId, request.Affiliation, start, end);
+            var parameters = await _patientsDataService.GetPatientParameters(request.PatientId, request.Affiliation, start, end, request.Names);
             return Ok(parameters);
         }
 

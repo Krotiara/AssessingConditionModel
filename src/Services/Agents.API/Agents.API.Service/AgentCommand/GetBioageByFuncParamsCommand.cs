@@ -42,20 +42,12 @@ namespace Agents.API.Service.AgentCommand
             string patientAffiliation = Properties[PropertiesNamesSettings.Affiliation].Value as string;
             DateTime endTimestamp = (DateTime)Variables[PropertiesNamesSettings.EndTimestamp].Value;
 
-#warning Нужно преобразовать везде int id to string id.
-            int id = int.Parse(patientId);
-
             var meta = await _pMService.Get(_modelKey);
             if(meta == null)
                 throw new ExecuteCommandException($"No meta for model key {_modelKey.Id}:{_modelKey.Version}");
             List<string> names = meta.ParamsNamesList;
-            Dictionary<string, PatientParameter> parameters = await _pPSerivce.GetLatestParameters(new LatestParametersRequest()
-            {
-                PatientId = id,
-                MedicalOrganization = patientAffiliation,
-                EndTimestamp = endTimestamp,
-                Names = names
-            });
+            PatientParametersRequest request = new(patientAffiliation, patientId, endTimestamp, meta.ParamsNamesList);
+            Dictionary<string, PatientParameter> parameters = await _pPSerivce.GetPatientParameters(request);
             if(parameters == null)
                 throw new ExecuteCommandException($"Cannot get latest parameters for patient {patientId}:{patientAffiliation}. See logs.");
 
