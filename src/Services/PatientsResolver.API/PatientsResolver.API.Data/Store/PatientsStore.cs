@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PatientsResolver.API.Service.Store
+namespace PatientsResolver.API.Data.Store
 {
     public class PatientsStore : MongoBaseService<Patient>
     {

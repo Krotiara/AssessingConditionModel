@@ -1,6 +1,6 @@
-﻿using PatientsResolver.API.Entities;
+﻿using PatientsResolver.API.Data.Store;
+using PatientsResolver.API.Entities;
 using PatientsResolver.API.Entities.Mongo;
-using PatientsResolver.API.Service.Store;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;

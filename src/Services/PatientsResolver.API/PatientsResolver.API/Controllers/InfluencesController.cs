@@ -3,8 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using PatientsResolver.API.Entities.Mongo;
 using PatientsResolver.API.Entities.Requests;
 using PatientsResolver.API.Models.Requests;
-using PatientsResolver.API.Service.Command;
-using PatientsResolver.API.Service.Query;
 using PatientsResolver.API.Service.Services;
 using System;
 
@@ -30,14 +28,6 @@ namespace PatientsResolver.API.Controllers
             if (inf == null)
                 return Ok();
             return Ok(inf);
-        }
-
-
-        [HttpPost("add")]
-        public async Task<ActionResult> AddPatientInfluence([FromBody] Influence influence)
-        {
-            await _influencesDataService.Insert(influence);
-            return Ok();
         }
 
 
@@ -67,12 +57,12 @@ namespace PatientsResolver.API.Controllers
         }
 
 
-        [HttpPost("addInfluenceData")]
-        public async Task<ActionResult> AddData([FromBody] AddInfluencesRequest request)
+        [HttpPost("add")]
+        public async Task<ActionResult> AddInfluences([FromBody] List<Influence> influences)
         {
-            //TODO - заменить на сервис
-            bool isSuccessSendRequest = await mediator.Send(new SendPatientDataFileSourceCommand() { Request = request });
-            return Ok(isSuccessSendRequest);
+            foreach(Influence influence in influences)
+                await _influencesDataService.Insert(influence);
+            return Ok();
         }
     }
 }

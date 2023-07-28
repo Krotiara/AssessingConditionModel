@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using PatientsResolver.API.Entities.Mongo;
 using PatientsResolver.API.Entities.Requests;
 using PatientsResolver.API.Models.Requests;
-using PatientsResolver.API.Service.Query;
 using PatientsResolver.API.Service.Services;
 
 namespace PatientsResolver.API.Controllers

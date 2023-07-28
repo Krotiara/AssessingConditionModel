@@ -1,5 +1,5 @@
-﻿using PatientsResolver.API.Entities.Mongo;
-using PatientsResolver.API.Service.Store;
+﻿using PatientsResolver.API.Data.Store;
+using PatientsResolver.API.Entities.Mongo;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -37,7 +37,20 @@ namespace PatientsResolver.API.Service.Services
         public async Task Delete(string id) => await _store.Delete(x => x.Id == id);
 
 
-        public async Task Insert(Influence inf) => await _store.Insert(inf);
+        public async Task Insert(Influence inf)
+        {
+            Influence dbInf = await _store.Get(x => x.PatientId == inf.PatientId
+            && x.Affiliation == inf.Affiliation
+            && x.StartTimestamp == inf.StartTimestamp
+            && x.EndTimestamp == inf.EndTimestamp
+            && x.InfluenceType == inf.InfluenceType
+            && x.MedicineName == inf.MedicineName);
+            if (dbInf != null)
+                return;
+
+             await _store.Insert(inf);
+        }
+       
 
 
         public async Task<IEnumerable<Influence>> Query(string patientId, string affiliation, DateTime start, DateTime end)

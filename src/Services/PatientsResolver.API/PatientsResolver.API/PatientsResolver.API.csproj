@@ -21,7 +21,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\PatientsResolver.API.Entities\PatientsResolver.API.Entities.csproj" />
-    <ProjectReference Include="..\PatientsResolver.API.Messaging.Receive\PatientsResolver.API.Messaging.Receive.csproj" />
     <ProjectReference Include="..\PatientsResolver.API.Service\PatientsResolver.API.Service.csproj" />
   </ItemGroup>
 
