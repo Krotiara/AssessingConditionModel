@@ -66,7 +66,6 @@ services
 
 services
     .AddTransient<IRequestHandler<ExecuteCodeLineCommand, Unit>, ExecuteCodeLineCommandHandler>()
-    .AddTransient<IRequestHandler<ConvertArgsCommand, object[]>, ConvertArgsCommandHandler>()
     .AddTransient<IMetaStorageService, InternalMetaStorageService>()
     .AddTransient<ICodeResolveService, CodeResolveService>();
 
