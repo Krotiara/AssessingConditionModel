@@ -1,7 +1,9 @@
 ﻿using Agents.API.Entities;
+using Agents.API.Entities.Requests;
 using Agents.API.Interfaces;
 using Agents.API.Service.AgentCommand;
 using Agents.API.Service.Command;
+using Amazon.Runtime.Internal;
 using Interfaces;
 using MediatR;
 using System;
@@ -35,7 +37,7 @@ namespace Agents.API.Service.Services
         public async Task<(ICommandArgsTypesMeta?, Delegate)> ResolveCommandAction(ICommand command,
             IAgentPropertiesNamesSettings commonPropertiesNames, CancellationToken cancellationToken)
         {
-            string commandName = await _mediator.Send(new GetCommandNameCommand(command), cancellationToken);
+            string commandName = GetCommandName(command);
             SystemCommands apiCommand;
             try
             {
@@ -115,6 +117,38 @@ namespace Agents.API.Service.Services
                 }
             }
             return results;
+        }
+
+
+        public ICommand ParseCodeLineCommand(ParseCodeLineRequest request)
+        {
+            bool isAssigning = request.CodeLine.Contains('=');
+            if (isAssigning)
+            {
+                string param = request.CodeLine.Split('=').First().Trim();
+                return new ExecutableCommand(request.CodeLine, CommandType.Assigning, request.LocalVariables, request.LocalProperties, param);
+            }
+            else
+                return new ExecutableCommand(request.CodeLine, CommandType.VoidCall, request.LocalVariables, request.LocalProperties);
+        }
+
+
+        public string GetCommandName(ICommand command)
+        {
+            Regex methodCallRegex = new Regex(@"=.+\(.*\)");
+            Match match = methodCallRegex.Match(command.OriginCommand);
+            if (match.Success)
+            {
+                string commandName = match
+                    .Value
+                    .Replace("=", "")
+                    .Trim()
+                    .Split('(')
+                    .First();
+                return commandName;
+            }
+            else
+                return null;
         }
 
     }

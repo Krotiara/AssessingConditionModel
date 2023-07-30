@@ -1,5 +1,6 @@
 ﻿using Agents.API.Entities;
 using Agents.API.Entities.AgentsSettings;
+using Agents.API.Entities.Requests;
 using Agents.API.Interfaces;
 using Agents.API.Service.AgentCommand;
 using Agents.API.Service.Command;
@@ -22,11 +23,13 @@ namespace Agents.API.Service.Services
     {
         private readonly IMediator _mediator;
         private readonly CommandServiceResolver _commandActionsProvider;
+        private readonly CodeResolveService _codeResolveService;
 
-        public CodeExecutorService(IMediator mediator, CommandServiceResolver commandActionsProvider)
+        public CodeExecutorService(IMediator mediator, CommandServiceResolver commandActionsProvider, CodeResolveService codeResolveService)
         {
             this._mediator = mediator;
             this._commandActionsProvider = commandActionsProvider;
+            _codeResolveService = codeResolveService;
         }
 
 
@@ -50,38 +53,11 @@ namespace Agents.API.Service.Services
 
             foreach (string codeLine in lines)
             {
-                ICommand command = await _mediator.Send(new ParseCodeLineCommand(codeLine, localVars, localProperties), cancellationToken);
+                ICommand command = _codeResolveService.ParseCodeLineCommand(new ParseCodeLineRequest(codeLine, localVars, localProperties));
                 await _mediator.Send(new ExecuteCodeLineCommand(command, commonPropertiesNames), cancellationToken);
             }
 
             return localVars;
         }
-
-
-        
-
-//        public async Task<object> ExecuteCommand(SystemCommands command, object[] commandArgs, CancellationToken cancellationToken = default)
-//        {
-//            IAgentCommand c = _commandActionsProvider.Invoke(command);
-//            if(c == null)
-//                throw new ResolveCommandActionException($"Не найдена команда для {command}");       
-//            object[] args = await _mediator.Send(new ConvertArgsCommand(command, commandArgs));
-
-//#warning TODO Нужна мета информация о параметрах - получить по аналогии с GetCommandArgsValuesQueueHandler (сразу преобразованные аргументы).
-
-//            object res = c.Command.DynamicInvoke(args);
-//            if (res is Task)
-//            {
-//                await (Task)res;
-//                res = res.GetType().GetProperty("Result").GetValue(res);
-//            }
-//            //if (typeof(T).GetInterface(nameof(IEnumerable<T>)) == null)
-//            //{
-//            //    TypeConverter typeConverter = TypeDescriptor.GetConverter(typeof(T));
-//            //    res = typeConverter.ConvertTo(res, typeof(T));
-//            //}
-
-//            return res;
-//        }
     }
 }
