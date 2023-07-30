@@ -21,14 +21,17 @@ namespace Agents.API.Service.Services
 
         private readonly IMediator _mediator;
         private readonly CommandServiceResolver _commandActionProvider;
+        private readonly IMetaStorageService _metaStorageService;
 
-        public CodeResolveService(IMediator mediator, CommandServiceResolver commandActionProvider)
+        public CodeResolveService(IMediator mediator,
+            CommandServiceResolver commandActionProvider, IMetaStorageService metaStorageService)
         {
             this._mediator = mediator;
             this._commandActionProvider = commandActionProvider;
+            _metaStorageService = metaStorageService;
         }
 
-        public async Task<(ICommandArgsTypesMeta, Delegate)> ResolveCommandAction(ICommand command, 
+        public async Task<(ICommandArgsTypesMeta?, Delegate)> ResolveCommandAction(ICommand command,
             IAgentPropertiesNamesSettings commonPropertiesNames, CancellationToken cancellationToken)
         {
             string commandName = await _mediator.Send(new GetCommandNameCommand(command), cancellationToken);
@@ -37,7 +40,7 @@ namespace Agents.API.Service.Services
             {
                 apiCommand = (SystemCommands)Enum.Parse(typeof(SystemCommands), commandName);
             }
-            catch(ArgumentException)
+            catch (ArgumentException)
             {
                 throw new ResolveCommandActionException($"Была передана команда, не содержащаяся в API системы: {commandName}");
             }
@@ -53,10 +56,10 @@ namespace Agents.API.Service.Services
             {
 #warning В тесте не вызывается метод, а взовращается делегат метода-теста. WAT
                 IAgentCommand c = _commandActionProvider.Invoke(apiCommand, command.LocalVariables, command.LocalProperties, commonPropertiesNames);
-                if(c == null)
+                if (c == null)
                     throw new ResolveCommandActionException($"Не удалось разрешить действие для команды {commandName}");
 #warning Может вернуться null.
-                ICommandArgsTypesMeta meta = await _mediator.Send(new GetCommandTypesMetaQueue(apiCommand), cancellationToken);
+                ICommandArgsTypesMeta? meta = _metaStorageService.GetMetaByCommandName(apiCommand);
                 return (meta, c.Command);
             }
         }

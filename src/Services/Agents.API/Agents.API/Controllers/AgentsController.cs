@@ -19,12 +19,17 @@ namespace Agents.API.Controllers
         private readonly IMediator _mediator;
         private readonly ILogger<AgentsController> _logger;
         private readonly SettingsService _settingsService;
+        private readonly AgentsService _agentsService;
 
-        public AgentsController(IMediator mediator, SettingsService settingsService, ILogger<AgentsController> logger)
+        public AgentsController(IMediator mediator, 
+            SettingsService settingsService, 
+            ILogger<AgentsController> logger, 
+            AgentsService agentsService)
         {
             _mediator = mediator;
             _logger = logger;
             _settingsService = settingsService;
+            _agentsService = agentsService;
         }
 
 
@@ -39,10 +44,13 @@ namespace Agents.API.Controllers
             
             foreach(var predictionSettings in request.Settings)
             {
-                IAgentState state = await _mediator.Send(new GetAgentStateQuery(
-                    new AgentKey() { ObservedId = request.Id, ObservedObjectAffilation = request.Affiliation }, 
-                    sets.Settings, 
-                    predictionSettings.Variables));
+                IAgentState? state = await _agentsService.GetAgentState(new GetAgentStateRequest()
+                {
+                    Key = new AgentKey() { ObservedId = request.Id, ObservedObjectAffilation = request.Affiliation },
+                    AgentsSettings = sets.Settings,
+                    Variables = predictionSettings.Variables
+                });
+
                 response.Predictions.Add(new PredictionResponsePart() { Name = predictionSettings.SettingsName, AgentState = state });
             }
 
