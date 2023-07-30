@@ -55,7 +55,7 @@ namespace Agents.API.Service.Services
         }
 
 
-        public async Task<Dictionary<string, PatientParameter>> GetPatientParameters(PatientParametersRequest request)
+        public async Task<Dictionary<string, Parameter>> GetPatientParameters(PatientParametersRequest request)
         {
             string body = Newtonsoft.Json.JsonConvert.SerializeObject(request);
             //TODO Запрос latestParameters
@@ -66,11 +66,8 @@ namespace Agents.API.Service.Services
                 _logger.LogError($"Cannot get latest parameters by request: {responce.StatusCode}.");
                 return null;
             }
-            var res = await responce.DeserializeBody<List<PatientParameter>>();
+            var res = await responce.DeserializeBody<List<Parameter>>();
             return res.ToDictionary(x => x.Name, x => x);
         }
     }
-
-
-    
 }

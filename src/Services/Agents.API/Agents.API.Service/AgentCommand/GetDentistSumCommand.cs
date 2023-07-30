@@ -1,4 +1,5 @@
 ﻿using Agents.API.Entities;
+using Agents.API.Entities.Mongo;
 using Agents.API.Entities.Requests;
 using Agents.API.Service.Services;
 using Interfaces;
@@ -16,7 +17,7 @@ namespace Agents.API.Service.AgentCommand
     public class GetDentistSumCommand : IAgentCommand
     {
         private readonly PredictionRequestsService _pMService;
-        private readonly PatientParametersService _pPSerivce;
+        private readonly PatientsRequestsService _pPSerivce;
         private readonly string _modelsServerUrl;
         private readonly EnvSettings _settings;
         private readonly TempModelSettings _modelSets;
@@ -29,7 +30,7 @@ namespace Agents.API.Service.AgentCommand
 
 
         public GetDentistSumCommand(PredictionRequestsService pMService,
-            PatientParametersService pPSerivce, 
+            PatientsRequestsService pPSerivce, 
             IOptions<EnvSettings> settings, 
             IOptions<TempModelSettings> modelSets)
         {
@@ -56,12 +57,12 @@ namespace Agents.API.Service.AgentCommand
                 throw new ExecuteCommandException($"No meta for model key {model.Id}:{model.Version}");
             List<string> names = meta.ParamsNamesList;
             PatientParametersRequest request = new(patientAffiliation, patientId, endTimestamp, names);
-            Dictionary<string, PatientParameter> parameters = await _pPSerivce.GetPatientParameters(request);
+            Dictionary<string, Parameter> parameters = await _pPSerivce.GetPatientParameters(request);
 
             if (parameters == null)
                 throw new ExecuteCommandException($"Cannot get latest parameters for patient {patientId}:{patientAffiliation}. See logs.");
 
-            float[] inputArgs = new float[names.Count];
+            double[] inputArgs = new double[names.Count];
             for (int i = 0; i < names.Count; i++)
             {
                 if (Variables.ContainsKey(names[i]) && Variables[names[i]].Value != null)
@@ -85,7 +86,7 @@ namespace Agents.API.Service.AgentCommand
                 
                 if (!parameters.ContainsKey(names[i]))
                     throw new ExecuteCommandException($"One of the required parameters is not found: {names[i]}");
-                inputArgs[i] = parameters[names[i]].ConvertValue<float>();
+                inputArgs[i] = parameters[names[i]].Value;
                 
             }
 
@@ -97,66 +98,6 @@ namespace Agents.API.Service.AgentCommand
                 var res = await responce.DeserializeBody<float[]>();
                 return (int)Math.Ceiling(res.First());
             }
-
-            ////Костыли.
-            //if (age <= 5)
-            //{
-            //    inputArgs = new float[]
-            //    {
-            //        pDict[ParameterNames.ReverseSagittalGap].ConvertValue<float>(),
-            //        pDict[ParameterNames.FirstMolarsNarrowing].ConvertValue<float>(),
-            //        pDict[ParameterNames.DentistPointsSum].ConvertValue<float>(),
-            //        pDict[ParameterNames.SagittalSlit].ConvertValue<float>(),
-            //        pDict[ParameterNames.VerticalDysocclusion].ConvertValue<float>(),
-            //        pDict[ParameterNames.LessIncisorOverlap].ConvertValue<float>(),
-            //        pDict[ParameterNames.ContactIncisorOverlapWithoutInjury].ConvertValue<float>(),
-            //        pDict[ParameterNames.ContactIncisorOverlapWithInjury].ConvertValue<float>(),
-            //        pDict[ParameterNames.LowerJawForwardDisplacement].ConvertValue<float>(),
-            //        pDict[ParameterNames.LowerJawBackwardDisplacement].ConvertValue<float>(),
-            //        pDict[ParameterNames.LowerJawSideDisplacement].ConvertValue<float>(),
-            //        pDict[ParameterNames.DentitionLengthReductionByTooth].ConvertValue<float>(),
-            //        pDict[ParameterNames.DentitionLengthReductionByTooths].ConvertValue<float>(),
-            //        age,
-            //        pDict[ParameterNames.TreatmentDuration].ConvertValue<float>(),
-            //        pDict[ParameterNames.TreatmentSteps].ConvertValue<float>(),
-            //        pDict[ParameterNames.TreatmentApparatuesCount].ConvertValue<float>()
-            //    };
-            //}
-            //else
-            //{
-            //    inputArgs = new float[]
-            //    {
-            //        pDict[ParameterNames.ReverseSagittalGap].ConvertValue<float>(),
-            //        pDict[ParameterNames.FirstMolarsNarrowing].ConvertValue<float>(),
-            //        pDict[ParameterNames.DentistPointsSum].ConvertValue<float>(),
-            //        pDict[ParameterNames.SagittalSlit].ConvertValue<float>(),
-            //        pDict[ParameterNames.VerticalDysocclusion].ConvertValue<float>(),
-            //        pDict[ParameterNames.LessIncisorOverlap].ConvertValue<float>(),
-            //        pDict[ParameterNames.ContactIncisorOverlapWithoutInjury].ConvertValue<float>(),
-            //        pDict[ParameterNames.ContactIncisorOverlapWithInjury].ConvertValue<float>(),
-            //        pDict[ParameterNames.LowerJawForwardDisplacement].ConvertValue<float>(),
-            //        pDict[ParameterNames.LowerJawBackwardDisplacement].ConvertValue<float>(),
-            //        pDict[ParameterNames.LowerJawSideDisplacement].ConvertValue<float>(),
-            //        pDict[ParameterNames.DentitionLengthReductionByTooth].ConvertValue<float>(),
-            //        pDict[ParameterNames.DentitionLengthReductionByTooths].ConvertValue<float>(),
-            //        age,
-            //        pDict[ParameterNames.ScoreAfterTreatment].ConvertValue<float>(),
-            //        pDict[ParameterNames.TreatmentDuration].ConvertValue<float>(),
-            //        pDict[ParameterNames.TreatmentSteps].ConvertValue<float>(),
-            //        pDict[ParameterNames.TreatmentApparatuesCount].ConvertValue<float>(),
-            //    };
-            //}
-
-            //IPredictRequest request = new PredictRequest() { Id = model.Id, Version = model.Version, Input = inputArgs};
-
-            //var responce = await _webRequester.SendRequest($"{_modelsServerUrl}/models/predict/", "POST", Newtonsoft.Json.JsonConvert.SerializeObject(request));
-            //if (!responce.IsSuccessStatusCode)
-            //    throw new ExecuteCommandException($"{responce.StatusCode}:{responce.ReasonPhrase}");
-            //else
-            //{
-            //    var res = await _webRequester.DeserializeBody<float[]>(responce);
-            //    return (int)res.First();
-            //}
         };
 
        

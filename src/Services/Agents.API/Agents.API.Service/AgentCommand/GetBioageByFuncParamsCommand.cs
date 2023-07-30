@@ -1,4 +1,5 @@
 ﻿using Agents.API.Entities;
+using Agents.API.Entities.Mongo;
 using Agents.API.Entities.Requests;
 using Agents.API.Service.Services;
 using Interfaces;
@@ -47,13 +48,13 @@ namespace Agents.API.Service.AgentCommand
                 throw new ExecuteCommandException($"No meta for model key {_modelKey.Id}:{_modelKey.Version}");
             List<string> names = meta.ParamsNamesList;
             PatientParametersRequest request = new(patientAffiliation, patientId, endTimestamp, meta.ParamsNamesList);
-            Dictionary<string, PatientParameter> parameters = await _requestService.GetPatientParameters(request);
+            Dictionary<string, Parameter> parameters = await _requestService.GetPatientParameters(request);
             if(parameters == null)
                 throw new ExecuteCommandException($"Cannot get latest parameters for patient {patientId}:{patientAffiliation}. See logs.");
 
             InitPressureDelta(parameters);
 
-            float[] inputArgs = new float[names.Count];
+            double[] inputArgs = new double[names.Count];
             for(int i = 0; i < names.Count; i++)
             {
                 if (Variables.ContainsKey(names[i]) && Variables[names[i]].Value != null)
@@ -70,7 +71,7 @@ namespace Agents.API.Service.AgentCommand
 
                 if (!parameters.ContainsKey(names[i]))
                     throw new ExecuteCommandException($"One of the required parameters is not found: {names[i]}");
-                inputArgs[i] = parameters[names[i]].ConvertValue<float>();      
+                inputArgs[i] = parameters[names[i]].Value;      
             }
 
             var responce = await _pMService.Predict(_modelKey, inputArgs);
@@ -86,16 +87,16 @@ namespace Agents.API.Service.AgentCommand
        
 
         //TODO придумать, как такое отслеживать.
-        private void InitPressureDelta(Dictionary<string, PatientParameter> dict)
+        private void InitPressureDelta(Dictionary<string, Parameter> dict)
         {
             if (dict.ContainsKey(_pressureDeltaParam))
                 return;
             if (!dict.ContainsKey(_systolicPressure) || !dict.ContainsKey(_diastolicPressure))
                 return;
-            dict[_pressureDeltaParam] = new PatientParameter()
+            dict[_pressureDeltaParam] = new Parameter()
             {
                 Name = _pressureDeltaParam,
-                Value = (dict[_diastolicPressure].ConvertValue<float>() - dict[_systolicPressure].ConvertValue<float>()).ToString()
+                Value = (dict[_diastolicPressure].Value - dict[_systolicPressure].Value)
             };
         }
     }

@@ -55,7 +55,7 @@ namespace Agents.API.Service.Services
         }
 
 
-        public async Task<HttpResponseMessage> Predict(ModelKey key, float[] input)
+        public async Task<HttpResponseMessage> Predict(ModelKey key, double[] input)
         {
             IPredictRequest request = new PredictRequest() { Id = key.Id, Version = key.Version, Input = input };
             string requestBody = Newtonsoft.Json.JsonConvert.SerializeObject(request);

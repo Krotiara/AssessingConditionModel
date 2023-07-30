@@ -48,7 +48,6 @@ services.AddMediatR(Assembly.GetExecutingAssembly());
 
 #region rabbitMQ
 services.Configure<RabbitMqConfiguration>(builder.Configuration.GetSection("RabbitMq"));
-services.Configure<AddDataConfig>(builder.Configuration.GetSection("RabbitMqAddInfo"));
 services.Configure<InitServiceRabbitConfig>(builder.Configuration.GetSection("InitServiceRabbitConfig"));
 #endregion
 
@@ -60,7 +59,6 @@ AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
 services
     .AddTransient<IWebRequester, HttpWebRequester>()
-    .AddTransient<IAgingDynamics<AgingState>, AgingDynamics>()
     .AddTransient<IProperty, Property>()
     .AddTransient<IAgentState, AgentState>();
 
