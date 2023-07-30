@@ -7,7 +7,7 @@ using System;
 
 namespace PatientsResolver.API.Controllers
 {
-    [Route("patientsApi/[controller]")]
+    [Route("api/[controller]")]
     public class InfluencesController : ControllerBase
     {
         private readonly IMediator mediator;

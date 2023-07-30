@@ -12,8 +12,11 @@ namespace Agents.API.Entities.Requests
         public PatientInfluencesRequest() { }
 
         public string PatientId { get; set; }
+
         public string Affiliation { get; set; }
+
         public DateTime? StartTimestamp { get; set; }
+
         public DateTime? EndTimestamp { get; set; }
     }
 }

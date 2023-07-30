@@ -7,7 +7,7 @@ using PatientsResolver.API.Service.Services;
 namespace PatientsResolver.API.Controllers
 {
 
-    [Route("patientsApi/[controller]")]
+    [Route("api/[controller]")]
     public class PatientsController : ControllerBase
     {
         private readonly PatientsDataService _patientsDataService;

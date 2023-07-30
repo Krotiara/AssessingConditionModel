@@ -21,15 +21,16 @@ namespace Agents.API.Service.Services
         public PatientsRequestsService(IWebRequester webRequester, IOptions<EnvSettings> settings, ILogger<PatientsRequestsService> logger)
         {
             _webRequester = webRequester;
-            _patientsResolverApiUrl = settings.Value.PatientsResolverApiUrl;
+            _patientsResolverApiUrl = $"{settings.Value.PatientsResolverApiUrl}/api";
             _logger = logger;
         }
 
 
         public async Task<Patient?> GetPatientInfo(string id, string affiliation)
         {
-            string url = $"{_patientsResolverApiUrl}/patientsApi/patients/{affiliation}/{id}";
-            var responce = await _webRequester.SendRequest(url, "GET");
+            string url = $"{_patientsResolverApiUrl}/Patients/patient{affiliation}/{id}";
+            string body = Newtonsoft.Json.JsonConvert.SerializeObject(new GetPatientRequest() { PatientId = id, Affiliation = affiliation }); 
+            var responce = await _webRequester.SendRequest(url, "POST", body);
             if (responce.IsSuccessStatusCode)
                 return await responce.DeserializeBody<Patient>();
             else
@@ -43,7 +44,7 @@ namespace Agents.API.Service.Services
         public async Task<IList<Influence>> GetInfluences(PatientInfluencesRequest request)
         {
             string body = Newtonsoft.Json.JsonConvert.SerializeObject(request);
-            string url = $"{_patientsResolverApiUrl}/patientsApi/influences";
+            string url = $"{_patientsResolverApiUrl}/Influences/influences";
             var responce = await _webRequester.SendRequest(url, "POST", body);
             if (responce.IsSuccessStatusCode)
                 return await responce.DeserializeBody<List<Influence>>();
@@ -59,7 +60,7 @@ namespace Agents.API.Service.Services
         {
             string body = Newtonsoft.Json.JsonConvert.SerializeObject(request);
             //TODO Запрос latestParameters
-            string url = $"{_patientsResolverApiUrl}/patientsApi/Patients/parameters";
+            string url = $"{_patientsResolverApiUrl}/Patients/parameters";
             var responce = await _webRequester.SendRequest(url, "POST", body);
             if (!responce.IsSuccessStatusCode)
             {
