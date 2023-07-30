@@ -5,9 +5,9 @@ namespace Agents.API.Jobs
 {
     public class InitPredictionModelsJob : IJob
     {
-        private readonly PredcitionModelsService _predcitionModelsService;
+        private readonly PredictionRequestsService _predcitionModelsService;
 
-        public InitPredictionModelsJob(PredcitionModelsService predcitionModelsService)
+        public InitPredictionModelsJob(PredictionRequestsService predcitionModelsService)
         {
             _predcitionModelsService = predcitionModelsService;
         }

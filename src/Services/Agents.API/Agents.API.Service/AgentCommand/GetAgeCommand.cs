@@ -16,10 +16,7 @@ namespace Agents.API.Service.AgentCommand
     //TODO преобразовать в получение по дате рождения и переданному времени.
     public class GetAgeCommand : IAgentCommand
     {
-        private readonly IMediator _mediator;
-
-        private readonly RequestService _requestService;
-
+        private readonly PatientsRequestsService _requestService;
 
         public ConcurrentDictionary<string, IProperty> Variables { get; set; }
         public ConcurrentDictionary<string, IProperty> Properties { get; set; }
@@ -27,9 +24,8 @@ namespace Agents.API.Service.AgentCommand
         public IAgentPropertiesNamesSettings PropertiesNamesSettings { get; set; }
 
 
-        public GetAgeCommand(IMediator mediator, RequestService requestService)
+        public GetAgeCommand(PatientsRequestsService requestService)
         {
-            _mediator = mediator;
             _requestService = requestService;
         }
 
@@ -39,11 +35,11 @@ namespace Agents.API.Service.AgentCommand
             string patientAffiliation = Properties[PropertiesNamesSettings.Affiliation].Value as string;
 
             //TODO избавиться от запроса пациента.
-            var responce = await _requestService.GetPatientInfo(patientId, patientAffiliation);
-            if (!responce.IsSuccessStatusCode)
-                throw new ExecuteCommandException($"Cannot get patient {patientId}:{patientAffiliation} info: " +
-                    $"{responce.StatusCode}:{responce.ReasonPhrase}");
-            var patient = await responce.DeserializeBody<Patient>();
+            var patient = await _requestService.GetPatientInfo(patientId, patientAffiliation);
+            
+            if(patient == null)
+                throw new ExecuteCommandException($"No Patient {patientId}:{patientAffiliation}.");
+
             if (patient.Birthday == default(DateTime))
                 throw new ExecuteCommandException($"No Birthday value for patient {patientId}:{patientAffiliation}.");
 

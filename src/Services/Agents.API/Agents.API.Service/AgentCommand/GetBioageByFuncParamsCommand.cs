@@ -16,8 +16,8 @@ namespace Agents.API.Service.AgentCommand
     public class GetBioageByFuncParamsCommand : IAgentCommand
     {
         private readonly ModelKey _modelKey;
-        private readonly PredcitionModelsService _pMService;
-        private readonly PatientParametersService _pPSerivce;
+        private readonly PredictionRequestsService _pMService;
+        private readonly PatientsRequestsService _requestService;
 
         //TODO продумать, как избавиться от такого.
         private readonly string _pressureDeltaParam = "PulsePressure";
@@ -28,11 +28,11 @@ namespace Agents.API.Service.AgentCommand
         public ConcurrentDictionary<string, IProperty> Properties { get; set; }
         public IAgentPropertiesNamesSettings PropertiesNamesSettings { get; set; }
 
-        public GetBioageByFuncParamsCommand(PredcitionModelsService pMService, 
-            PatientParametersService pPSerivce, IOptions<TempModelSettings> modelSets)
+        public GetBioageByFuncParamsCommand(PredictionRequestsService pMService,
+            PatientsRequestsService requestService, IOptions<TempModelSettings> modelSets)
         {
             _pMService = pMService;
-            _pPSerivce = pPSerivce;
+            _requestService = requestService;
             _modelKey = modelSets.Value.BioAge;
         }
 
@@ -47,7 +47,7 @@ namespace Agents.API.Service.AgentCommand
                 throw new ExecuteCommandException($"No meta for model key {_modelKey.Id}:{_modelKey.Version}");
             List<string> names = meta.ParamsNamesList;
             PatientParametersRequest request = new(patientAffiliation, patientId, endTimestamp, meta.ParamsNamesList);
-            Dictionary<string, PatientParameter> parameters = await _pPSerivce.GetPatientParameters(request);
+            Dictionary<string, PatientParameter> parameters = await _requestService.GetPatientParameters(request);
             if(parameters == null)
                 throw new ExecuteCommandException($"Cannot get latest parameters for patient {patientId}:{patientAffiliation}. See logs.");
 

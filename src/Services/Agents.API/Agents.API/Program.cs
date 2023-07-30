@@ -75,13 +75,11 @@ services
 
 services
     .AddSingleton<SettingsService>()
-    .AddSingleton<PredcitionModelsService>()
+    .AddSingleton<PredictionRequestsService>()
     .AddSingleton<AgentsService>()
     .AddSingleton<InitServiceSender>()
     .AddSingleton<ICodeExecutor, CodeExecutorService>()
-    .AddSingleton<PredcitionModelsService>()
-    .AddSingleton<PatientParametersService>()
-    .AddSingleton<RequestService>();
+    .AddSingleton<PatientsRequestsService>();
 
 services.AddQuartz(q =>
 {

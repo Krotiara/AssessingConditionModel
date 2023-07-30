@@ -10,14 +10,14 @@ using System.Threading.Tasks;
 
 namespace Agents.API.Service.Services
 {
-    public class PredcitionModelsService
+    public class PredictionRequestsService
     {
         private readonly IWebRequester _webRequester;
         private readonly string _modelsServerUrl;
         private readonly TempModelSettings _tempModelSettings;
         private ConcurrentDictionary<ModelKey, ModelMeta> _metas;
 
-        public PredcitionModelsService(IWebRequester webRequester, 
+        public PredictionRequestsService(IWebRequester webRequester, 
             IOptions<EnvSettings> settings, 
             IOptions<TempModelSettings> modelSets)
         {
@@ -33,7 +33,7 @@ namespace Agents.API.Service.Services
             var responce = await _webRequester.SendRequest($"{_modelsServerUrl}/models", "GET");
             if (responce.IsSuccessStatusCode)
             {
-                var metas = await _webRequester.DeserializeBody<List<ModelMeta>>(responce);
+                var metas = await responce.DeserializeBody<List<ModelMeta>>();
                 foreach (var meta in metas)
                     _metas[new ModelKey() {Id= meta.StorageId, Version= meta.Version }] = meta;
             }

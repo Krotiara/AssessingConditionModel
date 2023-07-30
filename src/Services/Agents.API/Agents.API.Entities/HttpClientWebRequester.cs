@@ -28,15 +28,6 @@ namespace Agents.API.Entities
         }
 
 
-        public async Task<T> DeserializeBody<T>(HttpResponseMessage response)
-        {
-            var body = await response.Content.ReadAsStreamAsync();
-            using (StreamReader readResponse = new StreamReader(body))
-            {
-                string res = readResponse.ReadToEnd();
-                T desRes = Newtonsoft.Json.JsonConvert.DeserializeObject<T>(res);
-                return desRes;
-            }
-        }
+        
     }
 }
