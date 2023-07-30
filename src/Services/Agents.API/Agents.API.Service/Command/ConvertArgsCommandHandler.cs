@@ -32,15 +32,19 @@ namespace Agents.API.Service.Command
     public class ConvertArgsCommandHandler : IRequestHandler<ConvertArgsCommand, object[]>
     {
 
-        private readonly IMediator mediator;
-        public ConvertArgsCommandHandler(IMediator mediator)
+        private readonly IMediator _mediator;
+        private readonly IMetaStorageService _metaStorageService;
+
+
+        public ConvertArgsCommandHandler(IMediator mediator, IMetaStorageService metaStorageService)
         {
-            this.mediator = mediator;
+            this._mediator = mediator;
+            _metaStorageService = metaStorageService;
         }
 
         public async Task<object[]> Handle(ConvertArgsCommand request, CancellationToken cancellationToken)
         {
-            ICommandArgsTypesMeta commandMeta = await mediator.Send(new GetCommandTypesMetaQueue(request.CommandName));
+            ICommandArgsTypesMeta? commandMeta = _metaStorageService.GetMetaByCommandName(request.CommandName);
             if (commandMeta == null)
                 throw new NotImplementedException();
 

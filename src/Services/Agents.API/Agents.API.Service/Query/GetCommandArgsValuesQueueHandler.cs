@@ -12,9 +12,9 @@ using System.Threading.Tasks;
 namespace Agents.API.Service.Query
 {
 
-    public class GetCommandArgsValuesQueue : IRequest<List<object>>
+    public class GetCommandArgsValuesQuery : IRequest<List<object>>
     {
-        public GetCommandArgsValuesQueue(ICommand command, ICommandArgsTypesMeta argsMeta)
+        public GetCommandArgsValuesQuery(ICommand command, ICommandArgsTypesMeta argsMeta)
         {
             Command = command;
             CommandArgsTypesMeta = argsMeta;
@@ -26,9 +26,9 @@ namespace Agents.API.Service.Query
         public ICommandArgsTypesMeta CommandArgsTypesMeta { get; }
     }
 
-    public class GetCommandArgsValuesQueueHandler : IRequestHandler<GetCommandArgsValuesQueue, List<object>>
+    public class GetCommandArgsValuesQueryHandler : IRequestHandler<GetCommandArgsValuesQuery, List<object>>
     {
-        public async Task<List<object>> Handle(GetCommandArgsValuesQueue request, CancellationToken cancellationToken)
+        public async Task<List<object>> Handle(GetCommandArgsValuesQuery request, CancellationToken cancellationToken)
         {
 #warning нужно тестирование
             Regex argsRegex = new Regex(@"\(.*\)");

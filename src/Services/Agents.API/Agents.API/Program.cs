@@ -69,7 +69,7 @@ services
     .AddTransient<IRequestHandler<GetPatientInfoQuery, HttpResponseMessage>, GetPatientInfoQueryHandler>()
     .AddTransient<IRequestHandler<GetAgentStateQuery, IAgentState>, GetAgentStateQueryHandler>()
     .AddTransient<IRequestHandler<GetCommandTypesMetaQueue, ICommandArgsTypesMeta>, GetCommandTypesMetaQueueHandler>()
-    .AddTransient<IRequestHandler<GetCommandArgsValuesQueue, List<object>>, GetCommandArgsValuesQueueHandler>()
+    .AddTransient<IRequestHandler<GetCommandArgsValuesQuery, List<object>>, GetCommandArgsValuesQueryHandler>()
     .AddTransient<IRequestHandler<ParseCodeLineCommand, ICommand>, ParseCodeLineCommandHandler>()
     .AddTransient<IRequestHandler<GetCommandNameCommand, string>, GetCommandNameCommandHandler>()
     .AddTransient<IRequestHandler<ExecuteCodeLineCommand, Unit>, ExecuteCodeLineCommandHandler>()
@@ -88,7 +88,8 @@ services
     .AddSingleton<InitServiceSender>()
     .AddSingleton<ICodeExecutor, CodeExecutorService>()
     .AddSingleton<PredcitionModelsService>()
-    .AddSingleton<PatientParametersService>();
+    .AddSingleton<PatientParametersService>()
+    .AddSingleton<RequestService>();
 
 services.AddQuartz(q =>
 {

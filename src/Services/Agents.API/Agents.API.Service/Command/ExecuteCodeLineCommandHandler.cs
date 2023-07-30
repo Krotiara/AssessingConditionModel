@@ -58,7 +58,7 @@ namespace Agents.API.Service.Command
 
             (ICommandArgsTypesMeta, Delegate) commandPair = 
                 await _codeResolveService.ResolveCommandAction(request.Command, request.CommonPropertiesNames, cancellationToken);
-            List<object> variables = await _mediator.Send(new GetCommandArgsValuesQueue(request.Command, commandPair.Item1), cancellationToken);
+            List<object> variables = await _mediator.Send(new GetCommandArgsValuesQuery(request.Command, commandPair.Item1), cancellationToken);
 
             if (request.Command.CommandType == CommandType.Assigning)
             {
