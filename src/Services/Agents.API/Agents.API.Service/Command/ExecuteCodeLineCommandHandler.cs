@@ -1,7 +1,6 @@
 ﻿using Agents.API.Entities;
 using Agents.API.Entities.AgentsSettings;
 using Agents.API.Interfaces;
-using Agents.API.Service.Query;
 using Interfaces;
 using Interfaces.DynamicAgent;
 using MediatR;
@@ -62,7 +61,7 @@ namespace Agents.API.Service.Command
             if (commandPair.Item1 == null)
                 throw new NotImplementedException(); //TODO
 
-            List<object> variables = await _mediator.Send(new GetCommandArgsValuesQuery(request.Command, commandPair.Item1), cancellationToken);
+            List<object> variables = _codeResolveService.GetCommandArgsValues(request.Command, commandPair.Item1);
 
             if (request.Command.CommandType == CommandType.Assigning)
             {

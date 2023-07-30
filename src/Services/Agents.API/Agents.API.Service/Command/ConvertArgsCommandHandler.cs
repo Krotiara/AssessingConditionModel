@@ -1,6 +1,5 @@
 ﻿using Agents.API.Entities;
 using Agents.API.Interfaces;
-using Agents.API.Service.Query;
 using Agents.API.Service.Services;
 using Interfaces;
 using MediatR;

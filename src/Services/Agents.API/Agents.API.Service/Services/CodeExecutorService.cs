@@ -3,14 +3,17 @@ using Agents.API.Entities.AgentsSettings;
 using Agents.API.Interfaces;
 using Agents.API.Service.AgentCommand;
 using Agents.API.Service.Command;
+using Amazon.Runtime.Internal;
 using Interfaces;
 using Interfaces.DynamicAgent;
 using MediatR;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Agents.API.Service.Services
@@ -54,6 +57,8 @@ namespace Agents.API.Service.Services
             return localVars;
         }
 
+
+        
 
 //        public async Task<object> ExecuteCommand(SystemCommands command, object[] commandArgs, CancellationToken cancellationToken = default)
 //        {

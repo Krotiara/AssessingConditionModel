@@ -7,7 +7,6 @@ using Agents.API.Messaging.Receive.Receiver;
 using Microsoft.EntityFrameworkCore;
 using Agents.API.Service.Services;
 using Agents.API.Messaging.Receive.Configs;
-using Agents.API.Service.Query;
 using Agents.API.Data.Store;
 using Agents.API.Interfaces;
 using Interfaces.DynamicAgent;
@@ -66,7 +65,6 @@ services
     .AddTransient<IAgentState, AgentState>();
 
 services
-    .AddTransient<IRequestHandler<GetCommandArgsValuesQuery, List<object>>, GetCommandArgsValuesQueryHandler>()
     .AddTransient<IRequestHandler<ParseCodeLineCommand, ICommand>, ParseCodeLineCommandHandler>()
     .AddTransient<IRequestHandler<GetCommandNameCommand, string>, GetCommandNameCommandHandler>()
     .AddTransient<IRequestHandler<ExecuteCodeLineCommand, Unit>, ExecuteCodeLineCommandHandler>()

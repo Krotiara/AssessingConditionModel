@@ -4,7 +4,6 @@ using Agents.API.Entities.Requests;
 using Agents.API.Entities.Response;
 using Agents.API.Interfaces;
 using Agents.API.Service;
-using Agents.API.Service.Query;
 using Agents.API.Service.Services;
 using Interfaces;
 using Interfaces.DynamicAgent;
