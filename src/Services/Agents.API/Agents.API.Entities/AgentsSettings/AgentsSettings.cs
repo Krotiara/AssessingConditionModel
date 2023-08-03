@@ -18,7 +18,7 @@ namespace Agents.API.Entities.AgentsSettings
             States = new();
         }
 
-        public AgentType AgentType { get; set; }
+        public string AgentType { get; set; }
 
         public List<Property> StateProperties { get; set; }
   

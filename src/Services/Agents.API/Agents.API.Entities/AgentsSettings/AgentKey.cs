@@ -13,18 +13,21 @@ namespace Agents.API.Entities.AgentsSettings
 
         public string ObservedObjectAffilation { get; set; }
 
+        public string AgentType { get; set; }
+
         public override bool Equals(object? obj)
         {
             if (obj == null)
                 return false;
             AgentKey key = obj as AgentKey;
             return ObservedId == key.ObservedId
-                && ObservedObjectAffilation == key.ObservedObjectAffilation;
+                && ObservedObjectAffilation == key.ObservedObjectAffilation
+                && AgentType == key.AgentType;
         }
 
         public override int GetHashCode()
         {
-            return ObservedId.GetHashCode() ^ ObservedObjectAffilation.GetHashCode();
+            return ObservedId.GetHashCode() ^ ObservedObjectAffilation.GetHashCode() ^ AgentType.GetHashCode();
         }
     }
 }

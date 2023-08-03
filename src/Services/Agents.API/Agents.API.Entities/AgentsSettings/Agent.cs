@@ -20,7 +20,7 @@ namespace Agents.API.Entities.AgentsSettings
 
         public string Affiliation { get;}
 
-        public AgentType AgentType { get;} 
+        public string AgentType { get;} 
 
         public IAgentState CurrentState { get; set; }
 

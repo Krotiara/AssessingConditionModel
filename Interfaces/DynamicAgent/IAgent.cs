@@ -13,7 +13,7 @@ namespace Interfaces.DynamicAgent
 
         public string Affiliation { get; }
 
-        public AgentType AgentType { get; }
+        public string AgentType { get; }
 
         public IAgentState CurrentState { get; set; }
 
