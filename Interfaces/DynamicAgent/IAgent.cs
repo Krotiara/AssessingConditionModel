@@ -11,7 +11,7 @@ namespace Interfaces.DynamicAgent
     {
         public string Id { get; set; }
 
-        public string Organization { get; }
+        public string Affiliation { get; }
 
         public AgentType AgentType { get; }
 

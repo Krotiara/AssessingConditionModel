@@ -18,7 +18,7 @@ namespace Agents.API.Entities.AgentsSettings
 
         public string Id { get; set; }
 
-        public string Organization { get;}
+        public string Affiliation { get;}
 
         public AgentType AgentType { get;} 
 
@@ -39,7 +39,7 @@ namespace Agents.API.Entities.AgentsSettings
             _codeExecutor = codeExecutor;
             _stateResolveCode = settings.StateResolveCode;
             Id = key.ObservedId;
-            Organization = key.ObservedObjectAffilation;
+            Affiliation = key.ObservedObjectAffilation;
             AgentType = settings.AgentType;
             Properties = new();
             Variables = new();

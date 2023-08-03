@@ -40,12 +40,12 @@ namespace Agents.API.Service.Services
             }
             catch (ExecuteCodeLineException ex)
             {
-                _logger.LogError($"Ошибка обновления состояния агента {agent.Id}:{agent.Organization}: {ex.Message}");
+                _logger.LogError($"Ошибка обновления состояния агента {agent.Id}:{agent.Affiliation}: {ex.Message}");
                 return null;
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Непредвиденная ошибка обновления состояния агента {agent.Id}:{agent.Organization}: {ex.Message}");
+                _logger.LogError($"Непредвиденная ошибка обновления состояния агента {agent.Id}:{agent.Affiliation}: {ex.Message}");
                 return null;
 
             }
