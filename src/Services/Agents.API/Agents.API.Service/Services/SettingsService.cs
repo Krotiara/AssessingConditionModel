@@ -44,8 +44,9 @@ namespace Agents.API.Service.Services
                 return settings;
 
             settings = await _store.Get(x => x.Affiliation == affiliation && x.AgentType == agentType);
-            if(settings != null)
+            if (settings != null)
                 _settings[(settings.Affiliation, settings.AgentType)] = settings;
+
             return settings;
         }
 
