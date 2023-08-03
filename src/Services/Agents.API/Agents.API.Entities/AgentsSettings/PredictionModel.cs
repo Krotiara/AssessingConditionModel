@@ -13,6 +13,6 @@ namespace Agents.API.Entities.AgentsSettings
 
         public string Organization { get; set; }
 
-        public AgentSettings Settings { get; set; }
+        public AgentsSettings Settings { get; set; }
     }
 }

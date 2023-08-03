@@ -1,4 +1,4 @@
-﻿using Agents.API.Entities.AgentsSettings;
+﻿using Agents.API.Entities.Mongo;
 using Interfaces;
 using Interfaces.DynamicAgent;
 using System;

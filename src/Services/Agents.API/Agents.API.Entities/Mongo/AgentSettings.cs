@@ -1,27 +1,31 @@
-﻿using Interfaces;
+﻿using Agents.API.Entities.AgentsSettings;
+using Interfaces;
 using Interfaces.DynamicAgent;
-using Newtonsoft.Json;
+using Interfaces.Service;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
-namespace Agents.API.Entities.AgentsSettings
+namespace Agents.API.Entities.Mongo
 {
-    public class AgentSettings
+    public class AgentsSettings : Document
     {
-        public AgentSettings()
+        public AgentsSettings()
         {
             StateProperties = new();
             Variables = new();
             States = new();
         }
 
+        public string Affiliation { get; set; }
+
         public string AgentType { get; set; }
 
         public List<Property> StateProperties { get; set; }
-  
+
 
         public List<Property> Variables { get; set; }
 
@@ -29,6 +33,7 @@ namespace Agents.API.Entities.AgentsSettings
 
         public List<AgentState> States { get; set; }
 
+        [JsonIgnore]
         public AgentPropertiesNamesSettings CommonNamesSettings { get; set; }
     }
 }

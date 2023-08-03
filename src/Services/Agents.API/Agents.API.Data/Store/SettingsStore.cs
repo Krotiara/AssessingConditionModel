@@ -1,4 +1,6 @@
 ﻿using Agents.API.Entities.AgentsSettings;
+using Agents.API.Entities.Mongo;
+using Interfaces.Mongo;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -22,17 +24,10 @@ namespace Agents.API.Data.Store
     }
 
 
-    public class SettingsStore
+    public class SettingsStore : MongoBaseService<AgentSettings>
     {
-        private readonly ConcurrentDictionary<AgentSettingsKey, AgentSettings> _settings;
-
-        public SettingsStore()
+        public SettingsStore(MongoService mongo) : base(mongo, "AgentsSettings")
         {
-            _settings = new();
         }
-
-        public void Insert(string affiliation, AgentSettings settings) => _settings[new AgentSettingsKey(affiliation, settings.AgentType)] = settings;
-
-        public AgentSettings? Get(AgentSettingsKey key) => _settings.GetValueOrDefault(key);
     }
 }

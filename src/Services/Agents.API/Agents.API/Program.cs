@@ -41,6 +41,8 @@ services.AddSwaggerGen(c =>
     });
 });
 
+services.AddMongoService(builder.Configuration);
+
 services.Configure<TempModelSettings>(builder.Configuration.GetSection("Models"));
 services.Configure<EnvSettings>(builder.Configuration.GetSection("EnvSettings"));
 CommandsDependensyRegistrator.RegisterDependencies(services);
