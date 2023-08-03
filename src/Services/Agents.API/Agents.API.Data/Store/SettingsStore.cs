@@ -8,17 +8,31 @@ using System.Threading.Tasks;
 
 namespace Agents.API.Data.Store
 {
+    public struct AgentSettingsKey
+    {
+        public AgentSettingsKey(string affiliation, string agentType)
+        {
+            Affiliation = affiliation;
+            AgentType = agentType;
+        }
+
+        public string Affiliation { get; set; }
+
+        public string AgentType { get; set; }
+    }
+
+
     public class SettingsStore
     {
-        private readonly ConcurrentDictionary<string, PredictionModel> _settings;
+        private readonly ConcurrentDictionary<AgentSettingsKey, AgentSettings> _settings;
 
         public SettingsStore()
         {
-            _settings = new ConcurrentDictionary<string, PredictionModel>();
+            _settings = new();
         }
 
-        public void Insert(PredictionModel predictionModel) => _settings[predictionModel.Organization] = predictionModel;
+        public void Insert(string affiliation, AgentSettings settings) => _settings[new AgentSettingsKey(affiliation, settings.AgentType)] = settings;
 
-        public PredictionModel? Get(string organization) => _settings.GetValueOrDefault(organization);
+        public AgentSettings? Get(AgentSettingsKey key) => _settings.GetValueOrDefault(key);
     }
 }

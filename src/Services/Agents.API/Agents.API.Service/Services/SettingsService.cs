@@ -18,8 +18,8 @@ namespace Agents.API.Service.Services
         }
 
 
-        public void Insert(PredictionModel model) => _store.Insert(model);
+        public void Insert(string affiliation, AgentSettings settings) => _store.Insert(affiliation, settings);
 
-        public PredictionModel? Get(string organization) => _store.Get(organization);
+        public AgentSettings? Get(AgentSettingsKey key) => _store.Get(key);
     }
 }
