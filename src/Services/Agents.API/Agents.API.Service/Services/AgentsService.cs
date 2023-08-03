@@ -1,6 +1,6 @@
 ﻿using Agents.API.Data.Store;
 using Agents.API.Entities;
-using Agents.API.Entities.AgentsSettings;
+using Agents.API.Entities.Mongo;
 using Agents.API.Entities.Requests;
 using Agents.API.Interfaces;
 using Amazon.Runtime.Internal.Util;
@@ -27,7 +27,7 @@ namespace Agents.API.Service.Services
         }
 
 
-        public IAgent GetAgent(IAgentKey key, AgentsSettings settings) => _agentsStore.GetAgent(key, settings);
+        public IAgent GetAgent(IAgentKey key, AgentSettings settings) => _agentsStore.GetAgent(key, settings);
 
 
         public async Task<IAgentState?> GetAgentState(GetAgentStateRequest request)

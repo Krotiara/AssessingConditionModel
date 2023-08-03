@@ -12,7 +12,7 @@ namespace Agents.API.Entities.Requests
     {
         public IAgentKey Key { get; set; }
 
-        public AgentsSettings.AgentsSettings AgentsSettings { get; set; }
+        public Mongo.AgentSettings AgentsSettings { get; set; }
 
         public IEnumerable<IProperty> Variables { get; set; }
     }

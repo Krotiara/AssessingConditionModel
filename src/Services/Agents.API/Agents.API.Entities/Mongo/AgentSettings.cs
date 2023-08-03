@@ -11,9 +11,9 @@ using System.Threading.Tasks;
 
 namespace Agents.API.Entities.Mongo
 {
-    public class AgentsSettings : Document
+    public class AgentSettings : Document
     {
-        public AgentsSettings()
+        public AgentSettings()
         {
             StateProperties = new();
             Variables = new();

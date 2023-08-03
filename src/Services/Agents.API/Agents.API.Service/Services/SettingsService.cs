@@ -23,6 +23,13 @@ namespace Agents.API.Service.Services
         }
 
 
+        public async Task Insert(IEnumerable<AgentSettings> sets)
+        {
+            foreach (var settings in sets)
+                await Insert(settings);
+        }
+
+
         public async Task Insert(AgentSettings settings)
         {
             if (_settings.ContainsKey((settings.Affiliation, settings.AgentType)))
