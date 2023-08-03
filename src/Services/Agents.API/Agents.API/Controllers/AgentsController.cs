@@ -35,9 +35,9 @@ namespace Agents.API.Controllers
         [HttpPost("agents/predict")]
         public async Task<ActionResult> PredictState([FromBody] PredictionRequest request)
         {
-            var sets = _settingsService.Get(request.Affiliation);
+            var sets = await _settingsService.Get(request.Affiliation, request.AgentType);
             if (sets == null)
-                return BadRequest(new { Message = $"No agent settings for {request.Affiliation} affiliation."});        
+                return Ok();
 
             PredictionResponse response = new(request.Id, request.Affiliation);
             
@@ -46,7 +46,7 @@ namespace Agents.API.Controllers
                 IAgentState? state = await _agentsService.GetAgentState(new GetAgentStateRequest()
                 {
                     Key = new AgentKey() { ObservedId = request.Id, ObservedObjectAffilation = request.Affiliation },
-                    AgentsSettings = sets.Settings,
+                    AgentsSettings = sets,
                     Variables = predictionSettings.Variables
                 });
 
