@@ -14,7 +14,6 @@ namespace Agents.API.Entities.Requests
 
         public string Affiliation { get; set; }
 
-#warning Нужен ли здесь?
         public string AgentType { get; set; }
 
         public List<PredictionSettings> Settings { get; set; }
