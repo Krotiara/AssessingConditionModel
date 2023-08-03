@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace Agents.API.Service.AgentCommand
 {
-    //TODO преобразовать в получение по дате рождения и переданному времени.
+
     public class GetAgeCommand : IAgentCommand
     {
         private readonly PatientsRequestsService _requestService;
