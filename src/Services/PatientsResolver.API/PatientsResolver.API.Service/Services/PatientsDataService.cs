@@ -28,8 +28,8 @@ namespace PatientsResolver.API.Service.Services
             if (_patients.TryGetValue((patientId, affiliation), out Patient p))
                 return p;
             p = await _patientsStore.Get(x => x.PatientId == patientId && x.Affiliation == affiliation);
-
-            _patients[(patientId, affiliation)] = p;
+            if(p != null)
+                _patients[(patientId, affiliation)] = p;
             return p;
         }
 
