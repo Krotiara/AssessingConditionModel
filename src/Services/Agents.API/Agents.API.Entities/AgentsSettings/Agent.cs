@@ -34,7 +34,7 @@ namespace Agents.API.Entities.AgentsSettings
 
         private readonly AgentPropertiesNamesSettings _commonPropertiesNames;
 
-        public Agent(IAgentKey key, AgentsSettings settings, ICodeExecutor codeExecutor)
+        public Agent(IAgentKey key, AgentSettings settings, ICodeExecutor codeExecutor)
         {
             _codeExecutor = codeExecutor;
             _stateResolveCode = settings.StateResolveCode;
@@ -98,7 +98,7 @@ namespace Agents.API.Entities.AgentsSettings
         }
 
 
-        private void InitDicts(AgentsSettings settings)
+        private void InitDicts(AgentSettings settings)
         {
             foreach (IProperty p in settings.StateProperties)
                 Properties[p.Name] = p;

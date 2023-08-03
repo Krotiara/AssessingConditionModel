@@ -9,9 +9,9 @@ using System.Threading.Tasks;
 
 namespace Agents.API.Entities.AgentsSettings
 {
-    public class AgentsSettings
+    public class AgentSettings
     {
-        public AgentsSettings()
+        public AgentSettings()
         {
             StateProperties = new();
             Variables = new();

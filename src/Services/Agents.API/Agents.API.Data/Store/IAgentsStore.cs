@@ -11,7 +11,7 @@ namespace Agents.API.Data.Store
 {
     public interface IAgentsStore
     {
-        public IAgent GetAgent(IAgentKey key, AgentsSettings settings);
+        public IAgent GetAgent(IAgentKey key, AgentSettings settings);
 
         public void Clear();
     }

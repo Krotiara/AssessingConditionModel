@@ -27,7 +27,7 @@ namespace Agents.API.Service.Services
         }
 
 
-        public IAgent GetAgent(IAgentKey key, AgentsSettings settings) => _agentsStore.GetAgent(key, settings);
+        public IAgent GetAgent(IAgentKey key, AgentSettings settings) => _agentsStore.GetAgent(key, settings);
 
 
         public async Task<IAgentState?> GetAgentState(GetAgentStateRequest request)
