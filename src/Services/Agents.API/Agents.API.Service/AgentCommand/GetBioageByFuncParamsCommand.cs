@@ -40,10 +40,11 @@ namespace Agents.API.Service.AgentCommand
             string patientId = Properties[PropertiesNamesSettings.Id].Value as string;
             string patientAffiliation = Properties[PropertiesNamesSettings.Affiliation].Value as string;
             DateTime endTimestamp = (DateTime)Variables[PropertiesNamesSettings.EndTimestamp].Value;
+            string mlModelId = (string)Variables[PropertiesNamesSettings.MlModel].Value;
 
-            var meta = await _pMService.Get(_modelKey);
+            var meta = await _pMService.Get(mlModelId);
             if(meta == null)
-                throw new ExecuteCommandException($"No meta for model key {_modelKey.Id}:{_modelKey.Version}");
+                throw new ExecuteCommandException($"No meta for model id {mlModelId}");
             List<string> names = meta.ParamsNamesList;
             PatientParametersRequest request = new(patientAffiliation, patientId, endTimestamp, meta.ParamsNamesList);
             Dictionary<string, Parameter> parameters = await _requestService.GetPatientParameters(request);
@@ -72,7 +73,7 @@ namespace Agents.API.Service.AgentCommand
                 inputArgs[i] = parameters[names[i]].Value;      
             }
 
-            var responce = await _pMService.Predict(_modelKey, inputArgs);
+            var responce = await _pMService.Predict(mlModelId, inputArgs);
             if (!responce.IsSuccessStatusCode)
                 throw new ExecuteCommandException($"{responce.StatusCode}:{responce.ReasonPhrase}");
             else

@@ -20,7 +20,6 @@ namespace Agents.API.Service.AgentCommand
         private readonly PatientsRequestsService _pPSerivce;
         private readonly string _modelsServerUrl;
         private readonly EnvSettings _settings;
-        private readonly TempModelSettings _modelSets;
 
         private readonly string _ageParameter = "Age"; //TODO вынести в настройки. 
 
@@ -31,14 +30,12 @@ namespace Agents.API.Service.AgentCommand
 
         public GetDentistSumCommand(PredictionRequestsService pMService,
             PatientsRequestsService pPSerivce, 
-            IOptions<EnvSettings> settings, 
-            IOptions<TempModelSettings> modelSets)
+            IOptions<EnvSettings> settings)
         {
             _pMService = pMService;
             _pPSerivce = pPSerivce;
             _modelsServerUrl = settings.Value.ModelsApiUrl;
             _settings = settings.Value;
-            _modelSets = modelSets.Value;
         }
 
         public Delegate Command => async (int age) =>
@@ -46,15 +43,14 @@ namespace Agents.API.Service.AgentCommand
             string patientId = Properties[PropertiesNamesSettings.Id].Value as string;
             string patientAffiliation = Properties[PropertiesNamesSettings.Affiliation].Value as string;
             DateTime endTimestamp = (DateTime)Variables[PropertiesNamesSettings.EndTimestamp].Value;
+            string mlModelId = (string)Variables[PropertiesNamesSettings.MlModel].Value;
 
-#warning Костыльное получение версии и Id.
-            ModelKey model = GetModelByAge(age);
-            if (model == null)
+            if (mlModelId == null)
                 throw new ExecuteCommandException($"Cannot resolve model key");
 
-            var meta = await _pMService.Get(model);
+            var meta = await _pMService.Get(mlModelId);
             if (meta == null)
-                throw new ExecuteCommandException($"No meta for model key {model.Id}:{model.Version}");
+                throw new ExecuteCommandException($"No meta for model id {mlModelId}");
             List<string> names = meta.ParamsNamesList;
             PatientParametersRequest request = new(patientAffiliation, patientId, endTimestamp, names);
             Dictionary<string, Parameter> parameters = await _pPSerivce.GetPatientParameters(request);
@@ -90,7 +86,7 @@ namespace Agents.API.Service.AgentCommand
                 
             }
 
-            var responce = await _pMService.Predict(model, inputArgs);
+            var responce = await _pMService.Predict(mlModelId, inputArgs);
             if (!responce.IsSuccessStatusCode)
                 throw new ExecuteCommandException($"{responce.StatusCode}:{responce.ReasonPhrase}");
             else
@@ -99,17 +95,5 @@ namespace Agents.API.Service.AgentCommand
                 return (int)Math.Ceiling(res.First());
             }
         };
-
-       
-        private ModelKey GetModelByAge(float age)
-        {
-            if (age >= 3 && age <= 5)
-                return _modelSets.Dentist_3_5;
-            if (age >= 6 && age <= 9)
-                return _modelSets.Dentist_6_9;
-            else if (age >= 9 && age <= 12)
-                return _modelSets.Dentist_10_12;
-            else return null;
-        }
     }
 }
