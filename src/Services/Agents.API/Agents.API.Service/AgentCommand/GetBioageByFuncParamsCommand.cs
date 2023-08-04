@@ -16,7 +16,6 @@ namespace Agents.API.Service.AgentCommand
 {
     public class GetBioageByFuncParamsCommand : IAgentCommand
     {
-        private readonly ModelKey _modelKey;
         private readonly PredictionRequestsService _pMService;
         private readonly PatientsRequestsService _requestService;
 
@@ -30,11 +29,10 @@ namespace Agents.API.Service.AgentCommand
         public IAgentPropertiesNamesSettings PropertiesNamesSettings { get; set; }
 
         public GetBioageByFuncParamsCommand(PredictionRequestsService pMService,
-            PatientsRequestsService requestService, IOptions<TempModelSettings> modelSets)
+            PatientsRequestsService requestService)
         {
             _pMService = pMService;
             _requestService = requestService;
-            _modelKey = modelSets.Value.BioAge;
         }
 
         public Delegate Command => async () =>
