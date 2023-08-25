@@ -1,5 +1,8 @@
 COMPOSE_ARGS=-f docker-compose.yml -f docker-compose.env.yml
 
+prepare:
+	cp -f .env.test .env 2>/dev/null || true
+
 up:
 	docker compose ${COMPOSE_ARGS} up -d --build
 
