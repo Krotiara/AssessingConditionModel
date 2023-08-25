@@ -89,7 +89,7 @@ services.AddQuartz(q =>
     q.UseInMemoryStore();
 
     InitPredictionModelsJob.Schedule(q);
-    InitJob.Schedule(q);
+    //InitJob.Schedule(q); Для чего это?
 });
 services.AddQuartzHostedService();
 

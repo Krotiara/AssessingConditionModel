@@ -17,7 +17,7 @@ namespace Agents.API.Service.Services
         private readonly string _modelsServerUrl;
         private ConcurrentDictionary<string, ModelMeta> _metas;
 
-        public PredictionRequestsService(IWebRequester webRequester, 
+        public PredictionRequestsService(IWebRequester webRequester,
             IOptions<EnvSettings> settings)
         {
             _metas = new();
@@ -26,15 +26,18 @@ namespace Agents.API.Service.Services
         }
 
 
-        public async Task Init()
+        public async Task<bool> Init()
         {
             var responce = await _webRequester.SendRequest($"{_modelsServerUrl}/models", "GET");
-            if (responce.IsSuccessStatusCode)
+            if (responce != null && responce.IsSuccessStatusCode)
             {
                 var metas = await responce.DeserializeBody<List<ModelMeta>>();
                 foreach (var meta in metas)
                     _metas[meta.Id] = meta;
+                return true;
             }
+
+            return false;
         }
 
 
@@ -47,7 +50,7 @@ namespace Agents.API.Service.Services
 #warning TODO получение по ID в сервисе моделей машинного обучения.
 
             var responce = await _webRequester.SendRequest($"{_modelsServerUrl}/models/{id}", "GET");
-            if(responce.IsSuccessStatusCode)
+            if (responce != null && responce.IsSuccessStatusCode)
             {
                 _metas[id] = await responce.DeserializeBody<ModelMeta>();
                 return _metas[id];
@@ -57,7 +60,7 @@ namespace Agents.API.Service.Services
 
 
 #warning TODO правка route point на поулчение id из бд  в сервисе моделей машинного обучения.
-        public async Task<HttpResponseMessage> Predict(string id, double[] input)
+        public async Task<HttpResponseMessage?> Predict(string id, double[] input)
         {
             IPredictRequest request = new PredictRequest() { Id = id, Input = input };
             string requestBody = Newtonsoft.Json.JsonConvert.SerializeObject(request);

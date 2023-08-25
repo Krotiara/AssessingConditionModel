@@ -74,6 +74,8 @@ namespace Agents.API.Service.AgentCommand
             }
 
             var responce = await _pMService.Predict(mlModelId, inputArgs);
+            if (responce == null)
+                throw new ExecuteCommandException("Cannot get answer");
             if (!responce.IsSuccessStatusCode)
                 throw new ExecuteCommandException($"{responce.StatusCode}:{responce.ReasonPhrase}");
             else

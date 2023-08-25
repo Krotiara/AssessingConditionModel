@@ -14,12 +14,17 @@ namespace Agents.API.Jobs
 
         public static void Schedule(IServiceCollectionQuartzConfigurator q)
         {
-            q.ScheduleJob<InitPredictionModelsJob>(j => j.StartNow());
+            q.ScheduleJob<InitPredictionModelsJob>(j => j.StartNow()
+                .WithSimpleSchedule(x => x
+                .WithIntervalInSeconds(5)
+                .RepeatForever()));
         }
 
         public async Task Execute(IJobExecutionContext context)
         {
-            await _predcitionModelsService.Init();
+            bool isInit = await _predcitionModelsService.Init();
+            if (isInit)
+                await context.Scheduler.PauseJob(context.JobDetail.Key);
         }
     }
 }

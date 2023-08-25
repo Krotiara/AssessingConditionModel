@@ -31,11 +31,11 @@ namespace Agents.API.Service.Services
             string url = $"{_patientsResolverApiUrl}/Patients/patient{affiliation}/{id}";
             string body = Newtonsoft.Json.JsonConvert.SerializeObject(new GetPatientRequest() { PatientId = id, Affiliation = affiliation }); 
             var responce = await _webRequester.SendRequest(url, "POST", body);
-            if (responce.IsSuccessStatusCode)
+            if (responce != null && responce.IsSuccessStatusCode)
                 return await responce.DeserializeBody<Patient>();
             else
             {
-                _logger.LogError($"Cannot get patient info:{responce.StatusCode}:{responce.ReasonPhrase}.");
+                _logger.LogError($"Cannot get patient info.");
                 return null;
             }
         }
@@ -46,11 +46,11 @@ namespace Agents.API.Service.Services
             string body = Newtonsoft.Json.JsonConvert.SerializeObject(request);
             string url = $"{_patientsResolverApiUrl}/Influences/influences";
             var responce = await _webRequester.SendRequest(url, "POST", body);
-            if (responce.IsSuccessStatusCode)
+            if (responce != null && responce.IsSuccessStatusCode)
                 return await responce.DeserializeBody<List<Influence>>();
             else
             {
-                _logger.LogError($"Cannot get patient influences:{responce.StatusCode}:{responce.ReasonPhrase}.");
+                _logger.LogError($"Cannot get patient influences.");
                 return null;
             }
         }
@@ -62,9 +62,9 @@ namespace Agents.API.Service.Services
             //TODO Запрос latestParameters
             string url = $"{_patientsResolverApiUrl}/Patients/parameters";
             var responce = await _webRequester.SendRequest(url, "POST", body);
-            if (!responce.IsSuccessStatusCode)
+            if (responce == null || !responce.IsSuccessStatusCode)
             {
-                _logger.LogError($"Cannot get latest parameters by request: {responce.StatusCode}.");
+                _logger.LogError($"Cannot get latest parameters by request: no responce or responce is bad.");
                 return null;
             }
             var res = await responce.DeserializeBody<List<Parameter>>();
