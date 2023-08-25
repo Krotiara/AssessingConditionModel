@@ -8,8 +8,6 @@ services:
       context: .
       dockerfile: src/Services/PatientsResolver.API/PatientsResolver.API/Dockerfile
     restart: on-failure
-    depends_on:
-      - rabbitmq
 
   agents.api:
     image: ${DOCKER_REGISTRY-}agentsapi
@@ -18,5 +16,3 @@ services:
       context: .
       dockerfile: src/Services/Agents.API/Agents.API/Dockerfile
     restart: on-failure
-    depends_on:
-      - rabbitmq
