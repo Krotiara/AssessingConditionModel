@@ -1,60 +1,12 @@
 version: '3.4'
 
 services:
-
-  envoygateway:
-    build:
-      context: .
-      dockerfile: src/ApiGateways/Envoy/Dockerfile
-    ports:
-      - "9901:9901"
-      - "10000:10000"
-    volumes:
-      - ./src/ApiGateways/Envoy/envoy.yaml:/etc/envoy/envoy.yaml
-    networks:
-        - aModelNetwork
- 
-
   patientsresolver.api:
     image: ${DOCKER_REGISTRY-}patientsresolverapi
     container_name: patientsresolver.api
     build:
       context: .
       dockerfile: src/Services/PatientsResolver.API/PatientsResolver.API/Dockerfile
-    #volumes:
-    #  #- "C:/TestData:/data"
-    #  - ./https:/https:ro
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_URLS=http://+:80
-      - DATA_HANDLER_URL=http://patientdatahandler.api:80
-      #- ASPNETCORE_URLS=https://+:443;http://+:80
-      #- ASPNETCORE_HTTPS_PORT=8004
-      #- ASPNETCORE_Kestrel__Certificates__Default__Password=lisa2021
-      #- ASPNETCORE_Kestrel__Certificates__Default__Path=/https/localhost.pfx
-    ports:
-      - 8033:80
-    networks:
-        - aModelNetwork
-    restart: on-failure
-    depends_on:
-      - rabbitmq
-
-  patientdatahandler.api:
-    image: ${DOCKER_REGISTRY-}patientdatahandlerapi
-    container_name: patientdatahandler.api
-    build:
-      context: .
-      dockerfile: src/Services/PatientDataHandler.API/PatientDataHandler.API/Dockerfile
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_URLS=http://+:80
-    ports:
-      - 8005:80
-    #volumes:
-    #  - ./https:/https:ro
-    networks:
-        - aModelNetwork
     restart: on-failure
     depends_on:
       - rabbitmq
@@ -65,56 +17,6 @@ services:
     build:
       context: .
       dockerfile: src/Services/Agents.API/Agents.API/Dockerfile
-    ports:
-      - 8002:80
-    networks:
-        - aModelNetwork
     restart: on-failure
     depends_on:
       - rabbitmq
-
-  rabbitmq:
-    container_name: rabbitmq
-    tty: true
-    hostname: rabbitmq
-    ports:
-        - "15672:15672"
-        - "5672:5672"
-    image: rabbitmq:3-management
-    environment:
-        - RABBITMQ_DEFAULT_USER=user
-        - RABBITMQ_DEFAULT_PASS=password
-    networks:
-        - aModelNetwork
-
-
-  postgres_image:
-    container_name: postgresql
-    image: postgres:latest
-    ports:
-      - "5432:5432"
-    restart: always
-    volumes:
-      - postgresData:/var/lib/postgresql/data
-      - ./sql/patientsDb:/docker-entrypoint-initdb.d
-    environment:
-      POSTGRES_USER: "postgres"
-      POSTGRES_PASSWORD: "lisa2021"
-      POSTGRES_DB: "PatientData_db"
-    networks:
-        - aModelNetwork
-
-volumes:
-   db_volume:
-   pgadmin:
-   postgresData:
-       external: true
-
-networks:
-    aModelNetwork:
-        external: true
-#  postgres: 
-#    driver: bridge
-
-    
-
