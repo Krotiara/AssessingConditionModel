@@ -35,7 +35,7 @@ namespace Agents.API.Service.AgentCommand
             string patientAffiliation = Properties[PropertiesNamesSettings.Affiliation].Value as string;
 
             //TODO избавиться от запроса пациента.
-            var patient = await _requestService.GetPatientInfo(patientId, patientAffiliation);
+            var patient = await _requestService.GetPatientInfo(patientId, patientAffiliation, false);
             
             if(patient == null)
                 throw new ExecuteCommandException($"No Patient {patientId}:{patientAffiliation}.");

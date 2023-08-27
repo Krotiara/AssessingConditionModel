@@ -30,9 +30,9 @@ namespace Agents.API.Service.Services
         }
 
 
-        public async Task<Patient?> GetPatientInfo(string id, string affiliation)
+        public async Task<Patient?> GetPatientInfo(string id, string affiliation, bool isRefresh)
         {
-            if (_patients.TryGetValue((id, affiliation), out Patient p))
+            if (isRefresh && _patients.TryGetValue((id, affiliation), out Patient p))
                 return p;
 
 
