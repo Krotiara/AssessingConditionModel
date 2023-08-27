@@ -17,7 +17,7 @@ namespace Agents.API.Service.AgentCommand
     public class GetBioageByFuncParamsCommand : IAgentCommand
     {
         private readonly PredictionRequestsService _pMService;
-        private readonly PatientsRequestsService _requestService;
+        private readonly PatientsService _requestService;
 
         //TODO продумать, как избавиться от такого.
         private readonly string _pressureDeltaParam = "PulsePressure";
@@ -29,7 +29,7 @@ namespace Agents.API.Service.AgentCommand
         public IAgentPropertiesNamesSettings PropertiesNamesSettings { get; set; }
 
         public GetBioageByFuncParamsCommand(PredictionRequestsService pMService,
-            PatientsRequestsService requestService)
+            PatientsService requestService)
         {
             _pMService = pMService;
             _requestService = requestService;

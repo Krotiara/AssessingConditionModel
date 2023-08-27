@@ -17,7 +17,7 @@ namespace Agents.API.Service.AgentCommand
     public class GetDentistSumCommand : IAgentCommand
     {
         private readonly PredictionRequestsService _pMService;
-        private readonly PatientsRequestsService _pPSerivce;
+        private readonly PatientsService _pPSerivce;
         private readonly string _modelsServerUrl;
         private readonly EnvSettings _settings;
 
@@ -29,7 +29,7 @@ namespace Agents.API.Service.AgentCommand
 
 
         public GetDentistSumCommand(PredictionRequestsService pMService,
-            PatientsRequestsService pPSerivce, 
+            PatientsService pPSerivce, 
             IOptions<EnvSettings> settings)
         {
             _pMService = pMService;

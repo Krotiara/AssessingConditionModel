@@ -16,7 +16,7 @@ namespace Agents.API.Service.AgentCommand
 
     public class GetAgeCommand : IAgentCommand
     {
-        private readonly PatientsRequestsService _requestService;
+        private readonly PatientsService _requestService;
 
         public ConcurrentDictionary<string, IProperty> Variables { get; set; }
         public ConcurrentDictionary<string, IProperty> Properties { get; set; }
@@ -24,7 +24,7 @@ namespace Agents.API.Service.AgentCommand
         public IAgentPropertiesNamesSettings PropertiesNamesSettings { get; set; }
 
 
-        public GetAgeCommand(PatientsRequestsService requestService)
+        public GetAgeCommand(PatientsService requestService)
         {
             _requestService = requestService;
         }

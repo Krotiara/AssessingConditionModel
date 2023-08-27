@@ -78,7 +78,7 @@ services
     .AddSingleton<AgentsService>()
     .AddSingleton<InitServiceSender>()
     .AddSingleton<ICodeExecutor, CodeExecutorService>()
-    .AddSingleton<PatientsRequestsService>();
+    .AddSingleton<PatientsService>();
 
 services.AddQuartz(q =>
 {
