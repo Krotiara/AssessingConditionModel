@@ -16,13 +16,13 @@ namespace Agents.API.Service.AgentCommand
 {
     public class GetInfluencesCommand : IAgentCommand
     {
-        private readonly PatientsRequestsService _requestService;
+        private readonly PatientsService _requestService;
 
         public ConcurrentDictionary<string, IProperty> Variables { get; set; }
         public ConcurrentDictionary<string, IProperty> Properties { get; set; }
         public IAgentPropertiesNamesSettings PropertiesNamesSettings { get; set; }
 
-        public GetInfluencesCommand(PatientsRequestsService requestService)
+        public GetInfluencesCommand(PatientsService requestService)
         {
             _requestService = requestService;
         }
@@ -43,13 +43,11 @@ namespace Agents.API.Service.AgentCommand
             };
 
             var influences = await _requestService.GetInfluences(request);
-            
+
             if (influences == null)
                 throw new ExecuteCommandException($"Cannot get influences for {request.PatientId}({request.Affiliation}).");
 
             return influences;
         };
-
-
     }
 }

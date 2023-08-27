@@ -16,14 +16,9 @@ namespace Interfaces
 
     public enum SystemCommands
     {
-        GetLatestPatientParameters,
         GetAge,
-        GetBioageByFunctionalParameters,
-        GetInfluences,
-        GetAgingDynamics,
-        GetAgingState,
-        GetInfluencesWithoutParameters,
-        GetDentistSum
+        Predict,
+        GetInfluences
     }
 
 
