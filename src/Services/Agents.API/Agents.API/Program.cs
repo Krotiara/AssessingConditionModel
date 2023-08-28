@@ -76,7 +76,6 @@ services
     .AddSingleton<SettingsService>()
     .AddSingleton<PredictionRequestsService>()
     .AddSingleton<AgentsService>()
-    .AddSingleton<InitServiceSender>()
     .AddSingleton<ICodeExecutor, CodeExecutorService>()
     .AddSingleton<PatientsService>();
 
