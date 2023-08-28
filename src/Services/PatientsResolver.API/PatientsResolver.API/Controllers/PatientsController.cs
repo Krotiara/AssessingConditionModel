@@ -21,7 +21,7 @@ namespace PatientsResolver.API.Controllers
 
 
         [HttpPost("patient")]
-        public async Task<ActionResult> GetPatient(GetPatientRequest request)
+        public async Task<ActionResult> GetPatient([FromBody] GetPatientRequest request)
         {
             var patient = await _patientsDataService.Get(request.PatientId, request.Affiliation);
             if (patient == null)
@@ -31,7 +31,7 @@ namespace PatientsResolver.API.Controllers
 
 
         [HttpPost("parameters")]
-        public async Task<ActionResult> GetPatientParameters(GetPatientParametersRequest request)
+        public async Task<ActionResult> GetPatientParameters([FromBody] GetPatientParametersRequest request)
         {
             DateTime start = request.StartTimestamp == null ? DateTime.MinValue : (DateTime)request.StartTimestamp;
             DateTime end = request.EndTimestamp == null ? DateTime.MaxValue : (DateTime)request.EndTimestamp;
@@ -41,7 +41,7 @@ namespace PatientsResolver.API.Controllers
 
 
         [HttpPost("addParameters")]
-        public async Task<ActionResult> AddPatientParameters(AddPatientParametersRequest request)
+        public async Task<ActionResult> AddPatientParameters([FromBody] AddPatientParametersRequest request)
         {
             await _patientsDataService.AddPatientParameters(request.PatientId, request.PatientAffiliation, request.Parameters);
             return Ok();
