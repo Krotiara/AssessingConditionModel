@@ -10,12 +10,10 @@ namespace PatientsResolver.API.Controllers
     [Route("api/[controller]")]
     public class InfluencesController : ControllerBase
     {
-        private readonly IMediator mediator;
         private readonly InfluencesDataService _influencesDataService;
 
-        public InfluencesController(IMediator mediator, InfluencesDataService influencesDataService)
+        public InfluencesController(InfluencesDataService influencesDataService)
         {
-            this.mediator = mediator;
             _influencesDataService = influencesDataService;
         }
 
@@ -38,7 +36,7 @@ namespace PatientsResolver.API.Controllers
         }
 
 
-        [HttpDelete("delete/{id}")]
+        [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteInfluence(string id)
         {
             await _influencesDataService.Delete(id);

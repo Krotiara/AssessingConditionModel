@@ -57,7 +57,7 @@ namespace PatientsResolver.API.Controllers
         }
 
 
-        [HttpDelete("delete/{id}")]
+        [HttpDelete("{id}")]
         public async Task<ActionResult> DeletePatient(string id)
         {
             await _patientsDataService.Delete(id);
