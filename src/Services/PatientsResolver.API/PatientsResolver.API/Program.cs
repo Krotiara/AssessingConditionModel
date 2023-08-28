@@ -42,9 +42,9 @@ builder.Host.ConfigureDefaults(args)
 
 services.AddMongoService(builder.Configuration);
 
-services.AddScoped<IPatientParameter, PatientParameter>();
-services.AddScoped<IPatient, Patient>();
-services.AddScoped<IFileData, FileData>();
+services.AddTransient<IPatientParameter, PatientParameter>();
+services.AddTransient<IPatient, Patient>();
+services.AddTransient<IFileData, FileData>();
 services.AddTransient<IInfluence, Influence>();
 services.AddOptions();
 
