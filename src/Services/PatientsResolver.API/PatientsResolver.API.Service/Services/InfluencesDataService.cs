@@ -21,36 +21,26 @@ namespace PatientsResolver.API.Service.Services
         public async Task<Influence> Get(string id) => await _store.Get(x => x.Id == id);
 
 
-        public async Task Update(string id, Influence influence)
-        {
-            await _store.Update(x => x.Id == id)
-                .Set(x => x.Affiliation, influence.Affiliation)
-                .Set(x => x.InfluenceType, influence.InfluenceType)
-                .Set(x => x.StartTimestamp, influence.StartTimestamp)
-                .Set(x => x.EndTimestamp, influence.EndTimestamp)
-                .Set(x => x.MedicineName, influence.MedicineName)
-                .Set(x => x.PatientId, influence.PatientId)
-                .Execute();
-        }
-
-
         public async Task Delete(string id) => await _store.Delete(x => x.Id == id);
 
 
-        public async Task Insert(Influence inf)
+        public async Task Insert(Influence influence)
         {
-            Influence dbInf = await _store.Get(x => x.PatientId == inf.PatientId
-            && x.Affiliation == inf.Affiliation
-            && x.StartTimestamp == inf.StartTimestamp
-            && x.EndTimestamp == inf.EndTimestamp
-            && x.InfluenceType == inf.InfluenceType
-            && x.MedicineName == inf.MedicineName);
-            if (dbInf != null)
-                return;
-
-             await _store.Insert(inf);
+            if (influence.Id != null)
+            {
+                await _store.Update(x => x.Id == influence.Id)
+               .Set(x => x.Affiliation, influence.Affiliation)
+               .Set(x => x.InfluenceType, influence.InfluenceType)
+               .Set(x => x.StartTimestamp, influence.StartTimestamp)
+               .Set(x => x.EndTimestamp, influence.EndTimestamp)
+               .Set(x => x.MedicineName, influence.MedicineName)
+               .Set(x => x.PatientId, influence.PatientId)
+               .Execute();
+            }
+            else
+                await _store.Insert(influence);
         }
-       
+
 
 
         public async Task<IEnumerable<Influence>> Query(string patientId, string affiliation, DateTime start, DateTime end)

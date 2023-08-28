@@ -31,7 +31,7 @@ namespace PatientsResolver.API.Controllers
         [HttpPut("update")]
         public async Task<ActionResult> UpdatePatientInfluence([FromBody] Influence influence)
         {
-            await _influencesDataService.Update(influence.Id, influence);
+            await _influencesDataService.Insert(influence);
             return Ok();
         }
 
