@@ -79,7 +79,7 @@ namespace PatientsResolver.API.Service.Services
         {
             var namesHashes = new HashSet<string>(names);
             var patient = await Get(patientId, affiliation);
-            if (patient == null)
+            if (patient == null || patient.Parameters == null)
                 return Enumerable.Empty<Parameter>();
 
             return patient.Parameters.Where(x => namesHashes.Contains(x.Key.Item1)
