@@ -28,7 +28,7 @@ namespace PatientsResolver.API.Service.Services
             if (_patients.TryGetValue((patientId, affiliation), out Patient p))
                 return p;
             p = await _patientsStore.Get(x => x.PatientId == patientId && x.Affiliation == affiliation);
-            if(p != null)
+            if (p != null)
                 _patients[(patientId, affiliation)] = p;
             return p;
         }
@@ -44,7 +44,6 @@ namespace PatientsResolver.API.Service.Services
                         .Set(x => x.Name, patient.Name)
                         .Set(x => x.Birthday, patient.Birthday)
                         .Set(x => x.Gender, patient.Gender)
-                        .Set(x => x.Parameters, patient.Parameters)
                         .Execute();
             _patients[(patient.PatientId, patient.Affiliation)] = patient;
         }
@@ -91,6 +90,23 @@ namespace PatientsResolver.API.Service.Services
                                          Timestamp = x.Key.Item2,
                                          Value = x.Value
                                      });
+        }
+
+
+        public async Task AddPatientParameters(string id, string affiliation, IEnumerable<Parameter> parameters)
+        {
+            if (!_patients.TryGetValue((id, affiliation), out Patient p))
+                return;
+
+            if (p.Parameters == null)
+                p.Parameters = new();
+
+            foreach (var par in parameters)
+                p.Parameters[(par.Name, par.Timestamp)] = par.Value;
+
+            await _patientsStore.Update(x => x.Id == p.Id)
+                .Set(x => x.Parameters, p.Parameters)
+                .Execute();
         }
     }
 }
