@@ -12,11 +12,6 @@ namespace PatientsResolver.API.Entities.Mongo
 {
     public class Patient : Document, IPatient
     {
-        public Patient()
-        {
-            Parameters = new();
-        }
-
         public string PatientId { get; set; }
         public string Affiliation { get; set; }
         public string Name { get; set; }
