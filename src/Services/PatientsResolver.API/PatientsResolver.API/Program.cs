@@ -51,8 +51,8 @@ services.AddOptions();
 /*Теперь вы можете выполнять ваши запросы. Для этого вам потребуется получить экземпляр интерфейса IMediator. Он регистрируется в вашем контейнере зависимостей той же командой AddMediatR.*/
 services.AddMediatR(Assembly.GetExecutingAssembly());
 
-services.AddSingleton<PatientsStore>();
-services.AddSingleton<InfluencesStore>();
+services.AddTransient<PatientsStore>();
+services.AddTransient<InfluencesStore>();
 services.AddSingleton<PatientsDataService>();
 services.AddSingleton<InfluencesDataService>();
 
