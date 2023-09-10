@@ -5,8 +5,10 @@ using Agents.API.Service.AgentCommand;
 using Agents.API.Service.Command;
 using Amazon.Runtime.Internal;
 using Interfaces;
+using Interfaces.DynamicAgent;
 using MediatR;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -120,16 +122,17 @@ namespace Agents.API.Service.Services
         }
 
 
-        public ICommand ParseCodeLineCommand(ParseCodeLineRequest request)
+        public ICommand ParseCodeLineCommand(string codeLine,
+            ConcurrentDictionary<string, IProperty> localVariables, ConcurrentDictionary<string, IProperty> localProperties)
         {
-            bool isAssigning = request.CodeLine.Contains('=');
+            bool isAssigning = codeLine.Contains('=');
             if (isAssigning)
             {
-                string param = request.CodeLine.Split('=').First().Trim();
-                return new ExecutableCommand(request.CodeLine, CommandType.Assigning, request.LocalVariables, request.LocalProperties, param);
+                string param = codeLine.Split('=').First().Trim();
+                return new ExecutableCommand(codeLine, CommandType.Assigning, localVariables, localProperties, param);
             }
             else
-                return new ExecutableCommand(request.CodeLine, CommandType.VoidCall, request.LocalVariables, request.LocalProperties);
+                return new ExecutableCommand(codeLine, CommandType.VoidCall, localVariables, localProperties);
         }
 
 

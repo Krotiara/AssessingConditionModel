@@ -9,11 +9,6 @@ namespace Agents.API.Entities.AgentsSettings
 {
     public class AgentState : IAgentState
     {
-        public AgentState(string name)
-        {
-            Name = name;
-        }
-
         public string Name { get; set; }
 
         public double NumericCharacteristic { get; set; }

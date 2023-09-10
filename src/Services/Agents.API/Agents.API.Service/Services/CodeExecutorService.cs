@@ -23,9 +23,9 @@ namespace Agents.API.Service.Services
     {
         private readonly IMediator _mediator;
         private readonly CommandServiceResolver _commandActionsProvider;
-        private readonly CodeResolveService _codeResolveService;
+        private readonly ICodeResolveService _codeResolveService;
 
-        public CodeExecutorService(IMediator mediator, CommandServiceResolver commandActionsProvider, CodeResolveService codeResolveService)
+        public CodeExecutorService(IMediator mediator, CommandServiceResolver commandActionsProvider, ICodeResolveService codeResolveService)
         {
             this._mediator = mediator;
             this._commandActionsProvider = commandActionsProvider;
@@ -53,7 +53,7 @@ namespace Agents.API.Service.Services
 
             foreach (string codeLine in lines)
             {
-                ICommand command = _codeResolveService.ParseCodeLineCommand(new ParseCodeLineRequest(codeLine, localVars, localProperties));
+                ICommand command = _codeResolveService.ParseCodeLineCommand(codeLine, localVars, localProperties);
                 await _mediator.Send(new ExecuteCodeLineCommand(command, commonPropertiesNames), cancellationToken);
             }
 

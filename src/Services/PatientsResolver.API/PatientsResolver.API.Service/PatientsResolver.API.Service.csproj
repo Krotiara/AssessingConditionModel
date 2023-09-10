@@ -7,6 +7,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Command\**" />
+    <Compile Remove="Query\**" />
+    <EmbeddedResource Remove="Command\**" />
+    <EmbeddedResource Remove="Query\**" />
+    <None Remove="Command\**" />
+    <None Remove="Query\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="MediatR" Version="11.0.0" />
     <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="10.0.1" />
   </ItemGroup>
@@ -14,11 +23,6 @@
   <ItemGroup>
     <ProjectReference Include="..\PatientsResolver.API.Data\PatientsResolver.API.Data.csproj" />
     <ProjectReference Include="..\PatientsResolver.API.Entities\PatientsResolver.API.Entities.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Command\" />
-    <Folder Include="Query\" />
   </ItemGroup>
 
 </Project>
