@@ -1,10 +1,13 @@
-﻿using PatientsResolver.API.Data.Store;
+﻿using Interfaces;
+using MongoDB.Driver;
+using PatientsResolver.API.Data.Store;
 using PatientsResolver.API.Entities;
 using PatientsResolver.API.Entities.Mongo;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -74,6 +77,7 @@ namespace PatientsResolver.API.Service.Services
         }
 
 
+        //TODO - заменить store на istore
         public async Task<IEnumerable<Parameter>> GetPatientParameters(string patientId, string affiliation, DateTime start, DateTime end, List<string> names)
         {
             var namesHashes = new HashSet<string>(names);
@@ -109,6 +113,12 @@ namespace PatientsResolver.API.Service.Services
             await _patientsStore.Update(x => x.Id == p.Id)
                 .Set(x => x.Parameters, p.Parameters)
                 .Execute();
+        }
+
+
+        public async Task<IEnumerable<Patient>> GetPatients(Expression<Func<Patient, bool>> filter)
+        {
+            return await _patientsStore.Query(filter);
         }
     }
 }

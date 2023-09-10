@@ -4,6 +4,7 @@ using PatientsResolver.API.Entities;
 using PatientsResolver.API.Entities.Mongo;
 using PatientsResolver.API.Models.Requests;
 using PatientsResolver.API.Service.Services;
+using System.Linq.Expressions;
 
 namespace PatientsResolver.API.Controllers
 {
@@ -71,6 +72,18 @@ namespace PatientsResolver.API.Controllers
         {
             await _patientsDataService.Delete(id);
             return Ok();
+        }
+
+
+        [HttpGet("patients")]
+        public async Task<ActionResult> GetPatients([FromBody] PatientsRequest request)
+        {
+            Expression<Func<Patient, bool>> filter;
+            if (request.Gender != null)
+                filter = x => x.Affiliation == request.Affiliation && x.Gender == request.Gender;
+            else
+                filter = x => x.Affiliation == request.Affiliation;
+            return Ok(await _patientsDataService.GetPatients(filter));
         }
     }
 }

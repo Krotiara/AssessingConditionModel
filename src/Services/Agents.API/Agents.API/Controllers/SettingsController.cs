@@ -17,7 +17,7 @@ namespace Agents.API.Controllers
 
 
         [HttpPost("agents/initSettings")]
-        public async Task<ActionResult> InitAgentsSettings(List<AgentSettings> settings)
+        public async Task<ActionResult> InitAgentsSettings([FromBody] List<AgentSettings> settings)
         {
             await _settingsService.Insert(settings);
             return Ok();
