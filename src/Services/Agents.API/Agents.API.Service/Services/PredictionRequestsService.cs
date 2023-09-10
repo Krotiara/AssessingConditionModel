@@ -15,7 +15,7 @@ namespace Agents.API.Service.Services
     {
         private readonly IWebRequester _webRequester;
         private readonly string _modelsServerUrl;
-        private ConcurrentDictionary<string, ModelMeta> _metas;
+        private readonly ConcurrentDictionary<string, ModelMeta> _metas;
 
         public PredictionRequestsService(IWebRequester webRequester,
             IOptions<EnvSettings> settings)
