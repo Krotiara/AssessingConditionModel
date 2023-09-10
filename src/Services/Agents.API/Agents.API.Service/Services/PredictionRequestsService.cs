@@ -47,8 +47,6 @@ namespace Agents.API.Service.Services
             if (_metas.ContainsKey(id))
                 return _metas[id];
 
-#warning TODO получение по ID в сервисе моделей машинного обучения.
-
             var responce = await _webRequester.SendRequest($"{_modelsServerUrl}/models/{id}", "GET");
             if (responce != null && responce.IsSuccessStatusCode)
             {
@@ -59,7 +57,6 @@ namespace Agents.API.Service.Services
         }
 
 
-#warning TODO правка route point на поулчение id из бд  в сервисе моделей машинного обучения.
         public async Task<HttpResponseMessage?> Predict(string id, double[] input)
         {
             IPredictRequest request = new PredictRequest() { Id = id, Input = input };
