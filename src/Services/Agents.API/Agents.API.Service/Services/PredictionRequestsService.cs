@@ -31,9 +31,12 @@ namespace Agents.API.Service.Services
             var responce = await _webRequester.SendRequest($"{_modelsServerUrl}/models", "GET");
             if (responce != null && responce.IsSuccessStatusCode)
             {
-                var metas = await responce.DeserializeBody<List<ModelMeta>>();
-                foreach (var meta in metas)
+                var metasString = await responce.DeserializeBody<List<string>>(); //Двойная сериализация из-за бага на стороне сервера ML.
+                foreach(string json in metasString)
+                {
+                    ModelMeta meta = await json.DeserializeJson<ModelMeta>();
                     _metas[meta.Id] = meta;
+                }
                 return true;
             }
 
