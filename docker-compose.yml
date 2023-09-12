@@ -8,19 +8,6 @@ services:
       context: .
       dockerfile: src/Services/PatientsResolver.API/PatientsResolver.API/Dockerfile
     restart: on-failure
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_URLS=http://+:80
-      #- ASPNETCORE_URLS=https://+:443;http://+:80
-      #- ASPNETCORE_HTTPS_PORT=8004
-      #- ASPNETCORE_Kestrel__Certificates__Default__Password=lisa2021
-      #- ASPNETCORE_Kestrel__Certificates__Default__Path=/https/localhost.pfx
-    ports:
-      - 8033:80
-    networks:
-        - aModelNetwork
-    depends_on:
-      - rabbitmq
 
   agents.api:
     image: ${DOCKER_REGISTRY-}agentsapi
@@ -28,55 +15,16 @@ services:
     build:
       context: .
       dockerfile: src/Services/Agents.API/Agents.API/Dockerfile
-    restart: on-failure
-    ports:
-      - 8002:80
-    networks:
-      - aModelNetwork
-    depends_on:
-      - rabbitmq
 
   envoygateway:
     build:
         context: .
         dockerfile: src/ApiGateways/Envoy/Dockerfile
-    ports:
-        - "9901:9901"
-        - "10000:10000"
-    volumes:
-        - ./src/ApiGateways/Envoy/envoy.yaml:/etc/envoy/envoy.yaml
-    networks:
-        - aModelNetwork
 
   rabbitmq:
     container_name: rabbitmq
-    tty: true
-    hostname: rabbitmq
-    ports:
-        - "15672:15672"
-        - "5672:5672"
     image: rabbitmq:3-management
-    environment:
-        - RABBITMQ_DEFAULT_USER=${RABBITMQ_USERNAME}
-        - RABBITMQ_DEFAULT_PASS=${RABBITMQ_PASSWD}
-    networks:
-        - aModelNetwork
 
   mongo:
     image: mongo:4.4.6
     restart: always
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWD}
-    volumes:
-     - ./mongo:/data/db
-
-volumes:
-   db_volume:
-   pgadmin:
-   postgresData:
-       external: true
-
-networks:
-    aModelNetwork:
-        external: true
