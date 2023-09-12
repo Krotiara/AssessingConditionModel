@@ -4,7 +4,6 @@ using Agents.API.Entities.Requests;
 using Agents.API.Entities.Response;
 using Agents.API.Interfaces;
 using Agents.API.Service;
-using Agents.API.Service.Query;
 using Agents.API.Service.Services;
 using Interfaces;
 using Interfaces.DynamicAgent;
@@ -19,30 +18,38 @@ namespace Agents.API.Controllers
         private readonly IMediator _mediator;
         private readonly ILogger<AgentsController> _logger;
         private readonly SettingsService _settingsService;
+        private readonly AgentsService _agentsService;
 
-        public AgentsController(IMediator mediator, SettingsService settingsService, ILogger<AgentsController> logger)
+        public AgentsController(IMediator mediator, 
+            SettingsService settingsService, 
+            ILogger<AgentsController> logger, 
+            AgentsService agentsService)
         {
             _mediator = mediator;
             _logger = logger;
             _settingsService = settingsService;
+            _agentsService = agentsService;
         }
 
 
         [HttpPost("agents/predict")]
         public async Task<ActionResult> PredictState([FromBody] PredictionRequest request)
         {
-            var sets = _settingsService.Get(request.Affiliation);
+            var sets = await _settingsService.Get(request.Affiliation, request.AgentType);
             if (sets == null)
-                return BadRequest(new { Message = $"No agent settings for {request.Affiliation} affiliation."});        
+                return Ok();
 
             PredictionResponse response = new(request.Id, request.Affiliation);
             
             foreach(var predictionSettings in request.Settings)
             {
-                IAgentState state = await _mediator.Send(new GetAgentStateQuery(
-                    new AgentKey() { ObservedId = request.Id, ObservedObjectAffilation = request.Affiliation }, 
-                    sets.Settings, 
-                    predictionSettings.Variables));
+                IAgentState? state = await _agentsService.GetAgentState(new GetAgentStateRequest()
+                {
+                    Key = new AgentKey() { ObservedId = request.Id, ObservedObjectAffilation = request.Affiliation },
+                    AgentsSettings = sets,
+                    Variables = predictionSettings.Variables
+                });
+
                 response.Predictions.Add(new PredictionResponsePart() { Name = predictionSettings.SettingsName, AgentState = state });
             }
 

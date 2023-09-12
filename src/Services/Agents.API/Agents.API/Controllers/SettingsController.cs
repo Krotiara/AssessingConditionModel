@@ -1,4 +1,5 @@
 ﻿using Agents.API.Entities.AgentsSettings;
+using Agents.API.Entities.Mongo;
 using Agents.API.Service.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -16,9 +17,9 @@ namespace Agents.API.Controllers
 
 
         [HttpPost("agents/initSettings")]
-        public ActionResult InitAgentsSettings([FromBody] PredictionModel predictionModel)
+        public async Task<ActionResult> InitAgentsSettings([FromBody] List<AgentSettings> settings)
         {
-            _settingsService.Insert(predictionModel);
+            await _settingsService.Insert(settings);
             return Ok();
         }
     }

@@ -1,5 +1,7 @@
 ﻿using Agents.API.Entities;
+using Agents.API.Entities.Mongo;
 using Agents.API.Entities.Requests;
+using Agents.API.Service.Services;
 using Interfaces;
 using Interfaces.DynamicAgent;
 using Microsoft.Extensions.Options;
@@ -14,17 +16,15 @@ namespace Agents.API.Service.AgentCommand
 {
     public class GetInfluencesCommand : IAgentCommand
     {
-        private readonly IWebRequester _webRequester;
-        private readonly string _patientsResolverApiUrl;
+        private readonly PatientsService _requestService;
 
         public ConcurrentDictionary<string, IProperty> Variables { get; set; }
         public ConcurrentDictionary<string, IProperty> Properties { get; set; }
         public IAgentPropertiesNamesSettings PropertiesNamesSettings { get; set; }
 
-        public GetInfluencesCommand(IWebRequester webRequester, IOptions<EnvSettings> settings)
+        public GetInfluencesCommand(PatientsService requestService)
         {
-            _webRequester = webRequester;
-            _patientsResolverApiUrl = settings.Value.PatientsResolverApiUrl;
+            _requestService = requestService;
         }
 
         public Delegate Command => async () =>
@@ -34,26 +34,20 @@ namespace Agents.API.Service.AgentCommand
             DateTime startTimestamp = (DateTime)Variables[PropertiesNamesSettings.StartTimestamp].Value;
             DateTime endTimestamp = (DateTime)Variables[PropertiesNamesSettings.EndTimestamp].Value;
 
-#warning patientId нужно полность преобразовать в string на бэкэ
             PatientInfluencesRequest request = new()
             {
-                PatientId = int.Parse(patientId),
-                MedicalOrganization = patientAffiliation,
+                PatientId = patientId,
+                Affiliation = patientAffiliation,
                 StartTimestamp = startTimestamp,
                 EndTimestamp = endTimestamp
             };
-            string body = Newtonsoft.Json.JsonConvert.SerializeObject(request);
-            string url = $"{_patientsResolverApiUrl}/patientsApi/influences";
-            var responce = await _webRequester.SendRequest(url, "POST", body);
-            if (!responce.IsSuccessStatusCode)
-                throw new ExecuteCommandException($"{responce.StatusCode}:{responce.ReasonPhrase}");
-            else
-            {
-                var res = await _webRequester.DeserializeBody<IList<Influence>>(responce);
-                return res;
-            }
-        };
 
-        
+            var influences = await _requestService.GetInfluences(request);
+
+            if (influences == null)
+                throw new ExecuteCommandException($"Cannot get influences for {request.PatientId}({request.Affiliation}).");
+
+            return influences;
+        };
     }
 }

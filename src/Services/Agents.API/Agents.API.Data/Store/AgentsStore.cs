@@ -1,5 +1,6 @@
 ﻿using Agents.API.Entities;
 using Agents.API.Entities.AgentsSettings;
+using Agents.API.Entities.Mongo;
 using Agents.API.Interfaces;
 using Interfaces;
 using Interfaces.DynamicAgent;
@@ -25,7 +26,7 @@ namespace Agents.API.Data.Store
         }
 
 
-        public IAgent GetAgent(IAgentKey key, AgentsSettings settings)
+        public IAgent GetAgent(IAgentKey key, AgentSettings settings)
         {
             if (!_agents.ContainsKey(key))
                 _agents[key] = new Agent(key, settings, _codeExecutor);

@@ -8,9 +8,9 @@ namespace Interfaces.Requests
 {
     public interface IPatientInfluencesRequest
     {
-        public int PatientId { get; set; }
+        public string PatientId { get; set; }
 
-        public string MedicalOrganization { get; set; }
+        public string Affiliation { get; set; }
 
         public DateTime? StartTimestamp { get; set; }
 

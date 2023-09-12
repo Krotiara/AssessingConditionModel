@@ -1,5 +1,6 @@
 ﻿using Agents.API.Entities;
-using Agents.API.Service.Query;
+using Agents.API.Entities.Mongo;
+using Agents.API.Service.Services;
 using Interfaces;
 using Interfaces.DynamicAgent;
 using MediatR;
@@ -12,21 +13,20 @@ using System.Threading.Tasks;
 
 namespace Agents.API.Service.AgentCommand
 {
-    //TODO преобразовать в получение по дате рождения и переданному времени.
+
     public class GetAgeCommand : IAgentCommand
     {
-        private readonly IMediator _mediator;
+        private readonly PatientsService _requestService;
 
-        
         public ConcurrentDictionary<string, IProperty> Variables { get; set; }
         public ConcurrentDictionary<string, IProperty> Properties { get; set; }
 
         public IAgentPropertiesNamesSettings PropertiesNamesSettings { get; set; }
 
 
-        public GetAgeCommand(IMediator mediator)
+        public GetAgeCommand(PatientsService requestService)
         {
-            _mediator = mediator;
+            _requestService = requestService;
         }
 
         public Delegate Command => async (DateTime timestamp) =>
@@ -35,15 +35,15 @@ namespace Agents.API.Service.AgentCommand
             string patientAffiliation = Properties[PropertiesNamesSettings.Affiliation].Value as string;
 
             //TODO избавиться от запроса пациента.
-            var responce = await _mediator.Send(new GetPatientInfoQuery() { Id = patientId, Organization = patientAffiliation });
-            if (!responce.IsSuccessStatusCode)
-                throw new ExecuteCommandException($"Cannot get patient {patientId}:{patientAffiliation} info: " +
-                    $"{responce.StatusCode}:{responce.ReasonPhrase}");
-            var patient = await responce.DeserializeBody<Patient>();
+            var patient = await _requestService.GetPatientInfo(patientId, patientAffiliation, false);
+            
+            if(patient == null)
+                throw new ExecuteCommandException($"No Patient {patientId}:{patientAffiliation}.");
+
             if (patient.Birthday == default(DateTime))
                 throw new ExecuteCommandException($"No Birthday value for patient {patientId}:{patientAffiliation}.");
 
-            if(timestamp < patient.Birthday)
+            if (timestamp < patient.Birthday)
                 throw new ExecuteCommandException($"GetAgeCommand - timestamp is less than patient birthday " +
                     $"for patient {patientId}:{patientAffiliation}.");
 
@@ -51,7 +51,7 @@ namespace Agents.API.Service.AgentCommand
             return GetAge(patient.Birthday, timestamp);
         };
 
-       
+
         private int GetAge(DateTime dateOfBirth, DateTime dateOfMeasurement)
         {
             var a = ((dateOfMeasurement.Year * 100) + dateOfMeasurement.Month) * 100 + dateOfMeasurement.Day;

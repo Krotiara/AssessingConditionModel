@@ -1,131 +1,65 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using PatientsResolver.API.Entities;
-using PatientsResolver.API.Entities.Requests;
-using PatientsResolver.API.Service.Command;
-using PatientsResolver.API.Service.Query;
+using PatientsResolver.API.Entities.Mongo;
+using PatientsResolver.API.Models.Requests;
+using PatientsResolver.API.Service.Services;
 using System;
 
 namespace PatientsResolver.API.Controllers
 {
-    public class InfluencesController : Controller
+    [Route("api/[controller]")]
+    public class InfluencesController : ControllerBase
     {
-        private readonly IMediator mediator;
+        private readonly InfluencesDataService _influencesDataService;
 
-        public InfluencesController(IMediator mediator)
+        public InfluencesController(InfluencesDataService influencesDataService)
         {
-            this.mediator = mediator;
+            _influencesDataService = influencesDataService;
         }
 
 
-        [HttpGet("patientsApi/influence/{medOrganization}/{influenceId}")]
-        public async Task<ActionResult<Influence>> GetPatientInfluence(string medOrganization, int influenceId)
+        [HttpGet("{id}")]
+        public async Task<ActionResult> GetInfluenceById(string id)
         {
-            try
-            {
-                return await mediator.Send(new GetPatientInfluenceByIdQueue(influenceId, medOrganization));
-            }
-            catch(Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            var inf = await _influencesDataService.Get(id);
+            if (inf == null)
+                return Ok();
+            return Ok(inf);
         }
 
 
-        [HttpPost("patientsApi/influence/add")]
-        public async Task<ActionResult<bool>> AddPatientInfluence([FromBody] Influence influence)
+        [HttpPut("update")]
+        public async Task<ActionResult> UpdatePatientInfluence([FromBody] Influence influence)
         {
-            try
-            {
-                return await mediator.Send(new AddPatientInfluenceCommand(influence));
-            }
-            catch(Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            await _influencesDataService.Insert(influence);
+            return Ok();
         }
 
 
-        [HttpPut("patientsApi/influence/update")]
-        public async Task<ActionResult<Influence>> UpdatePatientInfluence([FromBody] Influence influence)
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> DeleteInfluence(string id)
         {
-            //TODO тесты
-            try
-            {
-                return await mediator.Send(new UpdateInfluenceCommand(influence));
-            }
-            catch(Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            await _influencesDataService.Delete(id);
+            return Ok();
         }
 
 
-        [HttpDelete("patientsApi/influence/delete/{medOrganization}/{influenceId}")]
-        public async Task<ActionResult<bool>> DeletePatientInfluence(string medOrganization, int influenceId) 
+        [HttpPost("influences")]
+        public async Task<ActionResult> GetInfluences([FromBody] GetInfluencesRequest request)
         {
-            try
-            {
-                return await mediator.Send(new DeleteInfluenceCommand(influenceId, medOrganization));
-            }
-            catch(Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            DateTime start = request.StartTimestamp == null ? DateTime.MinValue : (DateTime)request.StartTimestamp;
+            DateTime end = request.EndTimestamp == null ? DateTime.MaxValue : (DateTime)request.EndTimestamp;
+            var influences = await _influencesDataService.Query(request.PatientId, request.Affiliation, start, end);
+            return Ok(influences);
         }
 
 
-        #region influences routes
-        [HttpPost("patientsApi/influences")]
-        public async Task<ActionResult<List<Influence>>> GetPatientInfluences([FromBody]PatientInfluencesRequest request)
+        [HttpPost("add")]
+        public async Task<ActionResult> AddInfluences([FromBody] List<Influence> influences)
         {
-            try
-            {
-                DateTime start = request.StartTimestamp == null? DateTime.MinValue: (DateTime)request.StartTimestamp;
-                DateTime end = request.EndTimestamp == null ? DateTime.MaxValue : (DateTime)request.EndTimestamp;
-
-                return Ok(await mediator.Send(new GetPatientInfluencesQuery(request.PatientId, request.MedicalOrganization, start, end)));
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            foreach (Influence influence in influences)
+                await _influencesDataService.Insert(influence);
+            return Ok();
         }
-
-        [HttpPost("patientsApi/influencesWithoutParams")]
-        public async Task<ActionResult<List<Influence>>> GetPatientInfluencesWithoutParams([FromBody] PatientInfluencesRequest request)
-        {
-            try
-            {
-                DateTime start = request.StartTimestamp == null ? DateTime.MinValue : (DateTime)request.StartTimestamp;
-                DateTime end = request.EndTimestamp == null ? DateTime.MaxValue : (DateTime)request.EndTimestamp;
-
-                return Ok(await mediator.Send(new GetPatientInfluencesQuery(request.PatientId, request.MedicalOrganization, start, end, false)));
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
-
-       
-
-        [HttpPost("patientsApi/addInfluenceData/")]
-        public async Task<ActionResult<bool>> AddData([FromBody] AddInfluencesRequest request)
-        {
-            //TODO Добавить статус отсылки
-            try
-            {
-                bool isSuccessSendRequest = await mediator.Send(new SendPatientDataFileSourceCommand() { Request = request });
-                return Ok(isSuccessSendRequest);
-            }
-            catch (Exception ex)
-            {
-                //TODO Отлов кастомных ошибок
-                return BadRequest(ex.Message);
-            }
-
-        }
-        #endregion
     }
 }

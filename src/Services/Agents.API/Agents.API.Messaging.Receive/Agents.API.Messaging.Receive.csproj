@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
@@ -14,7 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\Interfaces\Interfaces.csproj" />
+    <ProjectReference Include="..\..\..\..\Interfaces\ASMLib.csproj" />
     <ProjectReference Include="..\Agents.API.Entities\Agents.API.Entities.csproj" />
     <ProjectReference Include="..\Agents.API.Service\Agents.API.Service.csproj" />
   </ItemGroup>

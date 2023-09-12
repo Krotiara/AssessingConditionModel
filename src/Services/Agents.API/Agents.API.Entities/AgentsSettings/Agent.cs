@@ -1,4 +1,5 @@
-﻿using Agents.API.Interfaces;
+﻿using Agents.API.Entities.Mongo;
+using Agents.API.Interfaces;
 using Interfaces;
 using Interfaces.DynamicAgent;
 using System;
@@ -18,9 +19,9 @@ namespace Agents.API.Entities.AgentsSettings
 
         public string Id { get; set; }
 
-        public string Organization { get;}
+        public string Affiliation { get;}
 
-        public AgentType AgentType { get;} 
+        public string AgentType { get;} 
 
         public IAgentState CurrentState { get; set; }
 
@@ -34,12 +35,12 @@ namespace Agents.API.Entities.AgentsSettings
 
         private readonly AgentPropertiesNamesSettings _commonPropertiesNames;
 
-        public Agent(IAgentKey key, AgentsSettings settings, ICodeExecutor codeExecutor)
+        public Agent(IAgentKey key, AgentSettings settings, ICodeExecutor codeExecutor)
         {
             _codeExecutor = codeExecutor;
             _stateResolveCode = settings.StateResolveCode;
             Id = key.ObservedId;
-            Organization = key.ObservedObjectAffilation;
+            Affiliation = key.ObservedObjectAffilation;
             AgentType = settings.AgentType;
             Properties = new();
             Variables = new();
@@ -98,7 +99,7 @@ namespace Agents.API.Entities.AgentsSettings
         }
 
 
-        private void InitDicts(AgentsSettings settings)
+        private void InitDicts(AgentSettings settings)
         {
             foreach (IProperty p in settings.StateProperties)
                 Properties[p.Name] = p;

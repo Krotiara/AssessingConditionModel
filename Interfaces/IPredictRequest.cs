@@ -12,6 +12,6 @@ namespace Interfaces
 
         public string Version { get; set; }
 
-        public float[] Input { get; set; }
+        public double[] Input { get; set; }
     }
 }

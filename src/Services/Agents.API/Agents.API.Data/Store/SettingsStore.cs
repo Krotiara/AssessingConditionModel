@@ -1,4 +1,6 @@
 ﻿using Agents.API.Entities.AgentsSettings;
+using Agents.API.Entities.Mongo;
+using Interfaces.Mongo;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -8,17 +10,24 @@ using System.Threading.Tasks;
 
 namespace Agents.API.Data.Store
 {
-    public class SettingsStore
+    public struct AgentSettingsKey
     {
-        private readonly ConcurrentDictionary<string, PredictionModel> _settings;
-
-        public SettingsStore()
+        public AgentSettingsKey(string affiliation, string agentType)
         {
-            _settings = new ConcurrentDictionary<string, PredictionModel>();
+            Affiliation = affiliation;
+            AgentType = agentType;
         }
 
-        public void Insert(PredictionModel predictionModel) => _settings[predictionModel.Organization] = predictionModel;
+        public string Affiliation { get; set; }
 
-        public PredictionModel? Get(string organization) => _settings.GetValueOrDefault(organization);
+        public string AgentType { get; set; }
+    }
+
+
+    public class SettingsStore : MongoBaseService<AgentSettings>
+    {
+        public SettingsStore(MongoService mongo) : base(mongo, "AgentsSettings")
+        {
+        }
     }
 }

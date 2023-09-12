@@ -7,7 +7,6 @@ using Agents.API.Messaging.Receive.Receiver;
 using Microsoft.EntityFrameworkCore;
 using Agents.API.Service.Services;
 using Agents.API.Messaging.Receive.Configs;
-using Agents.API.Service.Query;
 using Agents.API.Data.Store;
 using Agents.API.Interfaces;
 using Interfaces.DynamicAgent;
@@ -42,14 +41,14 @@ services.AddSwaggerGen(c =>
     });
 });
 
-services.Configure<TempModelSettings>(builder.Configuration.GetSection("Models"));
+services.AddMongoService(builder.Configuration);
+
 services.Configure<EnvSettings>(builder.Configuration.GetSection("EnvSettings"));
 CommandsDependensyRegistrator.RegisterDependencies(services);
 services.AddMediatR(Assembly.GetExecutingAssembly());
 
 #region rabbitMQ
 services.Configure<RabbitMqConfiguration>(builder.Configuration.GetSection("RabbitMq"));
-services.Configure<AddDataConfig>(builder.Configuration.GetSection("RabbitMqAddInfo"));
 services.Configure<InitServiceRabbitConfig>(builder.Configuration.GetSection("InitServiceRabbitConfig"));
 #endregion
 
@@ -61,19 +60,11 @@ AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
 services
     .AddTransient<IWebRequester, HttpWebRequester>()
-    .AddTransient<IAgingDynamics<AgingState>, AgingDynamics>()
     .AddTransient<IProperty, Property>()
     .AddTransient<IAgentState, AgentState>();
 
 services
-    .AddTransient<IRequestHandler<GetPatientInfoQuery, HttpResponseMessage>, GetPatientInfoQueryHandler>()
-    .AddTransient<IRequestHandler<GetAgentStateQuery, IAgentState>, GetAgentStateQueryHandler>()
-    .AddTransient<IRequestHandler<GetCommandTypesMetaQueue, ICommandArgsTypesMeta>, GetCommandTypesMetaQueueHandler>()
-    .AddTransient<IRequestHandler<GetCommandArgsValuesQueue, List<object>>, GetCommandArgsValuesQueueHandler>()
-    .AddTransient<IRequestHandler<ParseCodeLineCommand, ICommand>, ParseCodeLineCommandHandler>()
-    .AddTransient<IRequestHandler<GetCommandNameCommand, string>, GetCommandNameCommandHandler>()
     .AddTransient<IRequestHandler<ExecuteCodeLineCommand, Unit>, ExecuteCodeLineCommandHandler>()
-    .AddTransient<IRequestHandler<ConvertArgsCommand, object[]>, ConvertArgsCommandHandler>()
     .AddTransient<IMetaStorageService, InternalMetaStorageService>()
     .AddTransient<ICodeResolveService, CodeResolveService>();
 
@@ -83,12 +74,10 @@ services
 
 services
     .AddSingleton<SettingsService>()
-    .AddSingleton<PredcitionModelsService>()
+    .AddSingleton<PredictionRequestsService>()
     .AddSingleton<AgentsService>()
-    .AddSingleton<InitServiceSender>()
     .AddSingleton<ICodeExecutor, CodeExecutorService>()
-    .AddSingleton<PredcitionModelsService>()
-    .AddSingleton<PatientParametersService>();
+    .AddSingleton<PatientsService>();
 
 services.AddQuartz(q =>
 {
@@ -99,7 +88,7 @@ services.AddQuartz(q =>
     q.UseInMemoryStore();
 
     InitPredictionModelsJob.Schedule(q);
-    InitJob.Schedule(q);
+    //InitJob.Schedule(q); Для чего это?
 });
 services.AddQuartzHostedService();
 

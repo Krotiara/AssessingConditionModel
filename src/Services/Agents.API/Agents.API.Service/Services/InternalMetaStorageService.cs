@@ -1,4 +1,5 @@
 ﻿using Agents.API.Entities;
+using Agents.API.Entities.Mongo;
 using Agents.API.Interfaces;
 using Interfaces;
 using System;
@@ -18,17 +19,12 @@ namespace Agents.API.Service.Services
         {
             CommandTypesMeta = new Dictionary<SystemCommands, ICommandArgsTypesMeta>()
             {
-                {SystemCommands.GetLatestPatientParameters,
-                    new CommandArgsTypesMeta( new List<(Type, string)> {}, typeof(Dictionary<string,PatientParameter>))},
                 {SystemCommands.GetAge,
                     new CommandArgsTypesMeta(new List<(Type, string)> {(typeof(DateTime), "timestamp") }, typeof(int)) },
-                {SystemCommands.GetBioageByFunctionalParameters,
-                    new CommandArgsTypesMeta(new List<(Type, string)> {}, typeof(int))}, 
+                {SystemCommands.Predict,
+                    new CommandArgsTypesMeta(new List<(Type, string)> {(typeof(int), "age")}, typeof(float[]))},
                 {SystemCommands.GetInfluences,
-                    new CommandArgsTypesMeta(new List<(Type, string)> {}, typeof(List<Influence>))},
-                {SystemCommands.GetInfluencesWithoutParameters,
-                    new CommandArgsTypesMeta(new List<(Type, string)> {}, typeof(List<Influence>))},
-                {SystemCommands.GetDentistSum,new CommandArgsTypesMeta(new List<(Type, string)> {(typeof(int), "age")}, typeof(int)) }
+                    new CommandArgsTypesMeta(new List<(Type, string)> {}, typeof(List<Influence>))}
             };
         }
 

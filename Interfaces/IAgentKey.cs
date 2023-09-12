@@ -11,5 +11,7 @@ namespace Interfaces
         public string ObservedId { get; set; }
 
         public string ObservedObjectAffilation { get; set; }
+
+        public string AgentType { get; set; }
     }
 }

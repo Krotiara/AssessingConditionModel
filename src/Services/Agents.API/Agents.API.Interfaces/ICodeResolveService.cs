@@ -1,5 +1,7 @@
 ﻿using Interfaces;
+using Interfaces.DynamicAgent;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,5 +14,10 @@ namespace Agents.API.Interfaces
         //Метод принимает команду на псевдокоде и возвращает Func или Action в виде object и мета информацию о входных и выходных типах этого Func или Action для последующего каста.
         public Task<(ICommandArgsTypesMeta, Delegate)> ResolveCommandAction(ICommand command, 
             IAgentPropertiesNamesSettings commonPropertiesNames, CancellationToken cancellationToken);
+
+        public List<object> GetCommandArgsValues(ICommand command, ICommandArgsTypesMeta commandArgsTypesMeta);
+
+        public ICommand ParseCodeLineCommand(string codeLine, 
+            ConcurrentDictionary<string, IProperty> localVariables, ConcurrentDictionary<string, IProperty> localProperties);
     }
 }

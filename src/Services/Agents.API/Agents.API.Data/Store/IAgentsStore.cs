@@ -1,4 +1,4 @@
-﻿using Agents.API.Entities.AgentsSettings;
+﻿using Agents.API.Entities.Mongo;
 using Interfaces;
 using Interfaces.DynamicAgent;
 using System;
@@ -11,7 +11,7 @@ namespace Agents.API.Data.Store
 {
     public interface IAgentsStore
     {
-        public IAgent GetAgent(IAgentKey key, AgentsSettings settings);
+        public IAgent GetAgent(IAgentKey key, AgentSettings settings);
 
         public void Clear();
     }
