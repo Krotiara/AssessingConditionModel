@@ -8,6 +8,7 @@ using Agents.API.Service.Services;
 using Interfaces;
 using Interfaces.DynamicAgent;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Agents.API.Controllers

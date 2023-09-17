@@ -16,9 +16,27 @@ using Agents.API.Entities.AgentsSettings;
 using Quartz;
 using Agents.API.Jobs;
 using Agents.API.Messaging.Send;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 var builder = WebApplication.CreateBuilder(args);
 var services = builder.Services;
+
+
+services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(o =>
+    {
+        o.Events.OnRedirectToLogin = c =>
+        {
+            c.Response.StatusCode = StatusCodes.Status401Unauthorized;
+            return Task.CompletedTask;
+        };
+        o.Events.OnRedirectToAccessDenied = c =>
+        {
+            c.Response.StatusCode = StatusCodes.Status403Forbidden;
+            return Task.CompletedTask;
+        };
+    });
+
 
 // Add services to the container.
 services.AddControllers().AddNewtonsoftJson();
