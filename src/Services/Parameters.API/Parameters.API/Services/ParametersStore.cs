@@ -1,8 +1,9 @@
 ﻿using Interfaces.Mongo;
+using Parameters.API.Models;
 
-namespace Interfaces.Service
+namespace Parameters.API.Service
 {
-    public class ParametersStore : MongoBaseService<Parameter>
+    public class ParametersStore : MongoBaseService<ACParameter>
     {
         public ParametersStore(MongoService mongo) : base(mongo, "Parameters") { }
     }

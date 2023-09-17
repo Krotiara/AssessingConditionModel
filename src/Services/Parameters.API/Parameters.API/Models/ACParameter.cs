@@ -1,6 +1,6 @@
-﻿namespace Interfaces.Service
+﻿namespace Parameters.API.Models
 {
-    public class Parameter : Document
+    public class ACParameter : Document
     {
         public string Name { get; set; }
 
