@@ -6,6 +6,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Agents.API.Controllers
 {
+
+    [Route("api/agents/[controller]")]
+    [ApiController]
     public class SettingsController : ControllerBase
     {
         private readonly SettingsService _settingsService;
@@ -16,7 +19,7 @@ namespace Agents.API.Controllers
         }
 
 
-        [HttpPost("agents/initSettings")]
+        [HttpPost("initSettings")]
         public async Task<ActionResult> InitAgentsSettings([FromBody] List<AgentSettings> settings)
         {
             await _settingsService.Insert(settings);

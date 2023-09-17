@@ -12,6 +12,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Agents.API.Controllers
 {
+    [Route("api/agents/[controller]")]
+    [ApiController]
     public class AgentsController: ControllerBase
     {
 
@@ -32,7 +34,7 @@ namespace Agents.API.Controllers
         }
 
 
-        [HttpPost("agents/predict")]
+        [HttpPost("predict")]
         public async Task<ActionResult> PredictState([FromBody] PredictionRequest request)
         {
             var sets = await _settingsService.Get(request.Affiliation, request.AgentType);

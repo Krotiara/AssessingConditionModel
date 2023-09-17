@@ -58,26 +58,31 @@ string connectionString = builder.Configuration.GetConnectionString("PostgresCon
 //Для избежания ошибки Cannot write DateTime with Kind=Local to PostgreSQL type 'timestamp with time zone', only UTC is supported.
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
+//entities
 services
     .AddTransient<IWebRequester, HttpWebRequester>()
     .AddTransient<IProperty, Property>()
     .AddTransient<IAgentState, AgentState>();
 
-services
-    .AddTransient<IRequestHandler<ExecuteCodeLineCommand, Unit>, ExecuteCodeLineCommandHandler>()
-    .AddTransient<IMetaStorageService, InternalMetaStorageService>()
-    .AddTransient<ICodeResolveService, CodeResolveService>();
+//store
+services.AddTransient<UsersStore>();
 
 services
     .AddSingleton<SettingsStore>()
     .AddSingleton<IAgentsStore, AgentsStore>();
 
+//service
 services
     .AddSingleton<SettingsService>()
     .AddSingleton<PredictionRequestsService>()
     .AddSingleton<AgentsService>()
     .AddSingleton<ICodeExecutor, CodeExecutorService>()
     .AddSingleton<PatientsService>();
+
+services
+    .AddTransient<IRequestHandler<ExecuteCodeLineCommand, Unit>, ExecuteCodeLineCommandHandler>()
+    .AddTransient<IMetaStorageService, InternalMetaStorageService>()
+    .AddTransient<ICodeResolveService, CodeResolveService>();
 
 services.AddQuartz(q =>
 {
@@ -88,6 +93,7 @@ services.AddQuartz(q =>
     q.UseInMemoryStore();
 
     InitPredictionModelsJob.Schedule(q);
+    InitUsersJob.Schedule(q);
     //InitJob.Schedule(q); Для чего это?
 });
 services.AddQuartzHostedService();
