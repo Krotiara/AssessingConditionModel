@@ -49,7 +49,7 @@ namespace Parameters.API.Service
 
         public async Task<IEnumerable<ACParameter>> GetAll()
         {
-            var ps = await _paramsStore.All();
+            var ps = (await _paramsStore.All()).ToList();
             foreach (var param in ps)
                 _dictByNames[param.Name] = param;
             return ps;
