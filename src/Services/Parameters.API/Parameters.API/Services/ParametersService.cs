@@ -56,7 +56,7 @@ namespace Parameters.API.Service
         }
 
 
-        private async Task Update(ACParameter parameter)
+        public async Task Update(ACParameter parameter)
         {
             await _paramsStore.Update(x => x.Id == parameter.Id)
                 .Set(x => x.Description, parameter.Description)
@@ -64,6 +64,13 @@ namespace Parameters.API.Service
                 .Execute();
 
             _dictByNames[parameter.Name] = parameter;
+        }
+
+
+        public async Task Delete(string id)
+        {
+            await _paramsStore.Delete(x => x.Id == id);
+            _dictByNames.TryRemove(id, out _);
         }
 
     }
