@@ -1,4 +1,6 @@
-﻿namespace Parameters.API.Models
+﻿using Interfaces.Service;
+
+namespace Parameters.API.Models
 {
     public class ACParameter : Document
     {
