@@ -8,10 +8,14 @@ using Agents.API.Service.Services;
 using Interfaces;
 using Interfaces.DynamicAgent;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Agents.API.Controllers
 {
+    [Route("api/agents/[controller]")]
+    [ApiController]
+    [Authorize]
     public class AgentsController: ControllerBase
     {
 
@@ -32,7 +36,7 @@ namespace Agents.API.Controllers
         }
 
 
-        [HttpPost("agents/predict")]
+        [HttpPost("predict")]
         public async Task<ActionResult> PredictState([FromBody] PredictionRequest request)
         {
             var sets = await _settingsService.Get(request.Affiliation, request.AgentType);

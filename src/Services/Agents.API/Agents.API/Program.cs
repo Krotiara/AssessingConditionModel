@@ -16,9 +16,27 @@ using Agents.API.Entities.AgentsSettings;
 using Quartz;
 using Agents.API.Jobs;
 using Agents.API.Messaging.Send;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 var builder = WebApplication.CreateBuilder(args);
 var services = builder.Services;
+
+
+services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(o =>
+    {
+        o.Events.OnRedirectToLogin = c =>
+        {
+            c.Response.StatusCode = StatusCodes.Status401Unauthorized;
+            return Task.CompletedTask;
+        };
+        o.Events.OnRedirectToAccessDenied = c =>
+        {
+            c.Response.StatusCode = StatusCodes.Status403Forbidden;
+            return Task.CompletedTask;
+        };
+    });
+
 
 // Add services to the container.
 services.AddControllers().AddNewtonsoftJson();
@@ -58,26 +76,31 @@ string connectionString = builder.Configuration.GetConnectionString("PostgresCon
 //Для избежания ошибки Cannot write DateTime with Kind=Local to PostgreSQL type 'timestamp with time zone', only UTC is supported.
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
+//entities
 services
     .AddTransient<IWebRequester, HttpWebRequester>()
     .AddTransient<IProperty, Property>()
     .AddTransient<IAgentState, AgentState>();
 
-services
-    .AddTransient<IRequestHandler<ExecuteCodeLineCommand, Unit>, ExecuteCodeLineCommandHandler>()
-    .AddTransient<IMetaStorageService, InternalMetaStorageService>()
-    .AddTransient<ICodeResolveService, CodeResolveService>();
+//store
+services.AddTransient<UsersStore>();
 
 services
     .AddSingleton<SettingsStore>()
     .AddSingleton<IAgentsStore, AgentsStore>();
 
+//service
 services
     .AddSingleton<SettingsService>()
     .AddSingleton<PredictionRequestsService>()
     .AddSingleton<AgentsService>()
     .AddSingleton<ICodeExecutor, CodeExecutorService>()
     .AddSingleton<PatientsService>();
+
+services
+    .AddTransient<IRequestHandler<ExecuteCodeLineCommand, Unit>, ExecuteCodeLineCommandHandler>()
+    .AddTransient<IMetaStorageService, InternalMetaStorageService>()
+    .AddTransient<ICodeResolveService, CodeResolveService>();
 
 services.AddQuartz(q =>
 {
@@ -88,6 +111,7 @@ services.AddQuartz(q =>
     q.UseInMemoryStore();
 
     InitPredictionModelsJob.Schedule(q);
+    InitUsersJob.Schedule(q);
     //InitJob.Schedule(q); Для чего это?
 });
 services.AddQuartzHostedService();
@@ -111,6 +135,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.UseSwagger();
@@ -122,8 +147,6 @@ app.UseSwaggerUI(c =>
 });
 
 
-app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+app.MapControllers();
 
 app.Run();
