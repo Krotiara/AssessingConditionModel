@@ -6,20 +6,20 @@ var builder = WebApplication.CreateBuilder(args);
 
 var services = builder.Services;
 
-services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-    .AddCookie(o =>
-    {
-        o.Events.OnRedirectToLogin = c =>
-        {
-            c.Response.StatusCode = StatusCodes.Status401Unauthorized;
-            return Task.CompletedTask;
-        };
-        o.Events.OnRedirectToAccessDenied = c =>
-        {
-            c.Response.StatusCode = StatusCodes.Status403Forbidden;
-            return Task.CompletedTask;
-        };
-    });
+//services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+//    .AddCookie(o =>
+//    {
+//        o.Events.OnRedirectToLogin = c =>
+//        {
+//            c.Response.StatusCode = StatusCodes.Status401Unauthorized;
+//            return Task.CompletedTask;
+//        };
+//        o.Events.OnRedirectToAccessDenied = c =>
+//        {
+//            c.Response.StatusCode = StatusCodes.Status403Forbidden;
+//            return Task.CompletedTask;
+//        };
+//    });
 
 services.AddControllers();
 
@@ -59,8 +59,8 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
-app.UseAuthentication();
-app.UseAuthorization();
+//app.UseAuthentication();
+//app.UseAuthorization();
 
 app.UseSwagger();
 
