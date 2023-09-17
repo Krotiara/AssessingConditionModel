@@ -16,6 +16,13 @@ services:
       context: .
       dockerfile: src/Services/Agents.API/Agents.API/Dockerfile
 
+  parameters.api:
+    image: ${DOCKER_REGISTRY-}parametersapi
+    container_name: parameters.api
+    build:
+      context: .
+      dockerfile: src/Services/Parameters.API/Parameters.API/Dockerfile
+
   envoygateway:
     build:
         context: .
