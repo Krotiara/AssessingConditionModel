@@ -19,19 +19,19 @@ namespace Parameters.API.Service
         }
 
 
-        public async Task Insert(IEnumerable<ACParameter> parameters)
+        public async Task<ACParameter> Insert(ACParameter param)
         {
-            foreach (var param in parameters)
+            if (param.Id != null)
+                await Update(param);
+            else
             {
-                if (param.Id != null)
-                    await Update(param);
-                else
-                {
-                    await _paramsStore.Insert(param);
-                    _dictByNames[param.Name] = param;
-                }
+                await _paramsStore.Insert(param);
+                _dictByNames[param.Name] = param;
             }
+
+            return param;
         }
+
 
         public async Task<ACParameter> Get(string name)
         {
@@ -56,7 +56,7 @@ namespace Parameters.API.Service
         }
 
 
-        public async Task Update(ACParameter parameter)
+        public async Task<ACParameter> Update(ACParameter parameter)
         {
             await _paramsStore.Update(x => x.Id == parameter.Id)
                 .Set(x => x.Description, parameter.Description)
@@ -64,6 +64,8 @@ namespace Parameters.API.Service
                 .Execute();
 
             _dictByNames[parameter.Name] = parameter;
+
+            return parameter;
         }
 
 

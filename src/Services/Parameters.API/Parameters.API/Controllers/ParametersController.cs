@@ -27,18 +27,18 @@ namespace Parameters.API.Controllers
 
 
         [HttpPost("insert")]
-        public async Task<ActionResult> Insert([FromBody] IEnumerable<ACParameter> parameters)
+        public async Task<ActionResult> Insert([FromBody] ACParameter parameter)
         {
-            await _paramsService.Insert(parameters);
-            return Ok();
+            var p = await _paramsService.Insert(parameter);
+            return Ok(p);
         }
 
 
         [HttpPut("update")]
         public async Task<ActionResult> Update([FromBody] ACParameter parameter)
         {
-            await _paramsService.Update(parameter);
-            return Ok();
+            var p = await _paramsService.Update(parameter);
+            return Ok(p);
         }
 
 
