@@ -16,7 +16,7 @@ namespace Agents.API.Controllers
     [Route("api/agents/[controller]")]
     [ApiController]
     [Authorize]
-    public class AgentsController: ControllerBase
+    public class AgentsController : ControllerBase
     {
 
         private readonly IMediator _mediator;
@@ -24,9 +24,9 @@ namespace Agents.API.Controllers
         private readonly SettingsService _settingsService;
         private readonly AgentsService _agentsService;
 
-        public AgentsController(IMediator mediator, 
-            SettingsService settingsService, 
-            ILogger<AgentsController> logger, 
+        public AgentsController(IMediator mediator,
+            SettingsService settingsService,
+            ILogger<AgentsController> logger,
             AgentsService agentsService)
         {
             _mediator = mediator;
@@ -44,8 +44,8 @@ namespace Agents.API.Controllers
                 return Ok();
 
             PredictionResponse response = new(request.Id, request.Affiliation);
-            
-            foreach(var predictionSettings in request.Settings)
+
+            foreach (var predictionSettings in request.Settings)
             {
                 IAgentState? state = await _agentsService.GetAgentState(new GetAgentStateRequest()
                 {

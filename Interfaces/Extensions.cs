@@ -117,12 +117,5 @@ namespace Interfaces
             services.Configure<MongoDBSettings>(section);
             services.AddSingleton<MongoService>();
         }
-
-
-        public static void AddParametersService(this IServiceCollection services, IConfiguration conf)
-        {
-            services.AddSingleton<ParametersStore>();
-            services.AddSingleton<ParametersService>();
-        }
     }
 }
