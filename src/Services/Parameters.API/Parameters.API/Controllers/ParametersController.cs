@@ -7,7 +7,7 @@ namespace Parameters.API.Controllers
 {
     [Route("api/params/[controller]")]
     [ApiController]
-    [Authorize]
+    //[Authorize]
     public class ParametersController : ControllerBase
     {
         private readonly ParametersService _paramsService;
