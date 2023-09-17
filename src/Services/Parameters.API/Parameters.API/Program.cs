@@ -4,9 +4,6 @@ using Parameters.API.Service;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-builder.Services.AddControllersWithViews();
-
 var services = builder.Services;
 
 services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
