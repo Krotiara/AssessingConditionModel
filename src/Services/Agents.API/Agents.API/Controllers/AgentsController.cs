@@ -14,6 +14,7 @@ namespace Agents.API.Controllers
 {
     [Route("api/agents/[controller]")]
     [ApiController]
+    [Authorize]
     public class AgentsController: ControllerBase
     {
 
