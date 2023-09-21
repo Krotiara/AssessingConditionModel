@@ -3,10 +3,8 @@ using System.Reflection;
 using MediatR;
 using Interfaces;
 using Agents.API.Entities;
-using Agents.API.Messaging.Receive.Receiver;
 using Microsoft.EntityFrameworkCore;
 using Agents.API.Service.Services;
-using Agents.API.Messaging.Receive.Configs;
 using Agents.API.Data.Store;
 using Agents.API.Interfaces;
 using Interfaces.DynamicAgent;
@@ -15,7 +13,6 @@ using Agents.API;
 using Agents.API.Entities.AgentsSettings;
 using Quartz;
 using Agents.API.Jobs;
-using Agents.API.Messaging.Send;
 using Microsoft.AspNetCore.Authentication.Cookies;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -64,11 +61,6 @@ services.AddMongoService(builder.Configuration);
 services.Configure<EnvSettings>(builder.Configuration.GetSection("EnvSettings"));
 CommandsDependensyRegistrator.RegisterDependencies(services);
 services.AddMediatR(Assembly.GetExecutingAssembly());
-
-#region rabbitMQ
-services.Configure<RabbitMqConfiguration>(builder.Configuration.GetSection("RabbitMq"));
-services.Configure<InitServiceRabbitConfig>(builder.Configuration.GetSection("InitServiceRabbitConfig"));
-#endregion
 
 string connectionString = builder.Configuration.GetConnectionString("PostgresConnection");
 
