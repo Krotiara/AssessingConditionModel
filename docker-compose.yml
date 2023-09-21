@@ -42,16 +42,16 @@ services:
     volumes:
         - ./src/ApiGateways/Envoy/envoy.yaml:/etc/envoy/envoy.yaml
 
-  #acm.mongo:
-  #  image: mongo:4.4.6
-  #  restart: always
-  #  environment:
-  #    MONGO_INITDB_ROOT_USERNAME: root
-  #    MONGO_INITDB_ROOT_PASSWORD: aAAsuMHX6PefWh9ZpvPnT3E64yBgg5
-  #  volumes:
-  #   - ./mongo:/data/db
-  #  ports:
-  #    - "18570:27017"
+  acm.mongo:
+    image: mongo:4.4.6
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: aAAsuMHX6PefWh9ZpvPnT3E64yBgg5
+    volumes:
+     - ./mongo:/data/db
+    ports:
+      - "18570:27017"
 
 
 volumes:
