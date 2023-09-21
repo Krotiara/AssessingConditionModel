@@ -9,9 +9,7 @@
     <DockerServiceName>patientsresolver.api</DockerServiceName>
   </PropertyGroup>
   <ItemGroup>
-    <None Include=".env.test" />
     <None Include="certs\aspnetapp1.pfx" />
-    <None Include="docker-compose.env.yml" />
     <None Include="docker-compose.yml" />
     <None Include=".dockerignore" />
     <None Include="https\localhost.conf" />

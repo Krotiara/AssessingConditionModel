@@ -1,5 +1,5 @@
 ﻿using Agents.API.Entities.AgentsSettings;
-using Agents.API.Entities.Mongo;
+using Agents.API.Entities.Documents;
 using Interfaces.Mongo;
 using System;
 using System.Collections.Concurrent;

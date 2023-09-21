@@ -1,5 +1,5 @@
 ﻿using Agents.API.Entities.AgentsSettings;
-using Agents.API.Entities.Mongo;
+using Agents.API.Entities.Documents;
 using Agents.API.Service.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;

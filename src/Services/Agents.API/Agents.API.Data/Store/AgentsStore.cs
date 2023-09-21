@@ -1,6 +1,6 @@
 ﻿using Agents.API.Entities;
 using Agents.API.Entities.AgentsSettings;
-using Agents.API.Entities.Mongo;
+using Agents.API.Entities.Documents;
 using Agents.API.Interfaces;
 using Interfaces;
 using Interfaces.DynamicAgent;

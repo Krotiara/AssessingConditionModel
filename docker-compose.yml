@@ -8,6 +8,11 @@ services:
       context: .
       dockerfile: src/Services/PatientsResolver.API/PatientsResolver.API/Dockerfile
     restart: on-failure
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+    ports:
+      - 8033:80
 
   agents.api:
     image: ${DOCKER_REGISTRY-}agentsapi
@@ -15,6 +20,8 @@ services:
     build:
       context: .
       dockerfile: src/Services/Agents.API/Agents.API/Dockerfile
+    ports:
+      - 8002:80
 
   parameters.api:
     image: ${DOCKER_REGISTRY-}parametersapi
@@ -22,16 +29,33 @@ services:
     build:
       context: .
       dockerfile: src/Services/Parameters.API/Parameters.API/Dockerfile
+    ports:
+      - 8003:80
 
   envoygateway:
     build:
         context: .
         dockerfile: src/ApiGateways/Envoy/Dockerfile
+    ports:
+        - "9901:9901"
+        - "10000:10000"
+    volumes:
+        - ./src/ApiGateways/Envoy/envoy.yaml:/etc/envoy/envoy.yaml
 
-  rabbitmq:
-    container_name: rabbitmq
-    image: rabbitmq:3-management
-
-  mongo:
+  acm.mongo:
     image: mongo:4.4.6
     restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: aAAsuMHX6PefWh9ZpvPnT3E64yBgg5
+    volumes:
+     - ./mongo:/data/db
+    ports:
+      - "18570:27017"
+
+
+volumes:
+   db_volume:
+   pgadmin:
+   postgresData:
+       external: true

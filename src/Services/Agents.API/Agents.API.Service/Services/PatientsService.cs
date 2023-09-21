@@ -1,5 +1,5 @@
 ﻿using Agents.API.Entities;
-using Agents.API.Entities.Mongo;
+using Agents.API.Entities.Documents;
 using Agents.API.Entities.Requests;
 using Interfaces;
 using Microsoft.Extensions.Logging;

@@ -1,5 +1,5 @@
 ﻿using Agents.API.Data.Store;
-using Agents.API.Entities.Mongo;
+using Agents.API.Entities.Documents;
 using MongoDB.Bson;
 using Quartz;
 

@@ -1,6 +1,6 @@
 ﻿using Agents.API.Data.Store;
 using Agents.API.Entities.AgentsSettings;
-using Agents.API.Entities.Mongo;
+using Agents.API.Entities.Documents;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;

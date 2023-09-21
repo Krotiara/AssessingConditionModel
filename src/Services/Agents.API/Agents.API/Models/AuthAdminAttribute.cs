@@ -1,4 +1,4 @@
-﻿using Agents.API.Entities.Mongo;
+﻿using Agents.API.Entities.Documents;
 using Microsoft.AspNetCore.Authorization;
 
 namespace Agents.API.Models
