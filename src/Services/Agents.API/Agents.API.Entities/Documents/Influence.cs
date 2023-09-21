@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Agents.API.Entities.Mongo
+namespace Agents.API.Entities.Documents
 {
     public class Influence : Document, IInfluence
     {

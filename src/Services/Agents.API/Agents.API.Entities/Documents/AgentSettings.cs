@@ -9,7 +9,7 @@ using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
-namespace Agents.API.Entities.Mongo
+namespace Agents.API.Entities.Documents
 {
     public class AgentSettings : Document
     {

@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using System.ComponentModel.DataAnnotations;
-using Agents.API.Entities.Mongo;
+using Agents.API.Entities.Documents;
 using Agents.API.Data.Store;
 
 namespace Agents.API.Controllers
