@@ -44,12 +44,15 @@ services:
 
   mongo:
     image: mongo:4.4.6
+    container_name: acm.mongo
     restart: always
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: aAAsuMHX6PefWh9ZpvPnT3E64yBgg5
     volumes:
      - ./mongo:/data/db
+    ports:
+      - "18570:27017"
 
 
 volumes:
