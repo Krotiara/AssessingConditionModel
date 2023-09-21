@@ -13,8 +13,6 @@ services:
       - ASPNETCORE_URLS=http://+:80
     ports:
       - 8033:80
-    networks:
-        - aModelNetwork
 
   agents.api:
     image: ${DOCKER_REGISTRY-}agentsapi
@@ -24,8 +22,6 @@ services:
       dockerfile: src/Services/Agents.API/Agents.API/Dockerfile
     ports:
       - 8002:80
-    networks:
-      - aModelNetwork
 
   parameters.api:
     image: ${DOCKER_REGISTRY-}parametersapi
@@ -35,8 +31,6 @@ services:
       dockerfile: src/Services/Parameters.API/Parameters.API/Dockerfile
     ports:
       - 8003:80
-    networks:
-      - aModelNetwork
 
   envoygateway:
     build:
@@ -47,8 +41,6 @@ services:
         - "10000:10000"
     volumes:
         - ./src/ApiGateways/Envoy/envoy.yaml:/etc/envoy/envoy.yaml
-    networks:
-        - aModelNetwork
 
   mongo:
     image: mongo:4.4.6
@@ -65,7 +57,3 @@ volumes:
    pgadmin:
    postgresData:
        external: true
-
-networks:
-    aModelNetwork:
-        external: true
