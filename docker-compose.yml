@@ -42,9 +42,8 @@ services:
     volumes:
         - ./src/ApiGateways/Envoy/envoy.yaml:/etc/envoy/envoy.yaml
 
-  mongo:
+  acmongo:
     image: mongo:4.4.6
-    container_name: acm.mongo
     restart: always
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
