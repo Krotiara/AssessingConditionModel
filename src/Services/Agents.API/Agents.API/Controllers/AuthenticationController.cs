@@ -9,7 +9,7 @@ using Agents.API.Data.Store;
 
 namespace Agents.API.Controllers
 {
-    [Route("api/agents/[controller]")]
+    [Route("agentsApi/[controller]")]
     [ApiController]
     public class AuthenticationController : ControllerBase
     {

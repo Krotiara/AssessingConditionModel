@@ -5,7 +5,7 @@ using Parameters.API.Service;
 
 namespace Parameters.API.Controllers
 {
-    [Route("api/params/[controller]")]
+    [Route("parametersApi/[controller]")]
     [ApiController]
     //[Authorize]
     public class ParametersController : ControllerBase

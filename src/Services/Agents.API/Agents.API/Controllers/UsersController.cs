@@ -8,7 +8,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Sky.Controllers
 {
-    [Route("api/agents/[controller]")]
+    [Route("agentsApi/[controller]")]
     [ApiController]
     [AuthAdmin]
     public class UsersController : ControllerBase

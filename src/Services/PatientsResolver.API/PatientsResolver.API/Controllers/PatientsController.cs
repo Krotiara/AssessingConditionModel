@@ -9,7 +9,7 @@ using System.Linq.Expressions;
 namespace PatientsResolver.API.Controllers
 {
 
-    [Route("api/[controller]")]
+    [Route("patientsApi/[controller]")]
     public class PatientsController : ControllerBase
     {
         private readonly PatientsDataService _patientsDataService;
