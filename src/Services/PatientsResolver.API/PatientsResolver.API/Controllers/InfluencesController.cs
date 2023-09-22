@@ -7,7 +7,7 @@ using System;
 
 namespace PatientsResolver.API.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("patientsApi/[controller]")]
     public class InfluencesController : ControllerBase
     {
         private readonly InfluencesDataService _influencesDataService;

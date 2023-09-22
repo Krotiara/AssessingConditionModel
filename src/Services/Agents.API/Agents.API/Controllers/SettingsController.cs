@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Agents.API.Controllers
 {
 
-    [Route("api/agents/[controller]")]
+    [Route("agentsApi/[controller]")]
     [ApiController]
     [Authorize]
     public class SettingsController : ControllerBase

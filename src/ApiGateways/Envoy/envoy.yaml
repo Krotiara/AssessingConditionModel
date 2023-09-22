@@ -25,12 +25,12 @@ static_resources:
               routes:
               - name: "agents-long"
                 match:
-                  prefix: "/agents/"
+                  prefix: "/agentsApi/"
                 route:
                   auto_host_rewrite: true
-                  prefix_rewrite: "/agents/"
+                  prefix_rewrite: "/agentsApi/"
                   cluster: agents_service
-                  timeout: 60s
+                  timeout: 30s
               - name: "patients-long"
                 match:
                   prefix: "/patientsApi/"
@@ -39,21 +39,21 @@ static_resources:
                   prefix_rewrite: "/patientsApi/"
                   cluster: patients_service
                   timeout: 30s
-              - name: "influences-long"
+              - name: "models-long"
                 match:
-                  prefix: "/influences/"
+                  prefix: "/modelsApi/"
                 route:
                   auto_host_rewrite: true
-                  prefix_rewrite: "/influences/"
-                  cluster: patients_service
-                  timeout: 30s
-              - name: "models"
-                match:
-                  prefix: "/models/"
-                route:
-                  auto_host_rewrite: true
-                  prefix_rewrite: "/models/"
+                  prefix_rewrite: "/modelsApi/"
                   cluster: models_service
+                  timeout: 30s
+              - name: "parameters-long"
+                match:
+                  prefix: "/parametersApi/"
+                route:
+                  auto_host_rewrite: true
+                  prefix_rewrite: "/parametersApi/"
+                  cluster: parameters_service
                   timeout: 30s
 
           http_filters:
@@ -83,36 +83,11 @@ static_resources:
     - socket_address:
         address: models.mlserver
         port_value: 80
-    
-  #- name: catalog
-  #  connect_timeout: 0.25s
-  #  type: strict_dns
-  #  lb_policy: round_robin
-  #  hosts:
-  #  - socket_address:
-  #      address: catalog-api
-  #      port_value: 80
-  #- name: basket
-  #  connect_timeout: 0.25s
-  #  type: strict_dns
-  #  lb_policy: round_robin
-  #  hosts:
-  #  - socket_address:
-  #      address: basket-api
-  #      port_value: 80
-  #- name: ordering
-  #  connect_timeout: 0.25s
-  #  type: strict_dns
-  #  lb_policy: round_robin
-  #  hosts:
-  #  - socket_address:
-  #      address: ordering-api
-  #      port_value: 80
-  #- name: signalr-hub
-  #  connect_timeout: 0.25s
-  #  type: strict_dns
-  #  lb_policy: round_robin
-  #  hosts:
-  #  - socket_address:
-  #      address: ordering-signalrhub
-  #      port_value: 80
+  - name: parameters_service
+    connect_timeout: 0.25s
+    type: strict_dns
+    lb_policy: round_robin
+    hosts:
+    - socket_address:
+        address: parameters.api
+        port_value: 80
