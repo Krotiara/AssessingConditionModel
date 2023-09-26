@@ -21,10 +21,16 @@ namespace Agents.API.Controllers
         }
 
 
-        [HttpPost("initSettings")]
-        public async Task<ActionResult> InitAgentsSettings([FromBody] List<AgentSettings> settings)
+        public class InitSettingsRequest
         {
-            await _settingsService.Insert(settings);
+            public List<AgentSettings> Settings { get; set; }
+        }
+
+
+        [HttpPost("initSettings")]
+        public async Task<ActionResult> InitAgentsSettings([FromBody] InitSettingsRequest request)
+        {
+            await _settingsService.Insert(request.Settings);
             return Ok();
         }
     }
