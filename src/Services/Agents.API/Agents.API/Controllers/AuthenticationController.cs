@@ -40,7 +40,7 @@ namespace Agents.API.Controllers
             var claimsIdentity = new ClaimsIdentity(
                 claims, CookieAuthenticationDefaults.AuthenticationScheme);
 
-            var authProperties = new AuthenticationProperties { IsPersistent = true };
+            var authProperties = new AuthenticationProperties { IsPersistent = true, AllowRefresh = true };
 
             return HttpContext.SignInAsync(
                 CookieAuthenticationDefaults.AuthenticationScheme,
@@ -136,7 +136,14 @@ namespace Agents.API.Controllers
                 return ApiBadRequest("The user is banned.");
 
             await Authorize(user);
-            return Ok();
+
+            return Ok(new
+            {
+                user.Id,
+                user.Login,
+                user.Name,
+                user.Role
+            });
         }
 
 

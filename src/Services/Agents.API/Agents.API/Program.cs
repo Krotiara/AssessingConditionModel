@@ -139,6 +139,12 @@ app.UseSwaggerUI(c =>
 });
 
 
-app.MapControllers();
+IConfigurationSection authSettings = builder.Configuration.GetSection("AuthenticationSettings");
+bool isUseAuth = authSettings.Exists() && authSettings.GetValue<bool>("IsUse");
+
+if (isUseAuth)
+    app.MapControllers();
+else
+    app.MapControllers().AllowAnonymous();
 
 app.Run();
