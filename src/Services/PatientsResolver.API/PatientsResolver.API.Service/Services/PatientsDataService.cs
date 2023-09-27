@@ -63,10 +63,11 @@ namespace PatientsResolver.API.Service.Services
         }
 
 
-        public async Task Insert(Patient p)
+        public async Task<Patient> Insert(Patient p)
         {
             await _patientsStore.Insert(p);
             _patients[(p.PatientId, p.Affiliation)] = p;
+            return p;
         }
 
 
@@ -102,8 +103,12 @@ namespace PatientsResolver.API.Service.Services
             var p = await Get(id, affiliation);
 
             if (p == null)
-                return;
-
+                p = await Insert(new Patient()
+                {
+                    PatientId = id,
+                    Affiliation = affiliation
+                });
+                
             if (p.Parameters == null)
                 p.Parameters = new();
 
