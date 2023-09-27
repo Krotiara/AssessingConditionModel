@@ -44,7 +44,8 @@ namespace PatientsResolver.API.Controllers
         [HttpPost("addParameters")]
         public async Task<ActionResult> AddPatientParameters([FromBody] AddPatientParametersRequest request)
         {
-            await _patientsDataService.AddPatientParameters(request.PatientId, request.PatientAffiliation, request.Parameters);
+            foreach(var parameters in request.PatientsParameters)
+                await _patientsDataService.AddPatientParameters(parameters.PatientId, parameters.PatientAffiliation, parameters.Parameters);
             return Ok();
         }
 
