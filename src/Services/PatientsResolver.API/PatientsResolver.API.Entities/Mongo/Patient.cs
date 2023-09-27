@@ -63,7 +63,7 @@ namespace PatientsResolver.API.Entities.Mongo
         private (DateTime, string) GetKeyFields(string key)
         {
             var s = key.Split("_");
-            return (DateTime.Parse(s[0]), s[1]);
+            return (DateTime.Parse(s[1]), s[0]);
         }
 
     }
