@@ -86,15 +86,7 @@ namespace PatientsResolver.API.Service.Services
             if (patient == null || patient.Parameters == null)
                 return Enumerable.Empty<Parameter>();
 
-            return patient.Parameters.Where(x => namesHashes.Contains(x.Key.Item1)
-                                                && x.Key.Item2 <= end
-                                                && x.Key.Item2 >= start)
-                                     .Select(x => new Parameter()
-                                     {
-                                         Name = x.Key.Item1,
-                                         Timestamp = x.Key.Item2,
-                                         Value = x.Value
-                                     });
+            return patient.GetParameters(start, end, names);
         }
 
 
@@ -113,7 +105,7 @@ namespace PatientsResolver.API.Service.Services
                 p.Parameters = new();
 
             foreach (var par in parameters)
-                p.Parameters[(par.Name, par.Timestamp)] = par.Value;
+                p.SetParameter(par);
 
             await _patientsStore.Update(x => x.Id == p.Id)
                 .Set(x => x.Parameters, p.Parameters)

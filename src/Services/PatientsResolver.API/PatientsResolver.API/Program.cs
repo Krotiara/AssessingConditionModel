@@ -43,7 +43,6 @@ builder.Host.ConfigureDefaults(args)
 services.AddMongoService(builder.Configuration);
 
 services.AddTransient<IPatientParameter, PatientParameter>();
-services.AddTransient<IPatient, Patient>();
 services.AddTransient<IFileData, FileData>();
 services.AddTransient<IInfluence, Influence>();
 services.AddOptions();
