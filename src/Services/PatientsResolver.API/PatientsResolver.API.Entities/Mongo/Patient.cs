@@ -53,7 +53,10 @@ namespace PatientsResolver.API.Entities.Mongo
                     Timestamp = time,
                     Value = x.Value
                 };
-            });
+            })
+            .GroupBy(x => x.Name)
+            .Select(x => x.OrderByDescending(x=>x.Timestamp).First());
+            ;
         }
 
 
