@@ -14,10 +14,12 @@ namespace Agents.API.Controllers
     public class SettingsController : ControllerBase
     {
         private readonly SettingsService _settingsService;
+        private readonly PredictionRequestsService _predictionRequestsService;
 
-        public SettingsController(SettingsService settingsService)
+        public SettingsController(SettingsService settingsService, PredictionRequestsService predictionRequestsService)
         {
             _settingsService = settingsService;
+            _predictionRequestsService = predictionRequestsService;
         }
 
 
@@ -33,5 +35,9 @@ namespace Agents.API.Controllers
             await _settingsService.Insert(request.Settings);
             return Ok();
         }
+
+
+        [HttpGet("mlModelsMetas")]
+        public ActionResult GetMlModelsMetas() => Ok(_predictionRequestsService.GetMetasDto());
     }
 }

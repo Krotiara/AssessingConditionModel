@@ -1,5 +1,6 @@
 ﻿using Agents.API.Entities;
 using Agents.API.Entities.Documents;
+using Agents.API.Entities.Dto;
 using Interfaces;
 using Microsoft.Extensions.Options;
 using System;
@@ -57,6 +58,19 @@ namespace Agents.API.Service.Services
                 return _metas[id];
             }
             return null; //TODO log
+        }
+
+
+        public IEnumerable<ModelMetaDto> GetMetasDto()
+        {
+            var res = _metas.Values.Select(x=> new ModelMetaDto()
+            {
+                Id = x.Id,
+                Description = x.Description,
+                ParamsNames = x.ParamsNames
+            });
+
+            return res;
         }
 
 
