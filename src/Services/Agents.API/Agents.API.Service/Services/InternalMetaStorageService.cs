@@ -22,7 +22,7 @@ namespace Agents.API.Service.Services
                 {SystemCommands.GetAge,
                     new CommandArgsTypesMeta(new List<(Type, string)> {(typeof(DateTime), "timestamp") }, typeof(int)) },
                 {SystemCommands.Predict,
-                    new CommandArgsTypesMeta(new List<(Type, string)> {(typeof(int), "age")}, typeof(float[]))},
+                    new CommandArgsTypesMeta(new List<(Type, string)> {(typeof(int), "age")}, typeof(float))}, //TODO - пока заменил на float, но должно быть float[] после добавления взятия по индексу
                 {SystemCommands.GetInfluences,
                     new CommandArgsTypesMeta(new List<(Type, string)> {}, typeof(List<Influence>))}
             };
