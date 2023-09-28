@@ -49,7 +49,7 @@ namespace Agents.API.Controllers
             {
                 IAgentState? state = await _agentsService.GetAgentState(new GetAgentStateRequest()
                 {
-                    Key = new AgentKey() { ObservedId = request.Id, ObservedObjectAffilation = request.Affiliation },
+                    Key = new AgentKey() { ObservedId = request.Id, ObservedObjectAffilation = request.Affiliation, AgentType = request.AgentType },
                     AgentsSettings = sets,
                     Variables = predictionSettings.Variables
                 });
