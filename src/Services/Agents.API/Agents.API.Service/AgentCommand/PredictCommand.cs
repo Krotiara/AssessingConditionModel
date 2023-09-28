@@ -60,7 +60,7 @@ namespace Agents.API.Service.AgentCommand
             else
             {
                 var res = await responce.DeserializeBody<float[]>();
-                return res.First();
+                return res.First(); //TODO - убрать first
             }
         };
 
