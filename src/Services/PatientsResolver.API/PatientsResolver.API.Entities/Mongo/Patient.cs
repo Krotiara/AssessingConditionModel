@@ -60,7 +60,7 @@ namespace PatientsResolver.API.Entities.Mongo
         }
 
 
-        private string GetKey(string name, DateTime date) => $"{name}_{date}";
+        private string GetKey(string name, DateTime date) => $"{name}_{date.Date}";
 
 
         private (DateTime, string) GetKeyFields(string key)
