@@ -73,7 +73,7 @@ namespace Agents.API.Service.AgentCommand
             && ml.Value is string;
 
 
-        private double[] GetInputArgs(Dictionary<string, Parameter> parameters, List<string> names, int age)
+        private double[] GetInputArgs(Dictionary<string, Parameter> parameters, List<string> names, double age)
         {
             double[] inputArgs = new double[names.Count];
 
