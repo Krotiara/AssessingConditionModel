@@ -24,7 +24,7 @@ namespace Agents.API.Service.Services
         public PatientsService(IWebRequester webRequester, IOptions<EnvSettings> settings, ILogger<PatientsService> logger)
         {
             _webRequester = webRequester;
-            _patientsResolverApiUrl = $"{settings.Value.PatientsResolverApiUrl}/api";
+            _patientsResolverApiUrl = $"{settings.Value.PatientsResolverApiUrl}/patientsApi";
             _logger = logger;
             _patients = new();
         }
@@ -36,7 +36,7 @@ namespace Agents.API.Service.Services
                 return p;
 
 
-            string url = $"{_patientsResolverApiUrl}/Patients/patient{affiliation}/{id}";
+            string url = $"{_patientsResolverApiUrl}/Patients/patient";
             string body = Newtonsoft.Json.JsonConvert.SerializeObject(new GetPatientRequest() { PatientId = id, Affiliation = affiliation });
             var responce = await _webRequester.SendRequest(url, "POST", body);
             if (responce != null && responce.IsSuccessStatusCode)
