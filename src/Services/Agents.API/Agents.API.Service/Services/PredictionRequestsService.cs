@@ -62,7 +62,7 @@ namespace Agents.API.Service.Services
 
         public async Task<HttpResponseMessage?> Predict(string id, double[] input)
         {
-            IPredictRequest request = new PredictRequest() { Id = id, Input = input };
+            PredictRequest request = new PredictRequest() { Id = id, Input = input };
             string requestBody = Newtonsoft.Json.JsonConvert.SerializeObject(request);
             string url = $"{_modelsServerUrl}/modelsApi/predict";
             var responce = await _webRequester.SendRequest(url, "POST", requestBody);

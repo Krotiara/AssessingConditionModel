@@ -7,11 +7,9 @@ using System.Threading.Tasks;
 
 namespace Agents.API.Entities
 {
-    public class PredictRequest : IPredictRequest
+    public class PredictRequest
     {
         public string Id { get; set; }
-
-        public string Version { get; set; }
 
         public double[] Input { get; set; }
     }
