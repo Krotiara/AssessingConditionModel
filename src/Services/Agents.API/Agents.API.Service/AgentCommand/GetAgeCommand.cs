@@ -52,7 +52,7 @@ namespace Agents.API.Service.AgentCommand
         };
 
 
-        private int GetAge(DateTime dateOfBirth, DateTime dateOfMeasurement)
+        private double GetAge(DateTime dateOfBirth, DateTime dateOfMeasurement)
         {
             var a = ((dateOfMeasurement.Year * 100) + dateOfMeasurement.Month) * 100 + dateOfMeasurement.Day;
             var b = (((dateOfBirth.Year * 100) + dateOfBirth.Month) * 100) + dateOfBirth.Day;

@@ -20,9 +20,9 @@ namespace Agents.API.Service.Services
             CommandTypesMeta = new Dictionary<SystemCommands, ICommandArgsTypesMeta>()
             {
                 {SystemCommands.GetAge,
-                    new CommandArgsTypesMeta(new List<(Type, string)> {(typeof(DateTime), "timestamp") }, typeof(int)) },
+                    new CommandArgsTypesMeta(new List<(Type, string)> {(typeof(DateTime), "timestamp") }, typeof(double)) },
                 {SystemCommands.Predict,
-                    new CommandArgsTypesMeta(new List<(Type, string)> {(typeof(int), "age")}, typeof(float))}, //TODO - пока заменил на float, но должно быть float[] после добавления взятия по индексу
+                    new CommandArgsTypesMeta(new List<(Type, string)> {(typeof(double), "age")}, typeof(double))}, //TODO - пока заменил на float, но должно быть float[] после добавления взятия по индексу
                 {SystemCommands.GetInfluences,
                     new CommandArgsTypesMeta(new List<(Type, string)> {}, typeof(List<Influence>))}
             };
