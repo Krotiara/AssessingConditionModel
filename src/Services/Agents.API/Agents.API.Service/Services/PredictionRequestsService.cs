@@ -28,7 +28,7 @@ namespace Agents.API.Service.Services
 
         public async Task<bool> Init()
         {
-            var responce = await _webRequester.SendRequest($"{_modelsServerUrl}/models", "GET");
+            var responce = await _webRequester.SendRequest($"{_modelsServerUrl}/modelsApi", "GET");
             if (responce != null && responce.IsSuccessStatusCode)
             {
                 var metasString = await responce.DeserializeBody<List<string>>(); //Двойная сериализация из-за бага на стороне сервера ML.
@@ -50,7 +50,7 @@ namespace Agents.API.Service.Services
             if (_metas.ContainsKey(id))
                 return _metas[id];
 
-            var responce = await _webRequester.SendRequest($"{_modelsServerUrl}/models/{id}", "GET");
+            var responce = await _webRequester.SendRequest($"{_modelsServerUrl}/modelsApi/{id}", "GET");
             if (responce != null && responce.IsSuccessStatusCode)
             {
                 _metas[id] = await responce.DeserializeBody<ModelMeta>();
@@ -64,7 +64,7 @@ namespace Agents.API.Service.Services
         {
             IPredictRequest request = new PredictRequest() { Id = id, Input = input };
             string requestBody = Newtonsoft.Json.JsonConvert.SerializeObject(request);
-            string url = $"{_modelsServerUrl}/models/predict";
+            string url = $"{_modelsServerUrl}/modelsApi/predict";
             var responce = await _webRequester.SendRequest(url, "POST", requestBody);
             return responce;
         }
