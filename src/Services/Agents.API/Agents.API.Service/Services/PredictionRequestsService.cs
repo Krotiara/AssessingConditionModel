@@ -28,7 +28,7 @@ namespace Agents.API.Service.Services
 
         public async Task<bool> Init()
         {
-            var responce = await _webRequester.SendRequest($"{_modelsServerUrl}/modelsApi", "GET");
+            var responce = await _webRequester.SendRequest($"{_modelsServerUrl}/modelsApi/all", "GET");
             if (responce != null && responce.IsSuccessStatusCode)
             {
                 var metasString = await responce.DeserializeBody<List<string>>(); //Двойная сериализация из-за бага на стороне сервера ML.
