@@ -29,7 +29,7 @@ namespace Agents.API.Service.AgentCommand
         public ConcurrentDictionary<string, IProperty> Properties { get; set; }
         public IAgentPropertiesNamesSettings PropertiesNamesSettings { get; set; }
 
-        public Delegate Command => async (int age) =>
+        public Delegate Command => async (double age) =>
         {
             if (!CheckCommand())
                 throw new ExecuteCommandException($"No requered args in PredictCommand.");
