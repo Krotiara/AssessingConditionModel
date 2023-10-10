@@ -54,6 +54,20 @@ services:
       - "18570:27017"
 
 
+  models.mlserver:
+    image: krotiara/modelsmlserver
+    container_name: models.mlserver
+    build:
+      context: .
+      dockerfile: Models.MLServer/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+    ports:
+      - 5000:80
+    restart: on-failure
+
+
 volumes:
    db_volume:
    pgadmin:
