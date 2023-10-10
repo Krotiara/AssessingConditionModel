@@ -55,16 +55,13 @@ services:
 
 
   models.mlserver:
-    image: krotiara/modelsmlserver
+    image: krotiara/models.mlserver:latest
     container_name: models.mlserver
-    build:
-      context: .
-      dockerfile: Models.MLServer/Dockerfile
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:80
     ports:
-      - 5000:80
+      - 5001:80
     restart: on-failure
 
 
