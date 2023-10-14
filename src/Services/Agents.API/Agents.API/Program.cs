@@ -104,7 +104,7 @@ services.AddQuartz(q =>
 
     InitPredictionModelsJob.Schedule(q);
     InitUsersJob.Schedule(q);
-    //InitJob.Schedule(q); Для чего это?
+    InitSettingsJob.Schedule(q);
 });
 services.AddQuartzHostedService();
 

@@ -23,6 +23,16 @@ namespace Agents.API.Service.Services
         }
 
 
+        public async Task<bool> Init()
+        {
+            var sets = await _store.All();
+            foreach (var set in sets)
+                _settings[(set.Affiliation, set.AgentType)] = set;
+
+            return true;
+        }
+
+
         public async Task Insert(IEnumerable<AgentSettings> sets)
         {
             foreach (var settings in sets)
@@ -34,7 +44,9 @@ namespace Agents.API.Service.Services
         {
             if (_settings.ContainsKey((settings.Affiliation, settings.AgentType)))
                 return;
+
             await _store.Insert(settings);
+
             _settings[(settings.Affiliation, settings.AgentType)] = settings;
         }
 
