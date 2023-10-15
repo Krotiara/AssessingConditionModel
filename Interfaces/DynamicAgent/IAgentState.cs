@@ -15,5 +15,7 @@ namespace Interfaces.DynamicAgent
         public DateTime Timestamp { get; set; }
 
         public string DefinitionCode { get; set; }
+
+        public string Description { get; set; }
     }
 }
