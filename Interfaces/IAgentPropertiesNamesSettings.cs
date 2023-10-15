@@ -19,7 +19,5 @@ namespace Interfaces
         public string Id { get; set; }
 
         public string Affiliation { get; set; }
-
-        public string MlModel { get; set; }
     }
 }

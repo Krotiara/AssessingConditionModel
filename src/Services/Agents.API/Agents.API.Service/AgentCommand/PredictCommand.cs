@@ -29,7 +29,7 @@ namespace Agents.API.Service.AgentCommand
         public ConcurrentDictionary<string, IProperty> Properties { get; set; }
         public IAgentPropertiesNamesSettings PropertiesNamesSettings { get; set; }
 
-        public Delegate Command => async (double age) =>
+        public Delegate Command => async (double age, string mlModelId) =>
         {
             if (!CheckCommand())
                 throw new ExecuteCommandException($"No requered args in PredictCommand.");
@@ -37,7 +37,6 @@ namespace Agents.API.Service.AgentCommand
             string patientId = Properties[PropertiesNamesSettings.Id].Value as string;
             string patientAffiliation = Properties[PropertiesNamesSettings.Affiliation].Value as string;
             DateTime endTimestamp = (DateTime)Variables[PropertiesNamesSettings.EndTimestamp].Value;
-            string mlModelId = (string)Variables[PropertiesNamesSettings.MlModel].Value;
 
             var meta = await _pMService.Get(mlModelId);
             if (meta == null)
@@ -68,9 +67,7 @@ namespace Agents.API.Service.AgentCommand
         private bool CheckCommand() => Properties.ContainsKey(PropertiesNamesSettings.Id)
             && Properties.ContainsKey(PropertiesNamesSettings.Affiliation)
             && Variables.TryGetValue(PropertiesNamesSettings.EndTimestamp, out IProperty p)
-            && p.Value is DateTime
-            && Variables.TryGetValue(PropertiesNamesSettings.MlModel, out IProperty ml)
-            && ml.Value is string;
+            && p.Value is DateTime;
 
 
         private double[] GetInputArgs(Dictionary<string, Parameter> parameters, List<string> names, double age)
