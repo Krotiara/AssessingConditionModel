@@ -12,13 +12,13 @@ namespace Agents.API.Entities.AgentsSettings
     {
         public Property() { }
 
-        public Property(string name, Type type)
+        public Property(string name, string type)
         {
             Name = name;
             Type = type;
         }
 
-        public Property(object value, string name, Type type)
+        public Property(object value, string name, string type)
         {
             Name = name;
             Type = type;
@@ -27,7 +27,7 @@ namespace Agents.API.Entities.AgentsSettings
 
         public string Name { get; set; }
 
-        public Type Type { get; set; }
+        public string Type { get; set; }
 
         public object Value { get; set; }
     }

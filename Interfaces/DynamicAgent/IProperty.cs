@@ -10,7 +10,7 @@ namespace Interfaces.DynamicAgent
     {
         public string Name { get; set; }
 
-        public Type Type { get; set; }
+        public string Type { get; set; }
 
         public object Value { get; set; }
     }

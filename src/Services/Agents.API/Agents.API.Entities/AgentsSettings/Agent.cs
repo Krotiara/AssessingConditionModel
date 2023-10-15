@@ -113,9 +113,9 @@ namespace Agents.API.Entities.AgentsSettings
         private void InitCommonProperties(IAgentKey key, AgentPropertiesNamesSettings settings)
         {
             _commonProperties[settings.Id] = 
-                new Property() { Name = settings.Id, Type = typeof(string), Value = key.ObservedId };
+                new Property() { Name = settings.Id, Type = typeof(string).FullName, Value = key.ObservedId };
             _commonProperties[settings.Affiliation] =
-                new Property() { Name = settings.Affiliation, Type = typeof(string), Value = key.ObservedObjectAffilation};
+                new Property() { Name = settings.Affiliation, Type = typeof(string).FullName, Value = key.ObservedObjectAffilation};
         }
 
 

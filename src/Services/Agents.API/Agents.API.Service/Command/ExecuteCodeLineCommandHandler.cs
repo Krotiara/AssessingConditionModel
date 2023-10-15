@@ -87,7 +87,7 @@ namespace Agents.API.Service.Command
                         new Property()
                         {
                             Name = request.Command.AssigningParameter,
-                            Type = commandPair.Item1.OutputArgType,
+                            Type = commandPair.Item1.OutputArgType.FullName,
                             Value = res
                         };
                 }
@@ -116,7 +116,7 @@ namespace Agents.API.Service.Command
                 .Select(x => x.Value.Trim())
                 .OrderByDescending(x => x.Length); //Сортировка дял последующей замены от наибольших по длине переменных до наименьших.
 
-            Type? outputType = null;
+            string outputType = null;
 
             foreach (string var in vars)
             {
