@@ -84,12 +84,7 @@ namespace Agents.API.Service.Command
                 else
                 {
                     request.Command.LocalVariables[request.Command.AssigningParameter] =
-                        new Property()
-                        {
-                            Name = request.Command.AssigningParameter,
-                            Type = commandPair.Item1.OutputArgType.FullName,
-                            Value = res
-                        };
+                        new Property(request.Command.AssigningParameter, commandPair.Item1.OutputArgType.FullName, res);
                 }
             }
             else
@@ -141,12 +136,7 @@ namespace Agents.API.Service.Command
                 if (varsSource.ContainsKey(request.Command.AssigningParameter))
                     varsSource[request.Command.AssigningParameter].Value = scriptState.ReturnValue;
                 else
-                    varsSource[request.Command.AssigningParameter] = new Property()
-                        {
-                            Type = outputType,
-                            Name = request.Command.AssigningParameter,
-                            Value = scriptState.ReturnValue
-                        };
+                    varsSource[request.Command.AssigningParameter] = new Property(request.Command.AssigningParameter, outputType, scriptState.ReturnValue);
             }
         }
 

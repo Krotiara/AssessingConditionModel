@@ -63,7 +63,9 @@ namespace Agents.API.Entities.AgentsSettings
                 //TODO - set numeric characteristic. - сделать через указываемый через фронт параметр.
                 foreach (var pair in calculatedArgs)
                     if (Properties.ContainsKey(pair.Key))
-                        Properties[pair.Key] = pair.Value;
+                    {
+                        Properties[pair.Key].Value = pair.Value.Value;
+                    }
             }
             catch(DetermineStateException ex)
             {
@@ -113,9 +115,9 @@ namespace Agents.API.Entities.AgentsSettings
         private void InitCommonProperties(IAgentKey key, AgentPropertiesNamesSettings settings)
         {
             _commonProperties[settings.Id] = 
-                new Property() { Name = settings.Id, Type = typeof(string).FullName, Value = key.ObservedId };
+                new Property(settings.Id, typeof(string).FullName, key.ObservedId);
             _commonProperties[settings.Affiliation] =
-                new Property() { Name = settings.Affiliation, Type = typeof(string).FullName, Value = key.ObservedObjectAffilation};
+                new Property(settings.Affiliation, typeof(string).FullName, key.ObservedObjectAffilation);
         }
 
 

@@ -10,16 +10,8 @@ namespace Agents.API.Entities.AgentsSettings
 {
     public class Property : IProperty
     {
-        public Property() { }
 
-        public Property(string name, string type, string description)
-        {
-            Name = name;
-            Type = type;
-            Description = description;
-        }
-
-        public Property(object value, string name, string type, string description)
+        public Property(string name, string type, object value, string description = null)
         {
             Name = name;
             Type = type;
