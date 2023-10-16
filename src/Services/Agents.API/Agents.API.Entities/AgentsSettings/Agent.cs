@@ -19,17 +19,17 @@ namespace Agents.API.Entities.AgentsSettings
 
         public string Id { get; set; }
 
-        public string Affiliation { get;}
+        public string Affiliation { get; }
 
-        public string AgentType { get;} 
+        public string AgentType { get; }
 
         public IAgentState CurrentState { get; set; }
 
-        public ConcurrentDictionary<string, IProperty> Properties { get;}
+        public ConcurrentDictionary<string, IProperty> Properties { get; }
 
-        public ConcurrentDictionary<string, IProperty> Variables { get;}
+        public ConcurrentDictionary<string, IProperty> Variables { get; }
 
-        public ConcurrentDictionary<string, IAgentState> States { get;}
+        public ConcurrentDictionary<string, IAgentState> States { get; }
 
         private readonly ConcurrentDictionary<string, IProperty> _commonProperties;
 
@@ -63,11 +63,10 @@ namespace Agents.API.Entities.AgentsSettings
                 //TODO - set numeric characteristic. - сделать через указываемый через фронт параметр.
                 foreach (var pair in calculatedArgs)
                     if (Properties.ContainsKey(pair.Key))
-                    {
                         Properties[pair.Key].Value = pair.Value.Value;
-                    }
+
             }
-            catch(DetermineStateException ex)
+            catch (DetermineStateException ex)
             {
                 //TODO log
             }
@@ -114,7 +113,7 @@ namespace Agents.API.Entities.AgentsSettings
 
         private void InitCommonProperties(IAgentKey key, AgentPropertiesNamesSettings settings)
         {
-            _commonProperties[settings.Id] = 
+            _commonProperties[settings.Id] =
                 new Property(settings.Id, typeof(string).FullName, key.ObservedId);
             _commonProperties[settings.Affiliation] =
                 new Property(settings.Affiliation, typeof(string).FullName, key.ObservedObjectAffilation);
@@ -124,7 +123,7 @@ namespace Agents.API.Entities.AgentsSettings
         private async Task<string> UpdateStateBy(ConcurrentDictionary<string, IProperty> calcArgs)
         {
             string stateVar = "isState";
-            foreach(IAgentState state in States.Values)
+            foreach (IAgentState state in States.Values)
             {
                 string ifCondition = $"{stateVar}={state.DefinitionCode}";
                 var args = await _codeExecutor.ExecuteCode(ifCondition, calcArgs, _commonProperties, _commonPropertiesNames);
