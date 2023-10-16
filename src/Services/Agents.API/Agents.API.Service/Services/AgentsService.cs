@@ -56,7 +56,14 @@ namespace Agents.API.Service.Services
         public async Task<IEnumerable<IProperty>> GetAgentProperties(IAgentKey Key, AgentSettings agentsSettings)
         {
             IAgent agent = _agentsStore.GetAgent(Key, agentsSettings);
-            return agent.Properties.Values;
+            return agent.Properties.Values.Where(x=>x.Description != null && x.Description != string.Empty);
+        }
+
+
+        public async Task<IEnumerable<IProperty>> GetAgentVariables(IAgentKey Key, AgentSettings agentsSettings)
+        {
+            IAgent agent = _agentsStore.GetAgent(Key, agentsSettings);
+            return agent.Variables.Values.Where(x => x.Description != null && x.Description != string.Empty);
         }
     }
 }

@@ -9,11 +9,12 @@ namespace Agents.API.Entities.Response
 {
     public class PredictionResponsePart
     {
-        public PredictionResponsePart(string name, IAgentState agentState, IEnumerable<IProperty> properties)
+        public PredictionResponsePart(string name, IAgentState agentState, IEnumerable<IProperty> properties, IEnumerable<IProperty> variables)
         {
             Name = name;
             AgentState = agentState;
             Properties = properties;
+            Variables = variables;
         }
 
         public string Name { get; set; }
@@ -21,5 +22,7 @@ namespace Agents.API.Entities.Response
         public IAgentState AgentState { get; set; }
 
         public IEnumerable<IProperty> Properties { get; set; }
+
+        public IEnumerable<IProperty> Variables { get; set; }
     }
 }

@@ -57,9 +57,10 @@ namespace Agents.API.Controllers
                 });
 
                 var properties = await _agentsService.GetAgentProperties(key, sets);
+                var vars = await _agentsService.GetAgentVariables(key, sets);
 
                 if (state != null)
-                    response.Predictions.Add(new PredictionResponsePart(predictionSettings.SettingsName, state, properties));
+                    response.Predictions.Add(new PredictionResponsePart(predictionSettings.SettingsName, state, properties, vars));
             }
 
             return Ok(response);
