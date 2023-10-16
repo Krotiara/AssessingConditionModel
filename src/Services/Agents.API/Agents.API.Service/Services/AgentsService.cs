@@ -51,5 +51,12 @@ namespace Agents.API.Service.Services
             }
             return agent.CurrentState;
         }
+
+
+        public async Task<IEnumerable<IProperty>> GetAgentProperties(IAgentKey Key, AgentSettings agentsSettings)
+        {
+            IAgent agent = _agentsStore.GetAgent(Key, agentsSettings);
+            return agent.Properties.Values;
+        }
     }
 }

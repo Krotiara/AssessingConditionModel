@@ -47,14 +47,18 @@ namespace Agents.API.Controllers
 
             foreach (var predictionSettings in request.Settings)
             {
+                var key = new AgentKey() { ObservedId = request.Id, ObservedObjectAffilation = request.Affiliation, AgentType = request.AgentType };
+
                 IAgentState? state = await _agentsService.GetAgentState(new GetAgentStateRequest()
                 {
-                    Key = new AgentKey() { ObservedId = request.Id, ObservedObjectAffilation = request.Affiliation, AgentType = request.AgentType },
+                    Key = key,
                     AgentsSettings = sets,
                     Variables = predictionSettings.Variables
                 });
 
-                response.Predictions.Add(new PredictionResponsePart() { Name = predictionSettings.SettingsName, AgentState = state });
+                var properties = await _agentsService.GetAgentProperties(key, sets);
+
+                response.Predictions.Add(new PredictionResponsePart(predictionSettings.SettingsName, state, properties));
             }
 
             return Ok(response);

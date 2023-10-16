@@ -9,8 +9,17 @@ namespace Agents.API.Entities.Response
 {
     public class PredictionResponsePart
     {
+        public PredictionResponsePart(string name, IAgentState agentState, IEnumerable<IProperty> properties)
+        {
+            Name = name;
+            AgentState = agentState;
+            Properties = properties;
+        }
+
         public string Name { get; set; }
 
         public IAgentState AgentState { get; set; }
+
+        public IEnumerable<IProperty> Properties { get; set; }
     }
 }
