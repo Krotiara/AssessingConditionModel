@@ -71,6 +71,7 @@ namespace Agents.API.Service.Services
                 .Set(x => x.StateProperties, settings.StateProperties)
                 .Set(x => x.Variables, settings.Variables)
                 .Set(x => x.StateResolveCode, settings.StateResolveCode)
+                .Set(x => x.StateDescription, settings.StateDescription)
                 .Execute();
             _settings[(settings.Affiliation, settings.AgentType)] = settings;
         }

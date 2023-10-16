@@ -24,6 +24,8 @@ namespace Agents.API.Entities.Documents
 
         public string AgentType { get; set; }
 
+        public string StateDescription { get; set; }
+
         public List<Property> StateProperties { get; set; }
 
 
