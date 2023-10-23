@@ -31,8 +31,6 @@ namespace Agents.API.Entities.AgentsSettings
 
         public ConcurrentDictionary<string, IAgentState> States { get; }
 
-        private readonly ConcurrentDictionary<string, IProperty> _commonProperties;
-
         private readonly AgentPropertiesNamesSettings _commonPropertiesNames;
 
         public Agent(IAgentKey key, AgentSettings settings, ICodeExecutor codeExecutor)
@@ -45,7 +43,6 @@ namespace Agents.API.Entities.AgentsSettings
             Properties = new();
             Variables = new();
             States = new();
-            _commonProperties = new();
             InitDicts(settings);
             InitCommonProperties(key, settings.CommonNamesSettings);
             _commonPropertiesNames = settings.CommonNamesSettings; //TODO инициализация нового экземпляра, чтобы не продлевать время жизни settings
@@ -57,7 +54,7 @@ namespace Agents.API.Entities.AgentsSettings
             try
             {
                 ConcurrentDictionary<string, IProperty> calculatedArgs = await _codeExecutor
-                    .ExecuteCode(_stateResolveCode, Variables, _commonProperties, _commonPropertiesNames);
+                    .ExecuteCode(_stateResolveCode, this, _commonPropertiesNames);
                 string state = await UpdateStateBy(calculatedArgs);
                 CurrentState = States[state];
                 //TODO - set numeric characteristic. - сделать через указываемый через фронт параметр.
@@ -113,9 +110,9 @@ namespace Agents.API.Entities.AgentsSettings
 
         private void InitCommonProperties(IAgentKey key, AgentPropertiesNamesSettings settings)
         {
-            _commonProperties[settings.Id] =
+            Properties[settings.Id] =
                 new Property(settings.Id, typeof(string).FullName, key.ObservedId);
-            _commonProperties[settings.Affiliation] =
+            Properties[settings.Affiliation] =
                 new Property(settings.Affiliation, typeof(string).FullName, key.ObservedObjectAffilation);
         }
 
@@ -126,7 +123,7 @@ namespace Agents.API.Entities.AgentsSettings
             foreach (IAgentState state in States.Values)
             {
                 string ifCondition = $"{stateVar}={state.DefinitionCode}";
-                var args = await _codeExecutor.ExecuteCode(ifCondition, calcArgs, _commonProperties, _commonPropertiesNames);
+                var args = await _codeExecutor.ExecuteCode(ifCondition, this, _commonPropertiesNames);
                 if ((bool)args[stateVar].Value)
                 {
                     //TODO обработка ошибки, если stateNumberVar не число.

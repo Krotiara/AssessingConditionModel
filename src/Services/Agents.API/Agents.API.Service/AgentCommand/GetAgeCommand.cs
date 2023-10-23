@@ -18,8 +18,7 @@ namespace Agents.API.Service.AgentCommand
     {
         private readonly PatientsService _requestService;
 
-        public ConcurrentDictionary<string, IProperty> Variables { get; set; }
-        public ConcurrentDictionary<string, IProperty> Properties { get; set; }
+        public IAgent Agent { get; set; }
 
         public IAgentPropertiesNamesSettings PropertiesNamesSettings { get; set; }
 
@@ -31,8 +30,8 @@ namespace Agents.API.Service.AgentCommand
 
         public Delegate Command => async (DateTime timestamp) =>
         {
-            string patientId = Properties[PropertiesNamesSettings.Id].Value as string;
-            string patientAffiliation = Properties[PropertiesNamesSettings.Affiliation].Value as string;
+            string patientId = Agent.Properties[PropertiesNamesSettings.Id].Value as string;
+            string patientAffiliation = Agent.Properties[PropertiesNamesSettings.Affiliation].Value as string;
 
             //TODO избавиться от запроса пациента.
             var patient = await _requestService.GetPatientInfo(patientId, patientAffiliation, false);

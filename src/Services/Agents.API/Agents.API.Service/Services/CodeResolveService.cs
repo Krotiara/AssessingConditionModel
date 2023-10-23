@@ -1,23 +1,11 @@
 ﻿using Agents.API.Entities;
-using Agents.API.Entities.Requests;
 using Agents.API.Interfaces;
 using Agents.API.Service.AgentCommand;
-using Agents.API.Service.Command;
-using Amazon.Runtime.Internal;
 using Interfaces;
 using Interfaces.DynamicAgent;
 using MediatR;
-using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Net;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Agents.API.Service.Services
 {
@@ -60,7 +48,7 @@ namespace Agents.API.Service.Services
             else
             {
 #warning В тесте не вызывается метод, а взовращается делегат метода-теста. WAT
-                IAgentCommand c = _commandActionProvider.Invoke(apiCommand, command.LocalVariables, command.LocalProperties, commonPropertiesNames);
+                IAgentCommand c = _commandActionProvider.Invoke(apiCommand, command.Agent, commonPropertiesNames);
                 if (c == null)
                     throw new ResolveCommandActionException($"Не удалось разрешить действие для команды {commandName}");
 #warning Может вернуться null.
@@ -72,6 +60,9 @@ namespace Agents.API.Service.Services
 
         public List<object> GetCommandArgsValues(ICommand command, ICommandArgsTypesMeta commandArgsTypesMeta)
         {
+            var vars = command.Agent.Variables;
+            var props = command.Agent.Properties;
+
 #warning нужно тестирование
             Regex argsRegex = new Regex(@"\(.*\)");
             if (!argsRegex.IsMatch(command.OriginCommand))
@@ -91,10 +82,10 @@ namespace Agents.API.Service.Services
             List<object> results = new List<object>();
             for (int i = 0; i < args.Count(); i++)
             {
-                if (command.LocalVariables != null && command.LocalVariables.ContainsKey(args[i]))
-                    results.Add(command.LocalVariables[args[i]].Value);
-                else if (command.LocalProperties != null && command.LocalProperties.ContainsKey(args[i]))
-                    results.Add(command.LocalProperties[args[i]].Value);
+                if (vars != null && vars.ContainsKey(args[i]))
+                    results.Add(vars[args[i]].Value);
+                else if (props != null && props.ContainsKey(args[i]))
+                    results.Add(props[args[i]].Value);
                 else
                 {
                     string arg = args[i];
@@ -122,17 +113,16 @@ namespace Agents.API.Service.Services
         }
 
 
-        public ICommand ParseCodeLineCommand(string codeLine,
-            ConcurrentDictionary<string, IProperty> localVariables, ConcurrentDictionary<string, IProperty> localProperties)
+        public ICommand ParseCodeLineCommand(string codeLine, IAgent agent)
         {
             bool isAssigning = codeLine.Contains('=');
             if (isAssigning)
             {
                 string param = codeLine.Split('=').First().Trim();
-                return new ExecutableCommand(codeLine, CommandType.Assigning, localVariables, localProperties, param);
+                return new ExecutableCommand(codeLine, CommandType.Assigning, agent, param);
             }
             else
-                return new ExecutableCommand(codeLine, CommandType.VoidCall, localVariables, localProperties);
+                return new ExecutableCommand(codeLine, CommandType.VoidCall, agent);
         }
 
 

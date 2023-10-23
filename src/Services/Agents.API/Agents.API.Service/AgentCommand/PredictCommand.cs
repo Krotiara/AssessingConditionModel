@@ -25,18 +25,21 @@ namespace Agents.API.Service.AgentCommand
             _pPSerivce = requestService;
         }
 
-        public ConcurrentDictionary<string, IProperty> Variables { get; set; }
-        public ConcurrentDictionary<string, IProperty> Properties { get; set; }
+
+        public IAgent Agent { get; set; }
         public IAgentPropertiesNamesSettings PropertiesNamesSettings { get; set; }
 
         public Delegate Command => async (double age, string mlModelId) =>
         {
+            var props = Agent.Properties;
+            var vars = Agent.Variables;
+
             if (!CheckCommand())
                 throw new ExecuteCommandException($"No requered args in PredictCommand.");
 
-            string patientId = Properties[PropertiesNamesSettings.Id].Value as string;
-            string patientAffiliation = Properties[PropertiesNamesSettings.Affiliation].Value as string;
-            DateTime endTimestamp = (DateTime)Variables[PropertiesNamesSettings.EndTimestamp].Value;
+            string patientId = props[PropertiesNamesSettings.Id].Value as string;
+            string patientAffiliation = props[PropertiesNamesSettings.Affiliation].Value as string;
+            DateTime endTimestamp = (DateTime)vars[PropertiesNamesSettings.EndTimestamp].Value;
 
             var meta = await _pMService.Get(mlModelId);
             if (meta == null)
@@ -64,27 +67,30 @@ namespace Agents.API.Service.AgentCommand
         };
 
 
-        private bool CheckCommand() => Properties.ContainsKey(PropertiesNamesSettings.Id)
-            && Properties.ContainsKey(PropertiesNamesSettings.Affiliation)
-            && Variables.TryGetValue(PropertiesNamesSettings.EndTimestamp, out IProperty p)
+        private bool CheckCommand() => Agent.Properties.ContainsKey(PropertiesNamesSettings.Id)
+            && Agent.Properties.ContainsKey(PropertiesNamesSettings.Affiliation)
+            && Agent.Variables.TryGetValue(PropertiesNamesSettings.EndTimestamp, out IProperty p)
             && p.Value is DateTime;
 
 
         private double[] GetInputArgs(Dictionary<string, Parameter> parameters, List<string> names, double age)
         {
+            var props = Agent.Properties;
+            var vars = Agent.Variables;
+
             double[] inputArgs = new double[names.Count];
 
             for (int i = 0; i < names.Count; i++)
             {
-                if (Variables.ContainsKey(names[i]) && Variables[names[i]].Value != null)
+                if (vars.ContainsKey(names[i]) && vars[names[i]].Value != null)
                 {
-                    inputArgs[i] = Variables[names[i]].ConvertValue<float>();
+                    inputArgs[i] = vars[names[i]].ConvertValue<float>();
                     continue;
                 }
 
-                if (Properties.ContainsKey(names[i]) && Properties[names[i]].Value != null)
+                if (props.ContainsKey(names[i]) && props[names[i]].Value != null)
                 {
-                    inputArgs[i] = Properties[names[i]].ConvertValue<float>();
+                    inputArgs[i] = props[names[i]].ConvertValue<float>();
                     continue;
                 }
 

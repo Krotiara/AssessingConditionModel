@@ -17,7 +17,6 @@ namespace Agents.API.Interfaces
 
         public List<object> GetCommandArgsValues(ICommand command, ICommandArgsTypesMeta commandArgsTypesMeta);
 
-        public ICommand ParseCodeLineCommand(string codeLine, 
-            ConcurrentDictionary<string, IProperty> localVariables, ConcurrentDictionary<string, IProperty> localProperties);
+        public ICommand ParseCodeLineCommand(string codeLine, IAgent agent);
     }
 }

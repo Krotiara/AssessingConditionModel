@@ -11,9 +11,8 @@ namespace Agents.API.Interfaces
 { 
     public interface ICodeExecutor
     {
-        public Task<ConcurrentDictionary<string, IProperty>> ExecuteCode(string codeLines, 
-            ConcurrentDictionary<string, IProperty> variables,
-            ConcurrentDictionary<string, IProperty> properties,
+        public Task<ConcurrentDictionary<string, IProperty>> ExecuteCode(string codeLines,
+            IAgent agent,
             IAgentPropertiesNamesSettings commonPropertiesNames,
             CancellationToken cancellationToken=default);
 

@@ -11,7 +11,7 @@ namespace Agents.API
             services.AddTransient<PredictCommand>();
             services.AddTransient<GetInfluencesCommand>();
 
-            services.AddTransient<CommandServiceResolver>(serviceProvider => (command, vars, properties, commonPropsNames) =>
+            services.AddTransient<CommandServiceResolver>(serviceProvider => (command, agent, commonPropsNames) =>
             {
                 IAgentCommand? res = command switch
                 {
@@ -23,8 +23,7 @@ namespace Agents.API
 
                 if (res != null)
                 {
-                    res.Variables = vars;
-                    res.Properties = properties;
+                    res.Agent = agent;
                     res.PropertiesNamesSettings = commonPropsNames;
                 }
                 return res;

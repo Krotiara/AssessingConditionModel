@@ -18,8 +18,7 @@ namespace Agents.API.Service.AgentCommand
     {
         private readonly PatientsService _requestService;
 
-        public ConcurrentDictionary<string, IProperty> Variables { get; set; }
-        public ConcurrentDictionary<string, IProperty> Properties { get; set; }
+        public IAgent Agent { get; set; }
         public IAgentPropertiesNamesSettings PropertiesNamesSettings { get; set; }
 
         public GetInfluencesCommand(PatientsService requestService)
@@ -29,10 +28,10 @@ namespace Agents.API.Service.AgentCommand
 
         public Delegate Command => async () =>
         {
-            string patientId = Properties[PropertiesNamesSettings.Id].Value as string;
-            string patientAffiliation = Properties[PropertiesNamesSettings.Affiliation].Value as string;
-            DateTime startTimestamp = (DateTime)Variables[PropertiesNamesSettings.StartTimestamp].Value;
-            DateTime endTimestamp = (DateTime)Variables[PropertiesNamesSettings.EndTimestamp].Value;
+            string patientId = Agent.Properties[PropertiesNamesSettings.Id].Value as string;
+            string patientAffiliation = Agent.Properties[PropertiesNamesSettings.Affiliation].Value as string;
+            DateTime startTimestamp = (DateTime)Agent.Variables[PropertiesNamesSettings.StartTimestamp].Value;
+            DateTime endTimestamp = (DateTime)Agent.Variables[PropertiesNamesSettings.EndTimestamp].Value;
 
             PatientInfluencesRequest request = new()
             {
@@ -49,5 +48,7 @@ namespace Agents.API.Service.AgentCommand
 
             return influences;
         };
+
+
     }
 }

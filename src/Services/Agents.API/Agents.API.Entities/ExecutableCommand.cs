@@ -12,15 +12,12 @@ namespace Agents.API.Entities
 {
     public class ExecutableCommand : ICommand
     {
-        public ExecutableCommand(string originCommand, CommandType commandType, 
-            ConcurrentDictionary<string, IProperty> localVariables, 
-            ConcurrentDictionary<string, IProperty> localProperties, string assigningParamOriginalName = null)
+        public ExecutableCommand(string originCommand, CommandType commandType, IAgent agent, string assigningParamOriginalName = null)
         {
             OriginCommand = originCommand;
             CommandType = commandType;
             AssigningParameter = assigningParamOriginalName;
-            LocalVariables = localVariables;
-            LocalProperties = localProperties;
+            Agent = agent;
         }
 
         public string OriginCommand { get; }
@@ -29,8 +26,6 @@ namespace Agents.API.Entities
 
         public string AssigningParameter { get; }
 
-        public ConcurrentDictionary<string, IProperty> LocalVariables { get; }
-
-        public ConcurrentDictionary<string, IProperty> LocalProperties { get; }
+        public IAgent Agent { get; }
     }
 }
