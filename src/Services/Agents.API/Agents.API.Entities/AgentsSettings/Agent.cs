@@ -1,5 +1,6 @@
 ﻿using Agents.API.Entities.Documents;
 using Agents.API.Interfaces;
+using ASMLib.DynamicAgent;
 using Interfaces;
 using Interfaces.DynamicAgent;
 using System;
@@ -29,6 +30,8 @@ namespace Agents.API.Entities.AgentsSettings
 
         public ConcurrentDictionary<string, IProperty> Variables { get; }
 
+        public ConcurrentDictionary<(string, DateTime), IParameter> Buffer { get; set; }
+
         public ConcurrentDictionary<string, IAgentState> States { get; }
 
         private readonly AgentPropertiesNamesSettings _commonPropertiesNames;
@@ -43,6 +46,7 @@ namespace Agents.API.Entities.AgentsSettings
             Properties = new();
             Variables = new();
             States = new();
+            Buffer = new();
             InitDicts(settings);
             InitCommonProperties(key, settings.CommonNamesSettings);
             _commonPropertiesNames = settings.CommonNamesSettings; //TODO инициализация нового экземпляра, чтобы не продлевать время жизни settings

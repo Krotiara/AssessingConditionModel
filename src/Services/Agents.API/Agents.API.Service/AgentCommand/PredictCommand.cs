@@ -51,6 +51,8 @@ namespace Agents.API.Service.AgentCommand
             if (parameters == null)
                 throw new ExecuteCommandException($"Cannot get latest parameters for patient {patientId}:{patientAffiliation}.");
 
+            FillBuffer(parameters.Values);
+
             double[] args = GetInputArgs(parameters, meta.ParamsNamesList, age);
 
             var responce = await _pMService.Predict(mlModelId, args);
@@ -65,6 +67,13 @@ namespace Agents.API.Service.AgentCommand
                 return res.First(); //TODO - убрать first
             }
         };
+
+
+        private void FillBuffer(IEnumerable<Parameter> patientParameters)
+        {
+            foreach (var parameter in patientParameters)
+                Agent.Buffer[(parameter.Name, parameter.Timestamp)] = parameter;
+        }
 
 
         private bool CheckCommand() => Agent.Properties.ContainsKey(PropertiesNamesSettings.Id)

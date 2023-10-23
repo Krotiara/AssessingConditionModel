@@ -1,13 +1,12 @@
-﻿using ASMLib.DynamicAgent;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Agents.API.Entities.Documents
+namespace ASMLib.DynamicAgent
 {
-    public struct Parameter : IParameter
+    public interface IParameter
     {
         public string Name { get; set; }
 
