@@ -4,6 +4,7 @@ using Agents.API.Entities.Documents;
 using Agents.API.Entities.Requests;
 using Agents.API.Interfaces;
 using Amazon.Runtime.Internal.Util;
+using ASMLib.DynamicAgent;
 using Interfaces;
 using Interfaces.DynamicAgent;
 using Microsoft.Extensions.Logging;
@@ -64,6 +65,13 @@ namespace Agents.API.Service.Services
         {
             IAgent agent = _agentsStore.GetAgent(Key, agentsSettings);
             return agent.Variables.Values.Where(x => x.Description != null && x.Description != string.Empty);
+        }
+
+
+        public async Task<IEnumerable<IParameter>> GetAgentCalculationBuffer(IAgentKey key, AgentSettings agentsSettings)
+        {
+            IAgent agent = _agentsStore.GetAgent(key, agentsSettings);
+            return agent.Buffer.Values;
         }
     }
 }

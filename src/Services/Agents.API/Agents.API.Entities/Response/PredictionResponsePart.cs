@@ -1,4 +1,5 @@
-﻿using Interfaces.DynamicAgent;
+﻿using ASMLib.DynamicAgent;
+using Interfaces.DynamicAgent;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,12 +10,12 @@ namespace Agents.API.Entities.Response
 {
     public class PredictionResponsePart
     {
-        public PredictionResponsePart(string name, IAgentState agentState, IEnumerable<IProperty> properties, IEnumerable<IProperty> variables)
+        public PredictionResponsePart(string name, IAgentState agentState, IEnumerable<IProperty> properties, IEnumerable<IParameter> buffer)
         {
             Name = name;
             AgentState = agentState;
             Properties = properties;
-            Variables = variables;
+            Buffer = buffer;
         }
 
         public string Name { get; set; }
@@ -23,6 +24,6 @@ namespace Agents.API.Entities.Response
 
         public IEnumerable<IProperty> Properties { get; set; }
 
-        public IEnumerable<IProperty> Variables { get; set; }
+        public IEnumerable<IParameter> Buffer { get; set; }
     }
 }
