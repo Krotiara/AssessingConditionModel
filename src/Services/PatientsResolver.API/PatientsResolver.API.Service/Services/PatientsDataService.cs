@@ -81,7 +81,6 @@ namespace PatientsResolver.API.Service.Services
         //TODO - заменить store на istore
         public async Task<IEnumerable<Parameter>> GetPatientParameters(string patientId, string affiliation, DateTime start, DateTime end, List<string> names)
         {
-            var namesHashes = new HashSet<string>(names);
             var patient = await Get(patientId, affiliation);
             if (patient == null || patient.Parameters == null)
                 return Enumerable.Empty<Parameter>();
