@@ -37,7 +37,12 @@ namespace PatientsResolver.API.Entities.Mongo
         {
             IEnumerable<KeyValuePair<string, double>> source = null;
             if (names == null)
-                source = Parameters.Where(x => true);
+                source = Parameters.Where(x =>
+                {
+                    var keyFields = GetKeyFields(x.Key);
+                    DateTime time = keyFields.Item1;
+                    return time <= end && time >= start;
+                });
             else
             {
                 var namesHashes = new HashSet<string>(names);
