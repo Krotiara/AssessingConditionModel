@@ -33,8 +33,10 @@ namespace PatientsResolver.API.Entities.Mongo
         }
 
 
-        public IEnumerable<Parameter> GetParameters(DateTime start, DateTime end, List<string> names)
+        public IEnumerable<Parameter> GetParameters(DateTime start, DateTime end, List<string> names = null)
         {
+            if (names == null)
+                names = Parameters.Keys.ToList();
             var namesHashes = new HashSet<string>(names);
             return Parameters.Where(x =>
             {
