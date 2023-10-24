@@ -35,16 +35,22 @@ namespace PatientsResolver.API.Entities.Mongo
 
         public IEnumerable<Parameter> GetParameters(DateTime start, DateTime end, List<string> names = null)
         {
+            IEnumerable<KeyValuePair<string, double>> source = null;
             if (names == null)
-                names = Parameters.Keys.ToList();
-            var namesHashes = new HashSet<string>(names);
-            return Parameters.Where(x =>
+                source = Parameters.Where(x => true);
+            else
             {
-                var keyFields = GetKeyFields(x.Key);
-                DateTime time = keyFields.Item1;
-                string name = keyFields.Item2;
-                return namesHashes.Contains(name) && time <= end && time >= start;
-            }).Select(x =>
+                var namesHashes = new HashSet<string>(names);
+                source = Parameters.Where(x =>
+                {
+                    var keyFields = GetKeyFields(x.Key);
+                    DateTime time = keyFields.Item1;
+                    string name = keyFields.Item2;
+                    return namesHashes.Contains(name) && time <= end && time >= start;
+                });
+            }
+
+            return source.Select(x =>
             {
                 var keyFields = GetKeyFields(x.Key);
                 DateTime time = keyFields.Item1;
@@ -57,8 +63,7 @@ namespace PatientsResolver.API.Entities.Mongo
                 };
             })
             .GroupBy(x => x.Name)
-            .Select(x => x.OrderByDescending(x=>x.Timestamp).First());
-            ;
+            .Select(x => x.OrderByDescending(x => x.Timestamp).First());
         }
 
 
