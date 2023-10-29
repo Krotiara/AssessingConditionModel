@@ -31,6 +31,14 @@ namespace PatientsResolver.API.Controllers
         }
 
 
+        [HttpPost("patients")]
+        public async Task<ActionResult> GetPatients([FromBody] GetPatientsRequest r)
+        {
+            var patients = await _patientsDataService.GetPatients(r.Affiliation, r.Gender, r.InfluenceName, r.StartAge, r.EndAge, r.Start, r.End);
+            return Ok(patients);
+        }
+
+
         [HttpPost("parameters")]
         public async Task<ActionResult> GetPatientParameters([FromBody] GetPatientParametersRequest request)
         {
@@ -73,18 +81,6 @@ namespace PatientsResolver.API.Controllers
         {
             await _patientsDataService.Delete(id);
             return Ok();
-        }
-
-
-        [HttpGet("patients")]
-        public async Task<ActionResult> GetPatients([FromBody] PatientsRequest request)
-        {
-            Expression<Func<Patient, bool>> filter;
-            if (request.Gender != null)
-                filter = x => x.Affiliation == request.Affiliation && x.Gender == request.Gender;
-            else
-                filter = x => x.Affiliation == request.Affiliation;
-            return Ok(await _patientsDataService.GetPatients(filter));
         }
     }
 }

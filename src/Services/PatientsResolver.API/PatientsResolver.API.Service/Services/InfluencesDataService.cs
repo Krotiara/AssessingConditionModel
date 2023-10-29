@@ -43,6 +43,7 @@ namespace PatientsResolver.API.Service.Services
 
 
 
+        //TODO хэширование
         public async Task<IEnumerable<Influence>> Query(string patientId, string affiliation, DateTime start, DateTime end)
         {
             return await _store.Query(x => x.PatientId == patientId
@@ -56,6 +57,30 @@ namespace PatientsResolver.API.Service.Services
         {
             foreach (var inf in influences)
                 await _store.Insert(inf);
+        }
+
+
+
+        /// <summary>
+        /// Возвращает тех пациентов, у которых присутсвует заданное воздействие в заданный период времени
+        /// </summary>
+        /// <param name="patients"></param>
+        /// <param name="influenceName"></param>
+        /// <returns></returns>
+        public async Task<IEnumerable<Patient>> FilterByInfluence(IEnumerable<Patient> patients, string influenceName, DateTime start, DateTime end)
+        {
+            List<Patient> result = new();
+
+            foreach (var patient in patients)
+            {
+                var influences = await Query(patient.Id, patient.Affiliation, start, end);
+                bool isExist = influences.Any(x=>x.MedicineName == influenceName);
+                if (isExist)
+                    result.Add(patient);
+            }
+
+            return patients;
+
         }
     }
 }
