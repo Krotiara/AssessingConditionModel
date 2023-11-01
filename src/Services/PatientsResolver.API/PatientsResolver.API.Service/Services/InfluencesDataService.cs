@@ -49,7 +49,7 @@ namespace PatientsResolver.API.Service.Services
             return await _store.Query(x => x.PatientId == patientId
                                         && x.Affiliation == affiliation
                                         && x.StartTimestamp <= end
-                                        && x.EndTimestamp >= start);
+                                        && (x.EndTimestamp == null || x.EndTimestamp >= start));
         }
 
 
