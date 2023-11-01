@@ -16,12 +16,14 @@ namespace PatientsResolver.API.Service.Services
     public class PatientsDataService
     {
         private readonly PatientsStore _patientsStore;
+        private readonly InfluencesDataService _influencesDataService;
 
         private readonly ConcurrentDictionary<(string, string), Patient> _patients;
 
-        public PatientsDataService(PatientsStore patientsStore)
+        public PatientsDataService(PatientsStore patientsStore, InfluencesDataService influencesDataService)
         {
             _patientsStore = patientsStore;
+            _influencesDataService = influencesDataService;
             _patients = new();
         }
 
@@ -99,7 +101,7 @@ namespace PatientsResolver.API.Service.Services
                     PatientId = id,
                     Affiliation = affiliation
                 });
-                
+
             if (p.Parameters == null)
                 p.Parameters = new();
 
@@ -115,6 +117,48 @@ namespace PatientsResolver.API.Service.Services
         public async Task<IEnumerable<Patient>> GetPatients(Expression<Func<Patient, bool>> filter)
         {
             return await _patientsStore.Query(filter);
+        }
+
+
+        public async Task<IEnumerable<Patient>> GetPatients(string affiliation, 
+            GenderEnum? gender, string? influenceName, int? startAge, int? endAge, DateTime? start, DateTime? end)
+        {
+            int searchStartAge = startAge == null ? 0 : startAge.Value;
+            int searchEndAge = endAge == null ? 100 : endAge.Value;
+            start = start == null ? DateTime.MinValue : start;
+            end = end == null ? DateTime.MaxValue : end;
+            DateTime now = DateTime.Now;
+
+
+            List<Patient> patients = 
+                (await GetPatients(x => x.Affiliation == affiliation))
+                .Where(x =>
+                {
+                    int age = GetAge(x.Birthday, now);
+                    return age >= startAge && age <= endAge;
+                })
+                .ToList();
+
+            IEnumerable<Patient> filteredPatients = patients;
+
+            if (gender != null && gender != GenderEnum.None)
+                filteredPatients = patients.Where(x => x.Gender == gender);
+
+            if (influenceName != null)
+            {
+                filteredPatients = await _influencesDataService.FilterByInfluence(patients, influenceName, (DateTime)start, (DateTime)end);
+            }
+
+            return filteredPatients;
+        }
+
+
+        private int GetAge(DateTime dateOfBirth, DateTime dateOfMeasurement)
+        {
+            var a = ((dateOfMeasurement.Year * 100) + dateOfMeasurement.Month) * 100 + dateOfMeasurement.Day;
+            var b = (((dateOfBirth.Year * 100) + dateOfBirth.Month) * 100) + dateOfBirth.Day;
+
+            return (a - b) / 10000;
         }
     }
 }

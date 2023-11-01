@@ -43,12 +43,21 @@ namespace PatientsResolver.API.Service.Services
 
 
 
+        //TODO хэширование
         public async Task<IEnumerable<Influence>> Query(string patientId, string affiliation, DateTime start, DateTime end)
         {
-            return await _store.Query(x => x.PatientId == patientId
+            return (await _store.Query(x => x.PatientId == patientId
+                                        && x.Affiliation == affiliation))
+                                        .Where(x => x.StartTimestamp <= end && (x.EndTimestamp == null || x.EndTimestamp >= start));
+        }
+
+
+        public async Task<IEnumerable<Influence>> Query(string patientId, string affiliation, string medicineName, DateTime start, DateTime end)
+        {
+            return (await _store.Query(x => x.PatientId == patientId
                                         && x.Affiliation == affiliation
-                                        && x.StartTimestamp <= end
-                                        && x.EndTimestamp >= start);
+                                        && x.MedicineName == medicineName))
+                                        .Where(x => x.StartTimestamp <= end && (x.EndTimestamp == null || x.EndTimestamp >= start));
         }
 
 
@@ -56,6 +65,29 @@ namespace PatientsResolver.API.Service.Services
         {
             foreach (var inf in influences)
                 await _store.Insert(inf);
+        }
+
+
+
+        /// <summary>
+        /// Возвращает тех пациентов, у которых присутсвует заданное воздействие в заданный период времени
+        /// </summary>
+        /// <param name="patients"></param>
+        /// <param name="medicineName"></param>
+        /// <returns></returns>
+        public async Task<IEnumerable<Patient>> FilterByInfluence(IEnumerable<Patient> patients, string medicineName, DateTime start, DateTime end)
+        {
+            List<Patient> result = new();
+
+            foreach (var patient in patients)
+            {
+                var influences = await Query(patient.PatientId, patient.Affiliation, medicineName, start, end);
+                if (influences.Any())
+                    result.Add(patient);
+            }
+
+            return patients;
+
         }
     }
 }

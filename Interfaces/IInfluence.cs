@@ -15,7 +15,7 @@ namespace Interfaces
 
         public DateTime StartTimestamp { get; set; }
    
-        public DateTime EndTimestamp { get; set; }
+        public DateTime? EndTimestamp { get; set; }
 
         public string InfluenceType { get; set; }
 
