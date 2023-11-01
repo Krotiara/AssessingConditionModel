@@ -23,7 +23,7 @@ namespace PatientsResolver.API.Entities.Mongo
         public string PatientId { get; set; }
         public string Affiliation { get; set; }
         public DateTime StartTimestamp { get; set; }
-        public DateTime EndTimestamp { get; set; }
+        public DateTime? EndTimestamp { get; set; }
         public string InfluenceType { get; set; }
         public string MedicineName { get; set; }
     }
