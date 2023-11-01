@@ -55,9 +55,9 @@ namespace PatientsResolver.API.Controllers
 
 
         [HttpPost("add")]
-        public async Task<ActionResult> AddInfluences([FromBody] List<Influence> influences)
+        public async Task<ActionResult> AddInfluences([FromBody] AddInfluencesRequest request)
         {
-            foreach (Influence influence in influences)
+            foreach (Influence influence in request.Influences)
                 await _influencesDataService.Insert(influence);
             return Ok();
         }
