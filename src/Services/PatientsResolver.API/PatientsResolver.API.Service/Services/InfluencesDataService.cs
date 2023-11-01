@@ -46,6 +46,8 @@ namespace PatientsResolver.API.Service.Services
         //TODO хэширование
         public async Task<IEnumerable<Influence>> Query(string patientId, string affiliation, DateTime start, DateTime end)
         {
+            var infs = (await _store.Query(x => x.PatientId == patientId
+                                        && x.Affiliation == affiliation)).ToList();
             return (await _store.Query(x => x.PatientId == patientId
                                         && x.Affiliation == affiliation))
                                         .Where(x => x.StartTimestamp <= end && (x.EndTimestamp == null || x.EndTimestamp >= start));
@@ -72,7 +74,8 @@ namespace PatientsResolver.API.Service.Services
 
             foreach (var patient in patients)
             {
-                var influences = await Query(patient.Id, patient.Affiliation, start, end);
+                var influences = await Query(patient.PatientId, patient.Affiliation, start, end);
+                var test = influences.ToList();
                 bool isExist = influences.Any(x => x.MedicineName == influenceName);
                 if (isExist)
                     result.Add(patient);
