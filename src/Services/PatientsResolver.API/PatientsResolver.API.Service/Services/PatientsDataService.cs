@@ -141,7 +141,6 @@ namespace PatientsResolver.API.Service.Services
             if (gender != null && gender != GenderEnum.None)
                 patients = patients.Where(x => x.Gender == gender);
 
-
             if (influenceName != null)
             {
                 patients = await _influencesDataService.FilterByInfluence(patients, influenceName, (DateTime)start, (DateTime)end);
