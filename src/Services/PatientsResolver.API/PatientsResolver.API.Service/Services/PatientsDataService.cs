@@ -120,7 +120,8 @@ namespace PatientsResolver.API.Service.Services
         }
 
 
-        public async Task<IEnumerable<Patient>> GetPatients(string affiliation, GenderEnum? gender, string? influenceName, int? startAge, int? endAge, DateTime? start, DateTime? end)
+        public async Task<IEnumerable<Patient>> GetPatients(string affiliation, 
+            GenderEnum? gender, string? influenceName, int? startAge, int? endAge, DateTime? start, DateTime? end)
         {
             int searchStartAge = startAge == null ? 0 : startAge.Value;
             int searchEndAge = endAge == null ? 100 : endAge.Value;
@@ -128,11 +129,16 @@ namespace PatientsResolver.API.Service.Services
             end = end == null ? DateTime.MaxValue : end;
             DateTime now = DateTime.Now;
 
-            //TODO избавиться от двух расчетов GetAge.
-            IEnumerable<Patient> patients = 
-                await GetPatients(x => x.Affiliation == affiliation && GetAge(x.Birthday, now) >= startAge && GetAge(x.Birthday, now) <= endAge);
 
-            if (gender != null)
+            IEnumerable<Patient> patients = 
+                (await GetPatients(x => x.Affiliation == affiliation))
+                .Where(x =>
+                {
+                    int age = GetAge(x.Birthday, now);
+                    return age >= startAge && age <= endAge;
+                });
+
+            if (gender != null && gender != GenderEnum.None)
                 patients = patients.Where(x => x.Gender == gender);
 
 
