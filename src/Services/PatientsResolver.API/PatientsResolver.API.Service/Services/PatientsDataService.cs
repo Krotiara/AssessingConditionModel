@@ -130,23 +130,26 @@ namespace PatientsResolver.API.Service.Services
             DateTime now = DateTime.Now;
 
 
-            IEnumerable<Patient> patients = 
+            List<Patient> patients = 
                 (await GetPatients(x => x.Affiliation == affiliation))
                 .Where(x =>
                 {
                     int age = GetAge(x.Birthday, now);
                     return age >= startAge && age <= endAge;
-                });
+                })
+                .ToList();
+
+            IEnumerable<Patient> filteredPatients = patients;
 
             if (gender != null && gender != GenderEnum.None)
-                patients = patients.Where(x => x.Gender == gender);
+                filteredPatients = patients.Where(x => x.Gender == gender);
 
             if (influenceName != null)
             {
-                patients = await _influencesDataService.FilterByInfluence(patients, influenceName, (DateTime)start, (DateTime)end);
+                filteredPatients = await _influencesDataService.FilterByInfluence(patients, influenceName, (DateTime)start, (DateTime)end);
             }
 
-            return patients;
+            return filteredPatients;
         }
 
 
