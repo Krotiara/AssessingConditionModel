@@ -1,7 +1,6 @@
 ﻿using Agents.API.Entities;
 using Agents.API.Entities.AgentsSettings;
 using Agents.API.Entities.Requests;
-using Agents.API.Entities.Response;
 using Agents.API.Interfaces;
 using Agents.API.Service;
 using Agents.API.Service.Services;
@@ -43,24 +42,14 @@ namespace Agents.API.Controllers
             if (sets == null)
                 return Ok();
 
-            PredictionResponse response = new(request.Id, request.Affiliation);
+            StatePredictions response = new(request.Id, request.Affiliation);
 
             foreach (var predictionSettings in request.Settings)
             {
-                var key = new AgentKey() { ObservedId = request.Id, ObservedObjectAffilation = request.Affiliation, AgentType = request.AgentType };
-
-                IAgentState? state = await _agentsService.GetAgentState(new GetAgentStateRequest()
-                {
-                    Key = key,
-                    AgentsSettings = sets,
-                    Variables = predictionSettings.Variables
-                });
-
-                var properties = await _agentsService.GetAgentProperties(key, sets);
-                var buffer = await _agentsService.GetAgentCalculationBuffer(key, sets);
-
-                if (state != null)
-                    response.Predictions.Add(new PredictionResponsePart(predictionSettings.SettingsName, state, properties, buffer));
+                var key = new AgentKey(request.Id, request.Affiliation, request.AgentType);
+                StatePrediction p = await _agentsService.GetPrediction(key, sets, predictionSettings);
+                if (p != null)
+                    response.Predictions.Add(p);
             }
 
             return Ok(response);

@@ -4,21 +4,21 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Agents.API.Entities.Response
+namespace Agents.API.Entities
 {
-    public class PredictionResponse
+    public class StatePredictions
     {
-        public PredictionResponse(string id, string affiliation)
+        public StatePredictions(string id, string affiliation)
         {
             Id = id;
             Affiliation = affiliation;
-            Predictions = new List<PredictionResponsePart>();
+            Predictions = new List<StatePrediction>();
         }
 
         public string Id { get; set; }
 
         public string Affiliation { get; set; }
 
-        public List<PredictionResponsePart> Predictions { get; set; }
+        public List<StatePrediction> Predictions { get; set; }
     }
 }
