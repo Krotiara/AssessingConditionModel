@@ -1,7 +1,9 @@
 ﻿using Agents.API.Data.Store;
 using Agents.API.Entities;
+using Agents.API.Entities.AgentsSettings;
 using Agents.API.Entities.Documents;
 using Agents.API.Entities.Requests;
+using Agents.API.Entities.Response;
 using Agents.API.Interfaces;
 using Amazon.Runtime.Internal.Util;
 using ASMLib.DynamicAgent;
@@ -54,14 +56,14 @@ namespace Agents.API.Service.Services
         }
 
 
-        public async Task<IEnumerable<IProperty>> GetAgentProperties(IAgentKey Key, AgentSettings agentsSettings)
+        public async Task<IEnumerable<IProperty>> GetAgentCurProperties(IAgentKey Key, AgentSettings agentsSettings)
         {
             IAgent agent = _agentsStore.GetAgent(Key, agentsSettings);
             return agent.Properties.Values.Where(x=>x.Description != null && x.Description != string.Empty);
         }
 
 
-        public async Task<IEnumerable<IProperty>> GetAgentVariables(IAgentKey Key, AgentSettings agentsSettings)
+        public async Task<IEnumerable<IProperty>> GetAgentCurVariables(IAgentKey Key, AgentSettings agentsSettings)
         {
             IAgent agent = _agentsStore.GetAgent(Key, agentsSettings);
             return agent.Variables.Values.Where(x => x.Description != null && x.Description != string.Empty);
@@ -72,6 +74,22 @@ namespace Agents.API.Service.Services
         {
             IAgent agent = _agentsStore.GetAgent(key, agentsSettings);
             return agent.Buffer.Values;
+        }
+
+
+        public async Task<StatePrediction> GetPrediction(IAgentKey key, 
+            AgentSettings sets, PredictionSettings pSets)
+        {
+            IAgentState? state = await GetAgentState(
+                        new GetAgentStateRequest(key, sets, pSets.Variables));
+
+            if (state == null)
+                return null;
+
+            var properties = await GetAgentCurProperties(key, sets);
+            var buffer = await GetAgentCalculationBuffer(key, sets);
+
+            return new StatePrediction(pSets.SettingsName, state, properties, buffer);
         }
     }
 }

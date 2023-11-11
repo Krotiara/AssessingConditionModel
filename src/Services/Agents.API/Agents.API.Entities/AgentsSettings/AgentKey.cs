@@ -9,6 +9,14 @@ namespace Agents.API.Entities.AgentsSettings
 {
     public class AgentKey : IAgentKey
     {
+
+        public AgentKey(string observedId, string observedObjectAffilation, string agentType)
+        {
+            ObservedId = observedId;
+            ObservedObjectAffilation = observedObjectAffilation;
+            AgentType = agentType;
+        }
+
         public string ObservedId { get; set; }
 
         public string ObservedObjectAffilation { get; set; }

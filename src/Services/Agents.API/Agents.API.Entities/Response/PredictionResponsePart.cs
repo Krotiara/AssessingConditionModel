@@ -8,22 +8,23 @@ using System.Threading.Tasks;
 
 namespace Agents.API.Entities.Response
 {
-    public class PredictionResponsePart
+    public class StatePrediction
     {
-        public PredictionResponsePart(string name, IAgentState agentState, IEnumerable<IProperty> properties, IEnumerable<IParameter> buffer)
+        public StatePrediction(string name, IAgentState agentState, 
+            IEnumerable<IProperty> stateProperties, IEnumerable<IParameter> stateBuffer)
         {
             Name = name;
             AgentState = agentState;
-            Properties = properties;
-            Buffer = buffer;
+            StateProperties = stateProperties;
+            StateBuffer = stateBuffer;
         }
 
         public string Name { get; set; }
 
         public IAgentState AgentState { get; set; }
 
-        public IEnumerable<IProperty> Properties { get; set; }
+        public IEnumerable<IProperty> StateProperties { get; set; }
 
-        public IEnumerable<IParameter> Buffer { get; set; }
+        public IEnumerable<IParameter> StateBuffer { get; set; }
     }
 }
