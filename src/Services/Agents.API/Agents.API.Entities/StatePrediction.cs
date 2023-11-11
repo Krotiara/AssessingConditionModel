@@ -6,11 +6,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Agents.API.Entities.Response
+namespace Agents.API.Entities
 {
     public class StatePrediction
     {
-        public StatePrediction(string name, IAgentState agentState, 
+        public StatePrediction(string name, IAgentState agentState,
             IEnumerable<IProperty> stateProperties, IEnumerable<IParameter> stateBuffer)
         {
             Name = name;
