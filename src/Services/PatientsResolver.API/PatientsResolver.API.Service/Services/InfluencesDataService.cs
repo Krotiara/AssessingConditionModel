@@ -44,17 +44,20 @@ namespace PatientsResolver.API.Service.Services
 
         public async Task<IEnumerable<Influence>> Query(string patientId, string affiliation, DateTime start, DateTime end, string medicineName = null)
         {
-            Func<Influence, bool> func;
+            IEnumerable<Influence> res;
             if (medicineName == null)
-                func = x => x.PatientId == patientId && x.Affiliation == affiliation;
-            else
-                func = x => x.PatientId == patientId
-                                        && x.Affiliation == affiliation
-                                        && x.MedicineName == medicineName;
-
-
-            return (await _store.Query(x => func(x)))
+            {
+                res = (await _store.Query(x => x.PatientId == patientId && x.Affiliation == affiliation))
                                         .Where(x => x.StartTimestamp <= end && (x.EndTimestamp == null || x.EndTimestamp >= start));
+            }
+            else
+                res = (await _store.Query(x => x.PatientId == patientId
+                                        && x.Affiliation == affiliation
+                                        && x.MedicineName == medicineName))
+                                        .Where(x => x.StartTimestamp <= end && (x.EndTimestamp == null || x.EndTimestamp >= start));
+
+
+            return res;
         }
 
 
