@@ -49,7 +49,7 @@ namespace PatientsResolver.API.Controllers
         {
             DateTime start = request.StartTimestamp == null ? DateTime.MinValue : (DateTime)request.StartTimestamp;
             DateTime end = request.EndTimestamp == null ? DateTime.MaxValue : (DateTime)request.EndTimestamp;
-            var influences = await _influencesDataService.Query(request.PatientId, request.Affiliation, start, end);
+            var influences = await _influencesDataService.Query(request.PatientId, request.Affiliation, start, end, request.MedicineName);
             return Ok(influences);
         }
 
