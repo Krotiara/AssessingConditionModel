@@ -42,21 +42,18 @@ namespace PatientsResolver.API.Service.Services
         }
 
 
-
-        //TODO хэширование
-        public async Task<IEnumerable<Influence>> Query(string patientId, string affiliation, DateTime start, DateTime end)
+        public async Task<IEnumerable<Influence>> Query(string patientId, string affiliation, DateTime start, DateTime end, string medicineName = null)
         {
-            return (await _store.Query(x => x.PatientId == patientId
-                                        && x.Affiliation == affiliation))
-                                        .Where(x => x.StartTimestamp <= end && (x.EndTimestamp == null || x.EndTimestamp >= start));
-        }
-
-
-        public async Task<IEnumerable<Influence>> Query(string patientId, string affiliation, string medicineName, DateTime start, DateTime end)
-        {
-            return (await _store.Query(x => x.PatientId == patientId
+            Func<Influence, bool> func;
+            if (medicineName == null)
+                func = x => x.PatientId == patientId && x.Affiliation == affiliation;
+            else
+                func = x => x.PatientId == patientId
                                         && x.Affiliation == affiliation
-                                        && x.MedicineName == medicineName))
+                                        && x.MedicineName == medicineName;
+
+
+            return (await _store.Query(x => func(x)))
                                         .Where(x => x.StartTimestamp <= end && (x.EndTimestamp == null || x.EndTimestamp >= start));
         }
 
@@ -81,7 +78,7 @@ namespace PatientsResolver.API.Service.Services
 
             foreach (var patient in patients)
             {
-                var influences = await Query(patient.PatientId, patient.Affiliation, medicineName, start, end);
+                var influences = await Query(patient.PatientId, patient.Affiliation, start, end, medicineName);
                 if (influences.Any())
                     result.Add(patient);
             }

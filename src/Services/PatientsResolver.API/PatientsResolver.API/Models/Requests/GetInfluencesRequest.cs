@@ -9,5 +9,7 @@
         public DateTime? StartTimestamp { get; set; }
 
         public DateTime? EndTimestamp { get; set; }
+
+        public string MedicineName { get; set; }
     }
 }
