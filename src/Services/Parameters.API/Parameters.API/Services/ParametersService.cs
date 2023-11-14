@@ -21,6 +21,9 @@ namespace Parameters.API.Service
 
         public async Task<ACParameter> Insert(ACParameter param)
         {
+            if (param.Description.Contains("."))
+                param.Description = param.Description.Replace(".", "_");
+
             if (param.Id != null)
                 await Update(param);
             else
