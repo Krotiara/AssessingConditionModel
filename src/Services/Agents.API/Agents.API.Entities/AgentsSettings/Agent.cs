@@ -78,6 +78,7 @@ namespace Agents.API.Entities.AgentsSettings
         {
             foreach (IProperty p in vars)
                 Variables[p.Name] = p;
+            Buffer.Clear();
         }
 
 
