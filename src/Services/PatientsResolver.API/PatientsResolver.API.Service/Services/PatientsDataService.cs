@@ -134,7 +134,9 @@ namespace PatientsResolver.API.Service.Services
                 (await GetPatients(x => x.Affiliation == affiliation))
                 .Where(x =>
                 {
-                    int age = GetAge(x.Birthday, now);
+                    if (x.Birthday == null)
+                        return true;
+                    int age = GetAge((DateTime)x.Birthday, now);
                     return age >= searchStartAge && age <= searchEndAge;
                 })
                 .ToList();

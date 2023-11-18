@@ -15,7 +15,7 @@ namespace PatientsResolver.API.Entities.Mongo
         public string PatientId { get; set; }
         public string Affiliation { get; set; }
         public string Name { get; set; }
-        public DateTime Birthday { get; set; }
+        public DateTime? Birthday { get; set; }
         public GenderEnum Gender { get; set; }
         public TreatmentStatus TreatmentStatus { get; set; }
 
