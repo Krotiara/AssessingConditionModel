@@ -135,7 +135,7 @@ namespace PatientsResolver.API.Service.Services
                 .Where(x =>
                 {
                     int age = GetAge(x.Birthday, now);
-                    return age >= startAge && age <= endAge;
+                    return age >= searchStartAge && age <= searchEndAge;
                 })
                 .ToList();
 
