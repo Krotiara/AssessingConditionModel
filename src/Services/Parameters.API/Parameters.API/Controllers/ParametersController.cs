@@ -35,7 +35,7 @@ namespace Parameters.API.Controllers
 
 
         [HttpPost("insertMany")]
-        public async Task<ActionResult> InsertMany([FromBody] ACParameter parameters)
+        public async Task<ActionResult> InsertMany([FromBody] List<ACParameter> parameters)
         {
             foreach (var p in parameters)
                 await _paramsService.Insert(p);
