@@ -2,7 +2,7 @@ version: '3.4'
 
 services:
   patientsresolver.api:
-    image: ${DOCKER_REGISTRY-}patientsresolverapi
+    image: krotiara/patientsresolverapi
     container_name: patientsresolver.api
     build:
       context: .
@@ -15,7 +15,7 @@ services:
       - 8033:80
 
   agents.api:
-    image: ${DOCKER_REGISTRY-}agentsapi
+    image: krotiara/agentsapi
     container_name: agents.api
     build:
       context: .
@@ -24,7 +24,7 @@ services:
       - 8002:80
 
   parameters.api:
-    image: ${DOCKER_REGISTRY-}parametersapi
+    image: krotiara/parametersapi
     container_name: parameters.api
     build:
       context: .
