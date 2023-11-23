@@ -1,5 +1,9 @@
 COMPOSE_ARGS=-f docker-compose.yml
 
+push:
+	docker compose build --pull
+	docker compose ${COMPOSE_ARGS} push
+
 up:
 	docker compose ${COMPOSE_ARGS} up -d --build
 
