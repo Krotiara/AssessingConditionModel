@@ -33,6 +33,7 @@ services:
       - 8003:80
 
   envoygateway:
+    container_name: envoygateway
     build:
         context: .
         dockerfile: src/ApiGateways/Envoy/Dockerfile
@@ -63,3 +64,13 @@ services:
     ports:
       - 5001:80
     restart: on-failure
+
+  acs.client:
+    image: ${DOCKER_REG}/acsclient:latest
+    container_name: acs.client
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+    restart: on-failure
+    ports:
+     - 5002:80
