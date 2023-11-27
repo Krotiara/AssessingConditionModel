@@ -1,5 +1,8 @@
 COMPOSE_ARGS=-f docker-compose.yml
 
+prepare:
+	cp -f .env 2>/dev/null || true
+
 push:
 	docker compose build --pull
 	docker compose ${COMPOSE_ARGS} push
