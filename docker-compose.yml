@@ -54,7 +54,6 @@ services:
     ports:
       - "18570:27017"
 
-
   models.mlserver:
     image: ${DOCKER_REG}/models.mlserver:latest
     container_name: models.mlserver
