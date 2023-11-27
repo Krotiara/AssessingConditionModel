@@ -24,7 +24,9 @@ namespace Parameters.API.Service
             if (param.Description.Contains("."))
                 param.Description = param.Description.Replace(".", "_");
 
-            if (param.Id != null)
+            ACParameter parameter = await Get(param.Name);
+
+            if (parameter != null)
                 await Update(param);
             else
             {

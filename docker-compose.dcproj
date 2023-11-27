@@ -17,6 +17,5 @@
     <None Include="https\localhost.key" />
     <None Include="https\localhost.pfx" />
     <None Include="Makefile" />
-    <None Include="sql\patientsDb\init.sql" />
   </ItemGroup>
 </Project>

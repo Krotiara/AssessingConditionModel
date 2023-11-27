@@ -2,7 +2,7 @@ version: '3.4'
 
 services:
   patientsresolver.api:
-    image: ${DOCKER_REGISTRY-}patientsresolverapi
+    image: ${DOCKER_REG}/patientsresolverapi:latest
     container_name: patientsresolver.api
     build:
       context: .
@@ -15,7 +15,7 @@ services:
       - 8033:80
 
   agents.api:
-    image: ${DOCKER_REGISTRY-}agentsapi
+    image: ${DOCKER_REG}/agentsapi:latest
     container_name: agents.api
     build:
       context: .
@@ -24,7 +24,7 @@ services:
       - 8002:80
 
   parameters.api:
-    image: ${DOCKER_REGISTRY-}parametersapi
+    image: ${DOCKER_REG}/parametersapi:latest
     container_name: parameters.api
     build:
       context: .
@@ -46,8 +46,8 @@ services:
     image: mongo:4.4.6
     restart: always
     environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: aAAsuMHX6PefWh9ZpvPnT3E64yBgg5
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWD}
     volumes:
      - ./mongo:/data/db
     ports:
@@ -55,7 +55,7 @@ services:
 
 
   models.mlserver:
-    image: krotiara/models.mlserver:latest
+    image: ${DOCKER_REG}/models.mlserver:latest
     container_name: models.mlserver
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
@@ -63,10 +63,3 @@ services:
     ports:
       - 5001:80
     restart: on-failure
-
-
-volumes:
-   db_volume:
-   pgadmin:
-   postgresData:
-       external: true
