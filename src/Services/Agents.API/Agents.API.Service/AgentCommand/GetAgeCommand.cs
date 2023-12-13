@@ -37,17 +37,20 @@ namespace Agents.API.Service.AgentCommand
             var patient = await _requestService.GetPatientInfo(patientId, patientAffiliation, false);
             
             if(patient == null)
-                throw new ExecuteCommandException($"No Patient {patientId}:{patientAffiliation}.");
+                return new CommandResult(null, 
+                    $"No Patient {patientId}:{patientAffiliation}.");
 
             if (patient.Birthday == default(DateTime))
-                throw new ExecuteCommandException($"No Birthday value for patient {patientId}:{patientAffiliation}.");
+                return new CommandResult(null, 
+                    $"No Birthday value for patient {patientId}:{patientAffiliation}.");
 
             if (timestamp < patient.Birthday)
-                throw new ExecuteCommandException($"GetAgeCommand - timestamp is less than patient birthday " +
+                return new CommandResult(null, 
+                    $"GetAgeCommand - timestamp is less than patient birthday " +
                     $"for patient {patientId}:{patientAffiliation}.");
 
-
-            return GetAge(patient.Birthday, timestamp);
+            double age = GetAge(patient.Birthday, timestamp);
+            return new CommandResult(age);  
         };
 
 

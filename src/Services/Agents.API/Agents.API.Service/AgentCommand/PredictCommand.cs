@@ -35,7 +35,7 @@ namespace Agents.API.Service.AgentCommand
             var vars = Agent.Variables;
 
             if (!CheckCommand())
-                throw new ExecuteCommandException($"No requered args in PredictCommand.");
+                return new CommandResult(null, $"No requered args in PredictCommand.");
 
             string patientId = props[PropertiesNamesSettings.Id].Value as string;
             string patientAffiliation = props[PropertiesNamesSettings.Affiliation].Value as string;
@@ -43,13 +43,13 @@ namespace Agents.API.Service.AgentCommand
 
             var meta = await _pMService.Get(mlModelId);
             if (meta == null)
-                throw new ExecuteCommandException($"No meta for model id {mlModelId}");
+                return new CommandResult(null, $"No meta for model id {mlModelId}");
 
             PatientParametersRequest request = new(patientAffiliation, patientId, endTimestamp, meta.ParamsNamesList);
             Dictionary<string, Parameter> parameters = await _pPSerivce.GetPatientParameters(request);
 
             if (parameters == null)
-                throw new ExecuteCommandException($"Cannot get latest parameters for patient {patientId}:{patientAffiliation}.");
+                return new CommandResult(null, $"Cannot get latest parameters for patient {patientId}:{patientAffiliation}.");
 
             FillBuffer(parameters.Values);
 
@@ -57,15 +57,13 @@ namespace Agents.API.Service.AgentCommand
 
             var responce = await _pMService.Predict(mlModelId, args);
             if (responce == null)
-                throw new ExecuteCommandException("Cannot get answer");
-
-            if (!responce.IsSuccessStatusCode)
-                throw new ExecuteCommandException($"{responce.StatusCode}:{responce.ReasonPhrase}");
+                return new CommandResult(null, "Http request error.");
+            else if (responce.Status == Entities.Requests.Responce.PredictStatus.WaitModelDownloading)
+                return new CommandResult(null, "Cannot predict while predict model is downloading");
+            else if (responce.Status == Entities.Requests.Responce.PredictStatus.Error)
+                return new CommandResult(null, responce.ErrorMessage);
             else
-            {
-                var res = await responce.DeserializeBody<float[]>();
-                return res.First(); //TODO - убрать first
-            }
+                return new CommandResult(responce.Predictions.First());
         };
 
 

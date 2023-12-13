@@ -44,9 +44,9 @@ namespace Agents.API.Service.AgentCommand
             var influences = await _requestService.GetInfluences(request);
 
             if (influences == null)
-                throw new ExecuteCommandException($"Cannot get influences for {request.PatientId}({request.Affiliation}).");
+                return new CommandResult(null, $"Cannot get influences for {request.PatientId}({request.Affiliation}).");
 
-            return influences;
+            return new CommandResult(influences);
         };
 
 

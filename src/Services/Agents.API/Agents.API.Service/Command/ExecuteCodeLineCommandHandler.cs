@@ -73,6 +73,9 @@ namespace Agents.API.Service.Command
                     await (Task)res;
                     res = res.GetType().GetProperty("Result").GetValue(res);
                 }
+
+                CommandResult commandResult = (CommandResult)res; //TODO прокинуть сообщение дальше
+
                 if (commandPair.Item1.OutputArgType.GetInterface(nameof(IEnumerable)) == null)
                 {
                     TypeConverter typeConverter = TypeDescriptor.GetConverter(commandPair.Item1.OutputArgType);
