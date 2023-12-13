@@ -1,7 +1,9 @@
 ﻿using Agents.API.Entities;
 using Agents.API.Entities.Documents;
 using Agents.API.Entities.Dto;
+using Agents.API.Entities.Requests.Responce;
 using Interfaces;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Concurrent;
@@ -17,11 +19,14 @@ namespace Agents.API.Service.Services
         private readonly IWebRequester _webRequester;
         private readonly string _modelsServerUrl;
         private readonly ConcurrentDictionary<string, ModelMeta> _metas;
+        private readonly ILogger<PredictionRequestsService> _logger;
 
         public PredictionRequestsService(IWebRequester webRequester,
+            ILogger<PredictionRequestsService> logger,
             IOptions<EnvSettings> settings)
         {
             _metas = new();
+            _logger = logger;
             _webRequester = webRequester;
             _modelsServerUrl = settings.Value.ModelsApiUrl;
         }
@@ -74,13 +79,24 @@ namespace Agents.API.Service.Services
         }
 
 
-        public async Task<HttpResponseMessage?> Predict(string id, double[] input)
+        public async Task<PredictResponce?> Predict(string id, double[] input)
         {
+
             PredictRequest request = new PredictRequest() { Id = id, Input = input };
             string requestBody = Newtonsoft.Json.JsonConvert.SerializeObject(request);
             string url = $"{_modelsServerUrl}/modelsApi/predict";
             var responce = await _webRequester.SendRequest(url, "POST", requestBody);
-            return responce;
+            if (responce == null)
+            {
+                _logger.LogError($"Error in predict.");
+                return null;
+            }
+            if (!responce.IsSuccessStatusCode)
+            {
+                _logger.LogError($"Error in predict: status - {responce.StatusCode}, phase - {responce.ReasonPhrase}.");
+                return null;
+            }
+            return await responce.DeserializeBody<PredictResponce>();
         }
     }
 }
