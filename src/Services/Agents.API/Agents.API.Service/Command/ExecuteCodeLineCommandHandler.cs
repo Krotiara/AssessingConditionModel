@@ -19,7 +19,7 @@ using System.Threading.Tasks;
 namespace Agents.API.Service.Command
 {
 
-    public class ExecuteCodeLineCommand : IRequest
+    public class ExecuteCodeLineCommand : IRequest<CommandResult>
     {
         public ICommand Command { get; }
 
@@ -32,7 +32,7 @@ namespace Agents.API.Service.Command
         }
     }
 
-    public class ExecuteCodeLineCommandHandler : IRequestHandler<ExecuteCodeLineCommand, Unit>
+    public class ExecuteCodeLineCommandHandler : IRequestHandler<ExecuteCodeLineCommand, CommandResult>
     {
         private readonly ICodeResolveService _codeResolveService;
         private readonly IMediator _mediator;
@@ -44,17 +44,25 @@ namespace Agents.API.Service.Command
         }
 
 
-        public async Task<Unit> Handle(ExecuteCodeLineCommand request, CancellationToken cancellationToken)
+        public async Task<CommandResult> Handle(ExecuteCodeLineCommand request, CancellationToken cancellationToken)
         {
+            CommandResult res = null;
             //Случай простых команд присвоения или расчета без вызова функции.
             if (request.Command.CommandType == CommandType.Assigning && !IsContainsCommandCall(request.Command.OriginCommand))
             {
-                await ExecuteCommandWithoutCommandCall(request);
-                return await Unit.Task;
+                res = await HandleNoCommandExecuting(request);
+                return res;
             }
 
 #warning Не учтен случай, когда есть и вызов функции, и простые слагаемые. Нужно доьавить обнаружение этого и эксепшн. Усложнять псевдо-выполнитель кода не надо.
 
+            res = await HandleCommandExecuting(request, cancellationToken);
+            return res;
+        }
+
+
+        private async Task<CommandResult> HandleCommandExecuting(ExecuteCodeLineCommand request, CancellationToken cancellationToken)
+        {
             (ICommandArgsTypesMeta, Delegate) commandPair =
                 await _codeResolveService.ResolveCommandAction(request.Command, request.CommonPropertiesNames, cancellationToken);
 
@@ -63,24 +71,21 @@ namespace Agents.API.Service.Command
 
             List<object> variables = _codeResolveService.GetCommandArgsValues(request.Command, commandPair.Item1);
 
+            //if sync - return output value, if async - need await
+            //https://stackoverflow.com/questions/64766433/c-sharp-asynchronous-invoke-of-generic-delegates
+            object res = commandPair.Item2.DynamicInvoke(variables.ToArray());
+            if (res is Task)
+            {
+                await (Task)res;
+                res = res.GetType().GetProperty("Result").GetValue(res);
+            }
+
+            CommandResult commandResult = (CommandResult)res; //TODO прокинуть сообщение дальше
+
             if (request.Command.CommandType == CommandType.Assigning)
             {
-                //if sync - return output value, if async - need await
-                //https://stackoverflow.com/questions/64766433/c-sharp-asynchronous-invoke-of-generic-delegates
-                object res = commandPair.Item2.DynamicInvoke(variables.ToArray());
-                if (res is Task)
-                {
-                    await (Task)res;
-                    res = res.GetType().GetProperty("Result").GetValue(res);
-                }
+                ConvertResult(commandResult, commandPair.Item1.OutputArgType);
 
-                CommandResult commandResult = (CommandResult)res; //TODO прокинуть сообщение дальше
-
-                if (commandPair.Item1.OutputArgType.GetInterface(nameof(IEnumerable)) == null)
-                {
-                    TypeConverter typeConverter = TypeDescriptor.GetConverter(commandPair.Item1.OutputArgType);
-                    res = typeConverter.ConvertTo(res, commandPair.Item1.OutputArgType);
-                }
 
                 if (request.Command.Agent.Variables.ContainsKey(request.Command.AssigningParameter))
                     request.Command.Agent.Variables[request.Command.AssigningParameter].Value = res;
@@ -90,22 +95,22 @@ namespace Agents.API.Service.Command
                         new Property(request.Command.AssigningParameter, commandPair.Item1.OutputArgType.FullName, res);
                 }
             }
-            else
-            {
-                //На случай вызовов команд, которые не возвращают значение.
-                var obj = commandPair.Item2.DynamicInvoke(variables);
-                if (obj is Task)
-                {
-                    //// it's regular Task which does not return the value
-                    await (Task)obj;
-                }
-            }
 
-            return await Unit.Task;
+            return commandResult;
         }
 
 
-        private async Task ExecuteCommandWithoutCommandCall(ExecuteCodeLineCommand request)
+        private void ConvertResult(CommandResult res, Type outputType)
+        {
+            if (outputType.GetInterface(nameof(IEnumerable)) == null)
+            {
+                TypeConverter typeConverter = TypeDescriptor.GetConverter(outputType);
+                res.Result = typeConverter.ConvertTo(res.Result, outputType);
+            }
+        }
+
+
+        private async Task<CommandResult> HandleNoCommandExecuting(ExecuteCodeLineCommand request)
         {
             var variables = request.Command.Agent.Variables;
             var properties = request.Command.Agent.Properties;
@@ -127,9 +132,9 @@ namespace Agents.API.Service.Command
                 else if (properties.ContainsKey(var))
                     source = properties;
                 else
-                    throw new ExecuteCodeLineException($"Передана переменная {var}, которой не присвоено значение.");
+                    return new CommandResult($"Передана переменная {var}, которой не присвоено значение.");
                 if (outputType != null && source[var].Type != outputType)
-                    throw new ExecuteCodeLineException($"Несоответсвие типов переменных в выражении {request.Command.OriginCommand}"); //TODO - Тесты
+                    return new CommandResult($"Несоответсвие типов переменных в выражении {request.Command.OriginCommand}");
 
                 executableStr = executableStr.Replace(var, source[var].Value.ToString());
                 outputType = source[var].Type;
@@ -143,7 +148,9 @@ namespace Agents.API.Service.Command
                     varsSource[request.Command.AssigningParameter].Value = scriptState.ReturnValue;
                 else
                     varsSource[request.Command.AssigningParameter] = new Property(request.Command.AssigningParameter, outputType, scriptState.ReturnValue);
+
             }
+            return new CommandResult(scriptState.ReturnValue);
         }
 
 
