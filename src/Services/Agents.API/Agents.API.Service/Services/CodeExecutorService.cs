@@ -31,8 +31,15 @@ namespace Agents.API.Service.Services
         }
 
 
-        public async Task<ConcurrentDictionary<string, IProperty>> ExecuteCode(string codeLines,
-            IAgent agent,
+        /// <summary>
+        /// Метод выполняет код расчета состояния агента и возвращает сообщение об ошибке в случае, если код не был выполнен успешно.
+        /// </summary>
+        /// <param name="codeLines"></param>
+        /// <param name="agent"></param>
+        /// <param name="commonPropertiesNames"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        public async Task<ExecuteCodeResult> ExecuteCode(string codeLines, IAgent agent,
             IAgentPropertiesNamesSettings commonPropertiesNames,
             CancellationToken cancellationToken = default)
         {
@@ -45,10 +52,13 @@ namespace Agents.API.Service.Services
             {
                 ICommand command = _codeResolveService.ParseCodeLineCommand(codeLine, agent);
                 CommandResult res = await _mediator.Send(new ExecuteCodeLineCommand(command, commonPropertiesNames), cancellationToken);
+                //TODO в случае ошибки нужен откат значений агента.
+                if (res.IsError)
+                    return new ExecuteCodeResult() { Status = ExecuteCodeStatus.Error, ErrorMessage = res.ErrorMessage };
                 UpdateAgentVariables(res, command, agent);
             }
 
-            return agent.Variables;
+            return new ExecuteCodeResult() { Status = ExecuteCodeStatus.Success };
         }
 
 
@@ -59,7 +69,11 @@ namespace Agents.API.Service.Services
                 return;
 
             var varsSource = agent.Variables;
-            if (varsSource.ContainsKey(command.AssigningParameter))
+            var propsSource = agent.Properties;
+
+            if (propsSource.ContainsKey(command.AssigningParameter))
+                propsSource[command.AssigningParameter].Value = res.Result;
+            else if (varsSource.ContainsKey(command.AssigningParameter))
                 varsSource[command.AssigningParameter].Value = res.Result;
             else
             {

@@ -38,7 +38,7 @@ namespace Agents.API.Service.Services
             agent.UpdateVariables(request.Variables);
             try
             {
-                await agent.UpdateState();
+                UpdateStateResult result = await agent.UpdateState();
             }
             catch (ExecuteCodeLineException ex)
             {
