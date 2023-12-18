@@ -143,14 +143,9 @@ namespace Agents.API.Service.Command
             var scriptState = await CSharpScript.RunAsync(executableStr); //TODO - Тесты
             var varsSource = variables;
             if (scriptState.ReturnValue != null && !string.IsNullOrEmpty(scriptState.ReturnValue.ToString()))
-            {
-                if (varsSource.ContainsKey(request.Command.AssigningParameter))
-                    varsSource[request.Command.AssigningParameter].Value = scriptState.ReturnValue;
-                else
-                    varsSource[request.Command.AssigningParameter] = new Property(request.Command.AssigningParameter, outputType, scriptState.ReturnValue);
-
-            }
-            return new CommandResult(scriptState.ReturnValue);
+                return new CommandResult(scriptState.ReturnValue);   
+            else
+                return new CommandResult("Пустое значение расчета.");
         }
 
 

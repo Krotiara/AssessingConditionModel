@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Agents.API.Entities.Documents;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,10 +9,10 @@ namespace Agents.API.Entities
 {
     public class CommandResult
     {
-        public CommandResult(object result, string errorMessage = null)
+        public CommandResult(object result, IEnumerable<Parameter> buffer = null)
         {
             Result = result;
-            ErrorMessage = errorMessage;
+            CommandBuffer = buffer;
         }
 
         public CommandResult(string errorMessage)
@@ -20,6 +21,8 @@ namespace Agents.API.Entities
         }
 
         public object Result { get; set; }
+
+        public IEnumerable<Parameter> CommandBuffer { get; }
 
         public string ErrorMessage { get; set; }
 

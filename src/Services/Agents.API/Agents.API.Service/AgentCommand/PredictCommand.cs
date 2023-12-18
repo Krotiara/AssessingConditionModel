@@ -51,8 +51,6 @@ namespace Agents.API.Service.AgentCommand
             if (parameters == null)
                 return new CommandResult($"Cannot get latest parameters for patient {patientId}:{patientAffiliation}.");
 
-            FillBuffer(parameters.Values);
-
             double[] args = null;
             try
             {
@@ -71,15 +69,8 @@ namespace Agents.API.Service.AgentCommand
             else if (responce.Status == Entities.Requests.Responce.PredictStatus.Error)
                 return new CommandResult(responce.ErrorMessage);
             else
-                return new CommandResult(responce.Predictions.First());
+                return new CommandResult(responce.Predictions.First(), parameters.Values);
         };
-
-
-        private void FillBuffer(IEnumerable<Parameter> patientParameters)
-        {
-            foreach (var parameter in patientParameters)
-                Agent.Buffer[(parameter.Name, parameter.Timestamp)] = parameter;
-        }
 
 
         private bool CheckCommand() => Agent.Properties.ContainsKey(PropertiesNamesSettings.Id)

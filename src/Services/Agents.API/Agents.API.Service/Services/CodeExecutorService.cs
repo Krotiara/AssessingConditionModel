@@ -44,10 +44,28 @@ namespace Agents.API.Service.Services
             foreach (string codeLine in lines)
             {
                 ICommand command = _codeResolveService.ParseCodeLineCommand(codeLine, agent);
-                await _mediator.Send(new ExecuteCodeLineCommand(command, commonPropertiesNames), cancellationToken);
+                CommandResult res = await _mediator.Send(new ExecuteCodeLineCommand(command, commonPropertiesNames), cancellationToken);
+                UpdateAgentVariables(res, command, agent);
             }
 
             return agent.Variables;
+        }
+
+
+        private void UpdateAgentVariables(CommandResult res, ICommand command, IAgent agent)
+        {
+            //TODO - запрет командам менять переменные и свойства агентов.
+            if (command.CommandType == CommandType.VoidCall)
+                return;
+
+            var varsSource = agent.Variables;
+            if (varsSource.ContainsKey(command.AssigningParameter))
+                varsSource[command.AssigningParameter].Value = res.Result;
+            else
+            {
+                string outputType = res.Result.GetType().ToString(); //TODO нужна проверка.
+                varsSource[command.AssigningParameter] = new Property(command.AssigningParameter, outputType, res.Result);
+            }
         }
     }
 }
