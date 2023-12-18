@@ -35,7 +35,7 @@ namespace Agents.API.Service.AgentCommand
             var vars = Agent.Variables;
 
             if (!CheckCommand())
-                return new CommandResult(null, $"No requered args in PredictCommand.");
+                return new CommandResult($"No requered args in PredictCommand.");
 
             string patientId = props[PropertiesNamesSettings.Id].Value as string;
             string patientAffiliation = props[PropertiesNamesSettings.Affiliation].Value as string;
@@ -43,25 +43,33 @@ namespace Agents.API.Service.AgentCommand
 
             var meta = await _pMService.Get(mlModelId);
             if (meta == null)
-                return new CommandResult(null, $"No meta for model id {mlModelId}");
+                return new CommandResult($"No meta for model id {mlModelId}");
 
             PatientParametersRequest request = new(patientAffiliation, patientId, endTimestamp, meta.ParamsNamesList);
             Dictionary<string, Parameter> parameters = await _pPSerivce.GetPatientParameters(request);
 
             if (parameters == null)
-                return new CommandResult(null, $"Cannot get latest parameters for patient {patientId}:{patientAffiliation}.");
+                return new CommandResult($"Cannot get latest parameters for patient {patientId}:{patientAffiliation}.");
 
             FillBuffer(parameters.Values);
 
-            double[] args = GetInputArgs(parameters, meta.ParamsNamesList, age);
+            double[] args = null;
+            try
+            {
+                args = GetInputArgs(parameters, meta.ParamsNamesList, age);
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return new CommandResult(ex.Message);
+            }
 
             var responce = await _pMService.Predict(mlModelId, args);
             if (responce == null)
-                return new CommandResult(null, "Http request error.");
+                return new CommandResult("Http request error.");
             else if (responce.Status == Entities.Requests.Responce.PredictStatus.WaitModelDownloading)
-                return new CommandResult(null, "Cannot predict while predict model is downloading");
+                return new CommandResult("Cannot predict while predict model is downloading");
             else if (responce.Status == Entities.Requests.Responce.PredictStatus.Error)
-                return new CommandResult(null, responce.ErrorMessage);
+                return new CommandResult(responce.ErrorMessage);
             else
                 return new CommandResult(responce.Predictions.First());
         };
@@ -109,7 +117,7 @@ namespace Agents.API.Service.AgentCommand
 
 
                 if (!parameters.ContainsKey(names[i]))
-                    throw new ExecuteCommandException($"One of the required parameters is not found: {names[i]}");
+                    throw new KeyNotFoundException($"One of the required parameters is not found: {names[i]}");
 
                 inputArgs[i] = parameters[names[i]].Value;
             }

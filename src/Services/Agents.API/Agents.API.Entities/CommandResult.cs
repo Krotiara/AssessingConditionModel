@@ -14,6 +14,11 @@ namespace Agents.API.Entities
             ErrorMessage = errorMessage;
         }
 
+        public CommandResult(string errorMessage)
+        {
+            ErrorMessage = errorMessage;
+        }
+
         public object Result { get; set; }
 
         public string ErrorMessage { get; set; }
