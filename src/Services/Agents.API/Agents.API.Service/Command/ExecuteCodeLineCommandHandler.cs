@@ -82,7 +82,7 @@ namespace Agents.API.Service.Command
 
             CommandResult commandResult = (CommandResult)res; //TODO прокинуть сообщение дальше
 
-            if (request.Command.CommandType == CommandType.Assigning)
+            if (!commandResult.IsError && request.Command.CommandType == CommandType.Assigning)
                 ConvertResult(commandResult, commandPair.Item1.OutputArgType);
             
             return commandResult;
