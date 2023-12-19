@@ -86,7 +86,6 @@ namespace Agents.API.Service.Command
             {
                 ConvertResult(commandResult, commandPair.Item1.OutputArgType);
 
-
                 if (request.Command.Agent.Variables.ContainsKey(request.Command.AssigningParameter))
                     request.Command.Agent.Variables[request.Command.AssigningParameter].Value = commandResult.Result;
                 else
