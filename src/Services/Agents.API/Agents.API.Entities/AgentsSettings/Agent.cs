@@ -65,7 +65,7 @@ namespace Agents.API.Entities.AgentsSettings
                     string ifCondition = $"{stateVar}={state.DefinitionCode}";
                     res = await _codeExecutor.ExecuteCode(ifCondition, this, _commonPropertiesNames);
                     if (res.Status == ExecuteCodeStatus.Error)
-                        return new UpdateStateResult() { Status = UpdateStateStatus.Error, ErrorMessage = res.ErrorMessage };
+                        return new UpdateStateResult() { ErrorMessage = res.ErrorMessage };
                     if ((bool)Variables[stateVar].Value)
                     {
                         //TODO убрать обращение к Variables
@@ -73,12 +73,12 @@ namespace Agents.API.Entities.AgentsSettings
                         state.NumericCharacteristic = Convert.ToDouble(Variables[_commonPropertiesNames.StateNumber].Value);
                         state.Timestamp = Properties[_commonPropertiesNames.EndTimestamp].ConvertValue<DateTime>();
                         CurrentState = States[state.Name];
-                        return new UpdateStateResult() { Status = UpdateStateStatus.Success };
+                        return new UpdateStateResult() { AgentState = CurrentState };
                     }
                 }
             }
 
-            return new UpdateStateResult() { Status = UpdateStateStatus.Error, ErrorMessage = res.ErrorMessage };
+            return new UpdateStateResult() {ErrorMessage = res.ErrorMessage};
             //TODO - set numeric characteristic. - сделать через указываемый через фронт параметр
         }
 

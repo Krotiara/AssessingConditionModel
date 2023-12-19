@@ -1,22 +1,18 @@
-﻿using System;
+﻿using Interfaces.DynamicAgent;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Interfaces.DynamicAgent
+namespace Agents.API.Entities.Requests.Responce
 {
-    public enum UpdateStateStatus
-    {
-        Success = 0,
-        Error = 1
-    }
-
-
-    public class UpdateStateResult
+    public class GetAgentStateResponce
     {
         public IAgentState AgentState { get; set; }
 
         public string ErrorMessage { get; set; }
+
+        public bool IsError => ErrorMessage != null && ErrorMessage != string.Empty;
     }
 }

@@ -3,6 +3,7 @@ using Agents.API.Entities;
 using Agents.API.Entities.AgentsSettings;
 using Agents.API.Entities.Documents;
 using Agents.API.Entities.Requests;
+using Agents.API.Entities.Requests.Responce;
 using Agents.API.Interfaces;
 using Amazon.Runtime.Internal.Util;
 using ASMLib.DynamicAgent;
@@ -32,33 +33,23 @@ namespace Agents.API.Service.Services
         public IAgent GetAgent(IAgentKey key, AgentSettings settings) => _agentsStore.GetAgent(key, settings);
 
 
-        public async Task<IAgentState?> GetAgentState(GetAgentStateRequest request)
+        public async Task<GetAgentStateResponce> GetAgentState(GetAgentStateRequest request)
         {
             IAgent agent = _agentsStore.GetAgent(request.Key, request.AgentsSettings);
             agent.UpdateVariables(request.Variables);
-            try
+            UpdateStateResult result = await agent.UpdateState();
+            return new GetAgentStateResponce()
             {
-                UpdateStateResult result = await agent.UpdateState();
-            }
-            catch (ExecuteCodeLineException ex)
-            {
-                _logger.LogError($"Ошибка обновления состояния агента {agent.Id}:{agent.Affiliation}: {ex.Message}");
-                return null;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"Непредвиденная ошибка обновления состояния агента {agent.Id}:{agent.Affiliation}: {ex.Message}");
-                return null;
-
-            }
-            return agent.CurrentState;
+                AgentState = result.AgentState,
+                ErrorMessage = result.ErrorMessage
+            };
         }
 
 
         public async Task<IEnumerable<IProperty>> GetAgentCurProperties(IAgentKey Key, AgentSettings agentsSettings)
         {
             IAgent agent = _agentsStore.GetAgent(Key, agentsSettings);
-            return agent.Properties.Values.Where(x=>x.Description != null && x.Description != string.Empty);
+            return agent.Properties.Values.Where(x => x.Description != null && x.Description != string.Empty);
         }
 
 
@@ -76,19 +67,20 @@ namespace Agents.API.Service.Services
         }
 
 
-        public async Task<StatePrediction> GetPrediction(IAgentKey key, 
+        public async Task<StatePredictionResponce> GetPrediction(IAgentKey key,
             AgentSettings sets, PredictionSettings pSets)
         {
-            IAgentState? state = await GetAgentState(
+            GetAgentStateResponce stateResponce = await GetAgentState(
                         new GetAgentStateRequest(key, sets, pSets.Variables));
 
-            if (state == null)
-                return null;
+            if (stateResponce.IsError)
+                return new StatePredictionResponce() { ErrorMessage = stateResponce.ErrorMessage };
 
             var properties = await GetAgentCurProperties(key, sets);
             var buffer = await GetAgentCalculationBuffer(key, sets);
 
-            return new StatePrediction(pSets.SettingsName, state, properties, buffer);
+            return new StatePredictionResponce()
+            { StatePrediction = new StatePrediction(pSets.SettingsName, stateResponce.AgentState, properties, buffer) };
         }
     }
 }
