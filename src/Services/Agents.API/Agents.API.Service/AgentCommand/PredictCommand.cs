@@ -65,7 +65,7 @@ namespace Agents.API.Service.AgentCommand
             if (responce == null)
                 return new CommandResult("Http request error.");
             else if (responce.Status == Entities.Requests.Responce.PredictStatus.WaitModelDownloading)
-                return new CommandResult("Cannot predict while predict model is downloading");
+                return new CommandResult("Невозможно выполнить прогноз, т.к. модель прогноза еще загружается.");
             else if (responce.Status == Entities.Requests.Responce.PredictStatus.Error)
                 return new CommandResult(responce.ErrorMessage);
             else
