@@ -83,16 +83,8 @@ namespace Agents.API.Service.Command
             CommandResult commandResult = (CommandResult)res; //TODO прокинуть сообщение дальше
 
             if (request.Command.CommandType == CommandType.Assigning)
-            {
                 ConvertResult(commandResult, commandPair.Item1.OutputArgType);
-
-                if (request.Command.Agent.Variables.ContainsKey(request.Command.AssigningParameter))
-                    request.Command.Agent.Variables[request.Command.AssigningParameter].Value = commandResult.Result;
-                else
-                    request.Command.Agent.Variables[request.Command.AssigningParameter] =
-                        new Property(request.Command.AssigningParameter, commandPair.Item1.OutputArgType.FullName, commandResult.Result);   
-            }
-
+            
             return commandResult;
         }
 
