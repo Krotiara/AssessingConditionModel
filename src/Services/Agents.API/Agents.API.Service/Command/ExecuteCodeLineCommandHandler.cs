@@ -90,8 +90,7 @@ namespace Agents.API.Service.Command
                     request.Command.Agent.Variables[request.Command.AssigningParameter].Value = commandResult.Result;
                 else
                     request.Command.Agent.Variables[request.Command.AssigningParameter] =
-                        new Property(request.Command.AssigningParameter, commandPair.Item1.OutputArgType.FullName, commandResult.Result);
-                
+                        new Property(request.Command.AssigningParameter, commandPair.Item1.OutputArgType.FullName, commandResult.Result);   
             }
 
             return commandResult;
