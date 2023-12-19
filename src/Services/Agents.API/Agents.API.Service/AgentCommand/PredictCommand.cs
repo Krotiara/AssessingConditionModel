@@ -4,6 +4,7 @@ using Agents.API.Entities.Requests;
 using Agents.API.Service.Services;
 using Interfaces;
 using Interfaces.DynamicAgent;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -17,12 +18,14 @@ namespace Agents.API.Service.AgentCommand
     {
         private readonly PredictionRequestsService _pMService;
         private readonly PatientsService _pPSerivce;
+        private readonly ILogger<PredictCommand> _logger;
         private readonly string _ageParameter = "Age"; //TODO вынести в настройки. 
 
-        public PredictCommand(PredictionRequestsService pMService, PatientsService requestService)
+        public PredictCommand(PredictionRequestsService pMService, PatientsService requestService, ILogger<PredictCommand> logger)
         {
             _pMService = pMService;
             _pPSerivce = requestService;
+            _logger = logger;
         }
 
 
@@ -43,13 +46,13 @@ namespace Agents.API.Service.AgentCommand
 
             var meta = await _pMService.Get(mlModelId);
             if (meta == null)
-                return new CommandResult($"No meta for model id {mlModelId}");
+                return new CommandResult($"Не удалось получить информацию о модели прогноза {mlModelId}");
 
             PatientParametersRequest request = new(patientAffiliation, patientId, endTimestamp, meta.ParamsNamesList);
             Dictionary<string, Parameter> parameters = await _pPSerivce.GetPatientParameters(request);
 
             if (parameters == null)
-                return new CommandResult($"Cannot get latest parameters for patient {patientId}:{patientAffiliation}.");
+                return new CommandResult($"Не удалось получить показатели пациента {patientId}:{patientAffiliation}.");
 
             double[] args = null;
             try
@@ -58,6 +61,7 @@ namespace Agents.API.Service.AgentCommand
             }
             catch (KeyNotFoundException ex)
             {
+                _logger.LogError(ex.Message);
                 return new CommandResult(ex.Message);
             }
 
@@ -108,7 +112,7 @@ namespace Agents.API.Service.AgentCommand
 
 
                 if (!parameters.ContainsKey(names[i]))
-                    throw new KeyNotFoundException($"One of the required parameters is not found: {names[i]}");
+                    throw new KeyNotFoundException($"Один из параметров не был найден: {names[i]}.");
 
                 inputArgs[i] = parameters[names[i]].Value;
             }

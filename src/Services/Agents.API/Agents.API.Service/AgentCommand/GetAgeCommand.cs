@@ -37,14 +37,13 @@ namespace Agents.API.Service.AgentCommand
             var patient = await _requestService.GetPatientInfo(patientId, patientAffiliation, false);
             
             if(patient == null)
-                return new CommandResult($"No Patient {patientId}:{patientAffiliation}.");
+                return new CommandResult($"Не удалось получить информацию о пациенте {patientId}:{patientAffiliation}.");
 
             if (patient.Birthday == default(DateTime))
-                return new CommandResult($"No Birthday value for patient {patientId}:{patientAffiliation}.");
+                return new CommandResult($"Не установлена дата рождения у пациента {patientId}:{patientAffiliation}.");
 
             if (timestamp < patient.Birthday)
-                return new CommandResult($"GetAgeCommand - timestamp is less than patient birthday " +
-                    $"for patient {patientId}:{patientAffiliation}.");
+                return new CommandResult($"Указанная дата прогноза меньше даты рождения пациента {patientId}:{patientAffiliation}.");
 
             double age = GetAge(patient.Birthday, timestamp);
             return new CommandResult(age);  

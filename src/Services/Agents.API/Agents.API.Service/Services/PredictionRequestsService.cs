@@ -62,7 +62,8 @@ namespace Agents.API.Service.Services
                 _metas[id] = await responce.DeserializeBody<ModelMeta>();
                 return _metas[id];
             }
-            return null; //TODO log
+            _logger.LogError($"Cant get model meta by id = {id}.");
+            return null;
         }
 
 
@@ -88,7 +89,7 @@ namespace Agents.API.Service.Services
             var responce = await _webRequester.SendRequest(url, "POST", requestBody);
             if (responce == null)
             {
-                _logger.LogError($"Error in predict.");
+                _logger.LogError($"Cant get answer for request {url}");
                 return null;
             }
             if (!responce.IsSuccessStatusCode)
