@@ -115,6 +115,7 @@ namespace Agents.API.Service.AgentCommand
                     throw new KeyNotFoundException($"Один из параметров не был найден: {names[i]}.");
 
                 inputArgs[i] = parameters[names[i]].Value;
+                Agent.AddToBuffer(parameters[names[i]]);
             }
 
             return inputArgs;

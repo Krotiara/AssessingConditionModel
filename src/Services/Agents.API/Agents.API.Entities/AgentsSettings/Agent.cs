@@ -70,8 +70,8 @@ namespace Agents.API.Entities.AgentsSettings
                     {
                         //TODO убрать обращение к Variables
                         //TODO отделить состояние от агента.
-                        state.NumericCharacteristic = Convert.ToDouble(Variables[_commonPropertiesNames.StateNumber].Value);
-                        state.Timestamp = Properties[_commonPropertiesNames.EndTimestamp].ConvertValue<DateTime>();
+                        state.NumericCharacteristic = Convert.ToDouble(Properties[_commonPropertiesNames.StateNumber].Value);
+                        state.Timestamp = Variables[_commonPropertiesNames.EndTimestamp].ConvertValue<DateTime>();
                         CurrentState = States[state.Name];
                         return new UpdateStateResult() { AgentState = CurrentState };
                     }
@@ -89,6 +89,9 @@ namespace Agents.API.Entities.AgentsSettings
                 Variables[p.Name] = p;
             Buffer.Clear();
         }
+
+
+        public void AddToBuffer(IParameter parameter) => Buffer.TryAdd((parameter.Name, parameter.Timestamp), parameter);
 
 
         public T GetPropertyValue<T>(string propertyName)

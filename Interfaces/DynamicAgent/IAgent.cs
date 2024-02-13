@@ -33,6 +33,8 @@ namespace Interfaces.DynamicAgent
 
         public void UpdateVariables(IEnumerable<IProperty> vars);
 
+        public void AddToBuffer(IParameter parameter);
+
         public T GetPropertyValue<T>(string propertyName);
     }
 }
