@@ -31,8 +31,15 @@ namespace Agents.API.Service.Services
         }
 
 
-        public async Task<ConcurrentDictionary<string, IProperty>> ExecuteCode(string codeLines,
-            IAgent agent,
+        /// <summary>
+        /// Метод выполняет код расчета состояния агента и возвращает сообщение об ошибке в случае, если код не был выполнен успешно.
+        /// </summary>
+        /// <param name="codeLines"></param>
+        /// <param name="agent"></param>
+        /// <param name="commonPropertiesNames"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        public async Task<ExecuteCodeResult> ExecuteCode(string codeLines, IAgent agent,
             IAgentPropertiesNamesSettings commonPropertiesNames,
             CancellationToken cancellationToken = default)
         {
@@ -44,10 +51,35 @@ namespace Agents.API.Service.Services
             foreach (string codeLine in lines)
             {
                 ICommand command = _codeResolveService.ParseCodeLineCommand(codeLine, agent);
-                await _mediator.Send(new ExecuteCodeLineCommand(command, commonPropertiesNames), cancellationToken);
+                CommandResult res = await _mediator.Send(new ExecuteCodeLineCommand(command, commonPropertiesNames), cancellationToken);
+                //TODO в случае ошибки нужен откат значений агента.
+                if (res.IsError)
+                    return new ExecuteCodeResult() { Status = ExecuteCodeStatus.Error, ErrorMessage = res.ErrorMessage };
+                UpdateAgentVariables(res, command, agent);
             }
 
-            return agent.Variables;
+            return new ExecuteCodeResult() { Status = ExecuteCodeStatus.Success };
+        }
+
+
+        private void UpdateAgentVariables(CommandResult res, ICommand command, IAgent agent)
+        {
+            //TODO - запрет командам менять переменные и свойства агентов.
+            if (command.CommandType == CommandType.VoidCall)
+                return;
+
+            var varsSource = agent.Variables;
+            var propsSource = agent.Properties;
+
+            if (propsSource.ContainsKey(command.AssigningParameter))
+                propsSource[command.AssigningParameter].Value = res.Result;
+            else if (varsSource.ContainsKey(command.AssigningParameter))
+                varsSource[command.AssigningParameter].Value = res.Result;
+            else
+            {
+                string outputType = res.Result.GetType().ToString(); //TODO нужна проверка.
+                varsSource[command.AssigningParameter] = new Property(command.AssigningParameter, outputType, res.Result);
+            }
         }
     }
 }

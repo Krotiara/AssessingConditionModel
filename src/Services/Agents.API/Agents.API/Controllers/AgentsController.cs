@@ -1,6 +1,7 @@
 ﻿using Agents.API.Entities;
 using Agents.API.Entities.AgentsSettings;
 using Agents.API.Entities.Requests;
+using Agents.API.Entities.Requests.Responce;
 using Agents.API.Interfaces;
 using Agents.API.Service;
 using Agents.API.Service.Services;
@@ -36,23 +37,24 @@ namespace Agents.API.Controllers
 
 
         [HttpPost("predict")]
-        public async Task<ActionResult> PredictState([FromBody] PredictionRequest request)
+        public async Task<ActionResult> PredictState([FromBody] PredictionRequest req)
         {
-            var sets = await _settingsService.Get(request.Affiliation, request.AgentType);
+            var sets = await _settingsService.Get(req.Affiliation, req.AgentType);
             if (sets == null)
                 return Ok();
 
-            StatePredictions response = new(request.Id, request.Affiliation);
-
-            foreach (var predictionSettings in request.Settings)
+            List<StatePrediction> predictions = new();
+            foreach (var predictionSettings in req.Settings)
             {
-                var key = new AgentKey(request.Id, request.Affiliation, request.AgentType);
-                StatePrediction p = await _agentsService.GetPrediction(key, sets, predictionSettings);
-                if (p != null)
-                    response.Predictions.Add(p);
+                var key = new AgentKey(req.Id, req.Affiliation, req.AgentType);
+                StatePredictionResponce p = await _agentsService.GetPrediction(key, sets, predictionSettings);
+                if (p.IsError)
+                    return Ok(new StatePredictionsResponce(req.Id, req.Affiliation) { ErrorMessage = p.ErrorMessage });
+
+                predictions.Add(p.StatePrediction);
             }
 
-            return Ok(response);
+            return Ok(new StatePredictionsResponce(req.Id, req.Affiliation, predictions));
         }
     }
 }

@@ -90,7 +90,7 @@ services
     .AddSingleton<PatientsService>();
 
 services
-    .AddTransient<IRequestHandler<ExecuteCodeLineCommand, Unit>, ExecuteCodeLineCommandHandler>()
+    .AddTransient<IRequestHandler<ExecuteCodeLineCommand, CommandResult>, ExecuteCodeLineCommandHandler>()
     .AddTransient<IMetaStorageService, InternalMetaStorageService>()
     .AddTransient<ICodeResolveService, CodeResolveService>();
 

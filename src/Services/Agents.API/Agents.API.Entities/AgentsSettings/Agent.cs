@@ -53,24 +53,33 @@ namespace Agents.API.Entities.AgentsSettings
         }
 
 
-        public async Task UpdateState()
+        public async Task<UpdateStateResult> UpdateState()
         {
-            try
+            ExecuteCodeResult res = await _codeExecutor.ExecuteCode(_stateResolveCode, this, _commonPropertiesNames);
+            if (res.Status != ExecuteCodeStatus.Error)
             {
-                ConcurrentDictionary<string, IProperty> calculatedArgs = await _codeExecutor
-                    .ExecuteCode(_stateResolveCode, this, _commonPropertiesNames);
-                string state = await UpdateStateBy(calculatedArgs);
-                CurrentState = States[state];
-                //TODO - set numeric characteristic. - сделать через указываемый через фронт параметр.
-                foreach (var pair in calculatedArgs)
-                    if (Properties.ContainsKey(pair.Key))
-                        Properties[pair.Key].Value = pair.Value.Value;
+                string stateVar = "isState";
 
+                foreach (IAgentState state in States.Values)
+                {
+                    string ifCondition = $"{stateVar}={state.DefinitionCode}";
+                    res = await _codeExecutor.ExecuteCode(ifCondition, this, _commonPropertiesNames);
+                    if (res.Status == ExecuteCodeStatus.Error)
+                        return new UpdateStateResult() { ErrorMessage = res.ErrorMessage };
+                    if ((bool)Variables[stateVar].Value)
+                    {
+                        //TODO убрать обращение к Variables
+                        //TODO отделить состояние от агента.
+                        state.NumericCharacteristic = Convert.ToDouble(Variables[_commonPropertiesNames.StateNumber].Value);
+                        state.Timestamp = Properties[_commonPropertiesNames.EndTimestamp].ConvertValue<DateTime>();
+                        CurrentState = States[state.Name];
+                        return new UpdateStateResult() { AgentState = CurrentState };
+                    }
+                }
             }
-            catch (DetermineStateException ex)
-            {
-                //TODO log
-            }
+
+            return new UpdateStateResult() {ErrorMessage = res.ErrorMessage};
+            //TODO - set numeric characteristic. - сделать через указываемый через фронт параметр
         }
 
 
@@ -119,27 +128,6 @@ namespace Agents.API.Entities.AgentsSettings
                 new Property(settings.Id, typeof(string).FullName, key.ObservedId);
             Properties[settings.Affiliation] =
                 new Property(settings.Affiliation, typeof(string).FullName, key.ObservedObjectAffilation);
-        }
-
-
-        private async Task<string> UpdateStateBy(ConcurrentDictionary<string, IProperty> calcArgs)
-        {
-            string stateVar = "isState";
-            foreach (IAgentState state in States.Values)
-            {
-                string ifCondition = $"{stateVar}={state.DefinitionCode}";
-                var args = await _codeExecutor.ExecuteCode(ifCondition, this, _commonPropertiesNames);
-                if ((bool)args[stateVar].Value)
-                {
-                    //TODO обработка ошибки, если stateNumberVar не число.
-                    if (calcArgs.ContainsKey(_commonPropertiesNames.StateNumber))
-                        state.NumericCharacteristic = Convert.ToDouble(calcArgs[_commonPropertiesNames.StateNumber].Value);
-                    if (calcArgs.ContainsKey(_commonPropertiesNames.EndTimestamp))
-                        state.Timestamp = calcArgs[_commonPropertiesNames.EndTimestamp].ConvertValue<DateTime>();
-                    return state.Name;
-                }
-            }
-            throw new DetermineStateException($"Cannot define state by states conditions");
         }
     }
 }

@@ -29,7 +29,7 @@ namespace Interfaces.DynamicAgent
 
         public ConcurrentDictionary<string, IAgentState> States { get;}
 
-        public Task UpdateState();
+        public Task<UpdateStateResult> UpdateState();
 
         public void UpdateVariables(IEnumerable<IProperty> vars);
 

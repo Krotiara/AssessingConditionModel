@@ -1,4 +1,5 @@
 ﻿using Interfaces;
+using Microsoft.Extensions.Logging;
 using System.Net;
 using System.Text;
 
@@ -6,6 +7,13 @@ namespace Agents.API.Entities
 {
     public class HttpWebRequester : IWebRequester
     {
+        private readonly ILogger<HttpWebRequester> _logger;
+
+        public HttpWebRequester(ILogger<HttpWebRequester> logger)
+        {
+            _logger = logger;
+        }
+
         public async Task<HttpResponseMessage?> SendRequest(string requestUriStr, string method, string? jsonBody = null)
         {
             try
@@ -28,9 +36,9 @@ namespace Agents.API.Entities
                         throw new GetWebResponceException($"Unresolve http method {method}");
                 }
             }
-            catch(HttpRequestException)
+            catch(HttpRequestException ex)
             {
-                //TODO add log
+                _logger.LogError(ex, $"Request error: request - {requestUriStr}, method - {method}.");
                 return null;
             }
         }

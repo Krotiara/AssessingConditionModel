@@ -4,6 +4,7 @@ using Agents.API.Entities.Requests;
 using Agents.API.Service.Services;
 using Interfaces;
 using Interfaces.DynamicAgent;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -17,12 +18,14 @@ namespace Agents.API.Service.AgentCommand
     {
         private readonly PredictionRequestsService _pMService;
         private readonly PatientsService _pPSerivce;
+        private readonly ILogger<PredictCommand> _logger;
         private readonly string _ageParameter = "Age"; //TODO вынести в настройки. 
 
-        public PredictCommand(PredictionRequestsService pMService, PatientsService requestService)
+        public PredictCommand(PredictionRequestsService pMService, PatientsService requestService, ILogger<PredictCommand> logger)
         {
             _pMService = pMService;
             _pPSerivce = requestService;
+            _logger = logger;
         }
 
 
@@ -35,7 +38,7 @@ namespace Agents.API.Service.AgentCommand
             var vars = Agent.Variables;
 
             if (!CheckCommand())
-                throw new ExecuteCommandException($"No requered args in PredictCommand.");
+                return new CommandResult($"No requered args in PredictCommand.");
 
             string patientId = props[PropertiesNamesSettings.Id].Value as string;
             string patientAffiliation = props[PropertiesNamesSettings.Affiliation].Value as string;
@@ -43,37 +46,35 @@ namespace Agents.API.Service.AgentCommand
 
             var meta = await _pMService.Get(mlModelId);
             if (meta == null)
-                throw new ExecuteCommandException($"No meta for model id {mlModelId}");
+                return new CommandResult($"Не удалось получить информацию о модели прогноза {mlModelId}");
 
             PatientParametersRequest request = new(patientAffiliation, patientId, endTimestamp, meta.ParamsNamesList);
             Dictionary<string, Parameter> parameters = await _pPSerivce.GetPatientParameters(request);
 
             if (parameters == null)
-                throw new ExecuteCommandException($"Cannot get latest parameters for patient {patientId}:{patientAffiliation}.");
+                return new CommandResult($"Не удалось получить показатели пациента {patientId}:{patientAffiliation}.");
 
-            FillBuffer(parameters.Values);
-
-            double[] args = GetInputArgs(parameters, meta.ParamsNamesList, age);
+            double[] args = null;
+            try
+            {
+                args = GetInputArgs(parameters, meta.ParamsNamesList, age);
+            }
+            catch (KeyNotFoundException ex)
+            {
+                _logger.LogError(ex.Message);
+                return new CommandResult(ex.Message);
+            }
 
             var responce = await _pMService.Predict(mlModelId, args);
             if (responce == null)
-                throw new ExecuteCommandException("Cannot get answer");
-
-            if (!responce.IsSuccessStatusCode)
-                throw new ExecuteCommandException($"{responce.StatusCode}:{responce.ReasonPhrase}");
+                return new CommandResult("Http request error.");
+            else if (responce.Status == Entities.Requests.Responce.PredictStatus.WaitModelDownloading)
+                return new CommandResult("Невозможно выполнить прогноз, т.к. модель прогноза еще загружается.");
+            else if (responce.Status == Entities.Requests.Responce.PredictStatus.Error)
+                return new CommandResult(responce.ErrorMessage);
             else
-            {
-                var res = await responce.DeserializeBody<float[]>();
-                return res.First(); //TODO - убрать first
-            }
+                return new CommandResult(responce.Predictions.First(), parameters.Values);
         };
-
-
-        private void FillBuffer(IEnumerable<Parameter> patientParameters)
-        {
-            foreach (var parameter in patientParameters)
-                Agent.Buffer[(parameter.Name, parameter.Timestamp)] = parameter;
-        }
 
 
         private bool CheckCommand() => Agent.Properties.ContainsKey(PropertiesNamesSettings.Id)
@@ -111,7 +112,7 @@ namespace Agents.API.Service.AgentCommand
 
 
                 if (!parameters.ContainsKey(names[i]))
-                    throw new ExecuteCommandException($"One of the required parameters is not found: {names[i]}");
+                    throw new KeyNotFoundException($"Один из параметров не был найден: {names[i]}.");
 
                 inputArgs[i] = parameters[names[i]].Value;
             }

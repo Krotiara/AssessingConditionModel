@@ -47,7 +47,7 @@ namespace Agents.API.Service.Services
             }
             else
             {
-                _logger.LogError($"Cannot get patient info.");
+                _logger.LogError($"Cannot get patient info {id}({affiliation}).");
                 return null;
             }
         }
