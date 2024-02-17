@@ -23,15 +23,29 @@ namespace PatientsResolver.API.Data.Store
 
         public async Task DeleteAll(string patientId)
         {
-            var parameters = _dbContext.PatientParameters.AsQueryable().Where(x => x.Id == patientId);
+            var parameters = _dbContext.PatientParameters.AsQueryable().Where(x => x.PatientId == patientId);
             foreach (var p in parameters)
                 _dbContext.PatientParameters.Remove(p);
             await _dbContext.SaveChangesAsync();
         }
 
-        public Task<IEnumerable<PatientParameter>> GetParameters(string patientId, DateTime start, DateTime end, List<string> names = null)
+        public async Task<IEnumerable<PatientParameter>> GetParameters(string patientId, DateTime start, DateTime end, List<string> names = null)
         {
-            throw new NotImplementedException();
+            IEnumerable<PatientParameter> parameters = _dbContext.PatientParameters.AsQueryable()
+                .Where(x => x.PatientId == patientId && x.Timestamp <= end && x.Timestamp >= start)
+                .ToList();
+
+            if (parameters == null)
+                return null;
+
+            if (names != null)
+            {
+                var hash = new HashSet<string>(names);
+                parameters = parameters.Where(x => names.Contains(x.Name));
+            }
+
+            return await Task.FromResult(parameters);
+
         }
 
         public async Task Insert(PatientParameter p)
