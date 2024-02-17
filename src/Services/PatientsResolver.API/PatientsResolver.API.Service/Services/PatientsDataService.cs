@@ -21,8 +21,8 @@ namespace PatientsResolver.API.Service.Services
 
         private readonly ConcurrentDictionary<(string, string), IPatient> _patients;
 
-        public PatientsDataService(IPatientsStore<IPatient> patientsStore, 
-            IParametersStore<IPatientParameter> parametersStore, 
+        public PatientsDataService(IPatientsStore<IPatient> patientsStore,
+            IParametersStore<IPatientParameter> parametersStore,
             InfluencesDataService influencesDataService)
         {
             _patientsStore = patientsStore;
@@ -37,8 +37,14 @@ namespace PatientsResolver.API.Service.Services
             if (_patients.TryGetValue((patientId, affiliation), out IPatient p))
                 return p;
             p = await _patientsStore.Get(patientId, affiliation);
-            if (p != null)
-                _patients[(patientId, affiliation)] = p;
+
+            if (p == null)
+            {
+                p = await _patientsStore.Insert(patientId, affiliation);
+                _patients[(p.PatientId, p.Affiliation)] = p;
+            }
+
+            _patients[(patientId, affiliation)] = p;
             return p;
         }
 
@@ -82,7 +88,7 @@ namespace PatientsResolver.API.Service.Services
 
         public async Task<IEnumerable<IPatientParameter>> GetPatientParameters(string patientId, string affiliation, DateTime start, DateTime end, List<string> names)
         {
-            var patient = await Get(patientId, affiliation);         
+            var patient = await Get(patientId, affiliation);
             return await _parametersStore.GetParameters(patient.Id, start, end, names);
         }
 
@@ -90,16 +96,6 @@ namespace PatientsResolver.API.Service.Services
         public async Task AddPatientParameters(string id, string affiliation, IEnumerable<Parameter> parameters)
         {
             var p = await Get(id, affiliation);
-
-            if (p == null)
-            {
-                p = await _patientsStore.Insert(id, affiliation);
-                _patients[(p.PatientId, p.Affiliation)] = p;
-            }
-
-
-            if (p.Parameters == null)
-                p.Parameters = new();
 
             foreach (var par in parameters)
                 p.SetParameter(par);
@@ -110,7 +106,7 @@ namespace PatientsResolver.API.Service.Services
         }
 
 
-        public async Task<IEnumerable<IPatient>> GetPatients(string affiliation, 
+        public async Task<IEnumerable<IPatient>> GetPatients(string affiliation,
             GenderEnum? gender, string? influenceName, int? startAge, int? endAge, DateTime? start, DateTime? end)
         {
             int searchStartAge = startAge == null ? 0 : startAge.Value;
@@ -120,7 +116,7 @@ namespace PatientsResolver.API.Service.Services
             DateTime now = DateTime.Now;
 
 
-            List<IPatient> patients = 
+            List<IPatient> patients =
                 (await _patientsStore.GetAll(affiliation))
                 .Where(x =>
                 {
