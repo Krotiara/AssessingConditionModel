@@ -8,13 +8,13 @@ using System.Threading.Tasks;
 
 namespace PatientsResolver.API.Data.Store
 {
-    public interface IParametersStore<T> where T : IPatientParameter
+    public interface IParametersStore
     {
-        public Task<IEnumerable<IPatientParameter>> GetParameters(string patientId, DateTime start, DateTime end, List<string> names = null);
+        public Task<IEnumerable<PatientParameter>> GetParameters(string patientId, DateTime start, DateTime end, List<string> names = null);
 
-        public Task Insert(string patientId, IPatientParameter p);
+        public Task Insert(PatientParameter p);
 
-        public Task Insert(string patientId, IEnumerable<IPatientParameter> parameters);
+        public Task Insert(IEnumerable<PatientParameter> parameters);
 
         public Task Delete(string id);
 

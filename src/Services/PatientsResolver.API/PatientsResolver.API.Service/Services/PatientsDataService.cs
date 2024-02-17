@@ -16,13 +16,13 @@ namespace PatientsResolver.API.Service.Services
     public class PatientsDataService
     {
         private readonly IPatientsStore<IPatient> _patientsStore;
-        private readonly IParametersStore<IPatientParameter> _parametersStore;
+        private readonly IParametersStore _parametersStore;
         private readonly InfluencesDataService _influencesDataService;
 
         private readonly ConcurrentDictionary<(string, string), IPatient> _patients;
 
         public PatientsDataService(IPatientsStore<IPatient> patientsStore,
-            IParametersStore<IPatientParameter> parametersStore,
+            IParametersStore parametersStore,
             InfluencesDataService influencesDataService)
         {
             _patientsStore = patientsStore;
@@ -86,17 +86,17 @@ namespace PatientsResolver.API.Service.Services
         }
 
 
-        public async Task<IEnumerable<IPatientParameter>> GetPatientParameters(string patientId, string affiliation, DateTime start, DateTime end, List<string> names)
+        public async Task<IEnumerable<PatientParameter>> GetPatientParameters(string patientId, string affiliation, DateTime start, DateTime end, List<string> names)
         {
             var patient = await Get(patientId, affiliation);
             return await _parametersStore.GetParameters(patient.Id, start, end, names);
         }
 
 
-        public async Task AddPatientParameters(string id, string affiliation, IEnumerable<IPatientParameter> parameters)
+        public async Task AddPatientParameters(string id, string affiliation, IEnumerable<PatientParameter> parameters)
         {
             var p = await Get(id, affiliation);
-            await _parametersStore.Insert(p.Id, parameters);
+            await _parametersStore.Insert(parameters);
         }
 
 

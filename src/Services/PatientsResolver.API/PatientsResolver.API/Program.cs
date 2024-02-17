@@ -54,7 +54,7 @@ services.AddMediatR(Assembly.GetExecutingAssembly());
 services.AddTransient<PostgreSQLParametersDbContext>();
 
 services.AddTransient<IPatientsStore<MongoPatient>, MongoPatientsStore>();
-services.AddTransient<IParametersStore<PatientParameter>, PostgreSQLParametersStore>();
+services.AddTransient<IParametersStore, PostgreSQLParametersStore>();
 services.AddTransient<MongoInfluencesStore>();
 
 services.AddSingleton<PatientsDataService>();
