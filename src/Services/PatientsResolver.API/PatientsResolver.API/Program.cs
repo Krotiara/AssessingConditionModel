@@ -42,7 +42,6 @@ builder.Host.ConfigureDefaults(args)
 
 services.AddMongoService(builder.Configuration);
 
-services.AddTransient<IPatientParameter, PatientParameter>();
 services.AddTransient<IFileData, FileData>();
 services.AddTransient<IInfluence, Influence>();
 services.AddOptions();
@@ -50,7 +49,7 @@ services.AddOptions();
 /*Теперь вы можете выполнять ваши запросы. Для этого вам потребуется получить экземпляр интерфейса IMediator. Он регистрируется в вашем контейнере зависимостей той же командой AddMediatR.*/
 services.AddMediatR(Assembly.GetExecutingAssembly());
 
-services.AddTransient<PatientsStore>();
+services.AddTransient<MongoPatientsStore>();
 services.AddTransient<InfluencesStore>();
 services.AddSingleton<PatientsDataService>();
 services.AddSingleton<InfluencesDataService>();

@@ -8,21 +8,14 @@ namespace Interfaces
 {
     public interface IPatientParameter
     {
+        public string Id { get; set; }
 
-        public int Id { get; set; }
-
-        public int InfluenceId { get; set; }
-
-        public int PatientId { get; set; }
-
-        public string PatientAffiliation { get; set; }
-
-        public DateTime Timestamp { get; set; }
+        public string PatientId { get; set; }
 
         public string Name { get; set; }
 
-        public string Value { get;  set; }
+        public DateTime Timestamp { get; set; }
 
-        public bool IsDynamic { get; set; }
+        public double Value { get; set; }
     }
 }

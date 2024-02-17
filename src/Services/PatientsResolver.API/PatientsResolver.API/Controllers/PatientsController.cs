@@ -59,7 +59,7 @@ namespace PatientsResolver.API.Controllers
 
 
         [HttpPost("addPatient")]
-        public async Task<ActionResult> AddPatient([FromBody] Patient patient)
+        public async Task<ActionResult> AddPatient([FromBody] MongoPatient patient)
         {
             await _patientsDataService.Insert(patient);
             return Ok();
@@ -67,7 +67,7 @@ namespace PatientsResolver.API.Controllers
 
 
         [HttpPut("updatePatient")]
-        public async Task<ActionResult> UpdatePatient([FromBody] Patient patient)
+        public async Task<ActionResult> UpdatePatient([FromBody] MongoPatient patient)
         {
             if (patient.Id == null)
                 return Ok();

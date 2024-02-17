@@ -6,8 +6,12 @@ using System.Threading.Tasks;
 
 namespace PatientsResolver.API.Entities
 {
-    public struct Parameter
+    public class Parameter
     {
+        public string Id { get; set; }
+
+        public string PatientId { get; set; }
+
         public string Name { get; set; }
 
         public DateTime Timestamp { get; set; }
