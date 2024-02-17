@@ -11,9 +11,9 @@ namespace PatientsResolver.API.Service.Services
 {
     public class InfluencesDataService
     {
-        private readonly InfluencesStore _store;
+        private readonly MongoInfluencesStore _store;
 
-        public InfluencesDataService(InfluencesStore store)
+        public InfluencesDataService(MongoInfluencesStore store)
         {
             _store = store;
         }
