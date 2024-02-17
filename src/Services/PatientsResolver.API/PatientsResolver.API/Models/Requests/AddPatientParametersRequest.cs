@@ -8,7 +8,7 @@ namespace PatientsResolver.API.Models.Requests
 
         public string PatientAffiliation { get; set; }
 
-        public IEnumerable<Parameter> Parameters { get; set; }
+        public IEnumerable<PatientParameter> Parameters { get; set; }
     }
 
     public class AddPatientParametersRequest

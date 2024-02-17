@@ -26,12 +26,13 @@ namespace PatientsResolver.API.Data.Store
         public Task<IEnumerable<MongoPatient>> GetAll(string affiliation) 
             => Query(x => x.Affiliation == affiliation);
 
-        public async Task<IPatient> Insert(string patientId, string patientAffiliation)
+        public async Task<MongoPatient> Insert(string patientId, string patientAffiliation)
         {
             var patient = new MongoPatient() { PatientId = patientId, Affiliation = patientAffiliation};
             await Insert(patient);
             return patient;
         }
+
 
         public async Task Update(string id, MongoPatient patient)
         {

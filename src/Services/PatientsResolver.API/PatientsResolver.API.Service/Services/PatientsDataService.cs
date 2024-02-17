@@ -93,16 +93,10 @@ namespace PatientsResolver.API.Service.Services
         }
 
 
-        public async Task AddPatientParameters(string id, string affiliation, IEnumerable<Parameter> parameters)
+        public async Task AddPatientParameters(string id, string affiliation, IEnumerable<IPatientParameter> parameters)
         {
             var p = await Get(id, affiliation);
-
-            foreach (var par in parameters)
-                p.SetParameter(par);
-
-            await _patientsStore.Update(x => x.Id == p.Id)
-                .Set(x => x.Parameters, p.Parameters)
-                .Execute();
+            await _parametersStore.Insert(p.Id, parameters);
         }
 
 
