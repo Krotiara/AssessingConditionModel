@@ -10,6 +10,13 @@ namespace PatientsResolver.API.Data.Store
 {
     public class PostgreSQLParametersStore : IParametersStore<PatientParameter>
     {
+        private readonly PostgreSQLParametersDbContext _dbContext;
+
+        public PostgreSQLParametersStore(PostgreSQLParametersDbContext dbContext)
+        {
+            _dbContext = dbContext;
+        }
+
         public Task Delete(string id)
         {
             throw new NotImplementedException();

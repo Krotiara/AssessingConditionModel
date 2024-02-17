@@ -45,7 +45,7 @@ namespace Agents.API.Service.AgentCommand
             if (timestamp < patient.Birthday)
                 return new CommandResult($"Указанная дата прогноза меньше даты рождения пациента {patientId}:{patientAffiliation}.");
 
-            double age = GetAge(patient.Birthday, timestamp);
+            double age = GetAge((DateTime)patient.Birthday, timestamp);
             return new CommandResult(age);  
         };
 
