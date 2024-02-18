@@ -70,7 +70,7 @@ namespace PatientsResolver.API.Service.Services
 
         public async Task<IPatient> Insert(IPatient p)
         {
-            await _patientsStore.Insert(p);
+            p = await _patientsStore.Insert(p);
             _patients[(p.PatientId, p.Affiliation)] = p;
             return p;
         }
@@ -80,8 +80,8 @@ namespace PatientsResolver.API.Service.Services
         {
             foreach (var p in patients)
             {
-                await _patientsStore.Insert(p);
-                _patients[(p.PatientId, p.Affiliation)] = p;
+                var patient = await _patientsStore.Insert(p);
+                _patients[(patient.PatientId, patient.Affiliation)] = patient;
             }
         }
 

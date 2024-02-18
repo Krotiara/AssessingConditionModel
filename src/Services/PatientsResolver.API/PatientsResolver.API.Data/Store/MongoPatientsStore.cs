@@ -29,15 +29,15 @@ namespace PatientsResolver.API.Data.Store
         public async Task<IPatient> Insert(string patientId, string patientAffiliation)
         {
             var patient = new MongoPatient() { PatientId = patientId, Affiliation = patientAffiliation};
-            await Insert(patient);
-            return patient;
+            var res = await Insert(patient);
+            return res;
         }
 
-        public async Task Insert(IPatient p)
+        public async Task<IPatient> Insert(IPatient p)
         {
-            if (p is not MongoPatient)
-                return;
-            await base.Insert((MongoPatient)p);
+            var mongoP = new MongoPatient(p);
+            await base.Insert(mongoP);
+            return mongoP;
         }
 
         public async Task Update(string id, IPatient patient)

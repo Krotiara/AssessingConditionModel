@@ -10,6 +10,18 @@ using System.Linq.Expressions;
 namespace PatientsResolver.API.Controllers
 {
 
+    public class Patient : IPatient
+    {
+        public string Id { get; set; }
+        public string PatientId { get; set; }
+        public string Affiliation { get; set; }
+        public string Name { get; set; }
+        public DateTime? Birthday { get; set; }
+        public GenderEnum Gender { get; set; }
+        public TreatmentStatus TreatmentStatus { get; set; }
+    }
+
+
     [Route("patientsApi/[controller]")]
     public class PatientsController : ControllerBase
     {
@@ -60,7 +72,7 @@ namespace PatientsResolver.API.Controllers
 
 
         [HttpPost("addPatient")]
-        public async Task<ActionResult> AddPatient([FromBody] IPatient patient)
+        public async Task<ActionResult> AddPatient([FromBody] Patient patient)
         {
             await _patientsDataService.Insert(patient);
             return Ok();
@@ -68,7 +80,7 @@ namespace PatientsResolver.API.Controllers
 
 
         [HttpPut("updatePatient")]
-        public async Task<ActionResult> UpdatePatient([FromBody] IPatient patient)
+        public async Task<ActionResult> UpdatePatient([FromBody] Patient patient)
         {
             if (patient.Id == null)
                 return Ok();

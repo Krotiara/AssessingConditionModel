@@ -18,7 +18,7 @@ namespace PatientsResolver.API.Data.Store
 
         public Task<IPatient> Insert(string patientId, string patientAffiliation);
 
-        public Task Insert(IPatient p);
+        public Task<IPatient> Insert(IPatient p);
 
         public Task Delete(string id);
 
