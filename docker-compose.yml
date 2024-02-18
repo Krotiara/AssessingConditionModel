@@ -54,6 +54,18 @@ services:
     ports:
       - "18570:27017"
 
+  postgres:
+    image: postgres
+    restart: always
+    volumes:
+      - ./postgres:/var/lib/postgresql/data
+      - ./pg_init/init.sql:/docker-entrypoint-initdb.d/init.sql
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    ports:
+      - "5432:5432"
+
   models.mlserver:
     image: ${DOCKER_REG}/models.mlserver:latest
     container_name: models.mlserver
