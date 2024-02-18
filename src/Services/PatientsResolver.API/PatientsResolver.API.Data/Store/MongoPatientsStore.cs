@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace PatientsResolver.API.Data.Store
 {
-    public class MongoPatientsStore : MongoBaseService<MongoPatient>, IPatientsStore<MongoPatient>
+    public class MongoPatientsStore : MongoBaseService<MongoPatient>, IPatientsStore
     {
         public MongoPatientsStore(MongoService mongo) : base(mongo, "Patients")
         {
@@ -18,23 +18,29 @@ namespace PatientsResolver.API.Data.Store
 
         public Task Delete(string id) => Delete(x => x.Id == id);
 
-        public async Task<MongoPatient> Get(string patientId, string patientAffiliation)
+        public async Task<IPatient> Get(string patientId, string patientAffiliation)
             => await Get(x => x.PatientId == patientId && x.Affiliation == patientAffiliation);
 
-        public async Task<MongoPatient> Get(string id) => await Get(x => x.Id == id);
+        public async Task<IPatient> Get(string id) => await Get(x => x.Id == id);
 
-        public Task<IEnumerable<MongoPatient>> GetAll(string affiliation) 
-            => Query(x => x.Affiliation == affiliation);
+        public async Task<IEnumerable<IPatient>> GetAll(string affiliation) 
+            => (await Query(x => x.Affiliation == affiliation)).Select(x=> (IPatient)x);
 
-        public async Task<MongoPatient> Insert(string patientId, string patientAffiliation)
+        public async Task<IPatient> Insert(string patientId, string patientAffiliation)
         {
             var patient = new MongoPatient() { PatientId = patientId, Affiliation = patientAffiliation};
             await Insert(patient);
             return patient;
         }
 
+        public async Task Insert(IPatient p)
+        {
+            if (p is not MongoPatient)
+                return;
+            await base.Insert((MongoPatient)p);
+        }
 
-        public async Task Update(string id, MongoPatient patient)
+        public async Task Update(string id, IPatient patient)
         {
             await Update(x => x.Id == id)
                        .Set(x => x.Affiliation, patient.Affiliation)

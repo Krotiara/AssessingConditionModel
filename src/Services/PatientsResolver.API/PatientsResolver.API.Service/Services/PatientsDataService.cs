@@ -15,13 +15,13 @@ namespace PatientsResolver.API.Service.Services
 {
     public class PatientsDataService
     {
-        private readonly IPatientsStore<IPatient> _patientsStore;
+        private readonly IPatientsStore _patientsStore;
         private readonly IParametersStore _parametersStore;
         private readonly InfluencesDataService _influencesDataService;
 
         private readonly ConcurrentDictionary<(string, string), IPatient> _patients;
 
-        public PatientsDataService(IPatientsStore<IPatient> patientsStore,
+        public PatientsDataService(IPatientsStore patientsStore,
             IParametersStore parametersStore,
             InfluencesDataService influencesDataService)
         {

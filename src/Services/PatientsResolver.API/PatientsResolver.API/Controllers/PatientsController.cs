@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using Interfaces;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using PatientsResolver.API.Entities;
 using PatientsResolver.API.Entities.Mongo;
@@ -59,7 +60,7 @@ namespace PatientsResolver.API.Controllers
 
 
         [HttpPost("addPatient")]
-        public async Task<ActionResult> AddPatient([FromBody] MongoPatient patient)
+        public async Task<ActionResult> AddPatient([FromBody] IPatient patient)
         {
             await _patientsDataService.Insert(patient);
             return Ok();
@@ -67,7 +68,7 @@ namespace PatientsResolver.API.Controllers
 
 
         [HttpPut("updatePatient")]
-        public async Task<ActionResult> UpdatePatient([FromBody] MongoPatient patient)
+        public async Task<ActionResult> UpdatePatient([FromBody] IPatient patient)
         {
             if (patient.Id == null)
                 return Ok();

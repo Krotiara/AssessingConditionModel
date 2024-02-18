@@ -8,21 +8,21 @@ using System.Threading.Tasks;
 
 namespace PatientsResolver.API.Data.Store
 {
-    public interface IPatientsStore<T> where T : IPatient
+    public interface IPatientsStore
     {
-        public Task<T> Get(string patientId, string patientAffiliation);
+        public Task<IPatient> Get(string patientId, string patientAffiliation);
 
-        public Task<T> Get(string id);
+        public Task<IPatient> Get(string id);
 
-        public Task<IEnumerable<T>> GetAll(string affiliation = null);
+        public Task<IEnumerable<IPatient>> GetAll(string affiliation = null);
 
-        public Task<T> Insert(string patientId, string patientAffiliation);
+        public Task<IPatient> Insert(string patientId, string patientAffiliation);
 
-        public Task Insert(T p);
+        public Task Insert(IPatient p);
 
         public Task Delete(string id);
 
-        public Task Update(string id, T patient);
+        public Task Update(string id, IPatient patient);
 
 
     }
