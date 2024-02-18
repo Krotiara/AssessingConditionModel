@@ -96,6 +96,8 @@ namespace PatientsResolver.API.Service.Services
         public async Task AddPatientParameters(string id, string affiliation, IEnumerable<PatientParameter> parameters)
         {
             var p = await Get(id, affiliation);
+            foreach (var parameter in parameters)
+                parameter.PatientId = p.Id;
             await _parametersStore.Insert(parameters);
         }
 
