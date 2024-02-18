@@ -68,6 +68,9 @@ namespace PatientsResolver.API.Service.Services
         }
 
 
+        public Task DeleteAllParameters(string patientId) => _parametersStore.DeleteAll(patientId);
+
+
         public async Task<IPatient> Insert(IPatient p)
         {
             p = await _patientsStore.Insert(p);

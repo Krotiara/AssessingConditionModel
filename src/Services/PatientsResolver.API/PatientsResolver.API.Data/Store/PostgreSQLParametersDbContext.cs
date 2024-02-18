@@ -27,13 +27,9 @@ namespace PatientsResolver.API.Data.Store
                 $"Password={_sets.Password}");
         }
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<PatientParameter>().HasKey(x => new
-            {
-                x.Name,
-                x.Timestamp
-            });
-        }
+        //protected override void OnModelCreating(ModelBuilder modelBuilder)
+        //{
+        //    modelBuilder.Entity<PatientParameter>().HasKey(x => x.Id);
+        //}
     }
 }
