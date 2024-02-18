@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using PatientsResolver.API.Entities;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PatientsResolver.API.Data.Store
 {
