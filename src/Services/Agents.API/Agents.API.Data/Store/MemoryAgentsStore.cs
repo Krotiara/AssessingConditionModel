@@ -13,26 +13,30 @@ using System.Threading.Tasks;
 
 namespace Agents.API.Data.Store
 {
-#warning Репозиторий только для одного вида агентов или для разных? Если для разных, то будет конфликт ключей observableId.
-    public class AgentsStore : IAgentsStore
+    public class MemoryAgentsStore : IAgentsStore
     {
         private ConcurrentDictionary<IAgentKey, IAgent> _agents;
         private readonly ICodeExecutor _codeExecutor;
 
-        public AgentsStore(ICodeExecutor codeExecutor)
+        public MemoryAgentsStore(ICodeExecutor codeExecutor)
         {
             _agents = new ConcurrentDictionary<IAgentKey, IAgent>();
             _codeExecutor = codeExecutor;
         }
 
 
-        public IAgent GetAgent(IAgentKey key, AgentSettings settings)
+        public Task<IAgent> GetAgent(IAgentKey key, AgentSettings settings)
         {
             if (!_agents.ContainsKey(key))
                 _agents[key] = new Agent(key, settings, _codeExecutor);
-            return _agents[key];
+            return Task.FromResult(_agents[key]);
         }
 
-        public void Clear() => _agents.Clear();
+        public Task Clear()
+        {
+            _agents.Clear();
+            return Task.CompletedTask;
+        }
+        
     }
 }

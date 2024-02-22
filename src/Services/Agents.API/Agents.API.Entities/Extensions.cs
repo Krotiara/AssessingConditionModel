@@ -16,7 +16,7 @@ namespace Agents.API.Entities
             using (StreamReader readResponse = new System.IO.StreamReader(body))
             {
                 string res = readResponse.ReadToEnd();
-                T desRes = Newtonsoft.Json.JsonConvert.DeserializeObject<T>(res);
+                T? desRes = Newtonsoft.Json.JsonConvert.DeserializeObject<T>(res);
                 return desRes;
             }
         }
@@ -24,7 +24,7 @@ namespace Agents.API.Entities
 
         public static async Task<T?> DeserializeJson<T>(this string json)
         {
-            T desRes = Newtonsoft.Json.JsonConvert.DeserializeObject<T>(json);
+            T? desRes = Newtonsoft.Json.JsonConvert.DeserializeObject<T>(json);
             return desRes;
         }
 
