@@ -1,4 +1,5 @@
-﻿using PatientsResolver.API.Data.Store;
+﻿using Interfaces;
+using PatientsResolver.API.Data.Store;
 using PatientsResolver.API.Entities.Mongo;
 using System;
 using System.Collections.Generic;
@@ -10,9 +11,9 @@ namespace PatientsResolver.API.Service.Services
 {
     public class InfluencesDataService
     {
-        private readonly InfluencesStore _store;
+        private readonly MongoInfluencesStore _store;
 
-        public InfluencesDataService(InfluencesStore store)
+        public InfluencesDataService(MongoInfluencesStore store)
         {
             _store = store;
         }
@@ -75,9 +76,9 @@ namespace PatientsResolver.API.Service.Services
         /// <param name="patients"></param>
         /// <param name="medicineName"></param>
         /// <returns></returns>
-        public async Task<IEnumerable<Patient>> FilterByInfluence(IEnumerable<Patient> patients, string medicineName, DateTime start, DateTime end)
+        public async Task<IEnumerable<IPatient>> FilterByInfluence(IEnumerable<IPatient> patients, string medicineName, DateTime start, DateTime end)
         {
-            List<Patient> result = new();
+            List<IPatient> result = new();
 
             foreach (var patient in patients)
             {

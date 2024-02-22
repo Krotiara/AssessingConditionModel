@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace PatientsResolver.API.Data.Store
 {
-    public class PatientsStore : MongoBaseService<Patient>
+    public class MongoInfluencesStore : MongoBaseService<Influence>
     {
-        public PatientsStore(MongoService mongo) : base(mongo, "Patients")
+        public MongoInfluencesStore(MongoService mongo) : base(mongo, "Influences")
         {
         }
     }

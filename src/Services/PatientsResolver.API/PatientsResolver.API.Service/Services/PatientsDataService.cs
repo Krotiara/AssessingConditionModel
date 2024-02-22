@@ -15,41 +15,44 @@ namespace PatientsResolver.API.Service.Services
 {
     public class PatientsDataService
     {
-        private readonly PatientsStore _patientsStore;
+        private readonly IPatientsStore _patientsStore;
+        private readonly IParametersStore _parametersStore;
         private readonly InfluencesDataService _influencesDataService;
 
-        private readonly ConcurrentDictionary<(string, string), Patient> _patients;
+        private readonly ConcurrentDictionary<(string, string), IPatient> _patients;
 
-        public PatientsDataService(PatientsStore patientsStore, InfluencesDataService influencesDataService)
+        public PatientsDataService(IPatientsStore patientsStore,
+            IParametersStore parametersStore,
+            InfluencesDataService influencesDataService)
         {
             _patientsStore = patientsStore;
+            _parametersStore = parametersStore;
             _influencesDataService = influencesDataService;
             _patients = new();
         }
 
 
-        public async Task<Patient> Get(string patientId, string affiliation)
+        public async Task<IPatient> Get(string patientId, string affiliation)
         {
-            if (_patients.TryGetValue((patientId, affiliation), out Patient p))
+            if (_patients.TryGetValue((patientId, affiliation), out IPatient p))
                 return p;
-            p = await _patientsStore.Get(x => x.PatientId == patientId && x.Affiliation == affiliation);
-            if (p != null)
-                _patients[(patientId, affiliation)] = p;
+            p = await _patientsStore.Get(patientId, affiliation);
+
+            if (p == null)
+            {
+                p = await _patientsStore.Insert(patientId, affiliation);
+                _patients[(p.PatientId, p.Affiliation)] = p;
+            }
+
+            _patients[(patientId, affiliation)] = p;
             return p;
         }
 
 
 
-        public async Task Update(string id, Patient patient)
+        public async Task Update(string id, IPatient patient)
         {
-            await _patientsStore.Update(x => x.Id == id)
-                        .Set(x => x.Affiliation, patient.Affiliation)
-                        .Set(x => x.PatientId, patient.PatientId)
-                        .Set(x => x.TreatmentStatus, patient.TreatmentStatus)
-                        .Set(x => x.Name, patient.Name)
-                        .Set(x => x.Birthday, patient.Birthday)
-                        .Set(x => x.Gender, patient.Gender)
-                        .Execute();
+            await _patientsStore.Update(id, patient);
             _patients[(patient.PatientId, patient.Affiliation)] = patient;
         }
 
@@ -57,70 +60,52 @@ namespace PatientsResolver.API.Service.Services
 
         public async Task Delete(string id)
         {
-            var patient = await _patientsStore.Get(x => x.Id == id);
+            var patient = await _patientsStore.Get(id);
             if (patient == null)
                 return;
-            await _patientsStore.Delete(x => x.Id == id);
+            await _patientsStore.Delete(id);
             _patients.TryRemove((patient.PatientId, patient.Affiliation), out _);
         }
 
 
-        public async Task<Patient> Insert(Patient p)
+        public Task DeleteAllParameters(string patientId) => _parametersStore.DeleteAll(patientId);
+
+
+        public async Task<IPatient> Insert(IPatient p)
         {
-            await _patientsStore.Insert(p);
+            p = await _patientsStore.Insert(p);
             _patients[(p.PatientId, p.Affiliation)] = p;
             return p;
         }
 
 
-        public async Task Insert(IEnumerable<Patient> patients)
+        public async Task Insert(IEnumerable<IPatient> patients)
         {
-            foreach (var patient in patients)
-                await Insert(patient);
+            foreach (var p in patients)
+            {
+                var patient = await _patientsStore.Insert(p);
+                _patients[(patient.PatientId, patient.Affiliation)] = patient;
+            }
         }
 
 
-        //TODO - заменить store на istore
-        public async Task<IEnumerable<Parameter>> GetPatientParameters(string patientId, string affiliation, DateTime start, DateTime end, List<string> names)
+        public async Task<IEnumerable<PatientParameter>> GetPatientParameters(string patientId, string affiliation, DateTime start, DateTime end, List<string> names)
         {
             var patient = await Get(patientId, affiliation);
-            if (patient == null || patient.Parameters == null)
-                return Enumerable.Empty<Parameter>();
-
-            return patient.GetParameters(start, end, names);
+            return await _parametersStore.GetParameters(patient.Id, start, end, names);
         }
 
 
-        public async Task AddPatientParameters(string id, string affiliation, IEnumerable<Parameter> parameters)
+        public async Task AddPatientParameters(string id, string affiliation, IEnumerable<PatientParameter> parameters)
         {
             var p = await Get(id, affiliation);
-
-            if (p == null)
-                p = await Insert(new Patient()
-                {
-                    PatientId = id,
-                    Affiliation = affiliation
-                });
-
-            if (p.Parameters == null)
-                p.Parameters = new();
-
-            foreach (var par in parameters)
-                p.SetParameter(par);
-
-            await _patientsStore.Update(x => x.Id == p.Id)
-                .Set(x => x.Parameters, p.Parameters)
-                .Execute();
+            foreach (var parameter in parameters)
+                parameter.PatientId = p.Id;
+            await _parametersStore.Insert(parameters);
         }
 
 
-        public async Task<IEnumerable<Patient>> GetPatients(Expression<Func<Patient, bool>> filter)
-        {
-            return await _patientsStore.Query(filter);
-        }
-
-
-        public async Task<IEnumerable<Patient>> GetPatients(string affiliation, 
+        public async Task<IEnumerable<IPatient>> GetPatients(string affiliation,
             GenderEnum? gender, string? influenceName, int? startAge, int? endAge, DateTime? start, DateTime? end)
         {
             int searchStartAge = startAge == null ? 0 : startAge.Value;
@@ -130,8 +115,8 @@ namespace PatientsResolver.API.Service.Services
             DateTime now = DateTime.Now;
 
 
-            List<Patient> patients = 
-                (await GetPatients(x => x.Affiliation == affiliation))
+            List<IPatient> patients =
+                (await _patientsStore.GetAll(affiliation))
                 .Where(x =>
                 {
                     if (x.Birthday == null)
@@ -141,7 +126,7 @@ namespace PatientsResolver.API.Service.Services
                 })
                 .ToList();
 
-            IEnumerable<Patient> filteredPatients = patients;
+            IEnumerable<IPatient> filteredPatients = patients;
 
             if (gender != null && gender != GenderEnum.None)
                 filteredPatients = patients.Where(x => x.Gender == gender);

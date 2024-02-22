@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using Interfaces;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using PatientsResolver.API.Entities;
 using PatientsResolver.API.Entities.Mongo;
@@ -8,6 +9,18 @@ using System.Linq.Expressions;
 
 namespace PatientsResolver.API.Controllers
 {
+
+    public class Patient : IPatient
+    {
+        public string Id { get; set; }
+        public string PatientId { get; set; }
+        public string Affiliation { get; set; }
+        public string Name { get; set; }
+        public DateTime? Birthday { get; set; }
+        public GenderEnum Gender { get; set; }
+        public TreatmentStatus TreatmentStatus { get; set; }
+    }
+
 
     [Route("patientsApi/[controller]")]
     public class PatientsController : ControllerBase
@@ -80,6 +93,14 @@ namespace PatientsResolver.API.Controllers
         public async Task<ActionResult> DeletePatient(string id)
         {
             await _patientsDataService.Delete(id);
+            return Ok();
+        }
+
+
+        [HttpDelete("parameters/{patientId}")]
+        public async Task<ActionResult> DeleteParametersForPatient(string patientId)
+        {
+            await _patientsDataService.DeleteAllParameters(patientId);
             return Ok();
         }
     }

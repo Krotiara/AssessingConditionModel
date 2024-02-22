@@ -79,7 +79,7 @@ services.AddTransient<UsersStore>();
 
 services
     .AddSingleton<SettingsStore>()
-    .AddSingleton<IAgentsStore, AgentsStore>();
+    .AddSingleton<IAgentsStore, MemoryAgentsStore>();
 
 //service
 services

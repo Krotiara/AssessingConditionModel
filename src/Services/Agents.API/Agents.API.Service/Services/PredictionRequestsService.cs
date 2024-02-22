@@ -59,8 +59,12 @@ namespace Agents.API.Service.Services
             var responce = await _webRequester.SendRequest($"{_modelsServerUrl}/modelsApi/{id}", "GET");
             if (responce != null && responce.IsSuccessStatusCode)
             {
-                _metas[id] = await responce.DeserializeBody<ModelMeta>();
-                return _metas[id];
+                var meta = await responce.DeserializeBody<ModelMeta>();
+                if (meta != null)
+                {
+                    _metas[id] = meta;
+                    return _metas[id];
+                }                
             }
             _logger.LogError($"Cant get model meta by id = {id}.");
             return null;

@@ -41,8 +41,9 @@ builder.Host.ConfigureDefaults(args)
     .UseDefaultServiceProvider(options =>options.ValidateScopes = false); // needed for mediatr DI
 
 services.AddMongoService(builder.Configuration);
+IConfigurationSection section = builder.Configuration.GetSection("PostgreSQLDbSettings");
+services.Configure<PostgreSQLDbSettings>(section);
 
-services.AddTransient<IPatientParameter, PatientParameter>();
 services.AddTransient<IFileData, FileData>();
 services.AddTransient<IInfluence, Influence>();
 services.AddOptions();
@@ -50,8 +51,12 @@ services.AddOptions();
 /*Теперь вы можете выполнять ваши запросы. Для этого вам потребуется получить экземпляр интерфейса IMediator. Он регистрируется в вашем контейнере зависимостей той же командой AddMediatR.*/
 services.AddMediatR(Assembly.GetExecutingAssembly());
 
-services.AddTransient<PatientsStore>();
-services.AddTransient<InfluencesStore>();
+services.AddDbContextFactory<PostgreSQLParametersDbContext>();
+
+services.AddTransient<IPatientsStore, MongoPatientsStore>();
+services.AddTransient<IParametersStore, PostgreSQLParametersStore>();
+services.AddTransient<MongoInfluencesStore>();
+
 services.AddSingleton<PatientsDataService>();
 services.AddSingleton<InfluencesDataService>();
 
