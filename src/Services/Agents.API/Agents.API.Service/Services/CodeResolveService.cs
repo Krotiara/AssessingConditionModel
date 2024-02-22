@@ -12,19 +12,17 @@ namespace Agents.API.Service.Services
     public class CodeResolveService : ICodeResolveService
     {
 
-        private readonly IMediator _mediator;
         private readonly CommandServiceResolver _commandActionProvider;
         private readonly IMetaStorageService _metaStorageService;
 
-        public CodeResolveService(IMediator mediator,
+        public CodeResolveService(
             CommandServiceResolver commandActionProvider, IMetaStorageService metaStorageService)
         {
-            this._mediator = mediator;
             this._commandActionProvider = commandActionProvider;
             _metaStorageService = metaStorageService;
         }
 
-        public async Task<(ICommandArgsTypesMeta?, Delegate)> ResolveCommandAction(ICommand command,
+        public Task<(ICommandArgsTypesMeta?, Delegate)> ResolveCommandAction(ICommand command,
             IAgentPropertiesNamesSettings commonPropertiesNames, CancellationToken cancellationToken)
         {
             string commandName = GetCommandName(command);
@@ -53,7 +51,7 @@ namespace Agents.API.Service.Services
                     throw new ResolveCommandActionException($"Не удалось разрешить действие для команды {commandName}");
 #warning Может вернуться null.
                 ICommandArgsTypesMeta? meta = _metaStorageService.GetMetaByCommandName(apiCommand);
-                return (meta, c.Command);
+                return Task.FromResult((meta, c.Command));
             }
         }
 
