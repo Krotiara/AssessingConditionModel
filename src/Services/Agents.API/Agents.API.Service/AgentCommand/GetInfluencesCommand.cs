@@ -28,6 +28,8 @@ namespace Agents.API.Service.AgentCommand
 
         public Delegate Command => async () =>
         {
+            if (PropertiesNamesSettings == null || Agent == null)
+                return new CommandResult($"Не удалось получить воздействия на пациента.");
             if (!Agent.Properties.TryGetValue(PropertiesNamesSettings.Id, out var idProp) ||
             !Agent.Properties.TryGetValue(PropertiesNamesSettings.Affiliation, out var affiliationProp) ||
             !Agent.Variables.TryGetValue(PropertiesNamesSettings.StartTimestamp, out var startProp) ||
