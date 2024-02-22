@@ -34,6 +34,9 @@ namespace Agents.API.Service.AgentCommand
 
         public Delegate Command => async (double age, string mlModelId) =>
         {
+            if (Agent == null || PropertiesNamesSettings == null)
+                return new CommandResult($"Внутренняя ошибка выполнения команды.");
+
             var props = Agent.Properties;
             var vars = Agent.Variables;
 
