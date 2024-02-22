@@ -11,6 +11,6 @@ namespace Interfaces
 {
     public interface IWebRequester
     {
-        Task<HttpResponseMessage?> SendRequest(string requestUriStr, string method, string? jsonBody = null);
+        Task<HttpResponseMessage> SendRequest(string requestUriStr, string method, string? jsonBody = null);
     }
 }

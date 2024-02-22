@@ -22,14 +22,14 @@ namespace Agents.API.Entities
         }
 
 
-        public static async Task<T> DeserializeJson<T>(this string json)
+        public static async Task<T?> DeserializeJson<T>(this string json)
         {
             T desRes = Newtonsoft.Json.JsonConvert.DeserializeObject<T>(json);
             return desRes;
         }
 
 
-        public static T ConvertValue<T>(this IProperty property)
+        public static T? ConvertValue<T>(this IProperty property)
         {
 #warning Ненадежный каст.
             try

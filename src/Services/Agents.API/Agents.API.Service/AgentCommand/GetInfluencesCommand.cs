@@ -28,10 +28,17 @@ namespace Agents.API.Service.AgentCommand
 
         public Delegate Command => async () =>
         {
-            string patientId = Agent.Properties[PropertiesNamesSettings.Id].Value as string;
-            string patientAffiliation = Agent.Properties[PropertiesNamesSettings.Affiliation].Value as string;
-            DateTime startTimestamp = (DateTime)Agent.Variables[PropertiesNamesSettings.StartTimestamp].Value;
-            DateTime endTimestamp = (DateTime)Agent.Variables[PropertiesNamesSettings.EndTimestamp].Value;
+            if (!Agent.Properties.TryGetValue(PropertiesNamesSettings.Id, out var idProp) ||
+            !Agent.Properties.TryGetValue(PropertiesNamesSettings.Affiliation, out var affiliationProp) ||
+            !Agent.Variables.TryGetValue(PropertiesNamesSettings.StartTimestamp, out var startProp) ||
+            !Agent.Variables.TryGetValue(PropertiesNamesSettings.EndTimestamp, out var endProp))
+                return new CommandResult($"Не удалось получить воздействия на пациента: недостаточно данных для поиска).");
+
+            string patientId = idProp.Value as string;
+            string patientAffiliation = affiliationProp.Value as string;
+            DateTime startTimestamp = (DateTime)startProp.Value;
+            DateTime endTimestamp = (DateTime)endProp.Value;
+
 
             PatientInfluencesRequest request = new()
             {

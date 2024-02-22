@@ -35,7 +35,15 @@ namespace PatientsResolver.API.Data.Store
 
         public async Task<IPatient> Insert(IPatient p)
         {
-            var mongoP = new MongoPatient(p);
+            var mongoP = new MongoPatient()
+            {
+                PatientId = p.PatientId,
+                Affiliation = p.Affiliation,
+                Birthday = p.Birthday,
+                Gender = p.Gender,
+                Name = p.Name,
+                TreatmentStatus = p.TreatmentStatus
+            };
             await base.Insert(mongoP);
             return mongoP;
         }
