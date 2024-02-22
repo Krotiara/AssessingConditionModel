@@ -10,7 +10,7 @@ namespace Agents.API.Entities
 {
     public static class Extensions
     {
-        public static async Task<T> DeserializeBody<T>(this HttpResponseMessage response)
+        public static async Task<T?> DeserializeBody<T>(this HttpResponseMessage response)
         {
             var body = await response.Content.ReadAsStreamAsync();
             using (StreamReader readResponse = new System.IO.StreamReader(body))
