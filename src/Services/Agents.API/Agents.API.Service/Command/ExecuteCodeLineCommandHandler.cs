@@ -6,6 +6,7 @@ using Interfaces.DynamicAgent;
 using MediatR;
 using Microsoft.CodeAnalysis.CSharp.Scripting;
 using Microsoft.CodeAnalysis.Scripting;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -36,11 +37,14 @@ namespace Agents.API.Service.Command
     {
         private readonly ICodeResolveService _codeResolveService;
         private readonly IMediator _mediator;
+        private readonly ILogger<ExecuteCodeLineCommandHandler> _logger;
 
-        public ExecuteCodeLineCommandHandler(ICodeResolveService codeResolveService, IMediator mediator)
+        public ExecuteCodeLineCommandHandler(ICodeResolveService codeResolveService, 
+            IMediator mediator, ILogger<ExecuteCodeLineCommandHandler> logger)
         {
             this._codeResolveService = codeResolveService;
             this._mediator = mediator;
+            _logger = logger;
         }
 
 
@@ -63,7 +67,7 @@ namespace Agents.API.Service.Command
 
         private async Task<CommandResult> HandleCommandExecuting(ExecuteCodeLineCommand request, CancellationToken cancellationToken)
         {
-            (ICommandArgsTypesMeta, Delegate) commandPair =
+            (ICommandArgsTypesMeta?, Delegate) commandPair =
                 await _codeResolveService.ResolveCommandAction(request.Command, request.CommonPropertiesNames, cancellationToken);
 
             if (commandPair.Item1 == null)
@@ -73,7 +77,11 @@ namespace Agents.API.Service.Command
 
             //if sync - return output value, if async - need await
             //https://stackoverflow.com/questions/64766433/c-sharp-asynchronous-invoke-of-generic-delegates
-            object res = commandPair.Item2.DynamicInvoke(variables.ToArray());
+            object? res = commandPair.Item2.DynamicInvoke(variables.ToArray());
+
+            if (res == null)
+                return new CommandResult($"Ошибка выполнения команды {request.Command.OriginCommand}");
+
             if (res is Task)
             {
                 await (Task)res;
@@ -83,19 +91,34 @@ namespace Agents.API.Service.Command
             CommandResult commandResult = (CommandResult)res; //TODO прокинуть сообщение дальше
 
             if (!commandResult.IsError && request.Command.CommandType == CommandType.Assigning)
-                ConvertResult(commandResult, commandPair.Item1.OutputArgType);
+            {
+                bool isConverted = ConvertResult(commandResult, commandPair.Item1.OutputArgType);
+                if (!isConverted)
+                {
+                    commandResult.ErrorMessage = $"Внутренняя ошибка преобразования типа результата выполнения команды: " +
+                        $"команда {request.Command.OriginCommand}," +
+                        $"результат {commandResult.Result}," +
+                        $"тип преобразования {commandPair.Item1.OutputArgType.FullName}";
+                    _logger.LogError(commandResult.ErrorMessage);
+                }
+            }
             
             return commandResult;
         }
 
 
-        private void ConvertResult(CommandResult res, Type outputType)
+        private bool ConvertResult(CommandResult res, Type outputType)
         {
             if (outputType.GetInterface(nameof(IEnumerable)) == null)
             {
                 TypeConverter typeConverter = TypeDescriptor.GetConverter(outputType);
-                res.Result = typeConverter.ConvertTo(res.Result, outputType);
+                var converted = typeConverter.ConvertTo(res.Result, outputType);
+                if (converted == null)
+                    return false;
+                res.Result = converted;
+                return true;
             }
+            return true;
         }
 
 
