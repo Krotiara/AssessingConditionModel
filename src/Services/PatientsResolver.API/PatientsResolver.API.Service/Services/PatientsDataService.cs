@@ -44,11 +44,8 @@ namespace PatientsResolver.API.Service.Services
             p = await _patientsStore.Get(patientId, affiliation);
 
             if (p == null)
-            {
-                p = await _patientsStore.Insert(patientId, affiliation);
-                _patients[(p.PatientId, p.Affiliation)] = p;
-            }
-
+                throw new KeyNotFoundException($"Не найден пациент {patientId}:{affiliation}.");
+            
             _patients[(patientId, affiliation)] = p;
             return p;
         }
