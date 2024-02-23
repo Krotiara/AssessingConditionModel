@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Interfaces.DynamicAgent
 {
-    public interface IAgentState
+    public interface IAgentState : ICloneable
     {
         public string Name { get; set; }
 

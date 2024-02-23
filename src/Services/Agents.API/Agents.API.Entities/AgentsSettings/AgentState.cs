@@ -18,5 +18,17 @@ namespace Agents.API.Entities.AgentsSettings
         public string DefinitionCode { get; set; }
 
         public string Description { get; set; }
+
+        public object Clone()
+        {
+            return new AgentState()
+            {
+                Name = Name,
+                NumericCharacteristic = NumericCharacteristic,
+                Timestamp = Timestamp,
+                DefinitionCode = DefinitionCode,
+                Description = Description
+            };
+        }
     }
 }
