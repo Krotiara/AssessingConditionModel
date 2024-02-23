@@ -70,13 +70,19 @@ namespace PatientsResolver.API.Service.Services
         {
             var patient = await _patientsStore.Get(id);
             if (patient == null)
-                return;
+                throw new KeyNotFoundException($"Не найден пациент.");
             await _patientsStore.Delete(id);
             _patients.TryRemove((patient.PatientId, patient.Affiliation), out _);
         }
 
 
-        public Task DeleteAllParameters(string patientId) => _parametersStore.DeleteAll(patientId);
+        public async Task DeleteAllParameters(string patientId)
+        {
+            var patient = await _patientsStore.Get(patientId);
+            if (patient == null)
+                throw new KeyNotFoundException($"Не найден пациент.");
+            await _parametersStore.DeleteAll(patientId);
+        }
 
 
         public async Task<IPatient> Insert(IPatient p)
