@@ -5,6 +5,7 @@ using PatientsResolver.API.Data;
 using PatientsResolver.API.Data.Store;
 using PatientsResolver.API.Entities;
 using PatientsResolver.API.Entities.Mongo;
+using PatientsResolver.API.Middlewares;
 using PatientsResolver.API.Models;
 using PatientsResolver.API.Service.Services;
 using System.Reflection;
@@ -48,7 +49,6 @@ services.AddTransient<IFileData, FileData>();
 services.AddTransient<IInfluence, Influence>();
 services.AddOptions();
 
-/*Теперь вы можете выполнять ваши запросы. Для этого вам потребуется получить экземпляр интерфейса IMediator. Он регистрируется в вашем контейнере зависимостей той же командой AddMediatR.*/
 services.AddMediatR(Assembly.GetExecutingAssembly());
 
 services.AddDbContextFactory<PostgreSQLParametersDbContext>();
@@ -79,6 +79,8 @@ app.UseStaticFiles();
 app.UseRouting();
 
 app.UseSwagger();
+
+app.UseMiddleware<ErrorHandlerMiddleware>();
 
 app.UseSwaggerUI(c =>
 {

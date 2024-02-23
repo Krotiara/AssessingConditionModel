@@ -1,4 +1,6 @@
-﻿using Interfaces;
+﻿using ASMLib;
+using Interfaces;
+using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
 using PatientsResolver.API.Data.Store;
 using PatientsResolver.API.Entities;
@@ -18,16 +20,19 @@ namespace PatientsResolver.API.Service.Services
         private readonly IPatientsStore _patientsStore;
         private readonly IParametersStore _parametersStore;
         private readonly InfluencesDataService _influencesDataService;
+        private readonly ILogger<PatientsDataService> _logger;
 
         private readonly ConcurrentDictionary<(string, string), IPatient> _patients;
 
         public PatientsDataService(IPatientsStore patientsStore,
             IParametersStore parametersStore,
-            InfluencesDataService influencesDataService)
+            InfluencesDataService influencesDataService,
+            ILogger<PatientsDataService> logger)
         {
             _patientsStore = patientsStore;
             _parametersStore = parametersStore;
             _influencesDataService = influencesDataService;
+            _logger = logger;
             _patients = new();
         }
 
@@ -39,11 +44,8 @@ namespace PatientsResolver.API.Service.Services
             p = await _patientsStore.Get(patientId, affiliation);
 
             if (p == null)
-            {
-                p = await _patientsStore.Insert(patientId, affiliation);
-                _patients[(p.PatientId, p.Affiliation)] = p;
-            }
-
+                throw new KeyNotFoundException($"Не найден пациент {patientId}:{affiliation}.");
+            
             _patients[(patientId, affiliation)] = p;
             return p;
         }
@@ -52,6 +54,9 @@ namespace PatientsResolver.API.Service.Services
 
         public async Task Update(string id, IPatient patient)
         {
+            var dbPatient = await _patientsStore.Get(id);
+            if (dbPatient == null)
+                throw new KeyNotFoundException($"Не найден пациент.");
             await _patientsStore.Update(id, patient);
             _patients[(patient.PatientId, patient.Affiliation)] = patient;
         }
@@ -62,20 +67,34 @@ namespace PatientsResolver.API.Service.Services
         {
             var patient = await _patientsStore.Get(id);
             if (patient == null)
-                return;
+                throw new KeyNotFoundException($"Не найден пациент.");
             await _patientsStore.Delete(id);
             _patients.TryRemove((patient.PatientId, patient.Affiliation), out _);
         }
 
 
-        public Task DeleteAllParameters(string patientId) => _parametersStore.DeleteAll(patientId);
+        public async Task DeleteAllParameters(string patientId)
+        {
+            var patient = await _patientsStore.Get(patientId);
+            if (patient == null)
+                throw new KeyNotFoundException($"Не найден пациент.");
+            await _parametersStore.DeleteAll(patientId);
+        }
 
 
         public async Task<IPatient> Insert(IPatient p)
         {
-            p = await _patientsStore.Insert(p);
-            _patients[(p.PatientId, p.Affiliation)] = p;
-            return p;
+            try
+            {
+                p = await _patientsStore.Insert(p);
+                _patients[(p.PatientId, p.Affiliation)] = p;
+                return p;
+            }
+            catch (EntityAlreadyExistException ex)
+            {
+                _logger.LogError(ex.Message);
+                throw;
+            }
         }
 
 
