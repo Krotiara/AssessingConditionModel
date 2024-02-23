@@ -1,4 +1,5 @@
-﻿using Interfaces;
+﻿using ASMLib;
+using Interfaces;
 using Interfaces.Mongo;
 using PatientsResolver.API.Entities;
 using PatientsResolver.API.Entities.Mongo;
@@ -35,6 +36,9 @@ namespace PatientsResolver.API.Data.Store
 
         public async Task<IPatient> Insert(IPatient p)
         {
+            var dbP = await Get(p.PatientId, p.Affiliation);
+            if (dbP != null)
+                throw new EntityAlreadyExistException($"Patient already exist: id = {p.PatientId}:{p.Affiliation}.");
             var mongoP = new MongoPatient()
             {
                 PatientId = p.PatientId,

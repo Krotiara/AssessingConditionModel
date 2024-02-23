@@ -1,4 +1,6 @@
-﻿using Interfaces;
+﻿using ASMLib;
+using Interfaces;
+using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
 using PatientsResolver.API.Data.Store;
 using PatientsResolver.API.Entities;
@@ -18,16 +20,19 @@ namespace PatientsResolver.API.Service.Services
         private readonly IPatientsStore _patientsStore;
         private readonly IParametersStore _parametersStore;
         private readonly InfluencesDataService _influencesDataService;
+        private readonly ILogger<PatientsDataService> _logger;
 
         private readonly ConcurrentDictionary<(string, string), IPatient> _patients;
 
         public PatientsDataService(IPatientsStore patientsStore,
             IParametersStore parametersStore,
-            InfluencesDataService influencesDataService)
+            InfluencesDataService influencesDataService,
+            ILogger<PatientsDataService> logger)
         {
             _patientsStore = patientsStore;
             _parametersStore = parametersStore;
             _influencesDataService = influencesDataService;
+            _logger = logger;
             _patients = new();
         }
 
@@ -73,9 +78,17 @@ namespace PatientsResolver.API.Service.Services
 
         public async Task<IPatient> Insert(IPatient p)
         {
-            p = await _patientsStore.Insert(p);
-            _patients[(p.PatientId, p.Affiliation)] = p;
-            return p;
+            try
+            {
+                p = await _patientsStore.Insert(p);
+                _patients[(p.PatientId, p.Affiliation)] = p;
+                return p;
+            }
+            catch (EntityAlreadyExistException ex)
+            {
+                _logger.LogError(ex.Message);
+                throw;
+            }
         }
 
 

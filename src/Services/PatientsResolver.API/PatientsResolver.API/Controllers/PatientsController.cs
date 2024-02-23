@@ -74,8 +74,8 @@ namespace PatientsResolver.API.Controllers
         [HttpPost("addPatient")]
         public async Task<ActionResult> AddPatient([FromBody] Patient patient)
         {
-            await _patientsDataService.Insert(patient);
-            return Ok();
+            var p = await _patientsDataService.Insert(patient);
+            return Ok(p);
         }
 
 
