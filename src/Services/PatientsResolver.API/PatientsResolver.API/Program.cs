@@ -5,6 +5,7 @@ using PatientsResolver.API.Data;
 using PatientsResolver.API.Data.Store;
 using PatientsResolver.API.Entities;
 using PatientsResolver.API.Entities.Mongo;
+using PatientsResolver.API.Middlewares;
 using PatientsResolver.API.Models;
 using PatientsResolver.API.Service.Services;
 using System.Reflection;
@@ -79,6 +80,8 @@ app.UseStaticFiles();
 app.UseRouting();
 
 app.UseSwagger();
+
+app.UseMiddleware<ErrorHandlerMiddleware>();
 
 app.UseSwaggerUI(c =>
 {
