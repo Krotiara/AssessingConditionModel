@@ -38,7 +38,7 @@ namespace PatientsResolver.API.Data.Store
         {
             var dbP = await Get(p.PatientId, p.Affiliation);
             if (dbP != null)
-                throw new EntityAlreadyExistException($"Patient already exist: id = {p.PatientId}:{p.Affiliation}.");
+                throw new EntityAlreadyExistException($"Пациента уже существует: id = {p.PatientId}:{p.Affiliation}.");
             var mongoP = new MongoPatient()
             {
                 PatientId = p.PatientId,
