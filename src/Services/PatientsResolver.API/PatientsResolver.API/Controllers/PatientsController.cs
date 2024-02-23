@@ -83,7 +83,7 @@ namespace PatientsResolver.API.Controllers
         public async Task<ActionResult> UpdatePatient([FromBody] Patient patient)
         {
             if (patient.Id == null)
-                return Ok();
+                return NotFound();
             await _patientsDataService.Update(patient.Id, patient);
             return Ok();
         }

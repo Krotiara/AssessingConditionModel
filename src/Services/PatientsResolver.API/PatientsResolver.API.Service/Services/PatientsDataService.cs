@@ -57,6 +57,9 @@ namespace PatientsResolver.API.Service.Services
 
         public async Task Update(string id, IPatient patient)
         {
+            var dbPatient = await _patientsStore.Get(id);
+            if (dbPatient == null)
+                throw new KeyNotFoundException($"Не найден пациент.");
             await _patientsStore.Update(id, patient);
             _patients[(patient.PatientId, patient.Affiliation)] = patient;
         }
