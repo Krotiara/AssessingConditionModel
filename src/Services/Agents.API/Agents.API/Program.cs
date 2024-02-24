@@ -77,15 +77,16 @@ services
 //store
 services.AddTransient<UsersStore>();
 
-services
-    .AddSingleton<SettingsStore>()
-    .AddSingleton<IAgentsStore, MemoryAgentsStore>();
+services.AddSingleton<SettingsStore>();
+
+services.AddScoped<IAgentsStore, MemoryAgentsStore>();
 
 //service
+services.AddScoped<AgentsService>();
+
 services
     .AddSingleton<SettingsService>()
     .AddSingleton<PredictionRequestsService>()
-    .AddSingleton<AgentsService>()
     .AddSingleton<ICodeExecutor, CodeExecutorService>()
     .AddSingleton<PatientsService>();
 
