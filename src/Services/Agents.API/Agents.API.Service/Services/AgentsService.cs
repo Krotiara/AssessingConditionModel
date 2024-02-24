@@ -1,13 +1,10 @@
 ﻿using Agents.API.Data.Store;
-using Agents.API.Entities;
 using Agents.API.Entities.AgentsSettings;
 using Agents.API.Entities.Documents;
 using Agents.API.Entities.Requests;
 using Agents.API.Entities.Requests.Responce;
 using ASMLib.DynamicAgent;
 using Interfaces;
-using Interfaces.DynamicAgent;
-using Microsoft.Extensions.Logging;
 
 namespace Agents.API.Service.Services
 {

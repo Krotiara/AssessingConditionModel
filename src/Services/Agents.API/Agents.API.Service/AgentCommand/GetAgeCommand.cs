@@ -1,15 +1,7 @@
 ﻿using Agents.API.Entities;
-using Agents.API.Entities.Documents;
 using Agents.API.Service.Services;
 using Interfaces;
-using Interfaces.DynamicAgent;
-using MediatR;
-using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using ASMLib.DynamicAgent;
 
 namespace Agents.API.Service.AgentCommand
 {

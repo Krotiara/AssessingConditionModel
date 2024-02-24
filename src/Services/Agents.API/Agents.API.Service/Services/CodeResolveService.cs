@@ -2,7 +2,7 @@
 using Agents.API.Interfaces;
 using Agents.API.Service.AgentCommand;
 using Interfaces;
-using Interfaces.DynamicAgent;
+using ASMLib.DynamicAgent;
 using MediatR;
 using System.ComponentModel;
 using System.Text.RegularExpressions;

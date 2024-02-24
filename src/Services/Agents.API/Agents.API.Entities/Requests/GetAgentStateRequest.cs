@@ -1,4 +1,4 @@
-﻿using Interfaces.DynamicAgent;
+﻿using ASMLib.DynamicAgent;
 using Interfaces;
 using System;
 using System.Collections.Generic;
@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Agents.API.Entities.Documents;
+using ASMLib.DynamicAgent;
 
 namespace Agents.API.Entities.Requests
 {

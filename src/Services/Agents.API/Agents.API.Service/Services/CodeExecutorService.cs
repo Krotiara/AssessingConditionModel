@@ -6,7 +6,7 @@ using Agents.API.Service.AgentCommand;
 using Agents.API.Service.Command;
 using Amazon.Runtime.Internal;
 using Interfaces;
-using Interfaces.DynamicAgent;
+using ASMLib.DynamicAgent;
 using MediatR;
 using System;
 using System.Collections.Concurrent;

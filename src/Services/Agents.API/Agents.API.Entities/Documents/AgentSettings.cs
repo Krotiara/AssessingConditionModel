@@ -1,6 +1,6 @@
 ﻿using Agents.API.Entities.AgentsSettings;
 using Interfaces;
-using Interfaces.DynamicAgent;
+using ASMLib.DynamicAgent;
 using Interfaces.Service;
 using System;
 using System.Collections.Generic;

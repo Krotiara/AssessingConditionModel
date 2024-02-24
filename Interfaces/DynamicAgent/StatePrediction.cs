@@ -1,12 +1,10 @@
-﻿using ASMLib.DynamicAgent;
-using Interfaces.DynamicAgent;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Agents.API.Entities
+namespace ASMLib.DynamicAgent
 {
     public class StatePrediction
     {

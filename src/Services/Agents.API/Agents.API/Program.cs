@@ -1,4 +1,3 @@
-using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 using MediatR;
 using Interfaces;
@@ -7,7 +6,6 @@ using Microsoft.EntityFrameworkCore;
 using Agents.API.Service.Services;
 using Agents.API.Data.Store;
 using Agents.API.Interfaces;
-using Interfaces.DynamicAgent;
 using Agents.API.Service.Command;
 using Agents.API;
 using Agents.API.Entities.AgentsSettings;
@@ -15,6 +13,7 @@ using Quartz;
 using Agents.API.Jobs;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Agents.API.Middlewares;
+using ASMLib.DynamicAgent;
 
 var builder = WebApplication.CreateBuilder(args);
 var services = builder.Services;

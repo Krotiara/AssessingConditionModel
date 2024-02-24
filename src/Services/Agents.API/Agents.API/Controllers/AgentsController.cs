@@ -6,7 +6,7 @@ using Agents.API.Interfaces;
 using Agents.API.Service;
 using Agents.API.Service.Services;
 using Interfaces;
-using Interfaces.DynamicAgent;
+using ASMLib.DynamicAgent;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
