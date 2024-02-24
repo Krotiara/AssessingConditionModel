@@ -1,5 +1,6 @@
 ﻿using ASMLib;
 using ASMLib.EventBus;
+using ASMLib.EventBus.Events;
 using Interfaces;
 using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
@@ -62,6 +63,11 @@ namespace PatientsResolver.API.Service.Services
                 throw new KeyNotFoundException($"Не найден пациент.");
             await _patientsStore.Update(id, patient);
             _patients[(patient.PatientId, patient.Affiliation)] = patient;
+            _eventBus?.Publish(new UpdatePatientEvent()
+            {
+                PatientId = patient.PatientId,
+                PatientAffiliation = patient.Affiliation
+            });
         }
 
 
@@ -91,6 +97,11 @@ namespace PatientsResolver.API.Service.Services
             {
                 p = await _patientsStore.Insert(p);
                 _patients[(p.PatientId, p.Affiliation)] = p;
+                _eventBus?.Publish(new AddPatientEvent()
+                {
+                    PatientId = p.PatientId,
+                    PatientAffiliation = p.Affiliation
+                });
                 return p;
             }
             catch (EntityAlreadyExistException ex)

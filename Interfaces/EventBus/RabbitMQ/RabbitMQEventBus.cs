@@ -9,6 +9,7 @@ using System.Reflection;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using ASMLib.EventBus.Events;
 
 namespace ASMLib.EventBus.RabbitMQ
 {

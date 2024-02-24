@@ -1,4 +1,5 @@
 ﻿using ASMLib.EventBus;
+using ASMLib.EventBus.Events;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace PatientsResolver.API.Service
 {
-	public class MessageSentEventHandler : IEventHandler<MessageSentEvent>
+    public class MessageSentEventHandler : IEventHandler<MessageSentEvent>
 	{
 		private readonly ILogger<MessageSentEvent> _logger;
 

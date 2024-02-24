@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ASMLib.EventBus.Events;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ASMLib.EventBus
 {
-	public interface IEventBus
+    public interface IEventBus
 	{
 		void Publish<TEvent>(TEvent @event)
 			where TEvent : Event;
