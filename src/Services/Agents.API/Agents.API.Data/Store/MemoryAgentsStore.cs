@@ -25,12 +25,10 @@ namespace Agents.API.Data.Store
         }
 
 
-        public Task<IAgent> GetAgent(IAgentKey key, AgentSettings settings)
+        public Task<IAgent> Get(IAgentKey key)
         {
             if (!_agents.ContainsKey(key))
                 _agents[key] = new Agent(key, _codeExecutor);
-
-            _agents[key].SetSettings(settings);
             
             return Task.FromResult(_agents[key]);
         }

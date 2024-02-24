@@ -38,11 +38,10 @@ namespace Agents.API.Controllers
                 throw new KeyNotFoundException("Не переданы настройки агентов.");
     
             var key = new AgentKey(req.Id, req.Affiliation, req.AgentType);
-            StatePredictionResponce p = await _agentsService.GetPrediction(key, req.AgentSettings, req.Settings);
-            if (p.IsError)
-                return Ok(new StatePredictionsResponce(req.Id, req.Affiliation) { ErrorMessage = p.ErrorMessage });
 
-            return Ok(new StatePredictionsResponce(req.Id, req.Affiliation, p.StatePrediction));
+            _agentsService.AddPredictionRequest(key, req);
+
+            return Ok();
         }
     }
 }

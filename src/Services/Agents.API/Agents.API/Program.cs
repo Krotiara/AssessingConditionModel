@@ -78,15 +78,13 @@ services
 services.AddTransient<UsersStore>();
 
 services.AddSingleton<SettingsStore>();
-
-services.AddScoped<IAgentsStore, MemoryAgentsStore>();
+services.AddSingleton<IAgentsStore, MemoryAgentsStore>();
 
 //service
-services.AddScoped<AgentsService>();
-
 services
     .AddSingleton<PredictionRequestsService>()
     .AddSingleton<ICodeExecutor, CodeExecutorService>()
+    .AddSingleton<AgentsService>()
     .AddSingleton<PatientsService>();
 
 services
@@ -104,6 +102,7 @@ services.AddQuartz(q =>
 
     InitPredictionModelsJob.Schedule(q);
     InitUsersJob.Schedule(q);
+    ProcessCurrentPredictionsJob.Schedule(q);
 });
 services.AddQuartzHostedService();
 
