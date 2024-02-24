@@ -1,12 +1,13 @@
 ﻿using ASMLib.EventBus;
 using ASMLib.EventBus.RabbitMQ;
+using PatientsResolver.API.Service;
 using RabbitMQ.Client;
 
 namespace PatientsResolver.API
 {
 	public static class Extensions
 	{
-		public static void AddRabbitMQEventBus(this IServiceCollection services, string connectionUrl, string brokerName, string queueName, int timeoutBeforeReconnecting = 15)
+		private static void AddRabbitMQEventBus(this IServiceCollection services, string connectionUrl, string brokerName, string queueName, int timeoutBeforeReconnecting = 15)
 		{
 			services.AddSingleton<IEventBusSubscriptionManager, InMemoryEventBusSubscriptionManager>();
 			services.AddSingleton<IPersistentConnection, RabbitMQPersistentConnection>(factory =>
@@ -29,6 +30,24 @@ namespace PatientsResolver.API
 
 				return new RabbitMQEventBus(persistentConnection, subscriptionManager, factory, logger, brokerName, queueName);
 			});
+		}
+
+
+		public static void AddRabbitMQEventBus(this IServiceCollection services, IConfiguration conf)
+        {
+			var rabbitMQSection = conf.GetSection("RabbitMQSettings");
+			if (rabbitMQSection == null)
+				return;
+
+			services.AddRabbitMQEventBus
+			(
+				connectionUrl: rabbitMQSection["ConnectionUrl"],
+				brokerName: rabbitMQSection["BrokerName"],
+				queueName: rabbitMQSection["QueueName"],
+				timeoutBeforeReconnecting: 15
+			);
+
+			services.AddTransient<MessageSentEventHandler>();
 		}
 	}
 }
