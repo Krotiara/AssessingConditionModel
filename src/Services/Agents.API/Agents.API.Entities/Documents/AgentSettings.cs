@@ -20,6 +20,8 @@ namespace Agents.API.Entities.Documents
             States = new();
         }
 
+        public string Id { get; set; }
+
         public string Affiliation { get; set; }
 
         public string AgentType { get; set; }

@@ -12,8 +12,8 @@ namespace Agents.API.Entities.Requests
 
         public string AgentType { get; set; }
 
-        public List<PredictionSettings> Settings { get; set; }
+        public PredictionSettings Settings { get; set; }
 
-        public ConcurrentDictionary<string, AgentSettings> AgentsSettings { get; set; }
+        public AgentSettings AgentSettings { get; set; }
     }
 }

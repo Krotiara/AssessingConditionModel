@@ -9,6 +9,8 @@ namespace ASMLib.DynamicAgent
 {
     public interface IAgentsSettings
     {
+        public string Id { get; set; }
+
         public string Affiliation { get; set; }
 
         public string AgentType { get; set; }

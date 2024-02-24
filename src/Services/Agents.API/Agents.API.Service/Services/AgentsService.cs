@@ -5,12 +5,15 @@ using Agents.API.Entities.Requests;
 using Agents.API.Entities.Requests.Responce;
 using ASMLib.DynamicAgent;
 using Interfaces;
+using System.Collections.Concurrent;
 
 namespace Agents.API.Service.Services
 {
     public class AgentsService
     {
         private readonly IAgentsStore _agentsStore;
+
+        private ConcurrentDictionary<IAgentKey, ConcurrentQueue<>
 
         public AgentsService(IAgentsStore agentsStore)
         {
