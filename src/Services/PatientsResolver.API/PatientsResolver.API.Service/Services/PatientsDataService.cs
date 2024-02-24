@@ -135,6 +135,11 @@ namespace PatientsResolver.API.Service.Services
             foreach (var parameter in parameters)
                 parameter.PatientId = p.Id;
             await _parametersStore.Insert(parameters);
+            _eventBus?.Publish(new AddPatientParametersEvent()
+            {
+                PatientId = p.PatientId,
+                PatientAffiliation = p.Affiliation
+            });
         }
 
 
