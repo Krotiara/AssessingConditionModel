@@ -19,15 +19,13 @@ namespace Agents.API.Controllers
     public class AgentsController : ControllerBase
     {
 
-        private readonly IMediator _mediator;
         private readonly ILogger<AgentsController> _logger;
         private readonly AgentsService _agentsService;
 
-        public AgentsController(IMediator mediator,
+        public AgentsController(
             ILogger<AgentsController> logger,
             AgentsService agentsService)
         {
-            _mediator = mediator;
             _logger = logger;
             _agentsService = agentsService;
         }
