@@ -36,5 +36,8 @@ namespace ASMLib.DynamicAgent
         public void AddToBuffer(IParameter parameter);
 
         public T GetPropertyValue<T>(string propertyName);
+
+
+        public void SetSettings(IAgentsSettings sets);
     }
 }

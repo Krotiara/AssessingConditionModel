@@ -9,7 +9,9 @@ namespace ASMLib.DynamicAgent
 {
     public interface IAgentsSettings
     {
-        public AgentType AgentType { get; set; }
+        public string Affiliation { get; set; }
+
+        public string AgentType { get; set; }
 
         public List<IProperty> StateProperties { get; set; }
 
@@ -18,5 +20,7 @@ namespace ASMLib.DynamicAgent
         public string StateResolveCode { get; set; }
 
         public List<IAgentState> States { get; set; }
+
+        public IAgentPropertiesNamesSettings CommonNamesSettings { get; set; }
     }
 }

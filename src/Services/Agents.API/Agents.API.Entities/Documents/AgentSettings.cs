@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Agents.API.Entities.Documents
 {
-    public class AgentSettings : Document
+    public class AgentSettings : IAgentsSettings
     {
         public AgentSettings()
         {
@@ -24,17 +24,17 @@ namespace Agents.API.Entities.Documents
 
         public string AgentType { get; set; }
 
-        public List<Property> StateProperties { get; set; }
+        public List<IProperty> StateProperties { get; set; }
 
 
-        public List<Property> Variables { get; set; }
+        public List<IProperty> Variables { get; set; }
 
         public string StateResolveCode { get; set; }
 
-        public List<AgentState> States { get; set; }
+        public List<IAgentState> States { get; set; }
 
         [JsonIgnore]
-        public AgentPropertiesNamesSettings CommonNamesSettings { get; set; }
+        public IAgentPropertiesNamesSettings CommonNamesSettings { get; set; }
     }
 }
 

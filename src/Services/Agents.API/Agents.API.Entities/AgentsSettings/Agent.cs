@@ -16,13 +16,13 @@ namespace Agents.API.Entities.AgentsSettings
     {
         private readonly ICodeExecutor _codeExecutor;
 
-        private readonly string _stateResolveCode;
+        private string _stateResolveCode;
 
         public string Id { get; set; }
 
         public string Affiliation { get; }
 
-        public string AgentType { get; }
+        public string AgentType { get; private set; }
 
         public IAgentState CurrentState { get; set; }
 
@@ -34,22 +34,18 @@ namespace Agents.API.Entities.AgentsSettings
 
         public ConcurrentDictionary<string, IAgentState> States { get; }
 
-        private readonly AgentPropertiesNamesSettings _commonPropertiesNames;
+        private IAgentPropertiesNamesSettings _commonPropertiesNames;
 
-        public Agent(IAgentKey key, AgentSettings settings, ICodeExecutor codeExecutor)
+        public Agent(IAgentKey key, ICodeExecutor codeExecutor)
         {
             _codeExecutor = codeExecutor;
-            _stateResolveCode = settings.StateResolveCode;
             Id = key.ObservedId;
             Affiliation = key.ObservedObjectAffilation;
-            AgentType = settings.AgentType;
             Properties = new();
             Variables = new();
             States = new();
             Buffer = new();
-            InitDicts(settings);
-            InitCommonProperties(key, settings.CommonNamesSettings);
-            _commonPropertiesNames = settings.CommonNamesSettings; //TODO инициализация нового экземпляра, чтобы не продлевать время жизни settings
+            
         }
 
 
@@ -114,8 +110,11 @@ namespace Agents.API.Entities.AgentsSettings
         }
 
 
-        private void InitDicts(AgentSettings settings)
+        private void InitDicts(IAgentsSettings settings)
         {
+            Properties.Clear();
+            Variables.Clear();
+            States.Clear();
             foreach (IProperty p in settings.StateProperties)
                 Properties[p.Name] = p;
             foreach (IProperty p in settings.Variables)
@@ -125,12 +124,21 @@ namespace Agents.API.Entities.AgentsSettings
         }
 
 
-        private void InitCommonProperties(IAgentKey key, AgentPropertiesNamesSettings settings)
+        private void InitCommonProperties(string observingId, string observingAffiliation, IAgentPropertiesNamesSettings settings)
         {
             Properties[settings.Id] =
-                new Property(settings.Id, typeof(string).FullName, key.ObservedId);
+                new Property(settings.Id, typeof(string).FullName, observingId);
             Properties[settings.Affiliation] =
-                new Property(settings.Affiliation, typeof(string).FullName, key.ObservedObjectAffilation);
+                new Property(settings.Affiliation, typeof(string).FullName, observingAffiliation);
+        }
+
+        public void SetSettings(IAgentsSettings settings)
+        {
+            _stateResolveCode = settings.StateResolveCode;
+            AgentType = settings.AgentType;
+            InitDicts(settings);
+            InitCommonProperties(Id, Affiliation, settings.CommonNamesSettings);
+            _commonPropertiesNames = settings.CommonNamesSettings; //TODO инициализация нового экземпляра, чтобы не продлевать время жизни settings
         }
     }
 }
