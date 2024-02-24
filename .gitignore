@@ -341,3 +341,4 @@ healthchecksdb
 
 mongo/
 postgres/
+rabbitmq/
