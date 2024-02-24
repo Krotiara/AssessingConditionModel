@@ -37,14 +37,14 @@ namespace Agents.API.Service.Services
         }
 
 
-        public async Task<IEnumerable<IProperty>> GetAgentCurProperties(IAgentKey Key, AgentSettings agentsSettings)
+        public async Task<IEnumerable<IProperty>> GetAgentCurProperties(IAgentKey Key)
         {
             IAgent agent = await _agentsStore.Get(Key);
             return agent.Properties.Values.Where(x => x.Description != null && x.Description != string.Empty);
         }
 
 
-        public async Task<IEnumerable<IParameter>> GetAgentCalculationBuffer(IAgentKey key, AgentSettings agentsSettings)
+        public async Task<IEnumerable<IParameter>> GetAgentCalculationBuffer(IAgentKey key)
         {
             IAgent agent = await _agentsStore.Get(key);
             return agent.Buffer.Values;
@@ -81,8 +81,8 @@ namespace Agents.API.Service.Services
             if (stateResponce.IsError)
                 return new StatePredictionResponce() { ErrorMessage = stateResponce.ErrorMessage };
 
-            var properties = await GetAgentCurProperties(key, request.AgentSettings);
-            var buffer = await GetAgentCalculationBuffer(key, request.AgentSettings);
+            var properties = await GetAgentCurProperties(key);
+            var buffer = await GetAgentCalculationBuffer(key);
 
             return new StatePredictionResponce()
             { StatePrediction = new StatePrediction(request.Settings.SettingsName, stateResponce.AgentState, properties, buffer) };
