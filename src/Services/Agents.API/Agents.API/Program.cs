@@ -18,6 +18,7 @@ using ASMLib.DynamicAgent;
 var builder = WebApplication.CreateBuilder(args);
 var services = builder.Services;
 
+bool isRabbitMq = builder.Configuration.GetSection("RabbitMQSettings").Exists();
 
 services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(o =>
@@ -91,6 +92,9 @@ services
     .AddTransient<IRequestHandler<ExecuteCodeLineCommand, CommandResult>, ExecuteCodeLineCommandHandler>()
     .AddTransient<IMetaStorageService, InternalMetaStorageService>()
     .AddTransient<ICodeResolveService, CodeResolveService>();
+
+if (isRabbitMq)
+    services.AddRabbitMQEventBus(builder.Configuration);
 
 services.AddQuartz(q =>
 {
