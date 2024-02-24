@@ -1,4 +1,5 @@
 ﻿using ASMLib;
+using ASMLib.EventBus;
 using Interfaces;
 using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
@@ -21,18 +22,20 @@ namespace PatientsResolver.API.Service.Services
         private readonly IParametersStore _parametersStore;
         private readonly InfluencesDataService _influencesDataService;
         private readonly ILogger<PatientsDataService> _logger;
-
+        private readonly IEventBus _eventBus;
         private readonly ConcurrentDictionary<(string, string), IPatient> _patients;
 
         public PatientsDataService(IPatientsStore patientsStore,
             IParametersStore parametersStore,
             InfluencesDataService influencesDataService,
-            ILogger<PatientsDataService> logger)
+            ILogger<PatientsDataService> logger,
+            IEventBus eventBus = null)
         {
             _patientsStore = patientsStore;
             _parametersStore = parametersStore;
             _influencesDataService = influencesDataService;
             _logger = logger;
+            _eventBus = eventBus;
             _patients = new();
         }
 
@@ -45,7 +48,7 @@ namespace PatientsResolver.API.Service.Services
 
             if (p == null)
                 throw new KeyNotFoundException($"Не найден пациент {patientId}:{affiliation}.");
-            
+
             _patients[(patientId, affiliation)] = p;
             return p;
         }
