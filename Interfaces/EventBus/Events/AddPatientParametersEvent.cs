@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ASMLib.EventBus.Events
 {
-    public class AddPatientParametersEvent : Event
+    public class UpdatePatientParametersEvent : Event
     {
         public string PatientId { get; set; }
 
