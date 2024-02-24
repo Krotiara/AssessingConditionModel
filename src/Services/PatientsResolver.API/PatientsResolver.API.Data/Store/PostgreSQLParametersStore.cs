@@ -83,7 +83,8 @@ namespace PatientsResolver.API.Data.Store
                     await context.PatientParameters.AddAsync(p);
                 else
                 {
-                    var dbParam = context.PatientParameters.SingleOrDefault(x => x.Id == p.Id);
+                    var dbParam = context.PatientParameters.SingleOrDefault(x => x.Id == p.Id 
+                    || (x.PatientId == p.PatientId && x.Name == p.Name && x.Timestamp == p.Timestamp));
                     if (dbParam == null)
                         await context.PatientParameters.AddAsync(p);
                     else

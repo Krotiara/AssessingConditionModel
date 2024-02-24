@@ -14,7 +14,6 @@ namespace PatientsResolver.API.Data.Store
         public PostgreSQLParametersDbContext(IOptions<PostgreSQLDbSettings> sets)
         {
             _sets = sets.Value;
-            Database.EnsureCreated();
         }
 
 
