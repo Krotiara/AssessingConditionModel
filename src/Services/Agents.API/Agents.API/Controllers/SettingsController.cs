@@ -13,27 +13,11 @@ namespace Agents.API.Controllers
     [Authorize]
     public class SettingsController : ControllerBase
     {
-        private readonly SettingsService _settingsService;
         private readonly PredictionRequestsService _predictionRequestsService;
 
-        public SettingsController(SettingsService settingsService, PredictionRequestsService predictionRequestsService)
+        public SettingsController(PredictionRequestsService predictionRequestsService)
         {
-            _settingsService = settingsService;
             _predictionRequestsService = predictionRequestsService;
-        }
-
-
-        public class InitSettingsRequest
-        {
-            public List<AgentSettings> Settings { get; set; }
-        }
-
-
-        [HttpPost("initSettings")]
-        public async Task<ActionResult> InitAgentsSettings([FromBody] InitSettingsRequest request)
-        {
-            await _settingsService.Insert(request.Settings);
-            return Ok();
         }
 
 

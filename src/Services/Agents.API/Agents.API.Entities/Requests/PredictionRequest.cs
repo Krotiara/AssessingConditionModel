@@ -1,10 +1,6 @@
 ﻿using Agents.API.Entities.AgentsSettings;
-using Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Agents.API.Entities.Documents;
+using System.Collections.Concurrent;
 
 namespace Agents.API.Entities.Requests
 {
@@ -17,5 +13,7 @@ namespace Agents.API.Entities.Requests
         public string AgentType { get; set; }
 
         public List<PredictionSettings> Settings { get; set; }
+
+        public ConcurrentDictionary<string, AgentSettings> AgentsSettings { get; set; }
     }
 }
