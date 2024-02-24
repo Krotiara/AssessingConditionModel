@@ -15,7 +15,7 @@ namespace Agents.API.Entities.Requests.Responce
             Affiliation = affiliation;
         }
 
-        public StatePredictionsResponce(string id, string affiliation, List<StatePrediction> preds) : this(id, affiliation)
+        public StatePredictionsResponce(string id, string affiliation,StatePrediction preds) : this(id, affiliation)
         {
             Predictions = preds;
         }
@@ -26,6 +26,6 @@ namespace Agents.API.Entities.Requests.Responce
 
         public string ErrorMessage { get; set; }
 
-        public List<StatePrediction> Predictions { get; set; }
+        public StatePrediction Predictions { get; set; }
     }
 }

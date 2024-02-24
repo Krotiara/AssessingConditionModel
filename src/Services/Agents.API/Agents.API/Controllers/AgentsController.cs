@@ -34,23 +34,15 @@ namespace Agents.API.Controllers
         [HttpPost("predict")]
         public async Task<ActionResult> PredictState([FromBody] PredictionRequest req)
         {
-            if (req.AgentsSettings == null)
+            if (req.AgentSettings == null)
                 throw new KeyNotFoundException("Не переданы настройки агентов.");
+    
+            var key = new AgentKey(req.Id, req.Affiliation, req.AgentType);
+            StatePredictionResponce p = await _agentsService.GetPrediction(key, req.AgentSettings, req.Settings);
+            if (p.IsError)
+                return Ok(new StatePredictionsResponce(req.Id, req.Affiliation) { ErrorMessage = p.ErrorMessage });
 
-            List<StatePrediction> predictions = new();
-            foreach (var predictionSettings in req.Settings)
-            {
-                var key = new AgentKey(req.Id, req.Affiliation, req.AgentType);
-                if (!req.AgentsSettings.TryGetValue(req.AgentType, out var sets))
-                    throw new KeyNotFoundException("Не переданы настройки агента.");
-                StatePredictionResponce p = await _agentsService.GetPrediction(key, sets, predictionSettings);
-                if (p.IsError)
-                    return Ok(new StatePredictionsResponce(req.Id, req.Affiliation) { ErrorMessage = p.ErrorMessage });
-
-                predictions.Add(p.StatePrediction);
-            }
-
-            return Ok(new StatePredictionsResponce(req.Id, req.Affiliation, predictions));
+            return Ok(new StatePredictionsResponce(req.Id, req.Affiliation, p.StatePrediction));
         }
     }
 }
