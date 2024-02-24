@@ -73,7 +73,7 @@ namespace Agents.API.Entities.AgentsSettings
                         state.NumericCharacteristic = Convert.ToDouble(Properties[_commonPropertiesNames.StateNumber].Value);
                         state.Timestamp = Variables[_commonPropertiesNames.EndTimestamp].ConvertValue<DateTime>();
                         CurrentState = States[state.Name];
-                        return new UpdateStateResult() { AgentState = (IAgentState)CurrentState.Clone()};
+                        return new UpdateStateResult() { AgentState = CurrentState };
                     }
                 }
             }

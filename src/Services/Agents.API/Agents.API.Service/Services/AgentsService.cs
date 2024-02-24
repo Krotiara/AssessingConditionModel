@@ -15,12 +15,9 @@ namespace Agents.API.Service.Services
     {
         private readonly IAgentsStore _agentsStore;
 
-        private HashSet<IAgentKey> _agentsInProcessSet;
-
         public AgentsService(IAgentsStore agentsStore)
         {
             _agentsStore = agentsStore;
-            _agentsInProcessSet = new();
         }
 
 
@@ -29,45 +26,15 @@ namespace Agents.API.Service.Services
 
         public async Task<GetAgentStateResponce> GetAgentState(GetAgentStateRequest request)
         {
-            if (_agentsInProcessSet.Contains(request.Key))
-                return new GetAgentStateResponce()
-                {
-                    ErrorMessage = $"Agent {request.Key.ObservedId}:{request.Key.ObservedObjectAffilation} is busy"
-                };
             IAgent agent = await _agentsStore.GetAgent(request.Key, request.AgentsSettings);
-
-            if (LockAgent(request.Key))
+            agent.UpdateVariables(request.Variables);
+            UpdateStateResult result = await agent.UpdateState();
+            return new GetAgentStateResponce()
             {
-                agent.UpdateVariables(request.Variables);
-                UpdateStateResult result = await agent.UpdateState();
-
-                UnlockAgent(request.Key);
-
-                return new GetAgentStateResponce()
-                {
-                    AgentState = result.AgentState,
-                    ErrorMessage = result.ErrorMessage
-                };
-            }
-
-            else
-                return new GetAgentStateResponce()
-                {
-                    ErrorMessage = $"Agent {request.Key.ObservedId}:{request.Key.ObservedObjectAffilation} is busy"
-                };
+                AgentState = result.AgentState,
+                ErrorMessage = result.ErrorMessage
+            };
         }
-
-        public bool LockAgent(IAgentKey key)
-        {
-            if (_agentsInProcessSet.Contains(key))
-                return false;
-            _agentsInProcessSet.Add(key);
-            return true;
-        }
-
-        public void UnlockAgent(IAgentKey key) => _agentsInProcessSet.Remove(key); //TODO А если вернет false?
-
-        //TODO free agent ~ delete
 
 
         public async Task<IEnumerable<IProperty>> GetAgentCurProperties(IAgentKey Key, AgentSettings agentsSettings)
