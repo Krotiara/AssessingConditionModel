@@ -19,19 +19,14 @@ namespace Agents.API.Controllers
     public class AgentsController : ControllerBase
     {
 
-        private readonly IMediator _mediator;
         private readonly ILogger<AgentsController> _logger;
-        private readonly SettingsService _settingsService;
         private readonly AgentsService _agentsService;
 
-        public AgentsController(IMediator mediator,
-            SettingsService settingsService,
+        public AgentsController(
             ILogger<AgentsController> logger,
             AgentsService agentsService)
         {
-            _mediator = mediator;
             _logger = logger;
-            _settingsService = settingsService;
             _agentsService = agentsService;
         }
 
@@ -39,14 +34,15 @@ namespace Agents.API.Controllers
         [HttpPost("predict")]
         public async Task<ActionResult> PredictState([FromBody] PredictionRequest req)
         {
-            var sets = await _settingsService.Get(req.Affiliation, req.AgentType);
-            if (sets == null)
-                return Ok();
+            if (req.AgentsSettings == null)
+                throw new KeyNotFoundException("Не переданы настройки агентов.");
 
             List<StatePrediction> predictions = new();
             foreach (var predictionSettings in req.Settings)
             {
                 var key = new AgentKey(req.Id, req.Affiliation, req.AgentType);
+                if (!req.AgentsSettings.TryGetValue(req.AgentType, out var sets))
+                    throw new KeyNotFoundException("Не переданы настройки агента.");
                 StatePredictionResponce p = await _agentsService.GetPrediction(key, sets, predictionSettings);
                 if (p.IsError)
                     return Ok(new StatePredictionsResponce(req.Id, req.Affiliation) { ErrorMessage = p.ErrorMessage });

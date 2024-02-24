@@ -14,6 +14,7 @@ using Agents.API.Entities.AgentsSettings;
 using Quartz;
 using Agents.API.Jobs;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Agents.API.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 var services = builder.Services;
@@ -77,15 +78,15 @@ services
 //store
 services.AddTransient<UsersStore>();
 
-services
-    .AddSingleton<SettingsStore>()
-    .AddSingleton<IAgentsStore, MemoryAgentsStore>();
+services.AddSingleton<SettingsStore>();
+
+services.AddScoped<IAgentsStore, MemoryAgentsStore>();
 
 //service
+services.AddScoped<AgentsService>();
+
 services
-    .AddSingleton<SettingsService>()
     .AddSingleton<PredictionRequestsService>()
-    .AddSingleton<AgentsService>()
     .AddSingleton<ICodeExecutor, CodeExecutorService>()
     .AddSingleton<PatientsService>();
 
@@ -104,7 +105,6 @@ services.AddQuartz(q =>
 
     InitPredictionModelsJob.Schedule(q);
     InitUsersJob.Schedule(q);
-    InitSettingsJob.Schedule(q);
 });
 services.AddQuartzHostedService();
 
@@ -129,6 +129,8 @@ app.UseRouting();
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.UseMiddleware<ErrorHandlerMiddleware>();
 
 app.UseSwagger();
 
