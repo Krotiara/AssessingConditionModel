@@ -15,7 +15,7 @@ namespace PatientsResolver.API
 				var connectionFactory = new ConnectionFactory
 				{
 					Uri = new Uri(connectionUrl),
-					DispatchConsumersAsync = true,
+					DispatchConsumersAsync = true
 				};
 
 				var logger = factory.GetService<ILogger<RabbitMQPersistentConnection>>();
