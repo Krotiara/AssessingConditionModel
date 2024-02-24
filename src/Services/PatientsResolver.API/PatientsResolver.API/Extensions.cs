@@ -46,7 +46,6 @@ namespace PatientsResolver.API
 				queueName: rabbitMQSection["QueueName"],
 				timeoutBeforeReconnecting: 15
 			);
-			//services.AddTransient<MessageSentEventHandler>(); - для получателей
 		}
 	}
 }
