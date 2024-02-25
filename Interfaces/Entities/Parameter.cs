@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ASMLib.DynamicAgent
+namespace ASMLib.Entities
 {
-    public interface IParameter
+    public class Parameter
     {
         public string Name { get; set; }
 

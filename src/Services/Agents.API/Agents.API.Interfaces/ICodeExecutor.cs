@@ -1,4 +1,5 @@
 ﻿using ASMLib.DynamicAgent;
+using ASMLib.Entities;
 using Interfaces;
 
 namespace Agents.API.Interfaces
@@ -21,7 +22,7 @@ namespace Agents.API.Interfaces
     public interface ICodeExecutor
     {
         public Task<ExecuteCodeResult> ExecuteCode(string codeLines, IAgent agent,
-            IAgentPropertiesNamesSettings commonPropertiesNames,
+            AgentPropertiesNamesSettings commonPropertiesNames,
             CancellationToken cancellationToken=default);
 
 

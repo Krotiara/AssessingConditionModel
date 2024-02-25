@@ -1,6 +1,7 @@
 ﻿using Agents.API.Entities;
 using Agents.API.Interfaces;
 using ASMLib.DynamicAgent;
+using ASMLib.Entities;
 using Interfaces;
 using MediatR;
 using Microsoft.CodeAnalysis.CSharp.Scripting;
@@ -16,9 +17,9 @@ namespace Agents.API.Service.Command
     {
         public ICommand Command { get; }
 
-        public IAgentPropertiesNamesSettings CommonPropertiesNames { get; }
+        public AgentPropertiesNamesSettings CommonPropertiesNames { get; }
 
-        public ExecuteCodeLineCommand(ICommand command, IAgentPropertiesNamesSettings commonPropertiesNames)
+        public ExecuteCodeLineCommand(ICommand command, AgentPropertiesNamesSettings commonPropertiesNames)
         {
             Command = command;
             CommonPropertiesNames = commonPropertiesNames;
@@ -130,7 +131,7 @@ namespace Agents.API.Service.Command
 
             foreach (string var in vars)
             {
-                IDictionary<string, IProperty> source;
+                IDictionary<string, Property> source;
                 if (variables.ContainsKey(var))
                     source = variables;
                 else if (properties.ContainsKey(var))

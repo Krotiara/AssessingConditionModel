@@ -16,6 +16,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using ASMLib.Entities;
 
 namespace Agents.API.Service.Services
 {
@@ -40,7 +41,7 @@ namespace Agents.API.Service.Services
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         public async Task<ExecuteCodeResult> ExecuteCode(string codeLines, IAgent agent,
-            IAgentPropertiesNamesSettings commonPropertiesNames,
+            AgentPropertiesNamesSettings commonPropertiesNames,
             CancellationToken cancellationToken = default)
         {
             List<string> lines = codeLines

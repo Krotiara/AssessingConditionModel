@@ -6,6 +6,7 @@ using ASMLib.DynamicAgent;
 using MediatR;
 using System.ComponentModel;
 using System.Text.RegularExpressions;
+using ASMLib.Entities;
 
 namespace Agents.API.Service.Services
 {
@@ -23,7 +24,7 @@ namespace Agents.API.Service.Services
         }
 
         public Task<(ICommandArgsTypesMeta?, Delegate)> ResolveCommandAction(ICommand command,
-            IAgentPropertiesNamesSettings commonPropertiesNames, CancellationToken cancellationToken)
+            AgentPropertiesNamesSettings commonPropertiesNames, CancellationToken cancellationToken)
         {
             string commandName = GetCommandName(command);
             SystemCommands apiCommand;

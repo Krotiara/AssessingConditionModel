@@ -14,6 +14,7 @@ using Agents.API.Jobs;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Agents.API.Middlewares;
 using ASMLib.DynamicAgent;
+using Agents.API.Entities.Documents;
 
 var builder = WebApplication.CreateBuilder(args);
 var services = builder.Services;
@@ -72,8 +73,8 @@ AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 //entities
 services
     .AddTransient<IWebRequester, HttpWebRequester>()
-    .AddTransient<IProperty, Property>()
-    .AddTransient<IAgentState, AgentState>();
+    .AddTransient<IAgentState, AgentState>()
+    .AddTransient<IAgentSettings, AgentSettings>();
 
 //store
 services.AddTransient<UsersStore>();

@@ -2,6 +2,7 @@
 using Agents.API.Service.Services;
 using Interfaces;
 using ASMLib.DynamicAgent;
+using ASMLib.Entities;
 
 namespace Agents.API.Service.AgentCommand
 {
@@ -12,7 +13,7 @@ namespace Agents.API.Service.AgentCommand
 
         public IAgent Agent { get; set; }
 
-        public IAgentPropertiesNamesSettings PropertiesNamesSettings { get; set; }
+        public AgentPropertiesNamesSettings PropertiesNamesSettings { get; set; }
 
 
         public GetAgeCommand(PatientsService requestService)

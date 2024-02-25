@@ -4,8 +4,10 @@ using Agents.API.Entities.Documents;
 using Agents.API.Entities.Requests;
 using Agents.API.Entities.Requests.Responce;
 using ASMLib.DynamicAgent;
+using ASMLib.Entities;
 using ASMLib.EventBus;
 using ASMLib.EventBus.Events;
+using ASMLib.Requests;
 using Interfaces;
 using System.Collections.Concurrent;
 
@@ -37,14 +39,14 @@ namespace Agents.API.Service.Services
         }
 
 
-        public async Task<IEnumerable<IProperty>> GetAgentCurProperties(IAgentKey Key)
+        public async Task<IEnumerable<Property>> GetAgentCurProperties(IAgentKey Key)
         {
             IAgent agent = await _agentsStore.Get(Key);
             return agent.Properties.Values.Where(x => x.Description != null && x.Description != string.Empty);
         }
 
 
-        public async Task<IEnumerable<IParameter>> GetAgentCalculationBuffer(IAgentKey key)
+        public async Task<IEnumerable<Parameter>> GetAgentCalculationBuffer(IAgentKey key)
         {
             IAgent agent = await _agentsStore.Get(key);
             return agent.Buffer.Values;

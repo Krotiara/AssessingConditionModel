@@ -1,8 +1,12 @@
-﻿using Agents.API.Entities.AgentsSettings;
-using Agents.API.Entities.Documents;
-using System.Collections.Concurrent;
+﻿using ASMLib.DynamicAgent;
+using ASMLib.Entities;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace Agents.API.Entities.Requests
+namespace ASMLib.Requests
 {
     public class PredictionRequest
     {
@@ -16,6 +20,6 @@ namespace Agents.API.Entities.Requests
 
         public PredictionSettings Settings { get; set; }
 
-        public AgentSettings AgentSettings { get; set; }
+        public IAgentSettings AgentSettings { get; set; }
     }
 }

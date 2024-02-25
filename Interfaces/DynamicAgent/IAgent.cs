@@ -1,4 +1,5 @@
 ﻿using ASMLib.DynamicAgent;
+using ASMLib.Entities;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -18,26 +19,26 @@ namespace ASMLib.DynamicAgent
 
         public IAgentState CurrentState { get; set; }
 
-        public ConcurrentDictionary<string, IProperty> Properties { get;}
+        public ConcurrentDictionary<string, Property> Properties { get;}
 
-        public ConcurrentDictionary<string, IProperty> Variables { get;}
+        public ConcurrentDictionary<string, Property> Variables { get;}
 
         /// <summary>
         /// Содержит в себе буффер для расчета свойств агентов
         /// </summary>
-        public ConcurrentDictionary<(string, DateTime), IParameter> Buffer { get; set; }
+        public ConcurrentDictionary<(string, DateTime), Parameter> Buffer { get; set; }
 
         public ConcurrentDictionary<string, IAgentState> States { get;}
 
         public Task<UpdateStateResult> UpdateState();
 
-        public void UpdateVariables(IEnumerable<IProperty> vars);
+        public void UpdateVariables(IEnumerable<Property> vars);
 
-        public void AddToBuffer(IParameter parameter);
+        public void AddToBuffer(Parameter parameter);
 
         public T GetPropertyValue<T>(string propertyName);
 
 
-        public void SetSettings(IAgentsSettings sets);
+        public void SetSettings(IAgentSettings sets);
     }
 }

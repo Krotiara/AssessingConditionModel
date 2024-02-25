@@ -10,6 +10,7 @@ using ASMLib.DynamicAgent;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using ASMLib.Requests;
 
 namespace Agents.API.Controllers
 {

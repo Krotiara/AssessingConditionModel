@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Interfaces
+namespace ASMLib.Entities
 {
-    public interface IAgentPropertiesNamesSettings
+    public class AgentPropertiesNamesSettings
     {
         public string StartTimestamp { get; set; }
 

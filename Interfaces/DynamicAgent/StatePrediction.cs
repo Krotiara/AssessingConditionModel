@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ASMLib.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,7 +10,7 @@ namespace ASMLib.DynamicAgent
     public class StatePrediction
     {
         public StatePrediction(string name, IAgentState agentState,
-            IProperty[] stateProperties, IParameter[] stateBuffer)
+            Property[] stateProperties, Parameter[] stateBuffer)
         {
             Name = name;
             AgentState = agentState;
@@ -21,8 +22,8 @@ namespace ASMLib.DynamicAgent
 
         public IAgentState AgentState { get; set; }
 
-        public IProperty[] StateProperties { get; set; }
+        public Property[] StateProperties { get; set; }
 
-        public IParameter[] StateBuffer { get; set; }
+        public Parameter[] StateBuffer { get; set; }
     }
 }

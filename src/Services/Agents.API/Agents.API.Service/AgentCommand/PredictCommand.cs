@@ -5,6 +5,7 @@ using Agents.API.Service.Services;
 using Interfaces;
 using ASMLib.DynamicAgent;
 using Microsoft.Extensions.Logging;
+using ASMLib.Entities;
 
 namespace Agents.API.Service.AgentCommand
 {
@@ -24,7 +25,7 @@ namespace Agents.API.Service.AgentCommand
 
 
         public IAgent Agent { get; set; }
-        public IAgentPropertiesNamesSettings PropertiesNamesSettings { get; set; }
+        public AgentPropertiesNamesSettings PropertiesNamesSettings { get; set; }
 
         public Delegate Command => async (double age, string mlModelId) =>
         {
@@ -76,7 +77,7 @@ namespace Agents.API.Service.AgentCommand
 
         private bool CheckCommand() => Agent.Properties.ContainsKey(PropertiesNamesSettings.Id)
             && Agent.Properties.ContainsKey(PropertiesNamesSettings.Affiliation)
-            && Agent.Variables.TryGetValue(PropertiesNamesSettings.EndTimestamp, out IProperty p)
+            && Agent.Variables.TryGetValue(PropertiesNamesSettings.EndTimestamp, out Property p)
             && p.Value is DateTime;
 
 

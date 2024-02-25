@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ASMLib.Entities;
 
 namespace Agents.API.Entities.AgentsSettings
 {
@@ -26,15 +27,15 @@ namespace Agents.API.Entities.AgentsSettings
 
         public IAgentState CurrentState { get; set; }
 
-        public ConcurrentDictionary<string, IProperty> Properties { get; }
+        public ConcurrentDictionary<string, Property> Properties { get; }
 
-        public ConcurrentDictionary<string, IProperty> Variables { get; }
+        public ConcurrentDictionary<string, Property> Variables { get; }
 
-        public ConcurrentDictionary<(string, DateTime), IParameter> Buffer { get; set; }
+        public ConcurrentDictionary<(string, DateTime), Parameter> Buffer { get; set; }
 
         public ConcurrentDictionary<string, IAgentState> States { get; }
 
-        private IAgentPropertiesNamesSettings _commonPropertiesNames;
+        private AgentPropertiesNamesSettings _commonPropertiesNames;
 
         public Agent(IAgentKey key, ICodeExecutor codeExecutor)
         {
@@ -79,15 +80,15 @@ namespace Agents.API.Entities.AgentsSettings
         }
 
 
-        public void UpdateVariables(IEnumerable<IProperty> vars)
+        public void UpdateVariables(IEnumerable<Property> vars)
         {
-            foreach (IProperty p in vars)
+            foreach (Property p in vars)
                 Variables[p.Name] = p;
             Buffer.Clear();
         }
 
 
-        public void AddToBuffer(IParameter parameter) => Buffer.TryAdd((parameter.Name, parameter.Timestamp), parameter);
+        public void AddToBuffer(Parameter parameter) => Buffer.TryAdd((parameter.Name, parameter.Timestamp), parameter);
 
 
         public T GetPropertyValue<T>(string propertyName)
@@ -110,21 +111,21 @@ namespace Agents.API.Entities.AgentsSettings
         }
 
 
-        private void InitDicts(IAgentsSettings settings)
+        private void InitDicts(IAgentSettings settings)
         {
             Properties.Clear();
             Variables.Clear();
             States.Clear();
-            foreach (IProperty p in settings.StateProperties)
+            foreach (Property p in settings.StateProperties)
                 Properties[p.Name] = p;
-            foreach (IProperty p in settings.Variables)
+            foreach (Property p in settings.Variables)
                 Variables[p.Name] = p;
             foreach (IAgentState s in settings.States)
                 States[s.Name] = s;
         }
 
 
-        private void InitCommonProperties(string observingId, string observingAffiliation, IAgentPropertiesNamesSettings settings)
+        private void InitCommonProperties(string observingId, string observingAffiliation, AgentPropertiesNamesSettings settings)
         {
             Properties[settings.Id] =
                 new Property(settings.Id, typeof(string).FullName, observingId);
@@ -132,7 +133,7 @@ namespace Agents.API.Entities.AgentsSettings
                 new Property(settings.Affiliation, typeof(string).FullName, observingAffiliation);
         }
 
-        public void SetSettings(IAgentsSettings settings)
+        public void SetSettings(IAgentSettings settings)
         {
             _stateResolveCode = settings.StateResolveCode;
             AgentType = settings.AgentType;

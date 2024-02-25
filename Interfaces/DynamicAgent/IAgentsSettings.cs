@@ -1,4 +1,5 @@
-﻿using Interfaces;
+﻿using ASMLib.Entities;
+using Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace ASMLib.DynamicAgent
 {
-    public interface IAgentsSettings
+    public interface IAgentSettings
     {
         public string Id { get; set; }
 
@@ -15,14 +16,14 @@ namespace ASMLib.DynamicAgent
 
         public string AgentType { get; set; }
 
-        public List<IProperty> StateProperties { get; set; }
+        public List<Property> StateProperties { get; set; }
 
-        public List<IProperty> Variables { get; set; }
+        public List<Property> Variables { get; set; }
 
         public string StateResolveCode { get; set; }
 
         public List<IAgentState> States { get; set; }
 
-        public IAgentPropertiesNamesSettings CommonNamesSettings { get; set; }
+        public AgentPropertiesNamesSettings CommonNamesSettings { get; set; }
     }
 }

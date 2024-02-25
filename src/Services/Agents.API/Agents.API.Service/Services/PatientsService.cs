@@ -1,6 +1,7 @@
 ﻿using Agents.API.Entities;
 using Agents.API.Entities.Documents;
 using Agents.API.Entities.Requests;
+using ASMLib.Entities;
 using Interfaces;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
