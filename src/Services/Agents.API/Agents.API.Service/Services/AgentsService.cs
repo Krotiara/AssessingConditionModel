@@ -82,8 +82,8 @@ namespace Agents.API.Service.Services
             if (stateResponce.IsError)
                 return new StatePredictionResponce() { ErrorMessage = stateResponce.ErrorMessage };
 
-            var properties = await GetAgentCurProperties(key);
-            var buffer = await GetAgentCalculationBuffer(key);
+            var properties = (await GetAgentCurProperties(key)).ToArray();
+            var buffer = (await GetAgentCalculationBuffer(key)).ToArray();
 
             return new StatePredictionResponce()
             { StatePrediction = new StatePrediction(request.Settings.SettingsName, stateResponce.AgentState, properties, buffer) };

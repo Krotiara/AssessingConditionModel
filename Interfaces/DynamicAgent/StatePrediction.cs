@@ -9,7 +9,7 @@ namespace ASMLib.DynamicAgent
     public class StatePrediction
     {
         public StatePrediction(string name, IAgentState agentState,
-            IEnumerable<IProperty> stateProperties, IEnumerable<IParameter> stateBuffer)
+            IProperty[] stateProperties, IParameter[] stateBuffer)
         {
             Name = name;
             AgentState = agentState;
@@ -21,8 +21,8 @@ namespace ASMLib.DynamicAgent
 
         public IAgentState AgentState { get; set; }
 
-        public IEnumerable<IProperty> StateProperties { get; set; }
+        public IProperty[] StateProperties { get; set; }
 
-        public IEnumerable<IParameter> StateBuffer { get; set; }
+        public IParameter[] StateBuffer { get; set; }
     }
 }
