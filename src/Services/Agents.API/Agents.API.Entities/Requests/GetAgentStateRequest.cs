@@ -7,7 +7,7 @@ namespace Agents.API.Entities.Requests
 {
     public class GetAgentStateRequest
     {
-        public GetAgentStateRequest(IAgentKey key, IAgentSettings agentsSettings, IEnumerable<Property> variables)
+        public GetAgentStateRequest(IAgentKey key, AgentSettings agentsSettings, IEnumerable<Property> variables)
         {
             Key = key;
             AgentsSettings = agentsSettings;
@@ -16,7 +16,7 @@ namespace Agents.API.Entities.Requests
 
         public IAgentKey Key { get; set; }
 
-        public IAgentSettings AgentsSettings { get; set; }
+        public AgentSettings AgentsSettings { get; set; }
 
         public IEnumerable<Property> Variables { get; set; }
     }

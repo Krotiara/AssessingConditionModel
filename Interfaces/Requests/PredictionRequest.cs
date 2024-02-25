@@ -20,6 +20,6 @@ namespace ASMLib.Requests
 
         public PredictionSettings Settings { get; set; }
 
-        public IAgentSettings AgentSettings { get; set; }
+        public AgentSettings AgentSettings { get; set; }
     }
 }

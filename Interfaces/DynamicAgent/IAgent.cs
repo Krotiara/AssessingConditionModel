@@ -39,6 +39,6 @@ namespace ASMLib.DynamicAgent
         public T GetPropertyValue<T>(string propertyName);
 
 
-        public void SetSettings(IAgentSettings sets);
+        public void SetSettings(AgentSettings sets);
     }
 }

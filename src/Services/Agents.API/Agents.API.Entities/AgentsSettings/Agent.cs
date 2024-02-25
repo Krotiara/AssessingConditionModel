@@ -111,7 +111,7 @@ namespace Agents.API.Entities.AgentsSettings
         }
 
 
-        private void InitDicts(IAgentSettings settings)
+        private void InitDicts(AgentSettings settings)
         {
             Properties.Clear();
             Variables.Clear();
@@ -133,7 +133,7 @@ namespace Agents.API.Entities.AgentsSettings
                 new Property(settings.Affiliation, typeof(string).FullName, observingAffiliation);
         }
 
-        public void SetSettings(IAgentSettings settings)
+        public void SetSettings(AgentSettings settings)
         {
             _stateResolveCode = settings.StateResolveCode;
             AgentType = settings.AgentType;

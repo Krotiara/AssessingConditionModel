@@ -1,15 +1,20 @@
-﻿using ASMLib.Entities;
-using Interfaces;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ASMLib.DynamicAgent
+namespace ASMLib.Entities
 {
-    public interface IAgentSettings
+    public class AgentSettings
     {
+        public AgentSettings()
+        {
+            StateProperties = new();
+            Variables = new();
+            States = new();
+        }
+
         public string Id { get; set; }
 
         public string Affiliation { get; set; }
