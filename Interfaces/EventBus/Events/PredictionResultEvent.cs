@@ -1,4 +1,5 @@
 ﻿using ASMLib.DynamicAgent;
+using ASMLib.Entities;
 using Interfaces;
 using System;
 using System.Collections.Generic;
@@ -12,7 +13,7 @@ namespace ASMLib.EventBus.Events
     {
         public string PredictionId { get; set; }
 
-        public IAgentKey AgentKey { get; set; }
+        public AgentKey AgentKey { get; set; }
 
         public StatePrediction StatePrediction { get; set; }
 

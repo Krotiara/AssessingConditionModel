@@ -18,8 +18,8 @@ namespace Agents.API.Service.Services
         private readonly IAgentsStore _agentsStore;
         private readonly IEventBus _eventBus;
 
-        private ConcurrentDictionary<IAgentKey, ConcurrentQueue<PredictionRequest>> _predictionsQueueDict;
-        private ConcurrentDictionary<IAgentKey, PredictionRequest> _currentPredictions;
+        private ConcurrentDictionary<AgentKey, ConcurrentQueue<PredictionRequest>> _predictionsQueueDict;
+        private ConcurrentDictionary<AgentKey, PredictionRequest> _currentPredictions;
 
         public AgentsService(IAgentsStore agentsStore, IEventBus eventBus)
         {
@@ -30,7 +30,7 @@ namespace Agents.API.Service.Services
         }
 
 
-        public void AddPredictionRequest(IAgentKey key, PredictionRequest request)
+        public void AddPredictionRequest(AgentKey key, PredictionRequest request)
         {
             if (!_predictionsQueueDict.ContainsKey(key))
                 _predictionsQueueDict[key] = new();
@@ -39,14 +39,14 @@ namespace Agents.API.Service.Services
         }
 
 
-        public async Task<IEnumerable<Property>> GetAgentCurProperties(IAgentKey Key)
+        public async Task<IEnumerable<Property>> GetAgentCurProperties(AgentKey Key)
         {
             IAgent agent = await _agentsStore.Get(Key);
             return agent.Properties.Values.Where(x => x.Description != null && x.Description != string.Empty);
         }
 
 
-        public async Task<IEnumerable<Parameter>> GetAgentCalculationBuffer(IAgentKey key)
+        public async Task<IEnumerable<Parameter>> GetAgentCalculationBuffer(AgentKey key)
         {
             IAgent agent = await _agentsStore.Get(key);
             return agent.Buffer.Values;
@@ -77,7 +77,7 @@ namespace Agents.API.Service.Services
         }
 
 
-        private async Task<StatePredictionResponce> GetPrediction(IAgentKey key, PredictionRequest request)
+        private async Task<StatePredictionResponce> GetPrediction(AgentKey key, PredictionRequest request)
         {
             GetAgentStateResponce stateResponce = await GetAgentState(
                         new GetAgentStateRequest(key, request.AgentSettings, request.Settings.Variables));

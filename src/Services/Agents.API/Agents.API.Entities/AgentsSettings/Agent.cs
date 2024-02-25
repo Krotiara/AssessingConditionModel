@@ -37,7 +37,7 @@ namespace Agents.API.Entities.AgentsSettings
 
         private AgentPropertiesNamesSettings _commonPropertiesNames;
 
-        public Agent(IAgentKey key, ICodeExecutor codeExecutor)
+        public Agent(AgentKey key, ICodeExecutor codeExecutor)
         {
             _codeExecutor = codeExecutor;
             Id = key.ObservedId;

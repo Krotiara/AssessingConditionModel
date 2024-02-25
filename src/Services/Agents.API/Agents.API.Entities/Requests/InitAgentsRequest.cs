@@ -1,4 +1,5 @@
 ﻿using Agents.API.Entities.AgentsSettings;
+using ASMLib.Entities;
 using Interfaces;
 using Interfaces.Requests;
 using System;
@@ -20,6 +21,6 @@ namespace Agents.API.Entities.Requests
         public List<AgentKey> AgentsToInit { get; set; }
 
         [NotMapped]
-        List<IAgentKey> IInitAgentsRequest.AgentsToInit => AgentsToInit.Select(x => x as IAgentKey).ToList();
+        List<AgentKey> IInitAgentsRequest.AgentsToInit => AgentsToInit.Select(x => x as AgentKey).ToList();
     }
 }

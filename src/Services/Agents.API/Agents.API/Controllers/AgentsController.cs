@@ -11,6 +11,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ASMLib.Requests;
+using ASMLib.Entities;
 
 namespace Agents.API.Controllers
 {

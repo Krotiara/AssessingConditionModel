@@ -1,14 +1,15 @@
-﻿using Interfaces;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Agents.API.Entities.AgentsSettings
+namespace ASMLib.Entities
 {
-    public class AgentKey : IAgentKey
+    public class AgentKey
     {
+        public AgentKey() { }
+
         public AgentKey(string observedId, string observedObjectAffilation, string agentType)
         {
             ObservedId = observedId;
