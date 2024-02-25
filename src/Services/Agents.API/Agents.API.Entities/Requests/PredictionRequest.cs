@@ -8,6 +8,8 @@ namespace Agents.API.Entities.Requests
     {
         public string Id { get; set; }
 
+        public string ObservedId { get; set; }
+
         public string Affiliation { get; set; }
 
         public string AgentType { get; set; }

@@ -37,7 +37,7 @@ namespace Agents.API.Controllers
             if (req.AgentSettings == null)
                 throw new KeyNotFoundException("Не переданы настройки агентов.");
     
-            var key = new AgentKey(req.Id, req.Affiliation, req.AgentType);
+            var key = new AgentKey(req.ObservedId, req.Affiliation, req.AgentType);
 
             _agentsService.AddPredictionRequest(key, req);
 
