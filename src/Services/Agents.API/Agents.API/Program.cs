@@ -73,7 +73,6 @@ AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 //entities
 services
     .AddTransient<IWebRequester, HttpWebRequester>()
-    .AddTransient<IAgentState, AgentState>()
     .AddTransient<IAgentSettings, AgentSettings>();
 
 //store

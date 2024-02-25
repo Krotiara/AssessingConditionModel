@@ -22,7 +22,7 @@ namespace ASMLib.DynamicAgent
 
         public string StateResolveCode { get; set; }
 
-        public List<IAgentState> States { get; set; }
+        public List<AgentState> States { get; set; }
 
         public AgentPropertiesNamesSettings CommonNamesSettings { get; set; }
     }

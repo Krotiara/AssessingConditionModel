@@ -17,7 +17,7 @@ namespace ASMLib.DynamicAgent
 
         public string AgentType { get; }
 
-        public IAgentState CurrentState { get; set; }
+        public AgentState CurrentState { get; set; }
 
         public ConcurrentDictionary<string, Property> Properties { get;}
 
@@ -28,7 +28,7 @@ namespace ASMLib.DynamicAgent
         /// </summary>
         public ConcurrentDictionary<(string, DateTime), Parameter> Buffer { get; set; }
 
-        public ConcurrentDictionary<string, IAgentState> States { get;}
+        public ConcurrentDictionary<string, AgentState> States { get;}
 
         public Task<UpdateStateResult> UpdateState();
 

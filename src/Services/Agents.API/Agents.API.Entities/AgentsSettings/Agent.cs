@@ -25,7 +25,7 @@ namespace Agents.API.Entities.AgentsSettings
 
         public string AgentType { get; private set; }
 
-        public IAgentState CurrentState { get; set; }
+        public AgentState CurrentState { get; set; }
 
         public ConcurrentDictionary<string, Property> Properties { get; }
 
@@ -33,7 +33,7 @@ namespace Agents.API.Entities.AgentsSettings
 
         public ConcurrentDictionary<(string, DateTime), Parameter> Buffer { get; set; }
 
-        public ConcurrentDictionary<string, IAgentState> States { get; }
+        public ConcurrentDictionary<string, AgentState> States { get; }
 
         private AgentPropertiesNamesSettings _commonPropertiesNames;
 
@@ -57,7 +57,7 @@ namespace Agents.API.Entities.AgentsSettings
             {
                 string stateVar = "isState";
 
-                foreach (IAgentState state in States.Values)
+                foreach (AgentState state in States.Values)
                 {
                     string ifCondition = $"{stateVar}={state.DefinitionCode}";
                     res = await _codeExecutor.ExecuteCode(ifCondition, this, _commonPropertiesNames);
@@ -120,7 +120,7 @@ namespace Agents.API.Entities.AgentsSettings
                 Properties[p.Name] = p;
             foreach (Property p in settings.Variables)
                 Variables[p.Name] = p;
-            foreach (IAgentState s in settings.States)
+            foreach (AgentState s in settings.States)
                 States[s.Name] = s;
         }
 

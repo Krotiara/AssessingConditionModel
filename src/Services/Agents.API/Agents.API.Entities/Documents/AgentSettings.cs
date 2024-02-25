@@ -34,7 +34,7 @@ namespace Agents.API.Entities.Documents
 
         public string StateResolveCode { get; set; }
 
-        public List<IAgentState> States { get; set; }
+        public List<AgentState> States { get; set; }
 
         [JsonIgnore]
         public AgentPropertiesNamesSettings CommonNamesSettings { get; set; }
