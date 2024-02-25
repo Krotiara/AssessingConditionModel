@@ -77,7 +77,6 @@ services
 //store
 services.AddTransient<UsersStore>();
 
-services.AddSingleton<SettingsStore>();
 services.AddSingleton<IAgentsStore, MemoryAgentsStore>();
 
 //service
