@@ -10,7 +10,7 @@ namespace ASMLib.EventBus.Events
 {
     public class PredictionResultEvent : Event
     {
-        public string Id { get; set; }
+        public string PredictionId { get; set; }
 
         public IAgentKey AgentKey { get; set; }
 

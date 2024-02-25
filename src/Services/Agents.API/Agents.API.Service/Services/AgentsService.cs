@@ -64,7 +64,7 @@ namespace Agents.API.Service.Services
                 if (_currentPredictions.TryRemove(pair.Key, out _))
                     _eventBus.Publish(new PredictionResultEvent()
                     {
-                        Id = request.Id,
+                        PredictionId = request.Id,
                         AgentKey = pair.Key,
                         StatePrediction = responce.StatePrediction,
                         ErrorMessage = responce.ErrorMessage
