@@ -9,6 +9,8 @@ namespace ASMLib.DynamicAgent
 {
     public class StatePrediction
     {
+        public StatePrediction() { }
+
         public StatePrediction(string name, AgentState agentState,
             Property[] stateProperties, Parameter[] stateBuffer)
         {
