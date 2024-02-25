@@ -1,4 +1,5 @@
 ﻿using ASMLib.DynamicAgent;
+using ASMLib.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,7 +18,7 @@ namespace ASMLib.Requests
 
         public string AgentType { get; set; }
 
-        public IPredictionSettings Settings { get; set; }
+        public PredictionSettings Settings { get; set; }
 
         public IAgentSettings AgentSettings { get; set; }
     }
