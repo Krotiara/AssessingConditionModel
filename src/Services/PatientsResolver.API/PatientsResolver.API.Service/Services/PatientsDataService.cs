@@ -1,19 +1,12 @@
 ﻿using ASMLib;
 using ASMLib.EventBus;
-using ASMLib.EventBus.Events;
 using Interfaces;
 using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
 using PatientsResolver.API.Data.Store;
 using PatientsResolver.API.Entities;
-using PatientsResolver.API.Entities.Mongo;
-using System;
+using PatientsResolver.API.Entities.Events;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PatientsResolver.API.Service.Services
 {
@@ -79,6 +72,11 @@ namespace PatientsResolver.API.Service.Services
                 throw new KeyNotFoundException($"Не найден пациент.");
             await _patientsStore.Delete(id);
             _patients.TryRemove((patient.PatientId, patient.Affiliation), out _);
+            _eventBus?.Publish(new UpdatePatientEvent()
+            {
+                PatientId = patient.PatientId,
+                PatientAffiliation = patient.Affiliation
+            });
         }
 
 
@@ -88,6 +86,11 @@ namespace PatientsResolver.API.Service.Services
             if (patient == null)
                 throw new KeyNotFoundException($"Не найден пациент.");
             await _parametersStore.DeleteAll(patientId);
+            _eventBus?.Publish(new UpdatePatientParametersEvent()
+            {
+                PatientId = patient.PatientId,
+                PatientAffiliation = patient.Affiliation
+            });
         }
 
 

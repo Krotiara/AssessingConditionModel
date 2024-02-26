@@ -1,13 +1,8 @@
 ﻿using ASMLib.DynamicAgent;
 using ASMLib.Entities;
-using Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using ASMLib.EventBus.Events;
 
-namespace ASMLib.EventBus.Events
+namespace Agents.API.Entities.Events
 {
     public class PredictionResultEvent : Event
     {

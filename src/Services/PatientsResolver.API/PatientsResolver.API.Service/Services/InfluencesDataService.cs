@@ -1,21 +1,20 @@
-﻿using Interfaces;
+﻿using ASMLib.EventBus;
+using Interfaces;
 using PatientsResolver.API.Data.Store;
+using PatientsResolver.API.Entities.Events;
 using PatientsResolver.API.Entities.Mongo;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PatientsResolver.API.Service.Services
 {
     public class InfluencesDataService
     {
         private readonly MongoInfluencesStore _store;
+        private readonly IEventBus _eventBus;
 
-        public InfluencesDataService(MongoInfluencesStore store)
+        public InfluencesDataService(MongoInfluencesStore store, IEventBus eventBus)
         {
             _store = store;
+            _eventBus = eventBus;
         }
 
 
@@ -37,9 +36,22 @@ namespace PatientsResolver.API.Service.Services
                .Set(x => x.MedicineName, influence.MedicineName)
                .Set(x => x.PatientId, influence.PatientId)
                .Execute();
+                _eventBus?.Publish(new UpdateInfluenceEvent()
+                {
+                    InfluenceId = influence.Id,
+                    PatientId = influence.PatientId,
+                    PatientAffiliation = influence.Affiliation
+                });
             }
             else
+            {
                 await _store.Insert(influence);
+                _eventBus?.Publish(new AddInfluenceEvent()
+                {
+                    PatientId = influence.PatientId,
+                    PatientAffiliation = influence.Affiliation
+                });
+            }
         }
 
 
