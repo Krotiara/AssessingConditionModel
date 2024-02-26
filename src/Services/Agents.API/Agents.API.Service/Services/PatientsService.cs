@@ -81,7 +81,17 @@ namespace Agents.API.Service.Services
                 return null;
             }
             var res = await responce.DeserializeBody<List<Parameter>>();
-            return res.ToDictionary(x => x.Name, x => x);
+            var resDict = new Dictionary<string, Parameter>();
+            foreach (var p in res)
+            {
+                if (resDict.TryGetValue(p.Name, out Parameter resP) && p.Timestamp > resP.Timestamp)
+                {
+                    resDict[p.Name] = p;
+                    continue;
+                }
+                resDict[p.Name] = p;
+            }
+            return resDict;
         }
     }
 }
