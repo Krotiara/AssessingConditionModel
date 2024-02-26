@@ -342,3 +342,4 @@ healthchecksdb
 mongo/
 postgres/
 rabbitmq/
+pgadmin/
