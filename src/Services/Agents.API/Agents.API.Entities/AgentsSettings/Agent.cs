@@ -116,6 +116,7 @@ namespace Agents.API.Entities.AgentsSettings
             Properties.Clear();
             Variables.Clear();
             States.Clear();
+            Buffer.Clear();
             foreach (Property p in settings.StateProperties)
                 Properties[p.Name] = p;
             foreach (Property p in settings.Variables)
