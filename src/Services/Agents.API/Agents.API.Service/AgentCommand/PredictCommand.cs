@@ -3,14 +3,9 @@ using Agents.API.Entities.Documents;
 using Agents.API.Entities.Requests;
 using Agents.API.Service.Services;
 using Interfaces;
-using Interfaces.DynamicAgent;
+using ASMLib.DynamicAgent;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using ASMLib.Entities;
 
 namespace Agents.API.Service.AgentCommand
 {
@@ -30,7 +25,7 @@ namespace Agents.API.Service.AgentCommand
 
 
         public IAgent Agent { get; set; }
-        public IAgentPropertiesNamesSettings PropertiesNamesSettings { get; set; }
+        public AgentPropertiesNamesSettings PropertiesNamesSettings { get; set; }
 
         public Delegate Command => async (double age, string mlModelId) =>
         {
@@ -82,7 +77,7 @@ namespace Agents.API.Service.AgentCommand
 
         private bool CheckCommand() => Agent.Properties.ContainsKey(PropertiesNamesSettings.Id)
             && Agent.Properties.ContainsKey(PropertiesNamesSettings.Affiliation)
-            && Agent.Variables.TryGetValue(PropertiesNamesSettings.EndTimestamp, out IProperty p)
+            && Agent.Variables.TryGetValue(PropertiesNamesSettings.EndTimestamp, out Property p)
             && p.Value is DateTime;
 
 

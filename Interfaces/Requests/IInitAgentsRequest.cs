@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ASMLib.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,6 +12,6 @@ namespace Interfaces.Requests
 
         public AgentType AgentType { get; }
 
-        public List<IAgentKey> AgentsToInit { get; }
+        public List<AgentKey> AgentsToInit { get; }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Agents.API.Entities.Documents;
+using ASMLib.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;

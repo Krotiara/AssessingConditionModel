@@ -1,17 +1,12 @@
-﻿using Agents.API.Entities.AgentsSettings;
-using Interfaces;
-using Interfaces.DynamicAgent;
-using Interfaces.Service;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
-namespace Agents.API.Entities.Documents
+namespace ASMLib.Entities
 {
-    public class AgentSettings : Document
+    public class AgentSettings
     {
         public AgentSettings()
         {
@@ -20,12 +15,13 @@ namespace Agents.API.Entities.Documents
             States = new();
         }
 
+        public string Id { get; set; }
+
         public string Affiliation { get; set; }
 
         public string AgentType { get; set; }
 
         public List<Property> StateProperties { get; set; }
-
 
         public List<Property> Variables { get; set; }
 
@@ -33,8 +29,6 @@ namespace Agents.API.Entities.Documents
 
         public List<AgentState> States { get; set; }
 
-        [JsonIgnore]
         public AgentPropertiesNamesSettings CommonNamesSettings { get; set; }
     }
 }
-

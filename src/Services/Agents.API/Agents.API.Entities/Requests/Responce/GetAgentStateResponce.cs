@@ -1,4 +1,5 @@
-﻿using Interfaces.DynamicAgent;
+﻿using ASMLib.DynamicAgent;
+using ASMLib.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,7 @@ namespace Agents.API.Entities.Requests.Responce
 {
     public class GetAgentStateResponce
     {
-        public IAgentState AgentState { get; set; }
+        public AgentState AgentState { get; set; }
 
         public string ErrorMessage { get; set; }
 

@@ -1,4 +1,3 @@
-using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 using MediatR;
 using Interfaces;
@@ -7,7 +6,6 @@ using Microsoft.EntityFrameworkCore;
 using Agents.API.Service.Services;
 using Agents.API.Data.Store;
 using Agents.API.Interfaces;
-using Interfaces.DynamicAgent;
 using Agents.API.Service.Command;
 using Agents.API;
 using Agents.API.Entities.AgentsSettings;
@@ -15,10 +13,13 @@ using Quartz;
 using Agents.API.Jobs;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Agents.API.Middlewares;
+using ASMLib.DynamicAgent;
+using Agents.API.Entities.Documents;
 
 var builder = WebApplication.CreateBuilder(args);
 var services = builder.Services;
 
+bool isRabbitMq = builder.Configuration.GetSection("RabbitMQSettings").Exists();
 
 services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(o =>
@@ -71,29 +72,27 @@ AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
 //entities
 services
-    .AddTransient<IWebRequester, HttpWebRequester>()
-    .AddTransient<IProperty, Property>()
-    .AddTransient<IAgentState, AgentState>();
+    .AddTransient<IWebRequester, HttpWebRequester>();
 
 //store
 services.AddTransient<UsersStore>();
 
-services.AddSingleton<SettingsStore>();
-
-services.AddScoped<IAgentsStore, MemoryAgentsStore>();
+services.AddSingleton<IAgentsStore, MemoryAgentsStore>();
 
 //service
-services.AddScoped<AgentsService>();
-
 services
     .AddSingleton<PredictionRequestsService>()
     .AddSingleton<ICodeExecutor, CodeExecutorService>()
+    .AddSingleton<AgentsService>()
     .AddSingleton<PatientsService>();
 
 services
     .AddTransient<IRequestHandler<ExecuteCodeLineCommand, CommandResult>, ExecuteCodeLineCommandHandler>()
     .AddTransient<IMetaStorageService, InternalMetaStorageService>()
     .AddTransient<ICodeResolveService, CodeResolveService>();
+
+if (isRabbitMq)
+    services.AddRabbitMQEventBus(builder.Configuration);
 
 services.AddQuartz(q =>
 {
@@ -105,6 +104,7 @@ services.AddQuartz(q =>
 
     InitPredictionModelsJob.Schedule(q);
     InitUsersJob.Schedule(q);
+    ProcessCurrentPredictionsJob.Schedule(q);
 });
 services.AddQuartzHostedService();
 

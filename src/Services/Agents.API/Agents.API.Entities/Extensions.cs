@@ -1,10 +1,6 @@
-﻿using Interfaces.DynamicAgent;
-using System;
-using System.Collections.Generic;
+﻿using ASMLib.DynamicAgent;
+using ASMLib.Entities;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Agents.API.Entities
 {
@@ -29,7 +25,7 @@ namespace Agents.API.Entities
         }
 
 
-        public static T? ConvertValue<T>(this IProperty property)
+        public static T? ConvertValue<T>(this Property property)
         {
 #warning Ненадежный каст.
             try

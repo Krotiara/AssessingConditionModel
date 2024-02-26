@@ -1,15 +1,14 @@
-﻿using Agents.API.Interfaces;
-using Interfaces.DynamicAgent;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Agents.API.Entities.AgentsSettings
+namespace ASMLib.Entities
 {
-    public class Property : IProperty
+    public class Property
     {
+        public Property() { }
 
         public Property(string name, string type, object value, string description = null)
         {
@@ -28,4 +27,3 @@ namespace Agents.API.Entities.AgentsSettings
         public object Value { get; set; }
     }
 }
-

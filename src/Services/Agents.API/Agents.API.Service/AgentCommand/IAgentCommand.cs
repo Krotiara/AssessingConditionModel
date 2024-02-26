@@ -1,11 +1,6 @@
 ﻿using Interfaces;
-using Interfaces.DynamicAgent;
-using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using ASMLib.DynamicAgent;
+using ASMLib.Entities;
 
 namespace Agents.API.Service.AgentCommand
 {
@@ -15,6 +10,6 @@ namespace Agents.API.Service.AgentCommand
 
         public IAgent Agent { get; set; }
 
-        public IAgentPropertiesNamesSettings PropertiesNamesSettings { get; set; }
+        public AgentPropertiesNamesSettings PropertiesNamesSettings { get; set; }
     }
 }

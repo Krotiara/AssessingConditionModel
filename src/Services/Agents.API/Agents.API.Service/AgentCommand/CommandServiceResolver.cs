@@ -1,15 +1,10 @@
 ﻿using Interfaces;
-using Interfaces.DynamicAgent;
-using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using ASMLib.DynamicAgent;
+using ASMLib.Entities;
 
 namespace Agents.API.Service.AgentCommand
 {
     public delegate IAgentCommand CommandServiceResolver(SystemCommands command, 
         IAgent agent,
-        IAgentPropertiesNamesSettings commonPropertiesNames);
+        AgentPropertiesNamesSettings commonPropertiesNames);
 }

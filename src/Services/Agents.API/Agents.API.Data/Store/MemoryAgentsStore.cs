@@ -3,32 +3,34 @@ using Agents.API.Entities.AgentsSettings;
 using Agents.API.Entities.Documents;
 using Agents.API.Interfaces;
 using Interfaces;
-using Interfaces.DynamicAgent;
+using ASMLib.DynamicAgent;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ASMLib.Entities;
 
 namespace Agents.API.Data.Store
 {
     public class MemoryAgentsStore : IAgentsStore
     {
-        private ConcurrentDictionary<IAgentKey, IAgent> _agents;
+        private ConcurrentDictionary<AgentKey, IAgent> _agents;
         private readonly ICodeExecutor _codeExecutor;
 
         public MemoryAgentsStore(ICodeExecutor codeExecutor)
         {
-            _agents = new ConcurrentDictionary<IAgentKey, IAgent>();
+            _agents = new ConcurrentDictionary<AgentKey, IAgent>();
             _codeExecutor = codeExecutor;
         }
 
 
-        public Task<IAgent> GetAgent(IAgentKey key, AgentSettings settings)
+        public Task<IAgent> Get(AgentKey key)
         {
             if (!_agents.ContainsKey(key))
-                _agents[key] = new Agent(key, settings, _codeExecutor);
+                _agents[key] = new Agent(key, _codeExecutor);
+            
             return Task.FromResult(_agents[key]);
         }
 

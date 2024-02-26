@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Interfaces.DynamicAgent
+namespace ASMLib.Entities
 {
-    public interface IAgentState
+    public class AgentState
     {
         public string Name { get; set; }
 

@@ -2,13 +2,14 @@
 using Agents.API.Interfaces;
 using ASMLib.DynamicAgent;
 using Interfaces;
-using Interfaces.DynamicAgent;
+using ASMLib.DynamicAgent;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ASMLib.Entities;
 
 namespace Agents.API.Entities.AgentsSettings
 {
@@ -16,40 +17,36 @@ namespace Agents.API.Entities.AgentsSettings
     {
         private readonly ICodeExecutor _codeExecutor;
 
-        private readonly string _stateResolveCode;
+        private string _stateResolveCode;
 
         public string Id { get; set; }
 
         public string Affiliation { get; }
 
-        public string AgentType { get; }
+        public string AgentType { get; private set; }
 
-        public IAgentState CurrentState { get; set; }
+        public AgentState CurrentState { get; set; }
 
-        public ConcurrentDictionary<string, IProperty> Properties { get; }
+        public ConcurrentDictionary<string, Property> Properties { get; }
 
-        public ConcurrentDictionary<string, IProperty> Variables { get; }
+        public ConcurrentDictionary<string, Property> Variables { get; }
 
-        public ConcurrentDictionary<(string, DateTime), IParameter> Buffer { get; set; }
+        public ConcurrentDictionary<(string, DateTime), Parameter> Buffer { get; set; }
 
-        public ConcurrentDictionary<string, IAgentState> States { get; }
+        public ConcurrentDictionary<string, AgentState> States { get; }
 
-        private readonly AgentPropertiesNamesSettings _commonPropertiesNames;
+        private AgentPropertiesNamesSettings _commonPropertiesNames;
 
-        public Agent(IAgentKey key, AgentSettings settings, ICodeExecutor codeExecutor)
+        public Agent(AgentKey key, ICodeExecutor codeExecutor)
         {
             _codeExecutor = codeExecutor;
-            _stateResolveCode = settings.StateResolveCode;
             Id = key.ObservedId;
             Affiliation = key.ObservedObjectAffilation;
-            AgentType = settings.AgentType;
             Properties = new();
             Variables = new();
             States = new();
             Buffer = new();
-            InitDicts(settings);
-            InitCommonProperties(key, settings.CommonNamesSettings);
-            _commonPropertiesNames = settings.CommonNamesSettings; //TODO инициализация нового экземпляра, чтобы не продлевать время жизни settings
+            
         }
 
 
@@ -60,7 +57,7 @@ namespace Agents.API.Entities.AgentsSettings
             {
                 string stateVar = "isState";
 
-                foreach (IAgentState state in States.Values)
+                foreach (AgentState state in States.Values)
                 {
                     string ifCondition = $"{stateVar}={state.DefinitionCode}";
                     res = await _codeExecutor.ExecuteCode(ifCondition, this, _commonPropertiesNames);
@@ -83,15 +80,15 @@ namespace Agents.API.Entities.AgentsSettings
         }
 
 
-        public void UpdateVariables(IEnumerable<IProperty> vars)
+        public void UpdateVariables(IEnumerable<Property> vars)
         {
-            foreach (IProperty p in vars)
+            foreach (Property p in vars)
                 Variables[p.Name] = p;
             Buffer.Clear();
         }
 
 
-        public void AddToBuffer(IParameter parameter) => Buffer.TryAdd((parameter.Name, parameter.Timestamp), parameter);
+        public void AddToBuffer(Parameter parameter) => Buffer.TryAdd((parameter.Name, parameter.Timestamp), parameter);
 
 
         public T GetPropertyValue<T>(string propertyName)
@@ -116,21 +113,34 @@ namespace Agents.API.Entities.AgentsSettings
 
         private void InitDicts(AgentSettings settings)
         {
-            foreach (IProperty p in settings.StateProperties)
+            Properties.Clear();
+            Variables.Clear();
+            States.Clear();
+            Buffer.Clear();
+            foreach (Property p in settings.StateProperties)
                 Properties[p.Name] = p;
-            foreach (IProperty p in settings.Variables)
+            foreach (Property p in settings.Variables)
                 Variables[p.Name] = p;
-            foreach (IAgentState s in settings.States)
+            foreach (AgentState s in settings.States)
                 States[s.Name] = s;
         }
 
 
-        private void InitCommonProperties(IAgentKey key, AgentPropertiesNamesSettings settings)
+        private void InitCommonProperties(string observingId, string observingAffiliation, AgentPropertiesNamesSettings settings)
         {
             Properties[settings.Id] =
-                new Property(settings.Id, typeof(string).FullName, key.ObservedId);
+                new Property(settings.Id, typeof(string).FullName, observingId);
             Properties[settings.Affiliation] =
-                new Property(settings.Affiliation, typeof(string).FullName, key.ObservedObjectAffilation);
+                new Property(settings.Affiliation, typeof(string).FullName, observingAffiliation);
+        }
+
+        public void SetSettings(AgentSettings settings)
+        {
+            _stateResolveCode = settings.StateResolveCode;
+            AgentType = settings.AgentType;
+            InitDicts(settings);
+            InitCommonProperties(Id, Affiliation, settings.CommonNamesSettings);
+            _commonPropertiesNames = settings.CommonNamesSettings; //TODO инициализация нового экземпляра, чтобы не продлевать время жизни settings
         }
     }
 }

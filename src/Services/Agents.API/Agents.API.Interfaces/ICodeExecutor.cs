@@ -1,14 +1,9 @@
-﻿using Interfaces;
-using Interfaces.DynamicAgent;
-using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using ASMLib.DynamicAgent;
+using ASMLib.Entities;
+using Interfaces;
 
 namespace Agents.API.Interfaces
-{ 
+{
     public enum ExecuteCodeStatus
     {
         Success = 0,
@@ -27,7 +22,7 @@ namespace Agents.API.Interfaces
     public interface ICodeExecutor
     {
         public Task<ExecuteCodeResult> ExecuteCode(string codeLines, IAgent agent,
-            IAgentPropertiesNamesSettings commonPropertiesNames,
+            AgentPropertiesNamesSettings commonPropertiesNames,
             CancellationToken cancellationToken=default);
 
 

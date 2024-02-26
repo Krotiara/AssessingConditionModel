@@ -1,6 +1,7 @@
 using Interfaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using PatientsResolver.API;
 using PatientsResolver.API.Data;
 using PatientsResolver.API.Data.Store;
 using PatientsResolver.API.Entities;
@@ -12,6 +13,8 @@ using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 var services = builder.Services;
+
+bool isRabbitMq = builder.Configuration.GetSection("RabbitMQSettings").Exists();
 
 // Add services to the container.
 services.AddControllers();
@@ -59,6 +62,9 @@ services.AddTransient<MongoInfluencesStore>();
 
 services.AddSingleton<PatientsDataService>();
 services.AddSingleton<InfluencesDataService>();
+
+if (isRabbitMq)
+    services.AddRabbitMQEventBus(builder.Configuration);
 
 var app = builder.Build();
 
