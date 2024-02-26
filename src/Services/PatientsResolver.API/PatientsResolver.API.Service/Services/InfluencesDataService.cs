@@ -21,7 +21,14 @@ namespace PatientsResolver.API.Service.Services
         public async Task<Influence> Get(string id) => await _store.Get(x => x.Id == id);
 
 
-        public async Task Delete(string id) => await _store.Delete(x => x.Id == id);
+        public async Task Delete(string id)
+        {
+            await _store.Delete(x => x.Id == id);
+            _eventBus?.Publish(new DeleteInfluenceEvent()
+            {
+                InfluenceId = id
+            });
+        }
 
 
         public async Task Insert(Influence influence)
