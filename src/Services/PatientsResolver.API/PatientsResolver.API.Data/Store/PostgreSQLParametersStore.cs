@@ -48,6 +48,9 @@ namespace PatientsResolver.API.Data.Store
                 parameters = parameters.Where(x => names.Contains(x.Name));
             }
 
+            parameters = parameters.GroupBy(x => x.Name)
+                .Select(x => x.OrderByDescending(y => y.Timestamp).First());
+
             return await Task.FromResult(parameters);
 
         }
