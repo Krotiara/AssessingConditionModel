@@ -97,10 +97,10 @@ namespace PatientsResolver.API.Controllers
         }
 
 
-        [HttpDelete("parameters/{patientId}")]
-        public async Task<ActionResult> DeleteParametersForPatient(string patientId)
+        [HttpDelete("parameters/{patientId}/{timestamp}")]
+        public async Task<ActionResult> DeleteParametersForPatient(string patientId, DateTime timestamp)
         {
-            await _patientsDataService.DeleteAllParameters(patientId);
+            await _patientsDataService.DeleteParameters(patientId);
             return Ok();
         }
     }

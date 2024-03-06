@@ -90,20 +90,21 @@ namespace PatientsResolver.API.Service.Services
         }
 
 
-        public async Task DeleteAllParameters(string patientId)
+        public async Task DeleteParameters(string patientId, string affiliation, DateTime timestamp)
         {
-            var patient = await _patientsStore.Get(patientId);
-            var meta = await _patientsMetaStore.Get(patient.Id);
-            if (patient == null || meta == null)
-                throw new KeyNotFoundException($"Не найден пациент.");
-            await _parametersStore.DeleteAll(patientId);
-            meta.InputParametersTimestamps.Clear();
-            await _patientsMetaStore.Insert(meta);
+            var patientInfo = await Get(patientId, affiliation);
+            if (patientInfo == null)
+                throw new KeyNotFoundException($"Не найден пациент {patientId}:{affiliation}.");
+
+            await _parametersStore.DeleteAll(patientId, timestamp);
+            if (patientInfo.Meta.InputParametersTimestamps.Remove(timestamp))
+                await _patientsMetaStore.Insert(patientInfo.Meta);
+            
             _eventBus?.Publish(new UpdatePatientParametersEvent()
             {
-                PatientId = patient.PatientId,
-                PatientAffiliation = patient.Affiliation,
-                InputParametersTimestamps = meta.InputParametersTimestamps
+                PatientId = patientId,
+                PatientAffiliation = affiliation,
+                InputParametersTimestamps = patientInfo.Meta.InputParametersTimestamps
             });
         }
 

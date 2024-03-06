@@ -18,6 +18,6 @@ namespace PatientsResolver.API.Data.Store
 
         public Task Delete(string id);
 
-        public Task DeleteAll(string patientId);
+        public Task DeleteAll(string patientId, DateTime timestamp);
     }
 }

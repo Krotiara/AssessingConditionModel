@@ -23,10 +23,10 @@ namespace PatientsResolver.API.Data.Store
             }
         }
 
-        public async Task DeleteAll(string patientId)
+        public async Task DeleteAll(string patientId, DateTime timestamp)
         {
             using var context = await _contextFactory.CreateDbContextAsync();
-            var parameters = context.PatientParameters.AsQueryable().Where(x => x.PatientId == patientId);
+            var parameters = context.PatientParameters.AsQueryable().Where(x => x.PatientId == patientId && x.Timestamp == timestamp);
             foreach (var p in parameters)
                 context.PatientParameters.Remove(p);
             await context.SaveChangesAsync();
