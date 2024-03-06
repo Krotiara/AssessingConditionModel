@@ -32,7 +32,7 @@ namespace PatientsResolver.API.Data.Store
             }
             else
             {
-                MongoPatientMeta m = new ()
+                MongoPatientMeta m = new()
                 {
                     PatientId = meta.PatientId,
                     InputParametersTimestamps = meta.InputParametersTimestamps

@@ -14,23 +14,29 @@ namespace PatientsResolver.API.Service.Services
     {
         private readonly IPatientsStore _patientsStore;
         private readonly IParametersStore _parametersStore;
+        private readonly IPatientsMetaStore _patientsMetaStore;
         private readonly InfluencesDataService _influencesDataService;
         private readonly ILogger<PatientsDataService> _logger;
         private readonly IEventBus _eventBus;
+
         private readonly ConcurrentDictionary<(string, string), IPatient> _patients;
+        private readonly ConcurrentDictionary<string, IPatientMeta> _patientsMeta;
 
         public PatientsDataService(IPatientsStore patientsStore,
             IParametersStore parametersStore,
+            IPatientsMetaStore patientsMetaStore,
             InfluencesDataService influencesDataService,
             ILogger<PatientsDataService> logger,
             IEventBus eventBus = null)
         {
             _patientsStore = patientsStore;
             _parametersStore = parametersStore;
+            _patientsMetaStore = patientsMetaStore;
             _influencesDataService = influencesDataService;
             _logger = logger;
             _eventBus = eventBus;
             _patients = new();
+            _patientsMeta = new();
         }
 
 
@@ -39,11 +45,12 @@ namespace PatientsResolver.API.Service.Services
             if (_patients.TryGetValue((patientId, affiliation), out IPatient p))
                 return p;
             p = await _patientsStore.Get(patientId, affiliation);
-
-            if (p == null)
+            var meta = await _patientsMetaStore.Get(p.Id);
+            if (p == null || meta == null)
                 throw new KeyNotFoundException($"Не найден пациент {patientId}:{affiliation}.");
 
             _patients[(patientId, affiliation)] = p;
+            _patientsMeta[p.Id] = meta;
             return p;
         }
 
@@ -99,7 +106,9 @@ namespace PatientsResolver.API.Service.Services
             try
             {
                 p = await _patientsStore.Insert(p);
+                var meta = await _patientsMetaStore.Insert(new PatientMeta(p.Id));
                 _patients[(p.PatientId, p.Affiliation)] = p;
+                _patientsMeta[p.Id] = meta;
                 _eventBus?.Publish(new AddPatientEvent()
                 {
                     PatientId = p.PatientId,
