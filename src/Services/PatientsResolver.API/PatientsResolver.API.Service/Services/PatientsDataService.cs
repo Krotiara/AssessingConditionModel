@@ -171,7 +171,7 @@ namespace PatientsResolver.API.Service.Services
         }
 
 
-        public async Task<IEnumerable<IPatient>> GetPatients(string affiliation,
+        public async Task<IEnumerable<PatientInfo>> GetPatients(string affiliation,
             GenderEnum? gender, string? influenceName, int? startAge, int? endAge, DateTime? start, DateTime? end)
         {
             int searchStartAge = startAge == null ? 0 : startAge.Value;
@@ -202,7 +202,19 @@ namespace PatientsResolver.API.Service.Services
                 filteredPatients = await _influencesDataService.FilterByInfluence(patients, influenceName, (DateTime)start, (DateTime)end);
             }
 
-            return filteredPatients;
+            var result = new List<PatientInfo>();
+            foreach (var p in filteredPatients)
+            {
+                var meta = await _patientsMetaStore.Get(p.Id);
+                if (meta != null)
+                    result.Add(new PatientInfo()
+                    {
+                        Patient = p,
+                        Meta = meta
+                    });
+            }
+
+            return result;
         }
 
 

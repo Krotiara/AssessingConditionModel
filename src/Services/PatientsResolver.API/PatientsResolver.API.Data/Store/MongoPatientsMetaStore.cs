@@ -1,11 +1,6 @@
-﻿using ASMLib;
-using Interfaces.Mongo;
+﻿using Interfaces.Mongo;
+using PatientsResolver.API.Entities;
 using PatientsResolver.API.Entities.Mongo;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PatientsResolver.API.Data.Store
 {

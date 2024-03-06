@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ASMLib
+namespace PatientsResolver.API.Entities
 {
     public interface IPatientMeta
     {
