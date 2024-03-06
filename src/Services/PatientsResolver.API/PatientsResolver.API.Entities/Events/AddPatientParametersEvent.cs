@@ -12,5 +12,7 @@ namespace PatientsResolver.API.Entities.Events
         public string PatientId { get; set; }
 
         public string PatientAffiliation { get; set; }
+
+        public List<DateTime> InputParametersTimestamps { get; set; }
     }
 }

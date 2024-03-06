@@ -20,7 +20,6 @@ namespace PatientsResolver.API.Service.Services
         private readonly IEventBus _eventBus;
 
         private readonly ConcurrentDictionary<(string, string), IPatient> _patients;
-        private readonly ConcurrentDictionary<string, IPatientMeta> _patientsMeta;
 
         public PatientsDataService(IPatientsStore patientsStore,
             IParametersStore parametersStore,
@@ -36,7 +35,6 @@ namespace PatientsResolver.API.Service.Services
             _logger = logger;
             _eventBus = eventBus;
             _patients = new();
-            _patientsMeta = new();
         }
 
 
@@ -50,7 +48,6 @@ namespace PatientsResolver.API.Service.Services
                 throw new KeyNotFoundException($"Не найден пациент {patientId}:{affiliation}.");
 
             _patients[(patientId, affiliation)] = p;
-            _patientsMeta[p.Id] = meta;
             return p;
         }
 
@@ -80,7 +77,6 @@ namespace PatientsResolver.API.Service.Services
             await _patientsStore.Delete(id);
             await _patientsMetaStore.Delete(id);
             _patients.TryRemove((patient.PatientId, patient.Affiliation), out _);
-            _patientsMeta.TryRemove(id, out _);
             _eventBus?.Publish(new UpdatePatientEvent()
             {
                 PatientId = patient.PatientId,
@@ -92,13 +88,17 @@ namespace PatientsResolver.API.Service.Services
         public async Task DeleteAllParameters(string patientId)
         {
             var patient = await _patientsStore.Get(patientId);
-            if (patient == null)
+            var meta = await _patientsMetaStore.Get(patient.Id);
+            if (patient == null || meta == null)
                 throw new KeyNotFoundException($"Не найден пациент.");
             await _parametersStore.DeleteAll(patientId);
+            meta.InputParametersTimestamps.Clear();
+            await _patientsMetaStore.Insert(meta);
             _eventBus?.Publish(new UpdatePatientParametersEvent()
             {
                 PatientId = patient.PatientId,
-                PatientAffiliation = patient.Affiliation
+                PatientAffiliation = patient.Affiliation,
+                InputParametersTimestamps = meta.InputParametersTimestamps
             });
         }
 
@@ -110,7 +110,6 @@ namespace PatientsResolver.API.Service.Services
                 p = await _patientsStore.Insert(p);
                 var meta = await _patientsMetaStore.Insert(new PatientMeta(p.Id));
                 _patients[(p.PatientId, p.Affiliation)] = p;
-                _patientsMeta[p.Id] = meta;
                 _eventBus?.Publish(new AddPatientEvent()
                 {
                     PatientId = p.PatientId,
@@ -146,13 +145,24 @@ namespace PatientsResolver.API.Service.Services
         public async Task AddPatientParameters(string id, string affiliation, IEnumerable<PatientParameter> parameters)
         {
             var p = await Get(id, affiliation);
+            var meta = await _patientsMetaStore.Get(p.Id);
+
+            if (p == null || meta == null)
+                throw new KeyNotFoundException($"Не найден пациент {id}:{ affiliation}.");
+          
             foreach (var parameter in parameters)
                 parameter.PatientId = p.Id;
+
+            var latest = parameters.OrderByDescending(x => x.Timestamp).FirstOrDefault();
+            if (latest != null)
+                meta.InputParametersTimestamps.Add(latest.Timestamp);
             await _parametersStore.Insert(parameters);
+            await _patientsMetaStore.Insert(meta);
             _eventBus?.Publish(new UpdatePatientParametersEvent()
             {
                 PatientId = p.PatientId,
-                PatientAffiliation = p.Affiliation
+                PatientAffiliation = p.Affiliation,
+                InputParametersTimestamps = meta.InputParametersTimestamps
             });
         }
 
