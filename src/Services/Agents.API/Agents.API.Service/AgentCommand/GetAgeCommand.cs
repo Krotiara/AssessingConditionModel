@@ -39,13 +39,13 @@ namespace Agents.API.Service.AgentCommand
             if (patient == null)
                 return new CommandResult($"Не удалось получить информацию о пациенте {patientId}:{patientAffiliation}.");
 
-            if (patient.Birthday == default(DateTime))
+            if (patient.Patient.Birthday == default(DateTime))
                 return new CommandResult($"Не установлена дата рождения у пациента {patientId}:{patientAffiliation}.");
 
-            if (timestamp < patient.Birthday)
+            if (timestamp < patient.Patient.Birthday)
                 return new CommandResult($"Указанная дата прогноза меньше даты рождения пациента {patientId}:{patientAffiliation}.");
 
-            double age = GetAge((DateTime)patient.Birthday, timestamp);
+            double age = GetAge((DateTime)patient.Patient.Birthday, timestamp);
             return new CommandResult(age);
         };
 
