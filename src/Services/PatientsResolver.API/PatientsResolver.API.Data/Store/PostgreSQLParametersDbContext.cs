@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using PatientsResolver.API.Entities;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -8,12 +9,27 @@ namespace PatientsResolver.API.Data.Store
     public class PostgreSQLParametersDbContext : DbContext
     {
         private readonly PostgreSQLDbSettings _sets;
+        private readonly ILogger<PostgreSQLParametersDbContext> _logger;
 
         public DbSet<PatientParameter> PatientParameters { get; set; }
 
-        public PostgreSQLParametersDbContext(IOptions<PostgreSQLDbSettings> sets)
+        public PostgreSQLParametersDbContext(IOptions<PostgreSQLDbSettings> sets, ILogger<PostgreSQLParametersDbContext> logger)
         {
             _sets = sets.Value;
+            _logger = logger;
+            InitDbIfRequiered();
+        }
+
+        private void InitDbIfRequiered()
+        {
+            try
+            {
+                Database.EnsureCreated();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogInformation($"Skip ensure creating postgreSQL db: {ex.Message}.");
+            }
         }
 
 
