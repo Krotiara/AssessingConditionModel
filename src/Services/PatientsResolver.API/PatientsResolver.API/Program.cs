@@ -58,6 +58,7 @@ services.AddDbContextFactory<PostgreSQLParametersDbContext>();
 
 services.AddTransient<IPatientsStore, MongoPatientsStore>();
 services.AddTransient<IParametersStore, PostgreSQLParametersStore>();
+services.AddTransient<IPatientsMetaStore, MongoPatientsMetaStore>();
 services.AddTransient<MongoInfluencesStore>();
 
 services.AddSingleton<PatientsDataService>();

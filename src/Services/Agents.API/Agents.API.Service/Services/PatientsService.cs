@@ -20,7 +20,7 @@ namespace Agents.API.Service.Services
         private readonly string _patientsResolverApiUrl;
         private readonly ILogger<PatientsService> _logger;
 
-        private readonly ConcurrentDictionary<(string, string), Patient> _patients;
+        private readonly ConcurrentDictionary<(string, string), PatientInfo> _patients;
 
         public PatientsService(IWebRequester webRequester, IOptions<EnvSettings> settings, ILogger<PatientsService> logger)
         {
@@ -31,9 +31,9 @@ namespace Agents.API.Service.Services
         }
 
 
-        public async Task<Patient?> GetPatientInfo(string id, string affiliation, bool isRefresh)
+        public async Task<PatientInfo?> GetPatientInfo(string id, string affiliation, bool isRefresh)
         {
-            if (isRefresh && _patients.TryGetValue((id, affiliation), out Patient p))
+            if (isRefresh && _patients.TryGetValue((id, affiliation), out PatientInfo p))
                 return p;
 
 
@@ -42,7 +42,7 @@ namespace Agents.API.Service.Services
             var responce = await _webRequester.SendRequest(url, "POST", body);
             if (responce != null && responce.IsSuccessStatusCode)
             {
-                p = await responce.DeserializeBody<Patient>();
+                p = await responce.DeserializeBody<PatientInfo>();
                 _patients[(id, affiliation)] = p;
                 return p;
             }

@@ -1,18 +1,15 @@
-﻿using ASMLib.EventBus.Events;
+﻿using ASMLib;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PatientsResolver.API.Entities.Events
+namespace PatientsResolver.API.Entities
 {
-    public class UpdatePatientParametersEvent : Event
+    public class PatientMeta
     {
         public string PatientId { get; set; }
-
-        public string PatientAffiliation { get; set; }
-
         public List<DateTime> InputParametersTimestamps { get; set; }
     }
 }

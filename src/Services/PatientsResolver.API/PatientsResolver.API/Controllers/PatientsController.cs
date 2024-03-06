@@ -37,10 +37,10 @@ namespace PatientsResolver.API.Controllers
         [HttpPost("patient")]
         public async Task<ActionResult> GetPatient([FromBody] GetPatientRequest request)
         {
-            var patient = await _patientsDataService.Get(request.PatientId, request.Affiliation);
-            if (patient == null)
+            var patientInfo = await _patientsDataService.Get(request.PatientId, request.Affiliation);
+            if (patientInfo == null)
                 return Ok();
-            return Ok(patient);
+            return Ok(patientInfo);
         }
 
 
