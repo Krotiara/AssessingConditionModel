@@ -19,7 +19,7 @@ namespace PatientsResolver.API.Service.Services
         private readonly ILogger<PatientsDataService> _logger;
         private readonly IEventBus _eventBus;
 
-        private readonly ConcurrentDictionary<(string, string), IPatient> _patients;
+        private readonly ConcurrentDictionary<(string, string), PatientInfo> _patients;
 
         public PatientsDataService(IPatientsStore patientsStore,
             IParametersStore parametersStore,
@@ -38,17 +38,21 @@ namespace PatientsResolver.API.Service.Services
         }
 
 
-        public async Task<IPatient> Get(string patientId, string affiliation)
+        public async Task<PatientInfo> Get(string patientId, string affiliation)
         {
-            if (_patients.TryGetValue((patientId, affiliation), out IPatient p))
+            if (_patients.TryGetValue((patientId, affiliation), out PatientInfo p))
                 return p;
-            p = await _patientsStore.Get(patientId, affiliation);
-            var meta = await _patientsMetaStore.Get(p.Id);
-            if (p == null || meta == null)
+            var patient = await _patientsStore.Get(patientId, affiliation);
+            var meta = await _patientsMetaStore.Get(patient.Id);
+            if (patient == null || meta == null)
                 throw new KeyNotFoundException($"Не найден пациент {patientId}:{affiliation}.");
 
-            _patients[(patientId, affiliation)] = p;
-            return p;
+            _patients[(patientId, affiliation)] = new PatientInfo()
+            {
+                Patient = patient,
+                Meta = meta
+            };
+            return _patients[(patientId, affiliation)];
         }
 
 
@@ -56,10 +60,11 @@ namespace PatientsResolver.API.Service.Services
         public async Task Update(string id, IPatient patient)
         {
             var dbPatient = await _patientsStore.Get(id);
-            if (dbPatient == null)
+            if (dbPatient == null || !_patients.ContainsKey((patient.PatientId, patient.Affiliation)))
                 throw new KeyNotFoundException($"Не найден пациент.");
+
             await _patientsStore.Update(id, patient);
-            _patients[(patient.PatientId, patient.Affiliation)] = patient;
+            _patients[(patient.PatientId, patient.Affiliation)].Patient = patient;
             _eventBus?.Publish(new UpdatePatientEvent()
             {
                 PatientId = patient.PatientId,
@@ -103,19 +108,23 @@ namespace PatientsResolver.API.Service.Services
         }
 
 
-        public async Task<IPatient> Insert(IPatient p)
+        public async Task<PatientInfo> Insert(IPatient p)
         {
             try
             {
                 p = await _patientsStore.Insert(p);
                 var meta = await _patientsMetaStore.Insert(new PatientMeta(p.Id));
-                _patients[(p.PatientId, p.Affiliation)] = p;
+                _patients[(p.PatientId, p.Affiliation)] = new PatientInfo()
+                {
+                    Patient = p,
+                    Meta = meta
+                };
                 _eventBus?.Publish(new AddPatientEvent()
                 {
                     PatientId = p.PatientId,
                     PatientAffiliation = p.Affiliation
                 });
-                return p;
+                return _patients[(p.PatientId, p.Affiliation)];
             }
             catch (EntityAlreadyExistException ex)
             {
@@ -128,41 +137,36 @@ namespace PatientsResolver.API.Service.Services
         public async Task Insert(IEnumerable<IPatient> patients)
         {
             foreach (var p in patients)
-            {
-                var patient = await _patientsStore.Insert(p);
-                _patients[(patient.PatientId, patient.Affiliation)] = patient;
-            }
+                await Insert(p);
         }
 
 
         public async Task<IEnumerable<PatientParameter>> GetPatientParameters(string patientId, string affiliation, DateTime start, DateTime end, List<string> names)
         {
             var patient = await Get(patientId, affiliation);
-            return await _parametersStore.GetParameters(patient.Id, start, end, names);
+            return await _parametersStore.GetParameters(patient.Patient.Id, start, end, names);
         }
 
 
         public async Task AddPatientParameters(string id, string affiliation, IEnumerable<PatientParameter> parameters)
         {
             var p = await Get(id, affiliation);
-            var meta = await _patientsMetaStore.Get(p.Id);
+            if (p == null)
+                throw new KeyNotFoundException($"Не найден пациент {id}:{affiliation}.");
 
-            if (p == null || meta == null)
-                throw new KeyNotFoundException($"Не найден пациент {id}:{ affiliation}.");
-          
             foreach (var parameter in parameters)
-                parameter.PatientId = p.Id;
+                parameter.PatientId = p.Patient.Id;
 
             var latest = parameters.OrderByDescending(x => x.Timestamp).FirstOrDefault();
             if (latest != null)
-                meta.InputParametersTimestamps.Add(latest.Timestamp);
+                p.Meta.InputParametersTimestamps.Add(latest.Timestamp);
             await _parametersStore.Insert(parameters);
-            await _patientsMetaStore.Insert(meta);
+            await _patientsMetaStore.Insert(p.Meta);
             _eventBus?.Publish(new UpdatePatientParametersEvent()
             {
-                PatientId = p.PatientId,
-                PatientAffiliation = p.Affiliation,
-                InputParametersTimestamps = meta.InputParametersTimestamps
+                PatientId = p.Patient.PatientId,
+                PatientAffiliation = p.Patient.Affiliation,
+                InputParametersTimestamps = p.Meta.InputParametersTimestamps
             });
         }
 
