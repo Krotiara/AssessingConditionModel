@@ -78,7 +78,9 @@ namespace PatientsResolver.API.Service.Services
             if (patient == null)
                 throw new KeyNotFoundException($"Не найден пациент.");
             await _patientsStore.Delete(id);
+            await _patientsMetaStore.Delete(id);
             _patients.TryRemove((patient.PatientId, patient.Affiliation), out _);
+            _patientsMeta.TryRemove(id, out _);
             _eventBus?.Publish(new UpdatePatientEvent()
             {
                 PatientId = patient.PatientId,
