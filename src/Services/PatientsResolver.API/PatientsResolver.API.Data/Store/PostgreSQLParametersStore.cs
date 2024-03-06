@@ -55,6 +55,26 @@ namespace PatientsResolver.API.Data.Store
 
         }
 
+
+        public async Task<IEnumerable<PatientParameter>> GetOldestParameters(string patientId, List<string> names)
+        {
+            //TODO - проверки на сущестовование и соответсвие дате.
+            var hash = new HashSet<string>(names);
+
+            using var context = await _contextFactory.CreateDbContextAsync();
+            IEnumerable<PatientParameter> parameters = context.PatientParameters
+                .AsQueryable()
+                .Where(x => x.PatientId == patientId)
+                .ToList()
+                .Where(x => names.Contains(x.Name))
+                .GroupBy(x => x.Name)
+                .Select(x => x.OrderBy(y => y.Timestamp).First());
+
+            return await Task.FromResult(parameters);
+        }
+
+
+
         public async Task Insert(PatientParameter p)
         {
             using var context = await _contextFactory.CreateDbContextAsync();
@@ -86,7 +106,7 @@ namespace PatientsResolver.API.Data.Store
                     await context.PatientParameters.AddAsync(p);
                 else
                 {
-                    var dbParam = context.PatientParameters.SingleOrDefault(x => x.Id == p.Id 
+                    var dbParam = context.PatientParameters.SingleOrDefault(x => x.Id == p.Id
                     || (x.PatientId == p.PatientId && x.Name == p.Name && x.Timestamp == p.Timestamp));
                     if (dbParam == null)
                         await context.PatientParameters.AddAsync(p);

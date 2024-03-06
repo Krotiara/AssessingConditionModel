@@ -12,6 +12,8 @@ namespace PatientsResolver.API.Data.Store
     {
         public Task<IEnumerable<PatientParameter>> GetParameters(string patientId, DateTime start, DateTime end, List<string> names = null);
 
+        public Task<IEnumerable<PatientParameter>> GetOldestParameters(string patientId, List<string> names);
+
         public Task Insert(PatientParameter p);
 
         public Task Insert(IEnumerable<PatientParameter> parameters);

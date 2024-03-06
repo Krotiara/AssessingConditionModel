@@ -10,6 +10,8 @@
 
         public DateTime? EndTimestamp { get; set; }
 
+        public bool IsOldest { get; set; }
+
         public List<string> Names { get; set; }
     }
 }

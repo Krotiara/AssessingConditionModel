@@ -57,7 +57,9 @@ namespace PatientsResolver.API.Controllers
         {
             DateTime start = request.StartTimestamp == null ? DateTime.MinValue : (DateTime)request.StartTimestamp;
             DateTime end = request.EndTimestamp == null ? DateTime.MaxValue : (DateTime)request.EndTimestamp;
-            var parameters = await _patientsDataService.GetPatientParameters(request.PatientId, request.Affiliation, start, end, request.Names);
+            var parameters = request.IsOldest ?
+                await _patientsDataService.GetOldestPatientParameters(request.PatientId, request.Affiliation, request.Names) :
+                await _patientsDataService.GetPatientParameters(request.PatientId, request.Affiliation, start, end, request.Names);
             return Ok(parameters);
         }
 
@@ -65,7 +67,7 @@ namespace PatientsResolver.API.Controllers
         [HttpPost("addParameters")]
         public async Task<ActionResult> AddPatientParameters([FromBody] AddPatientParametersRequest request)
         {
-            foreach(var parameters in request.PatientsParameters)
+            foreach (var parameters in request.PatientsParameters)
                 await _patientsDataService.AddPatientParameters(parameters.PatientId, parameters.PatientAffiliation, parameters.Parameters);
             return Ok();
         }

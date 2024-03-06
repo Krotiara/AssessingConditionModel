@@ -128,7 +128,18 @@ namespace PatientsResolver.API.Service.Services
         public async Task<IEnumerable<PatientParameter>> GetPatientParameters(string patientId, string affiliation, DateTime start, DateTime end, List<string> names)
         {
             var patient = await Get(patientId, affiliation);
+            if (patient == null)
+                return null;
             return await _parametersStore.GetParameters(patient.Id, start, end, names);
+        }
+
+
+        public async Task<IEnumerable<PatientParameter>> GetOldestPatientParameters(string patientId, string affiliation, List<string> names)
+        {
+            var patient = await Get(patientId, affiliation);
+            if (patient == null)
+                return null;
+            return await _parametersStore.GetOldestParameters(patient.Id, names);
         }
 
 
