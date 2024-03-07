@@ -108,9 +108,9 @@ namespace PatientsResolver.API.Controllers
 
 
         [HttpPost("parameters/delete")]
-        public async Task<ActionResult> DeleteParametersForPatient([FromBody] DeleteParametersRequest request)
+        public async Task<ActionResult> DeleteParametersForPatient([FromBody] DeleteParametersRequest r)
         {
-            await _patientsDataService.DeleteParameters(patientId);
+            await _patientsDataService.DeleteParameters(r.PatientId, r.Affiliation, r.Timestamp);
             return Ok();
         }
     }
